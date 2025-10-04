@@ -740,5 +740,12 @@
     "description": "No arcane selected here. Click to choose one.",
     "type": "",
     "imagePath": "/empty"
+  },
+  "shftK": {
+    "id": "shftK",
+    "name": "Chieftan",
+    "description": "Your King can move and capture in the 5x5 ring... and check an opposing King that does not have Chieftan.",
+    "type": "passive",
+    "imagePath": "/shftK"
   }
 }

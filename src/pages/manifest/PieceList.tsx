@@ -19,7 +19,7 @@ const pieceList: PieceItem[] = [
   {
     name: 'Herring',
     description:
-      'Moves in a hex-like pattern; must be captured if attacked. Cunning and elusive, forcing opponents into traps.',
+      'Moves in a hex-like pattern like the site logo (2 squares to either side or 2 squares to the front/back and 1 to the right/left). Must be captured if attacked. Cunning and elusive, forcing opponents into traps.',
     imagePath: '/assets/images/pieces/tactorius/normal/wH',
     family: 'Infantry',
   },
@@ -67,14 +67,14 @@ const pieceList: PieceItem[] = [
   {
     name: 'Spectre',
     description:
-      'Moves to the opposite square in a 5×5 box from its position. A phantom that haunts the board.',
+      'Moves to the opposite-colored square complex in a 5×5 box from its position. A phantom that haunts the board.',
     imagePath: '/assets/images/pieces/tactorius/normal/wS',
     family: 'Ghost',
   },
   {
     name: 'Wraith',
     description:
-      'Moves to the same square in a 5×5 box from its position. A relentless spirit shadowing its prey.',
+      'Moves to the same-colored square complex in a 5×5 box from its position. A relentless spirit shadowing its prey.',
     imagePath: '/assets/images/pieces/tactorius/normal/wW',
     family: 'Ghost',
   },
