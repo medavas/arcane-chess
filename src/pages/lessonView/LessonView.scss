@@ -111,33 +111,81 @@
         height: 40px;
       }
       .info-avatar {
-        display: flex;
+        display: grid;
+        grid-template-columns: 60px 1fr;
+        grid-auto-rows: auto;
+        column-gap: 10px;
         width: 100%;
+        align-items: center;
+
         .avatar {
+          grid-column: 1;
+          grid-row: 1;
           position: relative;
-          background: #11111188;
+          background: rgba(34, 34, 34, 0.7);
           width: 60px;
           height: 60px;
         }
+        .arcana-select-wrapper {
+          grid-column: 1 / -1;
+          grid-row: 2;
+
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+
+          width: 100%;
+          min-width: 0;
+        }
+
         .arcana-select {
           display: flex;
-          justify-content: center;
           align-items: center;
           gap: 5px;
-          height: 60px;
+
           width: 100%;
+          min-width: 0;
+          height: 60px;
+
           overflow-x: auto;
           overflow-y: hidden;
           white-space: nowrap;
-          background: #11111188;
+
+          background: rgba(34, 34, 34, 0.7);
+          scrollbar-gutter: stable;
+
           .arcane {
             height: 45px;
             width: 45px;
-            flex-shrink: 0;
+            flex: 0 0 auto;
+            display: inline-block;
             &:hover {
               cursor: pointer;
             }
           }
+
+          .arcane.is-active {
+            border-radius: 50%;
+            animation: arcanePulseGreen 1.5s infinite;
+            transform-origin: center center;
+          }
+        }
+
+        .mana-bar {
+          position: relative;
+          width: 100%;
+          height: 6px;
+          background: rgba(255, 255, 255, 0.12);
+          border-radius: 4px;
+          overflow: hidden;
+          flex: 0 0 auto;
+        }
+
+        .mana-bar__fill {
+          height: 100%;
+          width: 0;
+          background: linear-gradient(90deg, #2ecc71, #27ae60);
+          transition: width 200ms ease;
         }
       }
     }
@@ -170,34 +218,81 @@
         padding: 0 10px 0 10px;
         width: 100%;
         .info-avatar {
-          display: flex;
-          flex-direction: row-reverse;
-          justify-content: center;
-          height: 60px;
-          width: 400px;
-          .info {
-            width: 100%;
+          display: grid;
+          grid-template-columns: 60px 1fr;
+          grid-auto-rows: auto;
+          column-gap: 10px;
+          width: 100%;
+          align-items: center;
+
+          .avatar {
+            grid-column: 1;
+            grid-row: 1;
+            position: relative;
+            background: rgba(34, 34, 34, 0.7);
+            width: 60px;
+            height: 60px;
+          }
+          .arcana-select-wrapper {
+            grid-column: 1 / -1;
+            grid-row: 2;
+
             display: flex;
             flex-direction: column;
-            justify-content: space-around;
+            gap: 6px;
+
+            width: 100%;
+            min-width: 0;
+          }
+
+          .arcana-select {
+            display: flex;
             align-items: center;
-            background: #11111188;
-            margin-right: 10px;
-            .name {
-              text-align: right;
-            }
-            .arcana-select {
-              display: flex;
-              height: 100%;
-              padding: 13px 13px 0 13px;
-              .arcane {
-                height: 60px;
-                width: 60px;
-              }
-              .arcane:hover {
+            gap: 5px;
+
+            width: 100%;
+            min-width: 0;
+            height: 60px;
+
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+
+            background: rgba(34, 34, 34, 0.7);
+            scrollbar-gutter: stable;
+
+            .arcane {
+              height: 45px;
+              width: 45px;
+              flex: 0 0 auto;
+              display: inline-block;
+              &:hover {
                 cursor: pointer;
               }
             }
+
+            .arcane.is-active {
+              border-radius: 50%;
+              animation: arcanePulseGreen 1.5s infinite;
+              transform-origin: center center;
+            }
+          }
+
+          .mana-bar {
+            position: relative;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+            overflow: hidden;
+            flex: 0 0 auto;
+          }
+
+          .mana-bar__fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            transition: width 200ms ease;
           }
         }
         .global-volume-control {

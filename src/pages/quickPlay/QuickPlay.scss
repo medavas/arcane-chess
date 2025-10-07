@@ -47,62 +47,81 @@
       padding: 0 10px;
       overflow: hidden;
       .info-avatar {
-        display: flex;
-        flex-direction: row-reverse;
+        display: grid;
+        grid-template-columns: 60px 1fr;
+        grid-auto-rows: auto;
+        column-gap: 10px;
         width: 100%;
+        align-items: center;
+
         .avatar {
+          grid-column: 1;
+          grid-row: 1;
           position: relative;
           background: rgba(34, 34, 34, 0.7);
           width: 60px;
           height: 60px;
         }
+        .arcana-select-wrapper {
+          grid-column: 1 / -1;
+          grid-row: 2;
+
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+
+          width: 100%;
+          min-width: 0;
+        }
+
         .arcana-select {
           display: flex;
-          justify-content: flex-start;
           align-items: center;
           gap: 5px;
-          height: 60px;
+
           width: 100%;
+          min-width: 0;
+          height: 60px;
+
           overflow-x: auto;
           overflow-y: hidden;
           white-space: nowrap;
+
           background: rgba(34, 34, 34, 0.7);
+          scrollbar-gutter: stable;
+
           .arcane {
             height: 45px;
             width: 45px;
-            flex-shrink: 0;
+            flex: 0 0 auto;
+            display: inline-block;
             &:hover {
               cursor: pointer;
             }
           }
-          .arcane.trojan-active {
+
+          .arcane.is-active {
             border-radius: 50%;
             animation: arcanePulseGreen 1.5s infinite;
             transform-origin: center center;
-            @keyframes arcanePulseGreen {
-              0% {
-                box-shadow:
-                  0 0 0 4px rgba(46, 204, 113, 0.95),
-                  0 0 25px 8px rgba(46, 204, 113, 0.8),
-                  0 0 50px 20px rgba(46, 204, 113, 0.6);
-                transform: scale(1.05);
-              }
-              50% {
-                box-shadow:
-                  0 0 0 6px rgba(46, 204, 113, 0.9),
-                  0 0 30px 10px rgba(46, 204, 113, 0.85),
-                  0 0 60px 25px rgba(46, 204, 113, 0.5);
-                transform: scale(1.12);
-              }
-              100% {
-                box-shadow:
-                  0 0 0 4px rgba(46, 204, 113, 0.95),
-                  0 0 25px 8px rgba(46, 204, 113, 0.8),
-                  0 0 50px 20px rgba(46, 204, 113, 0.6);
-                transform: scale(1.05);
-              }
-            }
           }
+        }
+
+        .mana-bar {
+          position: relative;
+          width: 100%;
+          height: 6px;
+          background: rgba(255, 255, 255, 0.12);
+          border-radius: 4px;
+          overflow: hidden;
+          flex: 0 0 auto;
+        }
+
+        .mana-bar__fill {
+          height: 100%;
+          width: 0;
+          background: linear-gradient(90deg, #2ecc71, #27ae60);
+          transition: width 200ms ease;
         }
       }
       .dialogue {
@@ -196,61 +215,85 @@
         display: none;
       }
       .info-avatar {
-        display: flex;
+        /* Make a 2-column grid: [avatar | content],
+       then place the Arcana wrapper on a new row spanning both columns */
+        display: grid;
+        grid-template-columns: 60px 1fr; /* avatar width, then flexible */
+        grid-auto-rows: auto;
+        column-gap: 10px;
         width: 100%;
+        align-items: center; /* vertical align for the first row */
+
         .avatar {
+          grid-column: 1;
+          grid-row: 1;
           position: relative;
           background: rgba(34, 34, 34, 0.7);
           width: 60px;
           height: 60px;
         }
+
+        /* Arcana strip + mana bar sit on row 2 and span full width */
+        .arcana-select-wrapper {
+          grid-column: 1 / -1; /* span both columns */
+          grid-row: 2;
+
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+
+          width: 100%;
+          min-width: 0; /* allow shrinking within the grid */
+        }
+
         .arcana-select {
           display: flex;
-          justify-content: flex-start;
           align-items: center;
           gap: 5px;
-          height: 60px;
+
           width: 100%;
+          min-width: 0;
+          height: 60px;
+
           overflow-x: auto;
           overflow-y: hidden;
           white-space: nowrap;
+
           background: rgba(34, 34, 34, 0.7);
+          scrollbar-gutter: stable;
+
           .arcane {
             height: 45px;
             width: 45px;
-            flex-shrink: 0;
+            flex: 0 0 auto;
+            display: inline-block;
             &:hover {
               cursor: pointer;
             }
           }
+
           .arcane.is-active {
             border-radius: 50%;
             animation: arcanePulseGreen 1.5s infinite;
             transform-origin: center center;
-            @keyframes arcanePulseGreen {
-              0% {
-                box-shadow:
-                  0 0 0 4px rgba(46, 204, 113, 0.95),
-                  0 0 25px 8px rgba(46, 204, 113, 0.8),
-                  0 0 50px 20px rgba(46, 204, 113, 0.6);
-                transform: scale(1.05);
-              }
-              50% {
-                box-shadow:
-                  0 0 0 6px rgba(46, 204, 113, 0.9),
-                  0 0 30px 10px rgba(46, 204, 113, 0.85),
-                  0 0 60px 25px rgba(46, 204, 113, 0.5);
-                transform: scale(1.12);
-              }
-              100% {
-                box-shadow:
-                  0 0 0 4px rgba(46, 204, 113, 0.95),
-                  0 0 25px 8px rgba(46, 204, 113, 0.8),
-                  0 0 50px 20px rgba(46, 204, 113, 0.6);
-                transform: scale(1.05);
-              }
-            }
           }
+        }
+
+        .mana-bar {
+          position: relative;
+          width: 100%;
+          height: 6px;
+          background: rgba(255, 255, 255, 0.12);
+          border-radius: 4px;
+          overflow: hidden;
+          flex: 0 0 auto;
+        }
+
+        .mana-bar__fill {
+          height: 100%;
+          width: 0;
+          background: linear-gradient(90deg, #2ecc71, #27ae60);
+          transition: width 200ms ease;
         }
       }
     }

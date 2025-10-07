@@ -44,6 +44,8 @@ import Button from '../../components/Button/Button';
 import { Chessground, IChessgroundApi } from '../../chessground/chessgroundMod';
 import GlobalVolumeControl from 'src/utils/audio/GlobalVolumeControl';
 
+// import { getProgressState } from '../../arcaneChess/arcaneDefs.mjs';
+
 const booksMap: { [key: string]: { [key: string]: Node } } = {
   book1,
   book2,

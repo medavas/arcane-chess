@@ -344,57 +344,56 @@ function isStackingKey(key) {
   return false;
 }
 
-const ArcanaProgression = (() => {
-  let moveCount = { white: 0, black: 0 };
-  let grantsGiven = { white: 0, black: 0 };
-  let every = 6;
-  let enabled = true;
-  let firstAt = 1;
+function remainingFor(side, key) {
+  const inv = side === 'white' ? whiteArcaneInventory : blackArcaneInventory;
+  const live = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+  return (inv[key] | 0) - (live[key] | 0);
+}
+function universeFor(side) {
+  const inv = side === 'white' ? whiteArcaneInventory : blackArcaneInventory;
+  return Object.keys(inv).filter((k) => (inv[k] | 0) > 0);
+}
 
-  // how many times progression has handed out each key
-  const grantedByKey = {
-    white: Object.create(null),
-    black: Object.create(null),
-  };
+const ArcanaProgression = (() => {
+  const moveCount = { white: 0, black: 0 };
+  const grantsGiven = { white: 0, black: 0 };
+
+  let every = 6;
+  let firstAt = 1;
+  let enabled = true;
 
   function setEvery(n) {
     every = Math.max(1, n | 0);
   }
-
+  function setFirstAt(n) {
+    firstAt = Math.max(0, n | 0);
+  }
+  function setEnabled(b) {
+    enabled = !!b;
+  }
   function resetSide(s) {
     moveCount[s] = 0;
     grantsGiven[s] = 0;
-    grantedByKey[s] = Object.create(null);
   }
 
+  // Tier grows every two successful grants, capped at 6
   function tier(s) {
-    const g = grantsGiven[s];
+    const g = grantsGiven[s] | 0;
     const t = 1 + Math.floor(g / 2);
     return t > 6 ? 6 : t;
   }
 
-  function remainingByGrantCount(s, k) {
-    const inv = s === 'white' ? whiteArcaneInventory : blackArcaneInventory;
-    const given = grantedByKey[s][k] | 0;
-    return (inv[k] | 0) - given;
-  }
-
-  function uni(s) {
-    const inv = s === 'white' ? whiteArcaneInventory : blackArcaneInventory;
-    return Object.keys(inv).filter((k) => (inv[k] | 0) > 0);
-  }
-
-  function grantOne(s, excludeSet) {
+  // Core—choose one key to grant based on tier & remaining capacity
+  function grantOne(s) {
     const t = tier(s);
 
-    let pool = uni(s).filter(
-      (k) =>
-        (POWER_BY_KEY[k] ?? 1) <= t &&
-        remainingByGrantCount(s, k) > 0 &&
-        !(excludeSet && excludeSet.has(k))
+    let pool = universeFor(s).filter(
+      (k) => (POWER_BY_KEY[k] ?? 1) <= t && remainingFor(s, k) > 0
     );
+
+    // If nothing fits current tier, fall back to the smallest POWER_BY_KEY that still has remaining
     if (!pool.length) {
-      const all = uni(s).filter((k) => remainingByGrantCount(s, k) > 0);
+      const all = universeFor(s).filter((k) => remainingFor(s, k) > 0);
       if (!all.length) return null;
       let minP = Infinity;
       for (const k of all) {
@@ -404,6 +403,7 @@ const ArcanaProgression = (() => {
       pool = all.filter((k) => (POWER_BY_KEY[k] ?? 1) === minP);
     }
 
+    // Prefer strongest among the pool (deterministic tie-break by random index)
     let maxP = 1;
     for (const k of pool) {
       const p = POWER_BY_KEY[k] ?? 1;
@@ -412,33 +412,67 @@ const ArcanaProgression = (() => {
     const strongest = pool.filter((k) => (POWER_BY_KEY[k] ?? 1) === maxP);
     const key = strongest[(Math.random() * strongest.length) | 0];
 
-    // mark as granted regardless of current live
-    grantedByKey[s][key] = (grantedByKey[s][key] | 0) + 1;
-    grantsGiven[s] += 1;
-    incLiveArcana(s, key, +1); // live count is capped
-    return key;
+    // Actually increment; only count a grant if the live value changed
+    if (incLiveArcana(s, key, +1)) {
+      grantsGiven[s] += 1;
+      return key;
+    }
+    return null;
   }
 
-  function setEnabled(b) {
-    enabled = !!b;
-  }
-
-  function onMoveCommitted(col, exclude = []) {
+  // Call this from MakeMove() when a move is committed
+  function onMoveCommitted(colOrSide) {
     if (!enabled) return null;
-    const s = sideKey(col);
+    const s = sideKey(colOrSide);
     const m = ++moveCount[s];
-    if (m < firstAt || (m - firstAt) % every !== 0) return null;
-    return grantOne(s, new Set(exclude));
+    if (m < firstAt) return null;
+    if ((m - firstAt) % every !== 0) return null;
+    return grantOne(s);
   }
 
-  function revertGrant(side, key) {
-    const s = sideKey(side);
-    const cur = grantedByKey[s][key] | 0;
-    if (cur > 0) grantedByKey[s][key] = cur - 1;
-    if (grantsGiven[s] > 0) grantsGiven[s] -= 1;
+  // Expose a UI-friendly progress snapshot for a side
+  function getProgressState(colOrSide) {
+    const s = sideKey(colOrSide);
+    const mc = moveCount[s] | 0;
+
+    const beforeFirst = mc < firstAt;
+    const denom = beforeFirst ? Math.max(1, firstAt) : Math.max(1, every);
+
+    // steps within current cycle (0..denom)
+    const steps = beforeFirst ? mc : (((mc - firstAt) % every) + every) % every;
+
+    // 0..1 for a fill bar
+    const pct = Math.max(0, Math.min(1, steps / denom));
+
+    // moves until the next grant
+    const untilNext = beforeFirst ? firstAt - mc : every - steps || every;
+
+    return {
+      side: s,
+      moveCount: mc,
+      firstAt,
+      every,
+      pct,
+      steps,
+      denom,
+      untilNext,
+      grantsGiven: grantsGiven[s] | 0,
+      tier: tier(s),
+    };
   }
 
-  return { setEvery, setEnabled, resetSide, onMoveCommitted, revertGrant };
+  return {
+    setEvery,
+    setFirstAt,
+    setEnabled,
+    resetSide,
+    onMoveCommitted,
+    getProgressState,
+  };
 })();
+
+export function getProgressState(side) {
+  return ArcanaProgression.getProgressState(side);
+}
 
 export { ArcanaProgression };

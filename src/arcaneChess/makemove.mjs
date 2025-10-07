@@ -880,7 +880,6 @@ export function TakeMove(wasDyadMove = false) {
       h.grantedArcanaSide === 'white' ? whiteArcaneConfig : blackArcaneConfig;
     const k = h.grantedArcanaKey;
     cfg[k] = Math.max(0, (cfg[k] || 0) - 1);
-    ArcanaProgression.revertGrant(h.grantedArcanaSide, k);
     h.grantedArcanaKey = undefined;
     h.grantedArcanaSide = undefined;
   }
