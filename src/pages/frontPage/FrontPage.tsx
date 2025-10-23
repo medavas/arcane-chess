@@ -142,15 +142,16 @@ class UnwrappedFrontPage extends React.Component<
               <div className="intro">
                 <h3>
                   Welcome to <em>Tactorius</em>, where the timeless game of
-                  Chess transforms into an epic journey of strategy,
-                  imagination, and personal growth.
+                  Chess becomes a metagame-based epic of strategy, philosophy,
+                  and imagination.
                 </h3>
                 <h3>Enter Arcane Chess:</h3>
                 <p>
                   Step into a world where traditional Chess boundaries are
-                  redefined. Utilize powerful arcana—spells that bend the
-                  rules—encounter new and formidable pieces. Uncover limitless
-                  possibilities for fresh tactics and a new dynamic metagame.
+                  redefined. Utilize powerful arcana — spells that bend the
+                  rules — encounter new and formidable pieces. Uncover limitless
+                  possibilities for fresh tactics as opening theory is exchanged
+                  for metagame.
                 </p>
                 <div className="learn-more">
                   <Link to="/manifest?tab=pieces">
@@ -161,10 +162,7 @@ class UnwrappedFrontPage extends React.Component<
                       height={60}
                       width={300}
                       disabled={false}
-                      styles={{
-                        color: 'white',
-                        fontStyle: 'italic',
-                      }}
+                      styles={{ color: 'white', fontStyle: 'italic' }}
                       fontSize={16}
                       strong={true}
                       backgroundColorOverride="linear-gradient(135deg, #00c6ff, #001f4d)"
@@ -180,35 +178,28 @@ class UnwrappedFrontPage extends React.Component<
                       height={60}
                       width={300}
                       disabled={false}
-                      styles={{
-                        color: 'white',
-                        fontStyle: 'italic',
-                      }}
+                      styles={{ color: 'white', fontStyle: 'italic' }}
                       fontSize={16}
                       strong={true}
                       backgroundColorOverride="linear-gradient(135deg, #00b09b, #006400)"
                     />
                   </Link>
                 </div>
-                <h3>Embark on a Campaign:</h3>
+                <h3>Discover unique modes and challenges:</h3>
                 <p>
-                  Embark on an epic journey through a story teeming with
-                  villains, mythical beasts, alternate histories, and the fusion
-                  of spells with technology. Experience a campaign that
-                  seamlessly blends the strategic depth of Chess with profound
-                  personal growth and innovative storytelling. Traverse a
-                  cautionary sci-fi and fantasy universe, where every move on
-                  the board reveals deeper narratives. Test your skills with
-                  advanced Chess concepts, solve increasingly challenging
-                  puzzles, and engage in custom army battles. Earn points as you
-                  progress, and see your name rise on the leaderboard with each
-                  challenge you conquer.
+                  Engage in faction-based skirmishes or challenge the computer —
+                  an adaptive engine capable of casting spells of its own. Each
+                  battle tests not only calculation but creativity as you
+                  explore new layers of strategy born from the metagame.
+                </p>
+                <p>
+                  Venture into the campaign: a story-driven journey blending
+                  mythology, evolving concepts, and life lessons. Encounter
+                  powerful foes, solve puzzles, and rise through the leaderboard
+                  as you master the art of arcanecraft and tactics.
                 </p>
                 <h5>
-                  <strong>
-                    Your mind is the armory. Prepare it well, for every decision
-                    could be the key to victory or the door to defeat.
-                  </strong>
+                  <strong>Your mind is the armory.</strong>
                 </h5>
               </div>
             </div>

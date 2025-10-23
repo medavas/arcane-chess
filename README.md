@@ -2,7 +2,7 @@
 
 [![License: GNU GPL](https://img.shields.io/badge/License-GPL-blue.svg)](LICENSE)
 
-![Screenshot of Arcane Chess](https://github.com/rdeyo1129/arcane-chess/blob/main/public/assets/pages/cerulean-boss.webp)
+![Screenshot of Arcane Chess](https://github.com/medavas/arcane-chess/blob/main/public/assets/pages/cerulean-boss.webp)
 
 ## Overview
 
@@ -38,7 +38,7 @@ We welcome contributions to expand and enhance the project. Future work areas in
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/rdeyo1129/arcane-chess.git
+   git clone https://github.com/medavas/arcane-chess.git
    cd arcane-chess
    ```
 
@@ -96,6 +96,6 @@ For questions or further assistance, please open an issue or contact the maintai
 
 We would like to extend our gratitude to the open source Lichess projects for their incredible work and inspiration. Their contributions have greatly influenced our approach and continue to empower the chess community.
 
-Special thanks to the maintainers of the puzzle database, and to this fork that leads to the [Chessground repository](https://github.com/rdeyo1129/night-chess-ui-2) for their valuable contributions.
+Special thanks to the maintainers of the puzzle database, and to this fork that leads to the [Chessground repository](https://github.com/medavas/night-chess-ui-2) for their valuable contributions.
 
 For further thanks, please see the CREDITS.md file, and in the app: Manifest -> About

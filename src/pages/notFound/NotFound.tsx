@@ -99,8 +99,8 @@ class UnwrappedNotFound extends React.Component<
           <div className="row-a">
             <div className="intro-box">
               <div className="intro">
-                <h3>This page has slipped into the shadows.</h3>
-                <p>
+                <h3>404 anomaly detected</h3>
+                {/* <p>
                   Cassandra awoke to a silence punctuated only by the distant
                   hum of cosmic energy, her consciousness now residing within
                   the sleek, reflective chassis of a drifting robot. She felt no
@@ -112,7 +112,7 @@ class UnwrappedNotFound extends React.Component<
                   boundless void, Cassandra embraced the mysterious interplay of
                   human memory and machine precision, a silent witness to the
                   eternal dance of the universe.
-                </p>
+                </p> */}
               </div>
             </div>
             <div className="hero-fullscreen">

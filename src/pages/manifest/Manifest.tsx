@@ -280,26 +280,24 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
                 <h2 style={{ marginTop: '30px' }}>Mission Statements:</h2>
                 <ol style={{ listStyleType: 'decimal' }}>
                   <li>
-                    To create a free and open-source platform that empowers
-                    players to delve deeply into both the technical and
-                    philosophical aspects of chess, offering a comprehensive
-                    learning experience that enriches their understanding of the
-                    game.
+                    Shift Chess from opening theory to metagame through creative
+                    exploration.
                   </li>
                   <li>
-                    To revolutionize the chess experience by integrating
-                    immersive narratives and innovative gameplay enhancements,
-                    encouraging players to think creatively and explore new
-                    strategies beyond traditional gameplay.
+                    Teach the philosophy behind play, balance, and
+                    decision-making.
                   </li>
                   <li>
-                    To cultivate a vibrant community of chess enthusiasts, where
-                    collaboration, creativity, and shared mastery are at the
-                    heart of a continuously evolving and dynamic chess
-                    experience. Above all, the platform emphasizes the
-                    importance of having fun with the game, encouraging players
-                    to enjoy each match—win or lose—as a valuable and rewarding
-                    journey.
+                    Experiment with balance through an evolving system of spells
+                    and mechanics.
+                  </li>
+                  <li>
+                    Build an open-source community of thinkers, creators, and
+                    players.
+                  </li>
+                  <li>
+                    Redefine chess as a living experiment in imagination and
+                    logic.
                   </li>
                 </ol>
                 <div id="links" className="links">
@@ -358,7 +356,7 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
                     <a
                       target="_blank"
                       rel="noopener noreferrer"
-                      href="https://github.com/rdeyo1129/arcane-chess"
+                      href="https://github.com/medavas/arcane-chess"
                     >
                       <Button
                         text="PROJECT REPO"
@@ -375,7 +373,7 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
                     <a
                       target="_blank"
                       rel="noopener noreferrer"
-                      href="https://github.com/rdeyo1129/night-chess-ui-2"
+                      href="https://github.com/medavas/night-chess-ui-2"
                     >
                       <Button
                         text="CHESSGROUNDx FORK"
