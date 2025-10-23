@@ -219,6 +219,12 @@ export default function arcaneChess() {
     getDyadClock: () => {
       return GameBoard.dyadClock;
     },
+    getDyadName: () => {
+      return GameBoard.dyadName;
+    },
+    getDyadOwner: () => {
+      return GameBoard.dyadOwner;
+    },
     takeBackHalfDyad: () => {
       TakeMove(true);
     },

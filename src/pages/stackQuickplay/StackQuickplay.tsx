@@ -837,6 +837,19 @@ class UnwrappedStackQuickplay extends React.Component<Props, State> {
         const futureSightAvailable =
           this.state.history.length >= 4 && this.state.futureSightAvailable;
         const active = this.isArcaneActive(key);
+        const dyadName =
+          typeof this.arcaneChess().getDyadName === 'function'
+            ? this.arcaneChess().getDyadName()
+            : '';
+        const dyadOwner =
+          typeof this.arcaneChess().getDyadOwner === 'function'
+            ? this.arcaneChess().getDyadOwner()
+            : undefined;
+        let dyadStillActive = false;
+        if (key.startsWith('dyad') && dyadName === key) {
+          if (dyadOwner === color) dyadStillActive = true;
+        }
+        const effectiveActive = active || dyadStillActive;
         if (!value || value <= 0 || !key) return;
         return (
           <div
@@ -856,7 +869,7 @@ class UnwrappedStackQuickplay extends React.Component<Props, State> {
             <img
               key={key}
               className={`arcane ${
-                active
+                effectiveActive
                   ? 'is-active'
                   : this.state.hoverArcane === key
                   ? 'focus'

@@ -868,15 +868,33 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                 (!futureSightAvailable && key === 'modsFUT');
 
               const active = this.isArcaneActive(key);
+              const dyadName =
+                typeof this.arcaneChess().getDyadName === 'function'
+                  ? this.arcaneChess().getDyadName()
+                  : '';
+              const dyadOwner =
+                typeof this.arcaneChess().getDyadOwner === 'function'
+                  ? this.arcaneChess().getDyadOwner()
+                  : undefined;
+
+              let dyadStillActive = false;
+              if (key.startsWith('dyad') && dyadName === key) {
+                // Only keep the dyad icon active in the list for the owner color.
+                if (dyadOwner === color) {
+                  dyadStillActive = true;
+                }
+              }
+
               const trojanActive =
                 this.arcaneChess().getIfTrojanGambitExists(
                   this.state.engineColor
                 ) && key === 'modsTRO';
+              const effectiveActive = active || dyadStillActive;
 
               return (
                 <img
                   key={key}
-                  className={`arcane${active ? ' is-active' : ''}${
+                  className={`arcane${effectiveActive ? ' is-active' : ''}${
                     trojanActive
                       ? ' trojan-active'
                       : this.state.hoverArcane === key

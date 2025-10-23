@@ -871,6 +871,19 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
                 (!futureSightAvailable && key === 'modsFUT');
 
               const active = this.isArcaneActive(key);
+              const dyadName =
+                typeof this.arcaneChess().getDyadName === 'function'
+                  ? this.arcaneChess().getDyadName()
+                  : '';
+              const dyadOwner =
+                typeof this.arcaneChess().getDyadOwner === 'function'
+                  ? this.arcaneChess().getDyadOwner()
+                  : undefined;
+              let dyadStillActive = false;
+              if (key.startsWith('dyad') && dyadName === key) {
+                if (dyadOwner === color) dyadStillActive = true;
+              }
+              const effectiveActive = active || dyadStillActive;
               const trojanActive =
                 this.arcaneChess().getIfTrojanGambitExists(
                   this.state.engineColor
@@ -879,7 +892,7 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
               return (
                 <img
                   key={key}
-                  className={`arcane${active ? ' is-active' : ''}${
+                  className={`arcane${effectiveActive ? ' is-active' : ''}${
                     trojanActive
                       ? ' trojan-active'
                       : this.state.hoverArcane === key
