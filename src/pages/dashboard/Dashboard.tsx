@@ -148,6 +148,20 @@ export class UnwrappedDashboard extends React.Component<
     // const imageKey = (hoverKey && NAV_META[hoverKey]?.imageKey) || 'campaign1'; // default fallback
     const desc = (hoverKey && NAV_META[hoverKey]?.description) || '';
 
+    /*
+“transmissions” / “codex”
+
+“channels”:
+
+1. “developer log”
+2. “philosophy”
+3. “lore”
+4. “announcements”
+5. “community”
+6. “patches”
+7. “general blog”
+    */
+
     return (
       <div
         className={`dashboard ${this.state.fadeIn ? 'fade-in' : ''} ${
@@ -411,9 +425,14 @@ export class UnwrappedDashboard extends React.Component<
         </div>
         <div className="dashboard-body">
           <div className="news">
-            <h1 className="news-title">News & Announcements</h1>
+            <h1 className="news-title">Transmissions</h1>
             <div className="news-item">
-              <h4>Removal of AI-Generated Content</h4>
+              <h4>
+                Removal of AI-Generated Content
+                <h6>Source: medavas</h6>
+                <h6>Date: October 2025</h6>
+                <h6>Category: Announcements</h6>
+              </h4>
               <ul>
                 <li>
                   After a long thought, I have decided to take AI-generated
@@ -440,7 +459,12 @@ export class UnwrappedDashboard extends React.Component<
               </ul>
             </div>
             <div className="news-item">
-              <h4>Patch 2.5 Live: Hexweaver Update, Mana, Pawn Update</h4>
+              <h4>
+                Patch 2.5 Live: Hexweaver Update, Mana, Pawn Update
+                <h6>Source: medavas</h6>
+                <h6>Date: September 2025</h6>
+                <h6>Category: Mechanics</h6>
+              </h4>
               <ul>
                 <li>
                   Fog of war square condition summons hides friendly pieces from
@@ -464,21 +488,36 @@ export class UnwrappedDashboard extends React.Component<
               </ul>
             </div>
             <div className="news-item">
-              <h4>Skirmish: Faction Chess Now Live</h4>
+              <h4>
+                Skirmish: Faction Chess Now Live
+                <h6>Source: medavas</h6>
+                <h6>Date: September 2025</h6>
+                <h6>Category: Announcements</h6>
+              </h4>
               <ul>
                 <li>Discover a new metagame</li>
                 <li>Arena &gt; Skirmish &gt; choose a faction &gt; START!</li>
               </ul>
             </div>
             <div className="news-item">
-              <h4>Patch 2.4 Live: More Shifts and Offers</h4>
+              <h4>
+                Patch 2.4 Live: More Shifts and Offers
+                <h6>Source: medavas</h6>
+                <h6>Date: August 2025</h6>
+                <h6>Category: Mechanics</h6>
+              </h4>
               <ul>
                 <li>More alternate movesets for more pieces</li>
                 <li>More comprehensive gifts on piece offerings</li>
               </ul>
             </div>
             <div className="news-item">
-              <h4>Patch 2.3 Live: Offers and Mods</h4>
+              <h4>
+                Patch 2.3 Live: Offers and Mods
+                <h6>Source: medavas</h6>
+                <h6>Date: June 2025</h6>
+                <h6>Category: Mechanics</h6>
+              </h4>
               <ul>
                 <li>Offer: sacrifice a piece for a greater spells</li>
                 <li>Gluttony: capture on dyad moves</li>
@@ -487,14 +526,24 @@ export class UnwrappedDashboard extends React.Component<
               </ul>
             </div>
             <div className="news-item">
-              <h4>Patch 2.2 Live: Dyads and Herrings</h4>
+              <h4>
+                Patch 2.2 Live: Dyads and Herrings
+                <h6>Source: medavas</h6>
+                <h6>Date: February 2025</h6>
+                <h6>Category: Mechanics</h6>
+              </h4>
               <ul>
                 <li>Dyads: move twice in one move</li>
                 <li>Herring: must be captured if attacked</li>
               </ul>
             </div>
             <div className="news-item">
-              <h4>Patch 2.1 Live: New Units</h4>
+              <h4>
+                Patch 2.1 Live: New Units
+                <h6>Source: medavas</h6>
+                <h6>Date: September 2024</h6>
+                <h6>Category: Mechanics</h6>
+              </h4>
               <ul>
                 <li>Equus Piece Family: Zebra and Unicorn</li>
                 <li>Ghost Piece Family: Spectre and Wraith</li>
@@ -502,7 +551,12 @@ export class UnwrappedDashboard extends React.Component<
               </ul>
             </div>
             <div className="news-item">
-              <h4>Patch 2.0 Live: Spells</h4>
+              <h4>
+                Patch 2.0 Live: Spells
+                <h6>Source: medavas</h6>
+                <h6>Date: August 2024</h6>
+                <h6>Category: Mechanics</h6>
+              </h4>
               <ul>
                 <li>Summon Units</li>
                 <li>Summon Exile: a blocked off square</li>
