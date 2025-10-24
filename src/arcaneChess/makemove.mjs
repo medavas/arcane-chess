@@ -768,7 +768,9 @@ export function MakeMove(move, moveType = '') {
 
   const isCommitted = moveType === 'userMove' || moveType === 'commit';
 
-  if (isCommitted) {
+  // Only grant arcana when the move is a committed move and there is no active dyad.
+  // If a dyad is in progress, wait until it finishes (GameBoard.dyad === 0).
+  if (isCommitted && GameBoard.dyad === 0) {
     const sideKey = side === COLOURS.WHITE ? 'white' : 'black';
     const grantedKey = ArcanaProgression.onMoveCommitted(sideKey);
     if (grantedKey) {

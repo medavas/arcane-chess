@@ -165,7 +165,6 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
   };
 
   transformedInventory = (inventory: ArcanaDetail[]) => {
-    console.log(inventory);
     const object: { [key: string]: number } = {};
     _.forEach(inventory, (item) => {
       if (item.id === 'empty') return;
