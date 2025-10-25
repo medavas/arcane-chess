@@ -552,7 +552,7 @@ export class UnwrappedDashboard extends React.Component<
             </div>
             <div className="news-item">
               <h4>
-                Patch 2.0 Live: Spells
+                Patch 2.0 Live: Arcana (Spells)
                 <h6>Source: medavas</h6>
                 <h6>Date: August 2024</h6>
                 <h6>Category: Mechanics</h6>

@@ -849,29 +849,37 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                 ) && key === 'modsTRO';
 
               return (
-                <img
+                <div
                   key={key}
-                  className={`arcane${effectiveActive ? ' is-active' : ''}${
-                    trojanActive
-                      ? ' trojan-active'
-                      : this.state.hoverArcane === key
-                      ? ' focus'
-                      : ''
-                  }`}
-                  src={`/assets/arcanaImages${entry.imagePath}.svg`}
-                  style={{
-                    opacity: isDisabled ? 0.5 : 1,
-                    cursor: isDisabled
-                      ? 'not-allowed'
-                      : `url('/assets/images/cursors/pointer.svg') 12 4, pointer`,
-                  }}
-                  onClick={() => {
-                    if (isDisabled) return; // guard
-                    this.handleArcanaClick(key);
-                  }}
-                  onMouseEnter={() => this.toggleHover(key)}
-                  onMouseLeave={() => this.toggleHover('')}
-                />
+                  style={{ position: 'relative', display: 'inline-block' }}
+                >
+                  <div style={{ position: 'absolute' }}>
+                    {isInherent ? 'INH' : value}
+                  </div>
+                  <img
+                    key={key}
+                    className={`arcane${effectiveActive ? ' is-active' : ''}${
+                      trojanActive
+                        ? ' trojan-active'
+                        : this.state.hoverArcane === key
+                        ? ' focus'
+                        : ''
+                    }`}
+                    src={`/assets/arcanaImages${entry.imagePath}.svg`}
+                    style={{
+                      opacity: isDisabled ? 0.5 : 1,
+                      cursor: isDisabled
+                        ? 'not-allowed'
+                        : `url('/assets/images/cursors/pointer.svg') 12 4, pointer`,
+                    }}
+                    onClick={() => {
+                      if (isDisabled) return;
+                      this.handleArcanaClick(key);
+                    }}
+                    onMouseEnter={() => this.toggleHover(key)}
+                    onMouseLeave={() => this.toggleHover('')}
+                  />
+                </div>
               );
             }
           )}
@@ -910,12 +918,20 @@ class UnwrappedMissionView extends React.Component<Props, State> {
       const dyadClock = arcane.getDyadClock();
       if (dyadClock > 0 || this.state.isDyadMove) return;
 
-      const unit = key.split('sumn')[1].toUpperCase();
+      const suffix = key.slice(4);
       const side = this.state.selectedSide === 'white' ? 'w' : 'b';
-      const pieceCode =
-        unit === 'R'
-          ? royalties[unit] // Royalty summon
-          : pieces[`${side}${unit}`];
+
+      if (key.startsWith('sumnR') && suffix.length > 1) {
+        const rKey = suffix.toUpperCase();
+        const royaltyCode = royalties[rKey];
+        this.setState({
+          placingRoyalty: royaltyCode || 0,
+        });
+        return;
+      }
+
+      const unit = suffix.toUpperCase();
+      const pieceCode = pieces[`${side}${unit}`];
 
       this.setState({
         placingPiece: pieceCode || 0,
