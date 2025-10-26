@@ -11,10 +11,6 @@
 .skirmish-tactorius-board .cg-wrap,
 .stackversus-tactorius-board .cg-wrap,
 .cg-wrap {
-  // background-image:
-  // // url('/assets/images/white-texture.png'),
-  //   url('/assets/images/board/tactoriusBoard.svg');
-  // radial-gradient(circle, rgb(212, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)
   background-repeat: repeat, no-repeat;
   background-position:
     center,
@@ -33,12 +29,12 @@
 .desert-voltaire-board {
   background-image: url('/assets/images/textures/swirl.png'),
     url('/assets/images/board/tactoriusRed.svg');
-  // radial-gradient(circle, rgb(212, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)
   background-repeat: repeat, no-repeat;
   background-position:
     center,
     left top;
 }
+
 .brown-board,
 .saloon-board,
 .tornados-board,
@@ -56,12 +52,12 @@
 .everwanderers-board {
   background-image: url('/assets/images/textures/white-wall-3-2.png'),
     url('/assets/images/board/tactoriusBrown.svg');
-  // radial-gradient(circle, rgb(212, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)
   background-repeat: repeat, no-repeat;
   background-position:
     center,
     left top;
 }
+
 .future-egypt-room-board,
 .future-egypt-board,
 .nehkmet-board,
@@ -76,12 +72,12 @@
 .yellow-board {
   background-image: url('/assets/images/textures/skulls.png'),
     url('/assets/images/board/tactoriusYellow.svg');
-  // radial-gradient(circle, rgb(212, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)
   background-repeat: repeat, no-repeat;
   background-position:
     center,
     left top;
 }
+
 .lexicon-board,
 .forest-board,
 .owls-board,
@@ -100,12 +96,12 @@
 .robotcity-garden-board {
   background-image: url('/assets/images/textures/xv.png'),
     url('/assets/images/board/tactoriusGreen.svg');
-  // radial-gradient(circle, rgb(212, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)
   background-repeat: repeat, no-repeat;
   background-position:
     center,
     left top;
 }
+
 .town-board,
 .skeleton-battle-board,
 .desert-board,
@@ -126,12 +122,12 @@
 .sunset-board {
   background-image: url('/assets/images/textures/diagmonds.png'),
     url('/assets/images/board/tactoriusBlue.svg');
-  // radial-gradient(circle, rgb(212, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)
   background-repeat: repeat, no-repeat;
   background-position:
     center,
     left top;
 }
+
 .church-room-board,
 .figure-board,
 .spectre-battle-board,
@@ -143,12 +139,12 @@
 .cliff-board {
   background-image: url('/assets/images/textures/white-texture.png'),
     url('/assets/images/board/tactoriusPurple.svg');
-  // radial-gradient(circle, rgb(212, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)
   background-repeat: repeat, no-repeat;
   background-position:
     center,
     left top;
 }
+
 .jail-board,
 .ravensden-room-board,
 .library-board,
@@ -167,7 +163,6 @@
 .clocktower-board {
   background-image: url('/assets/images/textures/dark-mosaic.png'),
     url('/assets/images/board/tactoriusGray.svg');
-  // radial-gradient(circle, rgb(212, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)
   background-repeat: repeat, no-repeat;
   background-position:
     center,
@@ -175,14 +170,7 @@
 }
 
 .stacktadium-default-board {
-  background-image:
-    // url('/assets/images/textures/random-grey-variations.png'),
-    // url('/assets/images/board/electricblue.svg');
-    url('/assets/images/board/tactoriusRed.svg');
-  // radial-gradient(circle, rgb(212, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)
-  // background-color: #333; /* Dark background */
-  // box-shadow: 0 0 15px 5px rgba(0, 162, 255, 0.6); /* Blue glow */
-  // border-radius: 8px; /* Optional, for rounded corners */
+  background-image: url('/assets/images/board/tactoriusRed.svg');
   background-repeat: repeat, no-repeat;
   background-position:
     center,
@@ -190,30 +178,18 @@
 }
 
 .tactorius-default-board {
-  background-image:
-    // url('/assets/images/textures/random-grey-variations.png'),
-    // url('/assets/images/board/electricblue.svg');
-    url('/assets/images/board/tactoriusGray.svg');
-  // radial-gradient(circle, rgb(212, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)
-  // background-color: #333; /* Dark background */
-  // box-shadow: 0 0 15px 5px rgba(0, 162, 255, 0.6); /* Blue glow */
-  // border-radius: 8px; /* Optional, for rounded corners */
+  background-image: url('/assets/images/board/tactoriusGray.svg');
   background-repeat: repeat, no-repeat;
   background-position:
     center,
     left top;
 }
+
 .tiger-egypt-board,
 .spectre-haven-room-board,
 .tsar-board {
-  background-image:
-    url('/assets/images/textures/random-grey-variations.png'),
-    // url('/assets/images/board/electricblue.svg');
+  background-image: url('/assets/images/textures/random-grey-variations.png'),
     url('/assets/images/board/tactoriusBlue.svg');
-  // radial-gradient(circle, rgb(212, 0, 0) 0%, rgba(0, 0, 0, 1) 100%)
-  // background-color: #333; /* Dark background */
-  // box-shadow: 0 0 15px 5px rgba(0, 162, 255, 0.6); /* Blue glow */
-  // border-radius: 8px; /* Optional, for rounded corners */
   background-repeat: repeat, no-repeat;
   background-position:
     center,
@@ -223,8 +199,8 @@
 .tac .cg .armory-board .cg-wrap {
   background-image: url('/assets/images/board/armoryBoard.svg');
   overflow: hidden;
-  // z-index: 10;
 }
+
 .connect4-board .cg-wrap {
   background-image: url('/assets/images/board/connect4Board.svg');
 }
@@ -233,14 +209,12 @@ cg-helper {
   position: absolute;
   width: 12.5%;
   padding-bottom: 12.5%;
-  display: table; /* hack: round to full pixel size in chrome */
+  display: table;
   bottom: 0;
 }
 
 cg-board {
   position: absolute;
-  // top: 0;
-  // left: 0;
   width: 100%;
   height: 100%;
   -webkit-user-select: none;
@@ -260,6 +234,7 @@ cg-board square {
   left: 0;
   pointer-events: none;
 }
+
 .module-board cg-board square,
 .tactorius-board cg-board square,
 .quickplay-tactorius-board cg-board square,
@@ -269,10 +244,12 @@ cg-board square {
   width: 12.5%;
   height: 12.5%;
 }
+
 .armory-board cg-board square {
   width: 12.5%;
   height: 25%;
 }
+
 .connect4-board cg-board square {
   width: 20%;
   height: 20%;
@@ -287,6 +264,7 @@ cg-board square.move-dest {
   );
   pointer-events: auto;
 }
+
 cg-board square.premove-dest {
   background: radial-gradient(
     rgba(20, 30, 85, 0.5) 22%,
@@ -295,6 +273,7 @@ cg-board square.premove-dest {
     rgba(0, 0, 0, 0) 0
   );
 }
+
 cg-board square.oc.move-dest {
   background: radial-gradient(
     transparent 0%,
@@ -302,6 +281,7 @@ cg-board square.oc.move-dest {
     rgba(255, 223, 0, 0.5) 22%
   );
 }
+
 cg-board square.oc.premove-dest {
   background: radial-gradient(
     transparent 0%,
@@ -309,18 +289,23 @@ cg-board square.oc.premove-dest {
     rgba(255, 223, 0, 0.5) 22%
   );
 }
+
 cg-board square.move-dest:hover {
   background: rgba(255, 223, 0, 0.5) 22%;
 }
+
 .cg-wrap square.move-dest:hover {
   background-color: rgba(255, 223, 0, 0.5) 22%;
 }
+
 cg-board square.last-move {
   background: rgba(255, 223, 0, 0.5) 22%;
 }
+
 cg-board square.selected {
   background-color: rgba(255, 223, 0, 0.5);
 }
+
 cg-board square.check {
   background: radial-gradient(
     ellipse at center,
@@ -330,12 +315,8 @@ cg-board square.check {
     rgba(158, 0, 0, 0) 100%
   );
 }
-// Q: 'yellow',
-// T: 'blue',
-// M: 'green',
-// V: 'dark purple',
-// E: 'orange',
-// F: 'white',
+
+/* Royalty base auras */
 cg-board square.royaltyQ {
   background: radial-gradient(
     ellipse at center,
@@ -391,6 +372,7 @@ cg-board square.royaltyF {
   );
 }
 
+/* Royalty move-dest overlays */
 cg-board square.move-dest.royaltyQ {
   background: radial-gradient(
       ellipse at center,
@@ -404,6 +386,7 @@ cg-board square.move-dest.royaltyQ {
       rgba(0, 0, 0, 0.3) 0,
       rgba(0, 0, 0, 0) 0
     );
+  pointer-events: auto;
 }
 cg-board square.move-dest.royaltyT {
   background: radial-gradient(
@@ -418,6 +401,7 @@ cg-board square.move-dest.royaltyT {
       rgba(0, 0, 0, 0.3) 0,
       rgba(0, 0, 0, 0) 0
     );
+  pointer-events: auto;
 }
 cg-board square.move-dest.royaltyM {
   background: radial-gradient(
@@ -432,6 +416,7 @@ cg-board square.move-dest.royaltyM {
       rgba(0, 0, 0, 0.3) 0,
       rgba(0, 0, 0, 0) 0
     );
+  pointer-events: auto;
 }
 cg-board square.move-dest.royaltyV {
   background: radial-gradient(
@@ -446,6 +431,7 @@ cg-board square.move-dest.royaltyV {
       rgba(0, 0, 0, 0.3) 0,
       rgba(0, 0, 0, 0) 0
     );
+  pointer-events: auto;
 }
 cg-board square.move-dest.royaltyE {
   background: radial-gradient(
@@ -460,6 +446,7 @@ cg-board square.move-dest.royaltyE {
       rgba(0, 0, 0, 0.3) 0,
       rgba(0, 0, 0, 0) 0
     );
+  pointer-events: auto;
 }
 cg-board square.move-dest.royaltyF {
   background: radial-gradient(
@@ -469,13 +456,11 @@ cg-board square.move-dest.royaltyF {
       rgba(169, 169, 169, 0) 89%,
       rgba(158, 158, 158, 0) 100%
     ),
-    radial-gradient(
-      rgba(255, 223, 0, 0.5) 22%,
-      rgba(0, 0, 0, 0.3) 0,
-      rgba(0, 0, 0, 0) 0
-    );
+    radial-gradient(transparent 0%, transparent 80%, rgba(255, 223, 0, 0.5) 22%);
+  pointer-events: auto;
 }
 
+/* Royalty OC overlays */
 cg-board square.oc.move-dest.royaltyQ {
   background: radial-gradient(
       ellipse at center,
@@ -485,6 +470,7 @@ cg-board square.oc.move-dest.royaltyQ {
       rgba(158, 158, 0, 0) 100%
     ),
     radial-gradient(transparent 0%, transparent 80%, rgba(255, 223, 0, 0.5) 22%);
+  pointer-events: auto;
 }
 cg-board square.oc.move-dest.royaltyT {
   background: radial-gradient(
@@ -495,6 +481,7 @@ cg-board square.oc.move-dest.royaltyT {
       rgba(0, 0, 158, 0) 100%
     ),
     radial-gradient(transparent 0%, transparent 80%, rgba(255, 223, 0, 0.5) 22%);
+  pointer-events: auto;
 }
 cg-board square.oc.move-dest.royaltyM {
   background: radial-gradient(
@@ -505,6 +492,7 @@ cg-board square.oc.move-dest.royaltyM {
       rgba(0, 158, 0, 0) 100%
     ),
     radial-gradient(transparent 0%, transparent 80%, rgba(255, 223, 0, 0.5) 22%);
+  pointer-events: auto;
 }
 cg-board square.oc.move-dest.royaltyV {
   background: radial-gradient(
@@ -515,6 +503,7 @@ cg-board square.oc.move-dest.royaltyV {
       rgba(79, 0, 79, 0) 100%
     ),
     radial-gradient(transparent 0%, transparent 80%, rgba(255, 223, 0, 0.5) 22%);
+  pointer-events: auto;
 }
 cg-board square.oc.move-dest.royaltyE {
   background: radial-gradient(
@@ -525,10 +514,9 @@ cg-board square.oc.move-dest.royaltyE {
       rgba(158, 105, 0, 0) 100%
     ),
     radial-gradient(transparent 0%, transparent 80%, rgba(255, 223, 0, 0.5) 22%);
+  pointer-events: auto;
 }
-// todo: oc was removed here to show available squares in a fog of war area
-// probably leave this as a feature to help increase unawarness in the
-cg-board square.move-dest.royaltyF {
+cg-board square.oc.move-dest.royaltyF {
   background: radial-gradient(
       ellipse at center,
       rgba(255, 255, 255, 1) 0%,
@@ -537,11 +525,367 @@ cg-board square.move-dest.royaltyF {
       rgba(158, 158, 158, 0) 100%
     ),
     radial-gradient(transparent 0%, transparent 80%, rgba(255, 223, 0, 0.5) 22%);
+  pointer-events: auto;
+}
+
+/* Shift overlays (ensuring pointer events for hover) */
+.cg-wrap square.move-dest.shift,
+cg-board square.move-dest.shift {
+  background: radial-gradient(
+    rgba(255, 50, 50, 0.5) 22%,
+    rgba(255, 50, 50, 0.5) 22%,
+    rgba(0, 0, 0, 0.3) 0,
+    rgba(0, 0, 0, 0) 0
+  );
+  pointer-events: auto;
+}
+
+cg-board square.oc.move-dest.shift {
+  background: radial-gradient(
+    transparent 0%,
+    transparent 80%,
+    rgba(255, 50, 50, 0.5) 22%
+  );
+  pointer-events: auto;
+}
+
+cg-board square.move-dest.shift:hover {
+  background: rgba(255, 50, 50, 0.5) 22%;
+}
+.cg-wrap square.move-dest.shift:hover {
+  background-color: rgba(255, 50, 50, 0.5) 22%;
+}
+
+/* Royalty + Shift combined */
+.cg-wrap square.move-dest.royaltyQ.shift,
+cg-board square.move-dest.royaltyQ.shift {
+  background: radial-gradient(
+      ellipse at center,
+      rgba(255, 255, 0, 0.6) 0%,
+      rgba(231, 231, 0, 0.6) 25%,
+      rgba(169, 169, 0, 0) 89%,
+      rgba(158, 158, 0, 0) 100%
+    ),
+    radial-gradient(
+      rgba(255, 50, 50, 0.5) 22%,
+      rgba(255, 50, 50, 0.5) 22%,
+      rgba(0, 0, 0, 0.3) 0,
+      rgba(0, 0, 0, 0) 0
+    );
+  pointer-events: auto;
+}
+cg-board square.oc.move-dest.royaltyQ.shift {
+  background: radial-gradient(
+      transparent 0%,
+      transparent 80%,
+      rgba(255, 50, 50, 0.5) 22%
+    ),
+    radial-gradient(
+      ellipse at center,
+      rgba(255, 255, 0, 0.6) 0%,
+      rgba(231, 231, 0, 0.6) 25%,
+      rgba(169, 169, 0, 0) 89%,
+      rgba(158, 158, 0, 0) 100%
+    );
+  pointer-events: auto;
+}
+
+.cg-wrap square.move-dest.royaltyT.shift,
+cg-board square.move-dest.royaltyT.shift {
+  background: radial-gradient(
+      ellipse at center,
+      rgba(0, 0, 254, 0.6) 0%,
+      rgba(0, 0, 231, 0.6) 25%,
+      rgba(0, 0, 169, 0) 89%,
+      rgba(0, 0, 158, 0) 100%
+    ),
+    radial-gradient(
+      rgba(255, 50, 50, 0.5) 22%,
+      rgba(255, 50, 50, 0.5) 22%,
+      rgba(0, 0, 0, 0.3) 0,
+      rgba(0, 0, 0, 0) 0
+    );
+  pointer-events: auto;
+}
+cg-board square.oc.move-dest.royaltyT.shift {
+  background: radial-gradient(
+      transparent 0%,
+      transparent 80%,
+      rgba(255, 50, 50, 0.5) 22%
+    ),
+    radial-gradient(
+      ellipse at center,
+      rgba(0, 0, 254, 0.6) 0%,
+      rgba(0, 0, 231, 0.6) 25%,
+      rgba(0, 0, 169, 0) 89%,
+      rgba(0, 0, 158, 0) 100%
+    );
+  pointer-events: auto;
+}
+
+.cg-wrap square.move-dest.royaltyM.shift,
+cg-board square.move-dest.royaltyM.shift {
+  background: radial-gradient(
+      ellipse at center,
+      rgba(0, 254, 0, 0.6) 0%,
+      rgba(0, 231, 0, 0.6) 25%,
+      rgba(0, 169, 0, 0) 89%,
+      rgba(0, 158, 0, 0) 100%
+    ),
+    radial-gradient(
+      rgba(255, 50, 50, 0.5) 22%,
+      rgba(255, 50, 50, 0.5) 22%,
+      rgba(0, 0, 0, 0.3) 0,
+      rgba(0, 0, 0, 0) 0
+    );
+  pointer-events: auto;
+}
+cg-board square.oc.move-dest.royaltyM.shift {
+  background: radial-gradient(
+      transparent 0%,
+      transparent 80%,
+      rgba(255, 50, 50, 0.5) 22%
+    ),
+    radial-gradient(
+      ellipse at center,
+      rgba(0, 254, 0, 0.6) 0%,
+      rgba(0, 231, 0, 0.6) 25%,
+      rgba(0, 169, 0, 0) 89%,
+      rgba(0, 158, 0, 0) 100%
+    );
+  pointer-events: auto;
+}
+
+.cg-wrap square.move-dest.royaltyV.shift,
+cg-board square.move-dest.royaltyV.shift {
+  background: radial-gradient(
+      ellipse at center,
+      rgba(128, 0, 128, 0.6) 0%,
+      rgba(115, 0, 115, 0.6) 25%,
+      rgba(84, 0, 84, 0) 89%,
+      rgba(79, 0, 79, 0) 100%
+    ),
+    radial-gradient(
+      rgba(255, 50, 50, 0.5) 22%,
+      rgba(255, 50, 50, 0.5) 22%,
+      rgba(0, 0, 0, 0.3) 0,
+      rgba(0, 0, 0, 0) 0
+    );
+  pointer-events: auto;
+}
+cg-board square.oc.move-dest.royaltyV.shift {
+  background: radial-gradient(
+      transparent 0%,
+      transparent 80%,
+      rgba(255, 50, 50, 0.5) 22%
+    ),
+    radial-gradient(
+      ellipse at center,
+      rgba(128, 0, 128, 0.6) 0%,
+      rgba(115, 0, 115, 0.6) 25%,
+      rgba(84, 0, 84, 0) 89%,
+      rgba(79, 0, 79, 0) 100%
+    );
+  pointer-events: auto;
+}
+
+.cg-wrap square.move-dest.royaltyE.shift,
+cg-board square.move-dest.royaltyE.shift {
+  background: radial-gradient(
+      ellipse at center,
+      rgba(255, 165, 0, 0.6) 0%,
+      rgba(231, 151, 0, 0.6) 25%,
+      rgba(169, 110, 0, 0) 89%,
+      rgba(158, 105, 0, 0) 100%
+    ),
+    radial-gradient(
+      rgba(255, 50, 50, 0.5) 22%,
+      rgba(255, 50, 50, 0.5) 22%,
+      rgba(0, 0, 0, 0.3) 0,
+      rgba(0, 0, 0, 0) 0
+    );
+  pointer-events: auto;
+}
+cg-board square.oc.move-dest.royaltyE.shift {
+  background: radial-gradient(
+      transparent 0%,
+      transparent 80%,
+      rgba(255, 50, 50, 0.5) 22%
+    ),
+    radial-gradient(
+      ellipse at center,
+      rgba(255, 165, 0, 0.6) 0%,
+      rgba(231, 151, 0, 0.6) 25%,
+      rgba(169, 110, 0, 0) 89%,
+      rgba(158, 105, 0, 0) 100%
+    );
+  pointer-events: auto;
+}
+
+/* RoyaltyF shift with outlined ring cutout (red) */
+.cg-wrap square.move-dest.royaltyF.shift,
+cg-board square.move-dest.royaltyF.shift {
+  background: radial-gradient(
+      ellipse at center,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(200, 200, 200, 1) 25%,
+      rgba(169, 169, 169, 0) 89%,
+      rgba(158, 158, 158, 0) 100%
+    ),
+    radial-gradient(transparent 0%, transparent 80%, rgba(255, 50, 50, 0.5) 22%);
+  pointer-events: auto;
+}
+
+cg-board square.oc.move-dest.royaltyF.shift {
+  background: linear-gradient(rgba(255, 50, 50, 0.5), rgba(255, 50, 50, 0.5)),
+    radial-gradient(
+      ellipse at center,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(200, 200, 200, 1) 25%,
+      rgba(169, 169, 169, 0) 89%,
+      rgba(158, 158, 158, 0) 100%
+    );
+  pointer-events: auto;
+}
+
+/* Hover states for all royalty shifts (stronger red overlay/ring) */
+
+.cg-wrap square.move-dest.royaltyQ.shift:hover,
+cg-board square.move-dest.royaltyQ.shift:hover {
+  background: linear-gradient(rgba(255, 50, 50, 0.7), rgba(255, 50, 50, 0.7)),
+    radial-gradient(
+      ellipse at center,
+      rgba(255, 255, 0, 0.6) 0%,
+      rgba(231, 231, 0, 0.6) 25%,
+      rgba(169, 169, 0, 0) 89%,
+      rgba(158, 158, 0, 0) 100%
+    );
+}
+cg-board square.oc.move-dest.royaltyQ.shift:hover {
+  background: linear-gradient(rgba(255, 50, 50, 0.7), rgba(255, 50, 50, 0.7)),
+    radial-gradient(
+      ellipse at center,
+      rgba(255, 255, 0, 0.6) 0%,
+      rgba(231, 231, 0, 0.6) 25%,
+      rgba(169, 169, 0, 0) 89%,
+      rgba(158, 158, 0, 0) 100%
+    );
+}
+
+.cg-wrap square.move-dest.royaltyT.shift:hover,
+cg-board square.move-dest.royaltyT.shift:hover {
+  background: linear-gradient(rgba(255, 50, 50, 0.7), rgba(255, 50, 50, 0.7)),
+    radial-gradient(
+      ellipse at center,
+      rgba(0, 0, 254, 0.6) 0%,
+      rgba(0, 0, 231, 0.6) 25%,
+      rgba(0, 0, 169, 0) 89%,
+      rgba(0, 0, 158, 0) 100%
+    );
+}
+cg-board square.oc.move-dest.royaltyT.shift:hover {
+  background: linear-gradient(rgba(255, 50, 50, 0.7), rgba(255, 50, 50, 0.7)),
+    radial-gradient(
+      ellipse at center,
+      rgba(0, 0, 254, 0.6) 0%,
+      rgba(0, 0, 231, 0.6) 25%,
+      rgba(0, 0, 169, 0) 89%,
+      rgba(0, 0, 158, 0) 100%
+    );
+}
+
+.cg-wrap square.move-dest.royaltyM.shift:hover,
+cg-board square.move-dest.royaltyM.shift:hover {
+  background: linear-gradient(rgba(255, 50, 50, 0.7), rgba(255, 50, 50, 0.7)),
+    radial-gradient(
+      ellipse at center,
+      rgba(0, 254, 0, 0.6) 0%,
+      rgba(0, 231, 0, 0.6) 25%,
+      rgba(0, 169, 0, 0) 89%,
+      rgba(0, 158, 0, 0) 100%
+    );
+}
+cg-board square.oc.move-dest.royaltyM.shift:hover {
+  background: linear-gradient(rgba(255, 50, 50, 0.7), rgba(255, 50, 50, 0.7)),
+    radial-gradient(
+      ellipse at center,
+      rgba(0, 254, 0, 0.6) 0%,
+      rgba(0, 231, 0, 0.6) 25%,
+      rgba(0, 169, 0, 0) 89%,
+      rgba(0, 158, 0, 0) 100%
+    );
+}
+
+.cg-wrap square.move-dest.royaltyV.shift:hover,
+cg-board square.move-dest.royaltyV.shift:hover {
+  background: linear-gradient(rgba(255, 50, 50, 0.7), rgba(255, 50, 50, 0.7)),
+    radial-gradient(
+      ellipse at center,
+      rgba(128, 0, 128, 0.6) 0%,
+      rgba(115, 0, 115, 0.6) 25%,
+      rgba(84, 0, 84, 0) 89%,
+      rgba(79, 0, 79, 0) 100%
+    );
+}
+cg-board square.oc.move-dest.royaltyV.shift:hover {
+  background: linear-gradient(rgba(255, 50, 50, 0.7), rgba(255, 50, 50, 0.7)),
+    radial-gradient(
+      ellipse at center,
+      rgba(128, 0, 128, 0.6) 0%,
+      rgba(115, 0, 115, 0.6) 25%,
+      rgba(84, 0, 84, 0) 89%,
+      rgba(79, 0, 79, 0) 100%
+    );
+}
+
+.cg-wrap square.move-dest.royaltyE.shift:hover,
+cg-board square.move-dest.royaltyE.shift:hover {
+  background: linear-gradient(rgba(255, 50, 50, 0.7), rgba(255, 50, 50, 0.7)),
+    radial-gradient(
+      ellipse at center,
+      rgba(255, 165, 0, 0.6) 0%,
+      rgba(231, 151, 0, 0.6) 25%,
+      rgba(169, 110, 0, 0) 89%,
+      rgba(158, 105, 0, 0) 100%
+    );
+}
+cg-board square.oc.move-dest.royaltyE.shift:hover {
+  background: linear-gradient(rgba(255, 50, 50, 0.7), rgba(255, 50, 50, 0.7)),
+    radial-gradient(
+      ellipse at center,
+      rgba(255, 165, 0, 0.6) 0%,
+      rgba(231, 151, 0, 0.6) 25%,
+      rgba(169, 110, 0, 0) 89%,
+      rgba(158, 105, 0, 0) 100%
+    );
+}
+
+.cg-wrap square.move-dest.royaltyF.shift:hover,
+cg-board square.move-dest.royaltyF.shift:hover {
+  background: linear-gradient(rgba(255, 50, 50, 0.7), rgba(255, 50, 50, 0.7)),
+    radial-gradient(
+      ellipse at center,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(200, 200, 200, 1) 25%,
+      rgba(169, 169, 169, 0) 89%,
+      rgba(158, 158, 158, 0) 100%
+    );
+}
+cg-board square.oc.move-dest.royaltyF.shift:hover {
+  background: linear-gradient(rgba(255, 50, 50, 0.7), rgba(255, 50, 50, 0.7)),
+    radial-gradient(
+      ellipse at center,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(200, 200, 200, 1) 25%,
+      rgba(169, 169, 169, 0) 89%,
+      rgba(158, 158, 158, 0) 100%
+    );
 }
 
 cg-board square.current-premove {
   background-color: rgba(20, 30, 85, 0.5);
 }
+
 .cg-wrap piece {
   position: absolute;
   top: 0;
@@ -551,6 +895,7 @@ cg-board square.current-premove {
   will-change: transform;
   pointer-events: none;
 }
+
 .module-board .cg-wrap piece,
 .tactorius-board .cg-wrap piece,
 .quickplay-tactorius-board .cg-wrap piece,
@@ -560,10 +905,12 @@ cg-board square.current-premove {
   width: 12.5%;
   height: 12.5%;
 }
+
 .armory-board .cg-wrap piece {
   width: 12.5%;
   height: 12.5%;
 }
+
 .connect4-board .cg-wrap piece {
   width: 20%;
   height: 20%;
@@ -576,19 +923,24 @@ cg-board square.current-premove {
 cg-board piece.dragging {
   z-index: 9;
 }
+
 cg-board piece.anim {
   z-index: 8;
 }
+
 cg-board piece.fading {
   z-index: 1;
   opacity: 0.5;
 }
+
 cg-board square.move-dest:hover {
-  background: rgba(255, 223, 0, 0.3); /* Changed from rgba(20, 85, 30, 0.3) */
+  background: rgba(255, 223, 0, 0.3);
 }
+
 .cg-wrap piece.ghost {
   opacity: 0.3;
 }
+
 .cg-wrap svg {
   overflow: hidden;
   position: relative;
@@ -600,6 +952,7 @@ cg-board square.move-dest:hover {
   z-index: 2;
   opacity: 0.6;
 }
+
 .cg-wrap svg image {
   opacity: 0.5;
 }
@@ -624,6 +977,7 @@ cg-board square.move-dest:hover {
   flex-flow: column-reverse;
   text-align: right;
 }
+
 .cg-wrap coords.side.black {
   flex-flow: column;
 }
@@ -634,6 +988,7 @@ cg-board square.move-dest:hover {
   flex-flow: row;
   width: 100%;
 }
+
 .cg-wrap coords.bottom.black {
   flex-flow: row-reverse;
 }

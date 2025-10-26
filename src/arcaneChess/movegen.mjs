@@ -2435,7 +2435,9 @@ export function GenerateMoves(
         const wantHerring = hCanShift && !isHermit;
         const wantHermit = hCanShift && isHermit;
 
-        const wantShogun = kingCanShift;
+        // Shogun is a king-specific shift: only enable it when the mover is a King
+        const wantShogun =
+          kingCanShift && (pce === PIECES.wK || pce === PIECES.bK);
 
         const wantBanS =
           currentArcanaSide[4] & 2097152 &&
@@ -2526,8 +2528,7 @@ export function GenerateMoves(
             // CAPTURE shift only if enemy present
             if (
               canCapture &&
-              (has5thDimensionSword ||
-                (PieceKing[targetPiece] && kingCanShift)) &&
+              (has5thDimensionSword || wantShogun) &&
               GameBoard.pieces[targetSq] !== PIECES.EMPTY &&
               PieceCol[targetPiece] !== side &&
               herringAllowed

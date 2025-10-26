@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { GameBoard, FROMSQ } from './board';
+import { GameBoard, FROMSQ, MFLAGSHFT } from './board';
 import {
   generatePlayableOptions,
   GenerateMoves,
@@ -34,6 +34,9 @@ import { blackArcaneConfig, whiteArcaneConfig } from './arcaneDefs.mjs';
 export function validGroundMoves(summon = '', swap = '') {
   const moveMap = new Map();
   const validMovesReturn = validMoves(summon, swap);
+  // collect shift destinations per origin (moves with the shift flag)
+  // Map: fromKey -> Set of toKeys
+  const shiftDests = new Map();
 
   for (let move of validMovesReturn) {
     const from = PrMove(move, 'array')[0];
@@ -42,7 +45,21 @@ export function validGroundMoves(summon = '', swap = '') {
       moveMap.set(from, []);
     }
     moveMap.get(from).push(to);
+    try {
+      if (typeof MFLAGSHFT !== 'undefined' && (move & MFLAGSHFT) !== 0) {
+        if (!shiftDests.has(from)) shiftDests.set(from, new Set());
+        shiftDests.get(from).add(to);
+      }
+    } catch (e) {
+      // ignore if flags are unavailable for any reason
+    }
   }
+  // Attach optional metadata so callers can opt-in to shift-aware rendering.
+  // Backwards-compatible: callers that expect a Map still get one.
+  // Attach optional metadata so callers can opt-in to shift-aware rendering.
+  // Backwards-compatible: callers that expect a Map still get one. shiftDests
+  // is a Map keyed by origin -> Set of destination keys.
+  moveMap.shiftDests = shiftDests;
   return moveMap;
 }
 

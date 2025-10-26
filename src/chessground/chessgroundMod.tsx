@@ -86,6 +86,25 @@ export class Chessground extends React.Component<IChessground> {
       }
     });
 
+    // If a movable Map/dests was produced by arcaneChess.validGroundMoves,
+    // it may carry an optional `shiftDests` Set attached to the Map. Forward
+    // that Set into config.movable.shiftDests so the underlying renderer
+    // (night-chess-ui-2) can consume it without requiring changes at all
+    // call sites that create the dests Map.
+    try {
+      const movable = (props as any).movable;
+      const maybeDests = movable && (movable.dests || movable);
+      const shiftSet =
+        maybeDests && maybeDests.shiftDests
+          ? maybeDests.shiftDests
+          : movable && movable.shiftDests;
+      if (shiftSet) {
+        config.movable = config.movable || {};
+        config.movable.shiftDests = shiftSet;
+      }
+    } catch (e) {
+      // noop
+    }
     return config;
   }
   componentDidMount() {
