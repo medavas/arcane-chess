@@ -55,7 +55,7 @@ const TELEPORT_CONST = 31;
 // eps 30 = myriad
 const EPSILON_MYRIAD_CONST = 30;
 // eps 31 = eclipse
-// const ECLIPSE_CONST = 31;
+const ECLIPSE_CONST = 31;
 
 const HISTORY_CAP_PLY = 128;
 
@@ -269,6 +269,8 @@ function shiftKeyFromMove(move, moverPiece) {
       return 'shftK';
     case EPSILON_MYRIAD_CONST:
       return 'shftA';
+    case ECLIPSE_CONST:
+      return 'shftI';
     default:
       return null;
   }

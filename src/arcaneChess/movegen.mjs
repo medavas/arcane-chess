@@ -2565,6 +2565,146 @@ export function GenerateMoves(
     }
     pce = LoopNonSlidePce[pceIndex];
     dyad = LoopNonSlideDyad[pceIndex++];
+
+    // --- ECLIPSE (shftI) generic hop-over shift ---
+    // This implements shftI: if the side has shftI (or Myriad when no
+    // more-specific shifts exist) many non-pawn/non-V pieces may hop over
+    // any adjacent orth/diagonal piece and land on the next square in that
+    // direction if it is empty. The move is a SHIFT (MFLAGSHFT) and does
+    // not capture (landing square must be empty). The spell is not applied
+    // to pawns or V pieces. Pieces that already have their own specific
+    // hopping behavior (equus/zebra/unicorn, ghost/wraith/spectre, herring,
+    // king-specific shogun, etc.) will keep their specific shifts; shftI
+    // is only generated when it is available and not overridden by a more
+    // specific shift (this preserves precedence and Myriad handling).
+    const hasShftIBit = (currentArcanaSide[1] & POWERBIT.shftI) !== 0;
+    const hasMyriad = (currentArcanaSide[1] & 256) !== 0;
+
+    // Walk all board squares and add shftI moves for eligible movers.
+    for (let sqIter = 21; sqIter <= 98; sqIter++) {
+      if (SQOFFBOARD(sqIter) === BOOL.TRUE) continue;
+      const mover = GameBoard.pieces[sqIter];
+      if (mover === PIECES.EMPTY) continue;
+      // only our side
+      if (PieceCol[mover] !== GameBoard.side) continue;
+
+      // exclude pawns and kings
+      if (
+        mover === PIECES.wP ||
+        mover === PIECES.bP ||
+        mover === PIECES.wK ||
+        mover === PIECES.bK
+      )
+        continue;
+
+      // if piece is royaltied/overridden skip
+      if (
+        GameBoard.royaltyQ[sqIter] > 0 ||
+        GameBoard.royaltyT[sqIter] > 0 ||
+        GameBoard.royaltyM[sqIter] > 0 ||
+        GameBoard.royaltyV[sqIter] > 0 ||
+        GameBoard.royaltyE[sqIter] > 0
+      )
+        continue;
+
+      // Do not generate shftI when the mover has a more specific shift
+      // available (we reuse the pieceHasSpecificShift logic that is
+      // computed earlier for non-slide pieces; approximate here by
+      // checking common specific-shift categories).
+      const cs = currentArcanaSide[1];
+      let pieceHasSpecific = false;
+      if (
+        (cs & 2) !== 0 &&
+        (mover === PIECES.wN ||
+          mover === PIECES.bN ||
+          mover === PIECES.wZ ||
+          mover === PIECES.bZ ||
+          mover === PIECES.wU ||
+          mover === PIECES.bU)
+      )
+        pieceHasSpecific = true;
+      if ((cs & 32) !== 0 && (mover === PIECES.wS || mover === PIECES.bS))
+        pieceHasSpecific = true;
+      if ((cs & 32) !== 0 && (mover === PIECES.wW || mover === PIECES.bW))
+        pieceHasSpecific = true;
+      if ((cs & 64) !== 0 && (mover === PIECES.wH || mover === PIECES.bH))
+        pieceHasSpecific = true;
+      if ((cs & 512) !== 0 && (mover === PIECES.wK || mover === PIECES.bK))
+        pieceHasSpecific = true;
+
+      // If Myriad is active but there is a specific shift, prefer the
+      // specific one (don't emit shftI). Otherwise allow shftI when it's
+      // explicitly present or when Myriad is present and no specific shift
+      // exists.
+      if (!hasShftIBit && !(hasMyriad && !pieceHasSpecific)) continue;
+
+      // King-like 8 directions (orthogonal + diagonal)
+      for (let dirIndex = 0; dirIndex < KiDir.length; dirIndex++) {
+        const dir = KiDir[dirIndex];
+        const adj = sqIter + dir;
+        if (SQOFFBOARD(adj) === BOOL.TRUE) continue;
+        if (adj < 0 || adj > 119) continue;
+
+        // there must be a piece adjacent to hop over
+        if (GameBoard.pieces[adj] === PIECES.EMPTY) continue;
+
+        const land = adj + dir;
+        if (SQOFFBOARD(land) === BOOL.TRUE) continue;
+        if (land < 0 || land > 119) continue;
+
+        // landing square must be empty (shftI hop doesn't capture)
+        if (GameBoard.pieces[land] !== PIECES.EMPTY) continue;
+
+        // respect herrings filter
+        if (herrings.length && !_.includes(herrings, land)) continue;
+
+        // Determine which arcana to consume for this generic hop:
+        // - If the piece has a specific shift available, prefer the specific (use mover id)
+        // - Else if the side has shftI (eclipse), consume that (promo=31)
+        // - Else if Myriad is the only shift, consume the Myriad epsilon
+        // - Otherwise fallback to mover id
+        let promotedForMove;
+        if (pieceHasSpecific) promotedForMove = mover;
+        else if (hasShftIBit) promotedForMove = 31; // eclipse constant
+        else if (hasMyriad) promotedForMove = EPSILON_MYRIAD_CONST;
+        else promotedForMove = mover;
+
+        AddQuietMove(
+          MOVE(sqIter, land, PIECES.EMPTY, promotedForMove, MFLAGSHFT),
+          capturesOnly
+        );
+      }
+
+      // EDGE WRAP behaviour: only when the mover is on left or right file
+      // (file A or H). For A-file use offsets [17,7,-3]; for H-file use
+      // [3,-7,-17]. These offsets are independent of side and allow any
+      // non-pawn/non-king mover to hop to the other side of the board.
+      const file = sqIter % 10;
+      if (file === 1 || file === 8) {
+        const edgeOffsets = file === 1 ? [17, 7, -3] : [3, -7, -17];
+        for (const off of edgeOffsets) {
+          const dest = sqIter + off;
+          if (dest < 0 || dest > 119) continue;
+          if (SQOFFBOARD(dest) === BOOL.TRUE) continue;
+          if (GameBoard.pieces[dest] !== PIECES.EMPTY) continue;
+          if (herrings.length && !_.includes(herrings, dest)) continue;
+
+          // For edge wrap moves, allow only quiet moves by default.
+          // Choose which arcana to consume using the same precedence as
+          // the adjacency hops: specific shift -> shftI -> Myriad -> mover
+          let promotedForEdge;
+          if (pieceHasSpecific) promotedForEdge = mover;
+          else if (hasShftIBit) promotedForEdge = 31;
+          else if (hasMyriad) promotedForEdge = EPSILON_MYRIAD_CONST;
+          else promotedForEdge = mover;
+
+          AddQuietMove(
+            MOVE(sqIter, dest, PIECES.EMPTY, promotedForEdge, MFLAGSHFT),
+            capturesOnly
+          );
+        }
+      }
+    }
   }
 
   pceIndex = LoopSlideIndex[GameBoard.side];

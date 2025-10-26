@@ -408,7 +408,7 @@
   "shftI": {
     "id": "shftI",
     "name": "Eclipse",
-    "description": "hopping over piece / edge of board behavior (UPDATE description)",
+    "description": "A piece may hop over an adjacent piece to the next square in the same direction, no capturing. If that same piece is on the A or H file, it may hop to the opposite side of the board.",
     "type": "passive",
     "imagePath": "/shftI"
   },
