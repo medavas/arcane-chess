@@ -790,7 +790,6 @@ export function MakeMove(move, moveType = '') {
   return BOOL.TRUE;
 }
 
-// take move
 export function TakeMove(wasDyadMove = false) {
   if (GameBoard.hisPly > 0) GameBoard.hisPly--;
   if (GameBoard.ply > 0) GameBoard.ply--;
