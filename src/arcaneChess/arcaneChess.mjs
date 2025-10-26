@@ -42,7 +42,7 @@ import { PrSq } from './io';
 
 export default function arcaneChess() {
   // toggle to debug - turns off turn slot unlocks
-  let debugAllSpells = false;
+  let debugAllSpells = true;
 
   const init = () => {
     InitFilesRanksBrd();

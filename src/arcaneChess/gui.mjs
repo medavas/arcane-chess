@@ -157,7 +157,18 @@ export function MakeUserMove(
     return { parsed, isInitPromotion: BOOL.TRUE };
   }
 
-  MakeMove(parsed, 'userMove');
+  // If ParseMove couldn't find a valid move, don't apply anything.
+  if (parsed === NOMOVE) {
+    return { parsed, isInitPromotion: BOOL.FALSE };
+  }
+
+  // Apply the parsed move and check whether it was legal.
+  const makeResult = MakeMove(parsed, 'userMove');
+  if (makeResult === BOOL.FALSE) {
+    // MakeMove already reverted the illegal move via TakeMove(), so
+    // return NOMOVE so the UI won't record or act on this move.
+    return { parsed: NOMOVE, isInitPromotion: BOOL.FALSE };
+  }
 
   CheckAndSet();
 

@@ -28,6 +28,7 @@ import {
   KiDir,
   KnDir,
   VaDir,
+  ShoDir,
   SpDir,
   WrDir,
   HrDir,
@@ -726,6 +727,8 @@ export let ghostCanShift =
   currentArcanaSide[1] & 32 || currentArcanaSide[1] & 256;
 export let herringCanShift =
   currentArcanaSide[1] & 64 || currentArcanaSide[1] & 256;
+export let kingCanShift =
+  currentArcanaSide[1] & 512 || currentArcanaSide[1] & 256;
 
 export let hasPawnShiftAttack = () => pawnCanShift && has5thDimensionSword;
 export let hasAetherSurge = () => currentArcanaSide[4] & 131072;
@@ -1172,6 +1175,31 @@ export function SqAttacked(sq, side) {
         t_sq += dir;
         pce = GameBoard.pieces[t_sq];
       }
+    }
+  }
+
+  // shogun
+  // shogun: attacker is a King within the ShoDir ring BUT only counts
+  // as checking if the *defending* King does NOT also have Shogun active.
+  const defenderSide = side ^ 1;
+  const defenderArc =
+    defenderSide === COLOURS.WHITE
+      ? GameBoard.whiteArcane
+      : GameBoard.blackArcane;
+  const defenderKingCanShift =
+    (defenderArc[1] & 512) !== 0 || (defenderArc[1] & 256) !== 0;
+
+  for (index = 0; index < 16; index++) {
+    pce = GameBoard.pieces[sq + ShoDir[index]];
+    if (
+      pce !== SQUARES.OFFBOARD &&
+      PieceCol[pce] === side &&
+      PieceKing[pce] === BOOL.TRUE &&
+      !overridePresent(sq + ShoDir[index]) &&
+      !(GameBoard.royaltyE[sq + ShoDir[index]] > 0)
+    ) {
+      // only count this as an attack if the defender's King does NOT have Shogun.
+      if (!defenderKingCanShift) return BOOL.TRUE;
     }
   }
 

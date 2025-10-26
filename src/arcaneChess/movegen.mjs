@@ -45,6 +45,7 @@ import {
   KnDir,
   WrDir,
   SpDir,
+  ShoDir,
   HerShftDir,
   BanDirSp,
   // BanDirWr,
@@ -522,6 +523,7 @@ export function GenerateMoves(
   let rookCanShift = currentArcanaSide[1] & 8 || currentArcanaSide[1] & 256;
   let ghostCanShift = currentArcanaSide[1] & 32 || currentArcanaSide[1] & 256;
   let herringCanShift = currentArcanaSide[1] & 64 || currentArcanaSide[1] & 256;
+  let kingCanShift = currentArcanaSide[1] & 512 || currentArcanaSide[1] & 256;
 
   const herringArray = getHerrings(GameBoard.side);
 
@@ -2433,6 +2435,8 @@ export function GenerateMoves(
         const wantHerring = hCanShift && !isHermit;
         const wantHermit = hCanShift && isHermit;
 
+        const wantShogun = kingCanShift;
+
         const wantBanS =
           currentArcanaSide[4] & 2097152 &&
           (pce === PIECES.wS || pce === PIECES.bS);
@@ -2479,7 +2483,8 @@ export function GenerateMoves(
             // CAPTURE shift only if enemy present
             if (
               canCapture &&
-              has5thDimensionSword &&
+              (has5thDimensionSword ||
+                (PieceKing[targetPiece] && kingCanShift)) &&
               GameBoard.pieces[targetSq] !== PIECES.EMPTY &&
               PieceCol[targetPiece] !== side &&
               herringAllowed
@@ -2508,6 +2513,8 @@ export function GenerateMoves(
 
         if (wantBanS) runShift(12, (i) => BanDirSp[i], false);
         // if (wantBanW) runShift(12, (i) => BanDirWr[i], false);
+
+        if (wantShogun) runShift(16, (i) => ShoDir[i], true);
       }
     }
     pce = LoopNonSlidePce[pceIndex];

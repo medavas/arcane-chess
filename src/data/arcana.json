@@ -398,6 +398,13 @@
     "type": "passive",
     "imagePath": "/shftH"
   },
+  "shftK": {
+    "id": "shftK",
+    "name": "Shogun",
+    "description": "Your King can move and capture in the 5x5 ring... and check an opposing King that does not have Shogun.",
+    "type": "passive",
+    "imagePath": "/shftK"
+  },
   "shftA": {
     "id": "shftA",
     "name": "Myriad Path",

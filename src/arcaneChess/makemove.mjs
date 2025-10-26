@@ -263,6 +263,9 @@ function shiftKeyFromMove(move, moverPiece) {
     case PIECES.wH:
     case PIECES.bH:
       return 'shftH';
+    case PIECES.wK:
+    case PIECES.bK:
+      return 'shftK';
     case EPSILON_MYRIAD_CONST:
       return 'shftA';
     default:
