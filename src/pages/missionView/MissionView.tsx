@@ -829,7 +829,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                 this.state.thinking ||
                 (!futureSightAvailable && key === 'modsFUT');
 
-              const active = this.isArcaneActive(key);
+              const active = this.isArcaneActive(key, color);
               const dyadName =
                 typeof this.arcaneChess().getDyadName === 'function'
                   ? this.arcaneChess().getDyadName()
@@ -924,6 +924,11 @@ class UnwrappedMissionView extends React.Component<Props, State> {
       if (key.startsWith('sumnR') && suffix.length > 1) {
         const rKey = suffix.toUpperCase();
         const royaltyCode = royalties[rKey];
+        // toggle off if already selected
+        if (this.state.placingRoyalty === royaltyCode) {
+          this.setState({ placingRoyalty: 0 });
+          return;
+        }
         this.setState({
           placingRoyalty: royaltyCode || 0,
         });
@@ -932,6 +937,11 @@ class UnwrappedMissionView extends React.Component<Props, State> {
 
       const unit = suffix.toUpperCase();
       const pieceCode = pieces[`${side}${unit}`];
+      // toggle off when clicking same summon badge again
+      if (this.state.placingPiece === pieceCode) {
+        this.setState({ placingPiece: 0 });
+        return;
+      }
 
       this.setState({
         placingPiece: pieceCode || 0,
@@ -977,6 +987,44 @@ class UnwrappedMissionView extends React.Component<Props, State> {
     // === DYAD ===
     if (key.startsWith('dyad')) {
       const dyadClock = arcane.getDyadClock();
+      const dyadName =
+        typeof arcane.getDyadName === 'function' ? arcane.getDyadName() : '';
+      const dyadOwner =
+        typeof arcane.getDyadOwner === 'function'
+          ? arcane.getDyadOwner()
+          : undefined;
+      // if clicking the same dyad badge that is already active for the selected side,
+      // revert if halfway through (dyadClock === 1), otherwise deactivate
+      if (dyadName === key && dyadOwner === this.state.selectedSide) {
+        if (dyadClock === 1) {
+          try {
+            if (typeof arcane.takeBackHalfDyad === 'function') {
+              arcane.takeBackHalfDyad();
+            }
+          } catch (e) {
+            console.warn(e);
+          }
+          this.setState((prev) => ({
+            isDyadMove: true,
+            normalMovesOnly: true,
+            history: prev.history.slice(0, -1),
+            fen: outputFenOfCurrentPosition(),
+            fenHistory: prev.fenHistory.slice(0, -1),
+            lastMoveHistory: prev.lastMoveHistory.slice(0, -1),
+          }));
+          return;
+        }
+        try {
+          if (typeof arcane.deactivateDyad === 'function') {
+            arcane.deactivateDyad();
+          }
+        } catch (e) {
+          console.warn(e);
+        }
+        this.setState({ isDyadMove: false, normalMovesOnly: false });
+        return;
+      }
+
       if (this.state.isDyadMove && dyadClock === 0) {
         arcane.deactivateDyad();
         this.setState({ isDyadMove: false, normalMovesOnly: false });
@@ -1182,7 +1230,11 @@ class UnwrappedMissionView extends React.Component<Props, State> {
     });
   }
 
-  isArcaneActive = (key: string) => {
+  isArcaneActive = (key: string, color?: string) => {
+    // Only show active for badges that belong to the currently selected side
+    if (typeof color !== 'undefined' && color !== this.state.selectedSide)
+      return false;
+
     if (key === 'shftT') return this.state.isTeleport;
 
     if (key.includes('dyad')) return this.state.isDyadMove;

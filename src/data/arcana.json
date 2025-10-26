@@ -405,6 +405,13 @@
     "type": "passive",
     "imagePath": "/shftK"
   },
+  "shftI": {
+    "id": "shftI",
+    "name": "Eclipse",
+    "description": "hopping over piece / edge of board behavior (UPDATE description)",
+    "type": "passive",
+    "imagePath": "/shftI"
+  },
   "shftA": {
     "id": "shftA",
     "name": "Myriad Path",

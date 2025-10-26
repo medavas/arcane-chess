@@ -836,7 +836,7 @@ class UnwrappedStackQuickplay extends React.Component<Props, State> {
       (value: number, key: string) => {
         const futureSightAvailable =
           this.state.history.length >= 4 && this.state.futureSightAvailable;
-        const active = this.isArcaneActive(key);
+        const active = this.isArcaneActive(key, color);
         const dyadName =
           typeof this.arcaneChess().getDyadName === 'function'
             ? this.arcaneChess().getDyadName()
@@ -918,35 +918,39 @@ class UnwrappedStackQuickplay extends React.Component<Props, State> {
                     if (dyadClock > 0 || this.state.isDyadMove) return;
                     if (key.includes('sumnR') && key !== 'sumnR') {
                       // if (key !== 'sumnRE' && InCheck()) return;
+                      const royaltyCode = royalties[`${key.split('sumn')[1]}`];
+                      // toggle off if already selected
+                      if (this.state.placingRoyalty === royaltyCode) {
+                        this.setState({ placingRoyalty: 0 });
+                        return;
+                      }
                       this.setState({
                         isDyadMove: false,
                         placingPiece: 0,
-                        placingRoyalty: royalties[`${key.split('sumn')[1]}`],
+                        placingRoyalty: royaltyCode,
                         swapType: '',
                         isTeleport: false,
                         offeringType: '',
                       });
                     } else {
+                      const side =
+                        this.state.selectedSide === 'white' ? 'w' : 'b';
+                      const unit = key.split('sumn')[1].toUpperCase();
+                      const pieceKey =
+                        unit === 'X' ? `${side}X` : `${side}${unit}`;
+                      const pieceCode = pieces[pieceKey];
+                      // toggle off when clicking same summon badge again
+                      if (this.state.placingPiece === pieceCode) {
+                        this.setState({ placingPiece: 0 });
+                        return;
+                      }
                       this.setState({
                         isDyadMove: false,
                         placingRoyalty: 0,
                         swapType: '',
                         offeringType: '',
                         isTeleport: false,
-                        placingPiece:
-                          pieces[
-                            key.split('sumn')[1].toUpperCase() === 'X'
-                              ? `${
-                                  this.state.selectedSide === 'white'
-                                    ? 'w'
-                                    : 'b'
-                                }X`
-                              : `${
-                                  this.state.selectedSide === 'white'
-                                    ? 'w'
-                                    : 'b'
-                                }${key.split('sumn')[1]}`
-                          ],
+                        placingPiece: pieceCode,
                       });
                     }
                   }
@@ -982,6 +986,66 @@ class UnwrappedStackQuickplay extends React.Component<Props, State> {
                     GameBoard.suspend = 6;
                   }
                   if (key.includes('dyad')) {
+                    const dyadName =
+                      typeof this.arcaneChess().getDyadName === 'function'
+                        ? this.arcaneChess().getDyadName()
+                        : '';
+                    const dyadOwner =
+                      typeof this.arcaneChess().getDyadOwner === 'function'
+                        ? this.arcaneChess().getDyadOwner()
+                        : undefined;
+                    // if clicking same dyad that is active for selected side,
+                    // revert if halfway through (dyadClock === 1), otherwise deactivate
+                    if (
+                      dyadName === key &&
+                      dyadOwner === this.state.selectedSide
+                    ) {
+                      const currentDyadClock =
+                        this.arcaneChess().getDyadClock();
+                      if (currentDyadClock === 1) {
+                        try {
+                          if (
+                            typeof this.arcaneChess().takeBackHalfDyad ===
+                            'function'
+                          )
+                            this.arcaneChess().takeBackHalfDyad();
+                        } catch (e) {
+                          console.warn(e);
+                        }
+                        this.setState((prevState) => ({
+                          isDyadMove: true,
+                          normalMovesOnly: true,
+                          history: prevState.history.slice(0, -1),
+                          fen: outputFenOfCurrentPosition(),
+                          fenHistory: prevState.fenHistory.slice(0, -1),
+                          lastMoveHistory: prevState.lastMoveHistory.slice(
+                            0,
+                            -1
+                          ),
+                        }));
+                        return;
+                      }
+                      try {
+                        if (
+                          typeof this.arcaneChess().deactivateDyad ===
+                          'function'
+                        )
+                          this.arcaneChess().deactivateDyad();
+                      } catch (e) {
+                        console.warn(e);
+                      }
+                      this.setState({
+                        isDyadMove: false,
+                        normalMovesOnly: false,
+                        placingPiece: 0,
+                        placingRoyalty: 0,
+                        swapType: '',
+                        offeringType: '',
+                        isTeleport: false,
+                      });
+                      return;
+                    }
+
                     this.setState((prevState) => {
                       const dyadClock = this.arcaneChess().getDyadClock();
                       if (prevState.isDyadMove && dyadClock === 0) {
@@ -1127,7 +1191,9 @@ class UnwrappedStackQuickplay extends React.Component<Props, State> {
     return factions[randomIndex];
   };
 
-  isArcaneActive = (key: string) => {
+  isArcaneActive = (key: string, color?: string) => {
+    // if color provided, only show active for the selecting side
+    if (color && color !== this.state.selectedSide) return false;
     if (key === 'shftT') return this.state.isTeleport;
 
     if (key.includes('dyad')) return this.state.isDyadMove;
