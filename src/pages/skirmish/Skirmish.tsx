@@ -1027,6 +1027,7 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
 
     // === DYAD ===
     if (key.startsWith('dyad')) {
+      const dyadClock = arcane.getDyadClock();
       const dyadName =
         typeof arcane.getDyadName === 'function' ? arcane.getDyadName() : '';
       const dyadOwner =
