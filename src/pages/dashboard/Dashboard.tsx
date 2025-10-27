@@ -428,6 +428,28 @@ export class UnwrappedDashboard extends React.Component<
             <h1 className="news-title">Transmissions</h1>
             <div className="news-item">
               <h4>
+                Patch 2.6 Live: Alternate Moveset Update
+                <h6>Source: medavas</h6>
+                <h6>Date: October 2025</h6>
+                <h6>Category: Mechanics</h6>
+              </h4>
+              <ul>
+                <li>
+                  Quality of life improvements – Board now highlights potential
+                  moves that will use a shift arcana. Mana bar - countdown
+                  visual to next arcana unlock. Arcana badge visuals updated.
+                </li>
+                <li>
+                  Eclipse – Move through units and across the edge of the board.
+                </li>
+                <li>
+                  Shogun – A powerful new update to the King: you can now check
+                  the opposing King with your own.
+                </li>
+              </ul>
+            </div>
+            <div className="news-item">
+              <h4>
                 Removal of AI-Generated Content
                 <h6>Source: medavas</h6>
                 <h6>Date: October 2025</h6>
