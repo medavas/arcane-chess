@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { GameBoard, FROMSQ, MFLAGSHFT } from './board';
+import { GameBoard, FROMSQ, MFLAGSHFT, MFLAGCA } from './board';
 import {
   generatePlayableOptions,
   GenerateMoves,
@@ -46,9 +46,33 @@ export function validGroundMoves(summon = '', swap = '') {
     }
     moveMap.get(from).push(to);
     try {
-      if (typeof MFLAGSHFT !== 'undefined' && (move & MFLAGSHFT) !== 0) {
-        if (!shiftDests.has(from)) shiftDests.set(from, new Set());
-        shiftDests.get(from).add(to);
+      // mark shift destinations, but prefer castling when both a castle
+      // and a shift to the same destination exist. Some arcana (eg.
+      // shogun) can generate a shift to the same square as a castle;
+      // in that case we don't want to tag the square as a shift.
+      const isShiftFlag =
+        typeof MFLAGSHFT !== 'undefined' && (move & MFLAGSHFT) !== 0;
+      if (isShiftFlag) {
+        // detect whether any generated move with the same from->to is a castle
+        const hasCastleVariant = validMovesReturn.some((m2) => {
+          try {
+            const f2 = PrMove(m2, 'array')[0];
+            const t2 = PrMove(m2, 'array')[1];
+            return (
+              f2 === from &&
+              t2 === to &&
+              typeof MFLAGCA !== 'undefined' &&
+              (m2 & MFLAGCA) !== 0
+            );
+          } catch (e) {
+            return false;
+          }
+        });
+
+        if (!hasCastleVariant) {
+          if (!shiftDests.has(from)) shiftDests.set(from, new Set());
+          shiftDests.get(from).add(to);
+        }
       }
     } catch (e) {
       // ignore if flags are unavailable for any reason
@@ -60,6 +84,10 @@ export function validGroundMoves(summon = '', swap = '') {
   // Backwards-compatible: callers that expect a Map still get one. shiftDests
   // is a Map keyed by origin -> Set of destination keys.
   moveMap.shiftDests = shiftDests;
+  // optional: expose a place for callers to mark one or more shift
+  // destinations as "active". Callers can set this to a Set of keys
+  // or a Map(origin->Set(dest)). Renderer will look for movable.shiftActive.
+  moveMap.shiftActive = new Set();
   return moveMap;
 }
 
