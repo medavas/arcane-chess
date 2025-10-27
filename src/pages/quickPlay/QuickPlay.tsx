@@ -893,10 +893,15 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
 
               return (
                 <div
+                  className="arcane-select__item"
                   key={key}
-                  style={{ position: 'relative', display: 'inline-block' }}
+                  style={{
+                    position: 'relative',
+                    display: 'inline-block',
+                    marginRight: 6,
+                  }}
                 >
-                  <div style={{ position: 'absolute' }}>
+                  <div className="arcane-select__item-count">
                     {isInherent ? 'INH' : value}
                   </div>
                   <img
@@ -910,7 +915,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                     }`}
                     src={`/assets/arcanaImages${entry.imagePath}.svg`}
                     style={{
-                      opacity: isDisabled ? 0.5 : 1,
+                      opacity: isDisabled ? 0.4 : 1,
                       cursor: isDisabled
                         ? 'not-allowed'
                         : `url('/assets/images/cursors/pointer.svg') 12 4, pointer`,
