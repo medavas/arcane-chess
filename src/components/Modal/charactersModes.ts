@@ -270,14 +270,15 @@ export const modes: Record<string, GameModeType> = padModes({
     },
   },
   tutorial1: {
-    name: 'Tutorial 1',
+    name: 'Newest Update',
     white: {
       arcana: [
-        arcana.modsINH,
-        arcana.sumnZ,
-        arcana.dyadC,
         arcana.shftK,
         arcana.shftI,
+        arcana.moriDYA,
+        // arcana.moriNOR,
+        // arcana.moriROY,
+        arcana.moraPAW,
       ],
       setup: 'RNBTKBNR',
     },

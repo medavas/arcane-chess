@@ -24,9 +24,10 @@ import {
   whiteArcaneConfig,
   blackArcaneConfig,
   ArcanaProgression,
-  incLiveArcana,
   offerGrant,
   offerRevert,
+  getMoriMoraState,
+  applyMoriMoraRewards,
 } from './arcaneDefs';
 import {
   COLOURS,
@@ -204,17 +205,6 @@ export function MovePiece(from, to) {
   }
 }
 
-const getPocketCaptureEpsilon = (move, side, captured) => {
-  if ((move & (MFLAGSWAP | MFLAGSUMN)) !== 0) return PIECES.EMPTY;
-  if ((move & MFLAGEP) !== 0) {
-    return side === COLOURS.WHITE ? PIECES.bP : PIECES.wP;
-  }
-  if ((move & MFLAGSHFT) !== 0 && captured === TELEPORT_CONST) {
-    return TELEPORT_CONST;
-  }
-  return captured;
-};
-
 const getSumnCaptureForRoyalty = (move, captured) => {
   return (move & MFLAGSUMN) !== 0 ? captured : PIECES.EMPTY;
 };
@@ -391,18 +381,40 @@ export function MakeMove(move, moveType = '') {
       GameBoard.pieces[epSq] === victim
     ) {
       ClearPiece(epSq);
-      GameBoard.fiftyMove = 0;
-      const epPocket = getPocketCaptureEpsilon(move, side, captured);
-      if (
-        GameBoard.crazyHouse[side] &&
-        epPocket !== PIECES.EMPTY &&
-        epPocket !== TELEPORT_CONST &&
-        PieceCol[epPocket] !== side
-      ) {
-        const key = `sumn${PceChar.charAt(epPocket).toUpperCase()}`;
-        const sideKey = side === COLOURS.WHITE ? 'white' : 'black';
-        incLiveArcana(sideKey, key, +1);
+
+      {
+        if (commit && !h.moriMoraApplied) {
+          const killerSide = side === COLOURS.WHITE ? 'white' : 'black';
+          const victimSide = side === COLOURS.WHITE ? 'black' : 'white';
+          const context = {
+            killerSide,
+            victimSide,
+            piece: victim,
+            move,
+            board: GameBoard,
+          };
+          const moriMoraKeys = getMoriMoraState(context);
+          const mmResult = applyMoriMoraRewards(context, moriMoraKeys);
+          if (mmResult && mmResult.moraFired) h.moraTag = true;
+          if (mmResult && mmResult.moriFired) h.moriTag = true;
+          if (mmResult && mmResult.moriGifts) {
+            h.moriGifts = mmResult.moriGifts;
+            h.moriSide = victimSide;
+          }
+          if (mmResult && mmResult.moraGifts) {
+            h.moraGifts = mmResult.moraGifts;
+            h.moraSide = killerSide;
+          }
+          if (mmResult && (mmResult.moraFired || mmResult.moriFired))
+            h.moriMoraApplied = true;
+          let io = '';
+          if (mmResult && mmResult.moraFired) io += ' -N';
+          if (mmResult && mmResult.moriFired) io += ' -L';
+          if (io) h.ioSuffix = io;
+        }
       }
+
+      GameBoard.fiftyMove = 0;
     }
   } else if ((move & MFLAGCA) !== 0) {
     if (GameBoard.blackArcane[4] & 8) {
@@ -506,19 +518,45 @@ export function MakeMove(move, moveType = '') {
   if (isNormalCapture) {
     const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
     ClearPiece(to);
+
+    {
+      if (commit && !h.moriMoraApplied) {
+        const killerSide = side === COLOURS.WHITE ? 'white' : 'black';
+        const victimPiece = targetPieceAtTo;
+        const victimSide =
+          PieceCol[victimPiece] === COLOURS.WHITE ? 'white' : 'black';
+        const sameSide = killerSide === victimSide;
+        const context = {
+          killerSide,
+          victimSide,
+          piece: victimPiece,
+          move,
+          board: GameBoard,
+        };
+        const moriMoraKeys = getMoriMoraState(context);
+        if (sameSide) moriMoraKeys.moraKeys = [];
+        const mmResult = applyMoriMoraRewards(context, moriMoraKeys);
+        if (mmResult && mmResult.moraFired) h.moraTag = true;
+        if (mmResult && mmResult.moriFired) h.moriTag = true;
+        if (mmResult && mmResult.moriGifts) {
+          h.moriGifts = mmResult.moriGifts;
+          h.moriSide = victimSide;
+        }
+        if (mmResult && mmResult.moraGifts) {
+          h.moraGifts = mmResult.moraGifts;
+          h.moraSide = killerSide;
+        }
+        if (mmResult && (mmResult.moraFired || mmResult.moriFired))
+          h.moriMoraApplied = true;
+        let io = '';
+        if (mmResult && mmResult.moraFired) io += ' -N';
+        if (mmResult && mmResult.moriFired) io += ' -L';
+        if (io) h.ioSuffix = io;
+      }
+    }
+
     GameBoard.fiftyMove = 0;
     if (move & MFLAGPS) cfg['modsSUR'] -= 1;
-    const pocketCapNow = getPocketCaptureEpsilon(move, side, captured);
-    if (
-      GameBoard.crazyHouse[side] &&
-      pocketCapNow !== PIECES.EMPTY &&
-      pocketCapNow !== TELEPORT_CONST &&
-      PieceCol[pocketCapNow] !== side
-    ) {
-      const key = `sumn${PceChar.charAt(pocketCapNow).toUpperCase()}`;
-      const sideKey = side === COLOURS.WHITE ? 'white' : 'black';
-      incLiveArcana(sideKey, key, +1);
-    }
   }
 
   if (
@@ -908,20 +946,6 @@ export function TakeMove(wasDyadMove = false) {
     if (looksLikeEP) {
       AddPiece(epSq, epPawn);
     }
-    const epPocket = getPocketCaptureEpsilon(move, GameBoard.side, captured);
-    if (
-      GameBoard.crazyHouse[GameBoard.side] &&
-      epPocket !== PIECES.EMPTY &&
-      epPocket !== TELEPORT_CONST &&
-      PieceCol[epPocket] !== GameBoard.side
-    ) {
-      const key = `sumn${PceChar.charAt(epPocket).toUpperCase()}`;
-      const cfg2 =
-        GameBoard.side === COLOURS.WHITE
-          ? whiteArcaneConfig
-          : blackArcaneConfig;
-      cfg2[key] = (cfg2[key] ?? 0) - 1;
-    }
   } else if ((MFLAGCA & move) !== 0) {
     switch (to) {
       case SQUARES.C1:
@@ -960,25 +984,30 @@ export function TakeMove(wasDyadMove = false) {
     (move & (MFLAGSWAP | MFLAGSUMN | MFLAGEP)) === 0
   ) {
     AddPiece(to, captured);
-    const pocketCap = getPocketCaptureEpsilon(move, GameBoard.side, captured);
+
+    {
+      const h = GameBoard.history[GameBoard.hisPly];
+      if (h && h.moriGifts && h.moriGifts.length) {
+        const s =
+          h.moriSide || (GameBoard.side === COLOURS.WHITE ? 'white' : 'black');
+        for (let i = 0; i < h.moriGifts.length; i++)
+          offerRevert(s, h.moriGifts[i], 1);
+        h.moriGifts = undefined;
+        h.moriSide = undefined;
+      }
+      if (h && h.moraGifts && h.moraGifts.length) {
+        const s =
+          h.moraSide || (GameBoard.side === COLOURS.WHITE ? 'white' : 'black');
+        for (let i = 0; i < h.moraGifts.length; i++)
+          offerRevert(s, h.moraGifts[i], 1);
+        h.moraGifts = undefined;
+        h.moraSide = undefined;
+      }
+    }
 
     const cfg =
       GameBoard.side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
     if (move & MFLAGPS) cfg['modsSUR'] += 1;
-
-    if (
-      GameBoard.crazyHouse[GameBoard.side] &&
-      pocketCap !== PIECES.EMPTY &&
-      pocketCap !== TELEPORT_CONST &&
-      PieceCol[pocketCap] !== GameBoard.side
-    ) {
-      const key = `sumn${PceChar.charAt(pocketCap).toUpperCase()}`;
-      const cfg2 =
-        GameBoard.side === COLOURS.WHITE
-          ? whiteArcaneConfig
-          : blackArcaneConfig;
-      cfg2[key] = (cfg2[key] ?? 0) - 1;
-    }
   }
 
   if (

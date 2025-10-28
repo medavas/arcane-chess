@@ -632,56 +632,56 @@
   "moriDYA": {
     "id": "moriDYA",
     "name": "Letum Gemini",
-    "description": "",
+    "description": "on any of your piece death you gain a dyad all",
     "type": "inherent",
     "imagePath": "/moriDYA"
   },
   "moriROY": {
     "id": "moriROY",
     "name": "Letum Vultus",
-    "description": "",
+    "description": "on your QTMV death you gain a royalty vanguard",
     "type": "inherent",
     "imagePath": "/moriROY"
   },
   "moriPAW": {
     "id": "moriPAW",
     "name": "Letum Bane",
-    "description": "",
+    "description": "on any of your pawn death you gain a dyad all",
     "type": "inherent",
     "imagePath": "/moriPAW"
   },
   "moriNOR": {
     "id": "moriNOR",
     "name": "Letum Anima",
-    "description": "",
+    "description": "on any of your piece death, you get a summon of that piece",
     "type": "inherent",
     "imagePath": "/moriNOR"
   },
   "moraDYA": {
     "id": "moraDYA",
     "name": "Nex Gemini",
-    "description": "",
+    "description": "on any of your opponent piece death you gain a dyad all",
     "type": "inherent",
     "imagePath": "/moraDYA"
   },
   "moraROY": {
     "id": "moraROY",
     "name": "Nex Vultus",
-    "description": "",
+    "description": "on opponent's QTMV death you gain a royalty vanguard",
     "type": "inherent",
     "imagePath": "/moraROY"
   },
   "moraPAW": {
     "id": "moraPAW",
     "name": "Nex Bane",
-    "description": "",
+    "description": "on any of your opponent pawn death you gain a dyad all",
     "type": "inherent",
     "imagePath": "/moraPAW"
   },
   "moraNOR": {
     "id": "moraNOR",
     "name": "Nex Anima",
-    "description": "",
+    "description": "on any of your opponent piece death, you get a summon of that piece",
     "type": "inherent",
     "imagePath": "/moraNOR"
   },

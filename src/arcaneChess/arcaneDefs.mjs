@@ -1,3 +1,5 @@
+import { PIECES, PceChar, PiecePawn, BOOL } from './defs.mjs';
+
 export const whiteArcaneConfig = {};
 export const blackArcaneConfig = {};
 
@@ -328,7 +330,17 @@ export function offerRevert(side, key, qty = 1) {
   }
 }
 
-const STACKING_PREFIXES = ['sumn', 'offr', 'shft', 'swap', 'dyad'];
+const STACKING_PREFIXES = [
+  'sumn',
+  'offr',
+  'shft',
+  'swap',
+  'dyad',
+  'mori',
+  'mora',
+  'area',
+  'gain',
+];
 const STACKING_EXCEPTIONS = new Set([
   'modsSUS',
   'modsMAG',
@@ -472,6 +484,124 @@ const ArcanaProgression = (() => {
   };
 })();
 
+function mapPieceToSummonKey(piece) {
+  const L = PceChar.charAt(piece);
+  if (!L) return null;
+  return 'sumn' + L.toUpperCase();
+}
+
+function isQTMV(piece) {
+  return (
+    piece === PIECES.wQ ||
+    piece === PIECES.bQ ||
+    piece === PIECES.wT ||
+    piece === PIECES.bT ||
+    piece === PIECES.wM ||
+    piece === PIECES.bM ||
+    piece === PIECES.wV ||
+    piece === PIECES.bV
+  );
+}
+
+export function getMoriMoraState(context) {
+  const { killerSide, victimSide, piece } = context;
+
+  const killerLive =
+    killerSide === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+  const victimLive =
+    victimSide === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+
+  const getLiveKeys = (live, prefix) =>
+    Object.keys(live).filter(
+      (k) =>
+        k.startsWith(prefix) &&
+        ((live[k] | 0) > 0 || live[k] === true || live[k] === 'true')
+    );
+
+  const moriAll = getLiveKeys(victimLive, 'mori');
+  const moraAll = getLiveKeys(killerLive, 'mora');
+
+  const isPawn = PiecePawn[piece] === BOOL.TRUE;
+  const isRoyaltyV = isQTMV(piece);
+
+  const filterKeys = (arr) =>
+    arr.filter((k) => {
+      if (k.endsWith('PAW')) return isPawn;
+      if (k.endsWith('ROY')) return isRoyaltyV;
+      return true;
+    });
+
+  return {
+    moriKeys: filterKeys(moriAll),
+    moraKeys: filterKeys(moraAll),
+  };
+}
+
+function pickMMKey(keys, piece, base) {
+  if (!keys || !keys.length) return null;
+  if (PiecePawn[piece] === BOOL.TRUE && keys.indexOf(base + 'PAW') >= 0)
+    return base + 'PAW';
+  if (isQTMV(piece) && keys.indexOf(base + 'ROY') >= 0) return base + 'ROY';
+  if (keys.indexOf(base + 'NOR') >= 0) return base + 'NOR';
+  if (keys.indexOf(base + 'DYA') >= 0) return base + 'DYA';
+  if (keys.indexOf(base + 'MAN') >= 0) return base + 'MAN';
+  return keys[0];
+}
+
+export function applyMoriMoraRewards(context, keys) {
+  let moriFired = false;
+  let moraFired = false;
+  const moriGifts = [];
+  const moraGifts = [];
+
+  const mk = pickMMKey(keys.moriKeys, context.piece, 'mori');
+  if (mk) {
+    moriFired = true;
+    if (mk === 'moriDYA') {
+      offerGrant(context.victimSide, 'dyadA', 1);
+      moriGifts.push('dyadA');
+    } else if (mk === 'moriROY' && isQTMV(context.piece)) {
+      offerGrant(context.victimSide, 'sumnRV', 1);
+      moriGifts.push('sumnRV');
+    } else if (mk === 'moriPAW' && PiecePawn[context.piece] === BOOL.TRUE) {
+      offerGrant(context.victimSide, 'dyadA', 1);
+      moriGifts.push('dyadA');
+    } else if (mk === 'moriNOR') {
+      const sKey = mapPieceToSummonKey(context.piece);
+      if (sKey) {
+        offerGrant(context.victimSide, sKey, 1);
+        moriGifts.push(sKey);
+      }
+    }
+    // else if (mk === 'moriMAN') {
+    // }
+  }
+
+  const nk = pickMMKey(keys.moraKeys, context.piece, 'mora');
+  if (nk) {
+    moraFired = true;
+    if (nk === 'moraDYA') {
+      offerGrant(context.killerSide, 'dyadA', 1);
+      moraGifts.push('dyadA');
+    } else if (nk === 'moraROY' && isQTMV(context.piece)) {
+      offerGrant(context.killerSide, 'sumnRV', 1);
+      moraGifts.push('sumnRV');
+    } else if (nk === 'moraPAW' && PiecePawn[context.piece] === BOOL.TRUE) {
+      offerGrant(context.killerSide, 'dyadA', 1);
+      moraGifts.push('dyadA');
+    } else if (nk === 'moraNOR') {
+      const sKey = mapPieceToSummonKey(context.piece);
+      if (sKey) {
+        offerGrant(context.killerSide, sKey, 1);
+        moraGifts.push(sKey);
+      }
+    }
+    //  else if (nk === 'moraMAN') {
+    // }
+  }
+
+  return { moriFired, moraFired, moriGifts, moraGifts };
+}
 export function getProgressState(side) {
   return ArcanaProgression.getProgressState(side);
 }

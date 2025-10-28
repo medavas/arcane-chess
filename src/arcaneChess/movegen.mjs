@@ -406,6 +406,8 @@ export const generatePowers = () => {
       swap: 0,
       mods: 0,
       offr: 0,
+      mori: 0,
+      mora: 0,
     };
 
     // todo: this function needs to be generated on click on at least swap so piece movements like captures or other edge cases don't overlap
@@ -423,6 +425,8 @@ export const generatePowers = () => {
     powerBits[3] |= powerTypes.sumn;
     powerBits[4] |= powerTypes.mods;
     powerBits[5] |= powerTypes.offr;
+    powerBits[6] |= powerTypes.mori;
+    powerBits[7] |= powerTypes.mora;
 
     GameBoard.whiteArcane = powerBits;
 
@@ -436,6 +440,8 @@ export const generatePowers = () => {
       swap: 0,
       mods: 0,
       offr: 0,
+      mori: 0,
+      mora: 0,
     };
 
     _.forEach(blackArcaneConfig, (value, key) => {
@@ -451,6 +457,8 @@ export const generatePowers = () => {
     powerBits[3] |= powerTypes.sumn;
     powerBits[4] |= powerTypes.mods;
     powerBits[5] |= powerTypes.offr;
+    powerBits[6] |= powerTypes.mori;
+    powerBits[7] |= powerTypes.mora;
 
     GameBoard.blackArcane = powerBits;
 
