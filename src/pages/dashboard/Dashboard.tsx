@@ -435,6 +435,11 @@ export class UnwrappedDashboard extends React.Component<
               </h4>
               <ul>
                 <li>
+                  In honor of spooky season, three new arcana have been added
+                  that explore themes of death and the afterlife. Memento mori,
+                  amor fati. 💀
+                </li>
+                <li>
                   Letum (mori) - Various effects happen per spell when your
                   pieces are captured.
                 </li>
