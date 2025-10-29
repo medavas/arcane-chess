@@ -2610,14 +2610,14 @@ export function GenerateMoves(
       let pieceHasSpecific = false;
       if (
         (cs & 2) !== 0 &&
-        (mover === PIECES.wN ||
-          mover === PIECES.bN ||
-          mover === PIECES.wZ ||
+        (mover === PIECES.wZ ||
           mover === PIECES.bZ ||
           mover === PIECES.wU ||
           mover === PIECES.bU ||
+          mover === PIECES.wW ||
+          mover === PIECES.bW ||
           mover === PIECES.wX ||
-          mover === PIECES.bX) // keep your original special case
+          mover === PIECES.bX)
       )
         pieceHasSpecific = true;
       if ((cs & 32) !== 0 && (mover === PIECES.wS || mover === PIECES.bS))
@@ -2635,16 +2635,18 @@ export function GenerateMoves(
       const canQuiet = !capturesOnly && !herrings.length;
 
       // BLOCK ECLIPSE ADJACENT-HOP FOR UNICORN/ZEBRA
-      const isUnicornOrZebraOrExile =
+      const isUnicornOrZebraOrWraithOrExile =
         mover === PIECES.wU ||
         mover === PIECES.bU ||
         mover === PIECES.wZ ||
         mover === PIECES.bZ ||
+        mover === PIECES.wW ||
+        mover === PIECES.bW ||
         mover === PIECES.wX ||
         mover === PIECES.bX;
 
       // ----- Adjacent hop (orth/diag) -----
-      if (!isUnicornOrZebraOrExile) {
+      if (!isUnicornOrZebraOrWraithOrExile) {
         for (let dirIndex = 0; dirIndex < KiDir.length; dirIndex++) {
           const dir = KiDir[dirIndex];
           const adj = sqIter + dir;
