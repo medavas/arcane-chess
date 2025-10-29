@@ -407,6 +407,12 @@ export function MakeMove(move, moveType = '') {
           }
           if (mmResult && (mmResult.moraFired || mmResult.moriFired))
             h.moriMoraApplied = true;
+          if (mmResult && mmResult.moriMana) {
+            h.moriMana = mmResult.moriMana;
+          }
+          if (mmResult && mmResult.moraMana) {
+            h.moraMana = mmResult.moraMana;
+          }
           let io = '';
           if (mmResult && mmResult.moraFired) io += ' -N';
           if (mmResult && mmResult.moriFired) io += ' -L';
@@ -548,6 +554,12 @@ export function MakeMove(move, moveType = '') {
         }
         if (mmResult && (mmResult.moraFired || mmResult.moriFired))
           h.moriMoraApplied = true;
+        if (mmResult && mmResult.moriMana) {
+          h.moriMana = mmResult.moriMana;
+        }
+        if (mmResult && mmResult.moraMana) {
+          h.moraMana = mmResult.moraMana;
+        }
         let io = '';
         if (mmResult && mmResult.moraFired) io += ' -N';
         if (mmResult && mmResult.moriFired) io += ' -L';
@@ -987,21 +999,25 @@ export function TakeMove(wasDyadMove = false) {
 
     {
       const h = GameBoard.history[GameBoard.hisPly];
-      if (h && h.moriGifts && h.moriGifts.length) {
-        const s =
-          h.moriSide || (GameBoard.side === COLOURS.WHITE ? 'white' : 'black');
-        for (let i = 0; i < h.moriGifts.length; i++)
-          offerRevert(s, h.moriGifts[i], 1);
-        h.moriGifts = undefined;
-        h.moriSide = undefined;
+      if (h && h.moriMana) {
+        const { side, steps, keys = [] } = h.moriMana;
+        const cfg = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+        for (let i = 0; i < keys.length; i++) {
+          const k = keys[i];
+          cfg[k] = Math.max(0, (cfg[k] | 0) - 1);
+        }
+        ArcanaProgression.rewindBy(side, steps, keys);
+        h.moriMana = undefined;
       }
-      if (h && h.moraGifts && h.moraGifts.length) {
-        const s =
-          h.moraSide || (GameBoard.side === COLOURS.WHITE ? 'white' : 'black');
-        for (let i = 0; i < h.moraGifts.length; i++)
-          offerRevert(s, h.moraGifts[i], 1);
-        h.moraGifts = undefined;
-        h.moraSide = undefined;
+      if (h && h.moraMana) {
+        const { side, steps, keys = [] } = h.moraMana;
+        const cfg = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+        for (let i = 0; i < keys.length; i++) {
+          const k = keys[i];
+          cfg[k] = Math.max(0, (cfg[k] | 0) - 1);
+        }
+        ArcanaProgression.rewindBy(side, steps, keys);
+        h.moraMana = undefined;
       }
     }
 

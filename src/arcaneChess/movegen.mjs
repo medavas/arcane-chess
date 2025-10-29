@@ -2575,28 +2575,18 @@ export function GenerateMoves(
     dyad = LoopNonSlideDyad[pceIndex++];
 
     // --- ECLIPSE (shftI) generic hop-over shift ---
-    // This implements shftI: if the side has shftI (or Myriad when no
-    // more-specific shifts exist) many non-pawn/non-V pieces may hop over
-    // any adjacent orth/diagonal piece and land on the next square in that
-    // direction if it is empty. The move is a SHIFT (MFLAGSHFT) and does
-    // not capture (landing square must be empty). The spell is not applied
-    // to pawns or V pieces. Pieces that already have their own specific
-    // hopping behavior (equus/zebra/unicorn, ghost/wraith/spectre, herring,
-    // king-specific shogun, etc.) will keep their specific shifts; shftI
-    // is only generated when it is available and not overridden by a more
-    // specific shift (this preserves precedence and Myriad handling).
+    // Prevent Eclipse's adjacent-hop from applying to Unicorn/Zebra,
+    // but still allow the cross-board (edge-wrap) Eclipse for them.
     const hasShftIBit = (currentArcanaSide[1] & POWERBIT.shftI) !== 0;
     const hasMyriad = (currentArcanaSide[1] & 256) !== 0;
 
-    // Walk all board squares and add shftI moves for eligible movers.
     for (let sqIter = 21; sqIter <= 98; sqIter++) {
       if (SQOFFBOARD(sqIter) === BOOL.TRUE) continue;
       const mover = GameBoard.pieces[sqIter];
       if (mover === PIECES.EMPTY) continue;
-      // only our side
       if (PieceCol[mover] !== GameBoard.side) continue;
 
-      // exclude pawns and kings
+      // exclude pawns/kings from Eclipse logic
       if (
         mover === PIECES.wP ||
         mover === PIECES.bP ||
@@ -2605,7 +2595,7 @@ export function GenerateMoves(
       )
         continue;
 
-      // if piece is royaltied/overridden skip
+      // if mover is currently overridden by a royalty effect, skip
       if (
         GameBoard.royaltyQ[sqIter] > 0 ||
         GameBoard.royaltyT[sqIter] > 0 ||
@@ -2615,10 +2605,7 @@ export function GenerateMoves(
       )
         continue;
 
-      // Do not generate shftI when the mover has a more specific shift
-      // available (we reuse the pieceHasSpecificShift logic that is
-      // computed earlier for non-slide pieces; approximate here by
-      // checking common specific-shift categories).
+      // Detect if the side has more-specific shifts for this mover.
       const cs = currentArcanaSide[1];
       let pieceHasSpecific = false;
       if (
@@ -2628,7 +2615,9 @@ export function GenerateMoves(
           mover === PIECES.wZ ||
           mover === PIECES.bZ ||
           mover === PIECES.wU ||
-          mover === PIECES.bU)
+          mover === PIECES.bU ||
+          mover === PIECES.wX ||
+          mover === PIECES.bX) // keep your original special case
       )
         pieceHasSpecific = true;
       if ((cs & 32) !== 0 && (mover === PIECES.wS || mover === PIECES.bS))
@@ -2640,53 +2629,55 @@ export function GenerateMoves(
       if ((cs & 512) !== 0 && (mover === PIECES.wK || mover === PIECES.bK))
         pieceHasSpecific = true;
 
-      // If Myriad is active but there is a specific shift, prefer the
-      // specific one (don't emit shftI). Otherwise allow shftI when it's
-      // explicitly present or when Myriad is present and no specific shift
-      // exists.
+      // If neither shftI nor Myriad-without-specific is available, skip entirely.
       if (!hasShftIBit && !(hasMyriad && !pieceHasSpecific)) continue;
 
-      // King-like 8 directions (orthogonal + diagonal)
-      for (let dirIndex = 0; dirIndex < KiDir.length; dirIndex++) {
-        const dir = KiDir[dirIndex];
-        const adj = sqIter + dir;
-        if (SQOFFBOARD(adj) === BOOL.TRUE) continue;
-        if (adj < 0 || adj > 119) continue;
+      const canQuiet = !capturesOnly && !herrings.length;
 
-        // there must be a piece adjacent to hop over
-        if (GameBoard.pieces[adj] === PIECES.EMPTY) continue;
+      // BLOCK ECLIPSE ADJACENT-HOP FOR UNICORN/ZEBRA
+      const isUnicornOrZebraOrExile =
+        mover === PIECES.wU ||
+        mover === PIECES.bU ||
+        mover === PIECES.wZ ||
+        mover === PIECES.bZ ||
+        mover === PIECES.wX ||
+        mover === PIECES.bX;
 
-        const land = adj + dir;
-        if (SQOFFBOARD(land) === BOOL.TRUE) continue;
-        if (land < 0 || land > 119) continue;
+      // ----- Adjacent hop (orth/diag) -----
+      if (!isUnicornOrZebraOrExile) {
+        for (let dirIndex = 0; dirIndex < KiDir.length; dirIndex++) {
+          const dir = KiDir[dirIndex];
+          const adj = sqIter + dir;
+          if (SQOFFBOARD(adj) === BOOL.TRUE) continue;
+          if (adj < 0 || adj > 119) continue;
 
-        // landing square must be empty (shftI hop doesn't capture)
-        if (GameBoard.pieces[land] !== PIECES.EMPTY) continue;
+          // need a piece to hop over
+          if (GameBoard.pieces[adj] === PIECES.EMPTY) continue;
 
-        // respect herrings filter
-        if (herrings.length && !_.includes(herrings, land)) continue;
+          const land = adj + dir;
+          if (SQOFFBOARD(land) === BOOL.TRUE) continue;
+          if (land < 0 || land > 119) continue;
+          if (GameBoard.pieces[land] !== PIECES.EMPTY) continue;
 
-        // Determine which arcana to consume for this generic hop:
-        // - If the piece has a specific shift available, prefer the specific (use mover id)
-        // - Else if the side has shftI (eclipse), consume that (promo=31)
-        // - Else if Myriad is the only shift, consume the Myriad epsilon
-        // - Otherwise fallback to mover id
-        let promotedForMove;
-        if (pieceHasSpecific) promotedForMove = mover;
-        else if (hasShftIBit) promotedForMove = 31; // eclipse constant
-        else if (hasMyriad) promotedForMove = EPSILON_MYRIAD_CONST;
-        else promotedForMove = mover;
+          if (herrings.length && !_.includes(herrings, land)) continue;
 
-        AddQuietMove(
-          MOVE(sqIter, land, PIECES.EMPTY, promotedForMove, MFLAGSHFT),
-          capturesOnly
-        );
+          // choose what to consume: specific shift > shftI > Myriad > mover
+          let promotedForMove;
+          if (pieceHasSpecific) promotedForMove = mover;
+          else if (hasShftIBit) promotedForMove = 31; // your Eclipse token
+          else if (hasMyriad) promotedForMove = EPSILON_MYRIAD_CONST;
+          else promotedForMove = mover;
+
+          if (canQuiet) {
+            AddQuietMove(
+              MOVE(sqIter, land, PIECES.EMPTY, promotedForMove, MFLAGSHFT),
+              capturesOnly
+            );
+          }
+        }
       }
 
-      // EDGE WRAP behaviour: only when the mover is on left or right file
-      // (file A or H). For A-file use offsets [17,7,-3]; for H-file use
-      // [3,-7,-17]. These offsets are independent of side and allow any
-      // non-pawn/non-king mover to hop to the other side of the board.
+      // ----- Cross-board (edge-wrap) Eclipse — ALWAYS allowed (incl. U/Z) -----
       const file = sqIter % 10;
       if (file === 1 || file === 8) {
         const edgeOffsets = file === 1 ? [17, 7, -3] : [3, -7, -17];
@@ -2697,9 +2688,6 @@ export function GenerateMoves(
           if (GameBoard.pieces[dest] !== PIECES.EMPTY) continue;
           if (herrings.length && !_.includes(herrings, dest)) continue;
 
-          // For edge wrap moves, allow only quiet moves by default.
-          // Choose which arcana to consume using the same precedence as
-          // the adjacency hops: specific shift -> shftI -> Myriad -> mover
           let promotedForEdge;
           if (pieceHasSpecific) promotedForEdge = mover;
           else if (hasShftIBit) promotedForEdge = 31;

@@ -428,6 +428,29 @@ export class UnwrappedDashboard extends React.Component<
             <h1 className="news-title">Transmissions</h1>
             <div className="news-item">
               <h4>
+                Patch 2.7 Live: Halloween Update
+                <h6>Source: medavas</h6>
+                <h6>Date: October 2025</h6>
+                <h6>Category: Mechanics</h6>
+              </h4>
+              <ul>
+                <li>
+                  Letum (mori) - Various effects happen per spell when your
+                  pieces are captured.
+                </li>
+                <li>
+                  Nex (mora) - Various effects happen per spell when you capture
+                  pieces.
+                </li>
+                <li>
+                  Moveable Exile - Each side can summon their own block unit
+                  that moves in a special move pattern. It can not capture or be
+                  captured.
+                </li>
+              </ul>
+            </div>
+            <div className="news-item">
+              <h4>
                 Patch 2.6 Live: Alternate Moveset Update
                 <h6>Source: medavas</h6>
                 <h6>Date: October 2025</h6>

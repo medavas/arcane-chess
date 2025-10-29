@@ -204,82 +204,66 @@ const padModes = (modes: Record<string, GameModeType>) => {
 };
 
 export const modes: Record<string, GameModeType> = padModes({
-  fog: {
-    name: 'fog test',
-    white: {
-      arcana: [
-        arcana.sumnRG,
-        arcana.sumnRF,
-        arcana.sumnRG,
-        arcana.sumnRF,
-        arcana.sumnRH,
-        arcana.sumnRH,
-      ],
-      setup: 'RNBTKWSR',
-    },
-    black: {
-      arcana: [arcana.sumnRG, arcana.sumnRF],
-      setup: 'rnbtkwsr',
-    },
-  },
-  shifttest: {
-    name: 'shift test',
-    white: {
-      arcana: [
-        arcana.shftP,
-        arcana.shftN,
-        arcana.shftB,
-        arcana.shftR,
-        arcana.shftA,
-        arcana.modsDIM,
-      ],
-      setup: 'RNBTKWSR',
-    },
-    black: {
-      arcana: [],
-      setup: 'rnbtkwsr',
-    },
-  },
-  royaltest: {
-    name: 'royal test',
+  test1: {
+    name: 'Release Test 1',
     white: {
       arcana: [
         arcana.sumnRI,
-        arcana.sumnRI,
-        arcana.sumnRV,
-        arcana.sumnRG,
+        arcana.moriNOR,
+        arcana.shftK,
         arcana.shftA,
-        arcana.modsDIM,
+        arcana.moriMAN,
       ],
-      setup: 'RNBTKWSR',
+      setup: 'RNWTKWNR',
     },
     black: {
-      arcana: [arcana.sumnX, arcana.sumnX, arcana.sumnX],
-      setup: 'rnbtkwsr',
+      arcana: [arcana.sumnRG, arcana.sumnV, arcana.modsBAN],
+      setup: 'rswtkwsr',
     },
   },
-  aethersurge: {
-    name: 'surge check test',
+  test2: {
+    name: 'Release Test 2',
     white: {
-      arcana: [arcana.modsSUR],
+      arcana: [arcana.shftA, arcana.modsGLU, arcana.moriPAW],
       setup: 'RNBTKWSR',
     },
     black: {
-      arcana: [arcana.modsSUR],
-      setup: 'rnbtkwsr',
+      arcana: [arcana.shftK, arcana.modsGLU, arcana.moriPAW],
+      setup: 'rnbmkwsr',
+    },
+  },
+  test3: {
+    name: 'Release Test 3',
+    white: {
+      arcana: [arcana.shftI, arcana.moraDYA, arcana.offrK],
+      setup: 'RNBMKWSR',
+    },
+    black: {
+      arcana: [arcana.sumnX, arcana.sumnRI, arcana.modsSUR],
+      setup: 'rnbqkwsr',
+    },
+  },
+  test4: {
+    name: 'Release Test 4',
+    white: {
+      arcana: [
+        arcana.moraMAN,
+        arcana.moraNOR,
+        arcana.sumnN,
+        arcana.sumnN,
+        arcana.sumnN,
+      ],
+      setup: 'RNBQKBNR',
+    },
+    black: {
+      arcana: [arcana.modsPHA, arcana.sumnRA, arcana.moraNOR, arcana.shftG],
+      setup: 'rswtkwsr',
     },
   },
   tutorial1: {
-    name: 'Newest Update',
+    name: 'Tutorial 1',
     white: {
-      arcana: [
-        arcana.shftK,
-        arcana.shftI,
-        arcana.moriDYA,
-        // arcana.moriNOR,
-        // arcana.moriROY,
-        arcana.moraPAW,
-      ],
+      arcana: [arcana.modsINH, arcana.sumnZ, arcana.dyadC],
       setup: 'RNBTKBNR',
     },
     black: {

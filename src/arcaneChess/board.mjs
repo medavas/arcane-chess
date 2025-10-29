@@ -1178,28 +1178,36 @@ export function SqAttacked(sq, side) {
     }
   }
 
-  // shogun
-  // shogun: attacker is a King within the ShoDir ring BUT only counts
-  // as checking if the *defending* King does NOT also have Shogun active.
-  const defenderSide = side ^ 1;
-  const defenderArc =
-    defenderSide === COLOURS.WHITE
-      ? GameBoard.whiteArcane
-      : GameBoard.blackArcane;
-  const defenderKingCanShift =
-    (defenderArc[1] & 512) !== 0 || (defenderArc[1] & 256) !== 0;
+  // --- SHOGUN ---
+  // An attacker King in the ShoDir ring projects pressure only if
+  // the ATTACKER has Shogun (king shift/global shift) and the DEFENDER does NOT.
+  {
+    const attackerArc =
+      side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+    const defenderArc =
+      (side ^ 1) === COLOURS.WHITE
+        ? GameBoard.whiteArcane
+        : GameBoard.blackArcane;
 
-  for (index = 0; index < 16; index++) {
-    pce = GameBoard.pieces[sq + ShoDir[index]];
-    if (
-      pce !== SQUARES.OFFBOARD &&
-      PieceCol[pce] === side &&
-      PieceKing[pce] === BOOL.TRUE &&
-      !overridePresent(sq + ShoDir[index]) &&
-      !(GameBoard.royaltyE[sq + ShoDir[index]] > 0)
-    ) {
-      // only count this as an attack if the defender's King does NOT have Shogun.
-      if (!defenderKingCanShift) return BOOL.TRUE;
+    const attackerHasShogun =
+      (attackerArc[1] & 512) !== 0 || (attackerArc[1] & 256) !== 0;
+    const defenderHasShogun =
+      (defenderArc[1] & 512) !== 0 || (defenderArc[1] & 256) !== 0;
+
+    if (attackerHasShogun && !defenderHasShogun) {
+      for (index = 0; index < 16; index++) {
+        const ringSq = sq + ShoDir[index];
+        pce = GameBoard.pieces[ringSq];
+        if (
+          pce !== SQUARES.OFFBOARD &&
+          PieceCol[pce] === side &&
+          PieceKing[pce] === BOOL.TRUE &&
+          !overridePresent(ringSq) &&
+          !(GameBoard.royaltyE[ringSq] > 0)
+        ) {
+          return BOOL.TRUE;
+        }
+      }
     }
   }
 

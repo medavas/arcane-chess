@@ -474,6 +474,30 @@ const ArcanaProgression = (() => {
     };
   }
 
+  function advanceBy(sideInput, steps) {
+    const s = sideKey(sideInput);
+    if (!enabled || (steps | 0) <= 0) return [];
+    let mc = moveCount[s] | 0;
+    const grants = [];
+
+    for (let i = 0; i < steps; i++) {
+      mc++;
+      if (mc >= firstAt && (mc - firstAt) % every === 0) {
+        const k = grantOne(s);
+        if (k) grants.push(k);
+      }
+    }
+    moveCount[s] = mc;
+    return grants;
+  }
+
+  function rewindBy(sideInput, steps, revokedKeys = []) {
+    const s = sideKey(sideInput);
+    const n = revokedKeys.length | 0;
+    moveCount[s] = Math.max(0, (moveCount[s] | 0) - (steps | 0));
+    grantsGiven[s] = Math.max(0, (grantsGiven[s] | 0) - n);
+  }
+
   return {
     setEvery,
     setFirstAt,
@@ -481,6 +505,8 @@ const ArcanaProgression = (() => {
     resetSide,
     onMoveCommitted,
     getProgressState,
+    advanceBy,
+    rewindBy,
   };
 })();
 
@@ -554,6 +580,9 @@ export function applyMoriMoraRewards(context, keys) {
   const moriGifts = [];
   const moraGifts = [];
 
+  let moriMana = null;
+  let moraMana = null;
+
   const mk = pickMMKey(keys.moriKeys, context.piece, 'mori');
   if (mk) {
     moriFired = true;
@@ -572,9 +601,10 @@ export function applyMoriMoraRewards(context, keys) {
         offerGrant(context.victimSide, sKey, 1);
         moriGifts.push(sKey);
       }
+    } else if (mk === 'moriMAN') {
+      const keysGranted = ArcanaProgression.advanceBy(context.victimSide, 2);
+      moriMana = { side: context.victimSide, steps: 2, keys: keysGranted };
     }
-    // else if (mk === 'moriMAN') {
-    // }
   }
 
   const nk = pickMMKey(keys.moraKeys, context.piece, 'mora');
@@ -595,13 +625,15 @@ export function applyMoriMoraRewards(context, keys) {
         offerGrant(context.killerSide, sKey, 1);
         moraGifts.push(sKey);
       }
+    } else if (nk === 'moraMAN') {
+      const keysGranted = ArcanaProgression.advanceBy(context.killerSide, 2);
+      moraMana = { side: context.killerSide, steps: 2, keys: keysGranted };
     }
-    //  else if (nk === 'moraMAN') {
-    // }
   }
 
-  return { moriFired, moraFired, moriGifts, moraGifts };
+  return { moriFired, moraFired, moriGifts, moraGifts, moriMana, moraMana };
 }
+
 export function getProgressState(side) {
   return ArcanaProgression.getProgressState(side);
 }
