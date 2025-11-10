@@ -190,7 +190,7 @@ export function MakeUserMove(
   swapType = '',
   royaltyEpsilon = PIECES.EMPTY
 ) {
-  const { parsed, isInitPromotion } = ParseMove(
+  let moveResult = ParseMove(
     orig,
     dest,
     pieceEpsilon,
@@ -198,26 +198,31 @@ export function MakeUserMove(
     royaltyEpsilon
   );
 
-  if (isInitPromotion && pieceEpsilon === PIECES.EMPTY) {
-    return { parsed, isInitPromotion: BOOL.TRUE };
+  if (moveResult.isInitPromotion && pieceEpsilon === PIECES.EMPTY) {
+    if (GameBoard.side === COLOURS.WHITE && whiteArcaneConfig.modsDIV > 0) {
+      moveResult = ParseMove(orig, dest, PIECES.wV, swapType, royaltyEpsilon);
+    } else if (
+      GameBoard.side === COLOURS.BLACK &&
+      blackArcaneConfig.modsDIV > 0
+    ) {
+      moveResult = ParseMove(orig, dest, PIECES.bV, swapType, royaltyEpsilon);
+    } else {
+      return { parsed: moveResult.parsed, isInitPromotion: BOOL.TRUE };
+    }
   }
 
-  // If ParseMove couldn't find a valid move, don't apply anything.
-  if (parsed === NOMOVE) {
-    return { parsed, isInitPromotion: BOOL.FALSE };
+  if (moveResult.parsed === NOMOVE) {
+    return { parsed: moveResult.parsed, isInitPromotion: BOOL.FALSE };
   }
 
-  // Apply the parsed move and check whether it was legal.
-  const makeResult = MakeMove(parsed, 'userMove');
+  const makeResult = MakeMove(moveResult.parsed, 'userMove');
   if (makeResult === BOOL.FALSE) {
-    // MakeMove already reverted the illegal move via TakeMove(), so
-    // return NOMOVE so the UI won't record or act on this move.
     return { parsed: NOMOVE, isInitPromotion: BOOL.FALSE };
   }
 
   CheckAndSet();
 
-  return { parsed, isInitPromotion: BOOL.FALSE };
+  return { parsed: moveResult.parsed, isInitPromotion: BOOL.FALSE };
 }
 
 export function DrawMaterial() {

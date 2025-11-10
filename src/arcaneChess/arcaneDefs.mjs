@@ -64,32 +64,32 @@ export const POWERBIT = {
   dyadF: 32, // v k
 
   // 3 summons active 26
-  sumnP: 1,
-  sumnS: 2,
-  sumnH: 4,
-  sumnN: 8,
-  sumnB: 16,
-  sumnR: 32,
-  sumnQ: 64,
-  sumnT: 128,
-  sumnM: 256,
-  sumnV: 512,
-  sumnZ: 1024,
-  sumnU: 2048,
-  sumnW: 4096,
-  sumnX: 8192,
-  sumnRQ: 16384,
-  sumnRT: 32768,
-  sumnRM: 65536,
-  sumnRV: 131072,
-  sumnRE: 262144,
-  sumnRY: 524288,
-  sumnRZ: 1048576,
-  sumnRA: 2097152,
-  sumnRF: 4194304,
-  sumnRG: 8388608,
-  sumnRH: 16777216,
-  sumnRI: 33554432,
+  sumnP: 1, //         // a
+  sumnS: 2, //         // a
+  sumnH: 4, //         //
+  sumnN: 8, //         //
+  sumnB: 16, //        //
+  sumnR: 32, //        //
+  sumnQ: 64, //        //
+  sumnT: 128, //       //
+  sumnM: 256, //       //
+  sumnV: 512, //       //
+  sumnZ: 1024, //      //
+  sumnU: 2048, //      //
+  sumnW: 4096, //      //
+  sumnX: 8192, //      //
+  sumnRQ: 16384, //    //
+  sumnRT: 32768, //    //
+  sumnRM: 65536, //    //
+  sumnRV: 131072, //   //
+  sumnRE: 262144, //   //
+  sumnRY: 524288, //   // file
+  sumnRZ: 1048576, //  // rank
+  sumnRA: 2097152, //  // tomb
+  sumnRF: 4194304, //  // 3x3
+  sumnRG: 8388608, //  // 5x5
+  sumnRH: 16777216, // // entangle fog
+  sumnRI: 33554432, // // ra
 
   // 5 active 18
   offrA: 1,
@@ -139,21 +139,21 @@ export const POWERBIT = {
   modsFUT: 128, // active
   modsREA: 256, // inherent
   modsEXT: 512, // inherent
-  // modsSKI: 1024, // DEPRECATED
-  modsTRO: 2048, // inherent
-  modsREI: 4096, // inherent
-  modsSOV: 8192, // passive
-  modsDOP: 16384, // passive
-  modsMAG: 32768, // active
-  modsBLA: 65536, // active
-  modsSUR: 131072, // passive
-  modsDIM: 262144, // passive
-  modsRES: 524288, // passive
-  modsHER: 1048576, // inherent
-  modsBAN: 2097152, // inherent
-  modsFOG: 4194304, // passive
-  modsMIS: 8388608, // passive
-  modsHUR: 16777216, // passive
+  modsDIV: 1024, //              divine reckoning
+  modsTRO: 2048, // inherent     // trojan horse
+  modsREI: 4096, // inherent     . reincarnet to one spell I think
+  modsSOV: 8192, // passive      sovereign (summon pieces have square conditions - deprecate?
+  modsDOP: 16384, // passive     doppleganger
+  modsMAG: 32768, // active      magnet
+  modsBLA: 65536, // active      black hole
+  modsSUR: 131072, // passive    pawn surge
+  modsDIM: 262144, // passive    5th dimension sword
+  modsHER: 524288, // passive    hermit
+  modsHEM: 1048576, // inherent  hemlock
+  modsBAN: 2097152, // inherent  // banshee
+  modsY: 4194304, // passive     // .
+  modsZ: 8388608, // passive     // .
+  modsHUR: 16777216, // passive  // hurricane
 
   // 6 on your piece death 4
   moriDYA: 1, // inherent

@@ -270,6 +270,11 @@ export function AddWhitePawnCaptureMove(
     AddCaptureMove(MOVE(from, to, cap, PIECES.wU, flag), flag, capturesOnly);
     AddCaptureMove(MOVE(from, to, cap, PIECES.wS, flag), flag, capturesOnly);
     AddCaptureMove(MOVE(from, to, cap, PIECES.wW, flag), flag, capturesOnly);
+    // If Divine Reckoning is active for white, also offer Valkyrie as a
+    // promotion option.
+    if (GameBoard.whiteArcane[4] & POWERBIT.modsDIV) {
+      AddCaptureMove(MOVE(from, to, cap, PIECES.wV, flag), flag, capturesOnly);
+    }
   }
   if (RanksBrd[to] === RANKS.RANK_8) {
     AddCaptureMove(MOVE(from, to, cap, PIECES.wQ, flag), flag, capturesOnly);
@@ -282,6 +287,11 @@ export function AddWhitePawnCaptureMove(
     AddCaptureMove(MOVE(from, to, cap, PIECES.wN, flag), flag, capturesOnly);
     AddCaptureMove(MOVE(from, to, cap, PIECES.wS, flag), flag, capturesOnly);
     AddCaptureMove(MOVE(from, to, cap, PIECES.wW, flag), flag, capturesOnly);
+    // If Divine Reckoning is active for white, also offer Valkyrie as a
+    // promotion option.
+    if (GameBoard.whiteArcane[4] & POWERBIT.modsDIV) {
+      AddCaptureMove(MOVE(from, to, cap, PIECES.wV, flag), flag, capturesOnly);
+    }
   } else {
     AddCaptureMove(MOVE(from, to, cap, eps, flag), flag, capturesOnly);
   }
@@ -306,6 +316,10 @@ export function AddBlackPawnCaptureMove(
     AddCaptureMove(MOVE(from, to, cap, PIECES.bU, flag), flag, capturesOnly);
     AddCaptureMove(MOVE(from, to, cap, PIECES.bS, flag), flag, capturesOnly);
     AddCaptureMove(MOVE(from, to, cap, PIECES.bW, flag), flag, capturesOnly);
+    // Divine Reckoning: allow Valkyrie promotions for black
+    if (GameBoard.blackArcane[4] & POWERBIT.modsDIV) {
+      AddCaptureMove(MOVE(from, to, cap, PIECES.bV, flag), flag, capturesOnly);
+    }
   }
   if (RanksBrd[to] === RANKS.RANK_1) {
     AddCaptureMove(MOVE(from, to, cap, PIECES.bQ, flag), flag, capturesOnly);
@@ -318,6 +332,10 @@ export function AddBlackPawnCaptureMove(
     AddCaptureMove(MOVE(from, to, cap, PIECES.bN, flag), flag, capturesOnly);
     AddCaptureMove(MOVE(from, to, cap, PIECES.bS, flag), flag, capturesOnly);
     AddCaptureMove(MOVE(from, to, cap, PIECES.bW, flag), flag, capturesOnly);
+    // Divine Reckoning: allow Valkyrie promotions for black
+    if (GameBoard.blackArcane[4] & POWERBIT.modsDIV) {
+      AddCaptureMove(MOVE(from, to, cap, PIECES.bV, flag), flag, capturesOnly);
+    }
   } else {
     AddCaptureMove(MOVE(from, to, cap, eps, flag), flag, capturesOnly);
   }
@@ -336,6 +354,10 @@ export function AddWhitePawnQuietMove(from, to, eps, flag, capturesOnly) {
     AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wU, flag), capturesOnly);
     AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wS, flag), capturesOnly);
     AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wW, flag), capturesOnly);
+    // Divine Reckoning: include Valkyrie as a quiet promotion option for white
+    if (GameBoard.whiteArcane[4] & POWERBIT.modsDIV) {
+      AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wV, flag), capturesOnly);
+    }
   }
   if (RanksBrd[to] === RANKS.RANK_8) {
     if (GameBoard.suspend > 0) return;
@@ -349,6 +371,10 @@ export function AddWhitePawnQuietMove(from, to, eps, flag, capturesOnly) {
     AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wU, flag), capturesOnly);
     AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wS, flag), capturesOnly);
     AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wW, flag), capturesOnly);
+    // Divine Reckoning: include Valkyrie as a quiet promotion option for white
+    if (GameBoard.whiteArcane[4] & POWERBIT.modsDIV) {
+      AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wV, flag), capturesOnly);
+    }
   } else {
     AddQuietMove(MOVE(from, to, PIECES.EMPTY, eps, flag), capturesOnly);
   }
@@ -367,6 +393,10 @@ export function AddBlackPawnQuietMove(from, to, eps, flag, capturesOnly) {
     AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bU, flag), capturesOnly);
     AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bS, flag), capturesOnly);
     AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bW, flag), capturesOnly);
+    // Divine Reckoning: include Valkyrie as a quiet promotion option for black
+    if (GameBoard.blackArcane[4] & POWERBIT.modsDIV) {
+      AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bV, flag), capturesOnly);
+    }
   }
   if (RanksBrd[to] === RANKS.RANK_1) {
     if (GameBoard.suspend > 0) return;
@@ -380,6 +410,10 @@ export function AddBlackPawnQuietMove(from, to, eps, flag, capturesOnly) {
     AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bU, flag), capturesOnly);
     AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bS, flag), capturesOnly);
     AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bW, flag), capturesOnly);
+    // Divine Reckoning: include Valkyrie as a quiet promotion option for black
+    if (GameBoard.blackArcane[4] & POWERBIT.modsDIV) {
+      AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bV, flag), capturesOnly);
+    }
   } else {
     AddQuietMove(MOVE(from, to, PIECES.EMPTY, eps, flag), capturesOnly);
   }

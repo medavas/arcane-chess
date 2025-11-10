@@ -28,6 +28,7 @@ import {
   offerRevert,
   getMoriMoraState,
   applyMoriMoraRewards,
+  POWERBIT,
 } from './arcaneDefs';
 import {
   COLOURS,
@@ -382,42 +383,40 @@ export function MakeMove(move, moveType = '') {
     ) {
       ClearPiece(epSq);
 
-      {
-        if (commit && !h.moriMoraApplied) {
-          const killerSide = side === COLOURS.WHITE ? 'white' : 'black';
-          const victimSide = side === COLOURS.WHITE ? 'black' : 'white';
-          const context = {
-            killerSide,
-            victimSide,
-            piece: victim,
-            move,
-            board: GameBoard,
-          };
-          const moriMoraKeys = getMoriMoraState(context);
-          const mmResult = applyMoriMoraRewards(context, moriMoraKeys);
-          if (mmResult && mmResult.moraFired) h.moraTag = true;
-          if (mmResult && mmResult.moriFired) h.moriTag = true;
-          if (mmResult && mmResult.moriGifts) {
-            h.moriGifts = mmResult.moriGifts;
-            h.moriSide = victimSide;
-          }
-          if (mmResult && mmResult.moraGifts) {
-            h.moraGifts = mmResult.moraGifts;
-            h.moraSide = killerSide;
-          }
-          if (mmResult && (mmResult.moraFired || mmResult.moriFired))
-            h.moriMoraApplied = true;
-          if (mmResult && mmResult.moriMana) {
-            h.moriMana = mmResult.moriMana;
-          }
-          if (mmResult && mmResult.moraMana) {
-            h.moraMana = mmResult.moraMana;
-          }
-          let io = '';
-          if (mmResult && mmResult.moraFired) io += ' -N';
-          if (mmResult && mmResult.moriFired) io += ' -L';
-          if (io) h.ioSuffix = io;
+      if (commit && !h.moriMoraApplied) {
+        const killerSide = side === COLOURS.WHITE ? 'white' : 'black';
+        const victimSide = side === COLOURS.WHITE ? 'black' : 'white';
+        const context = {
+          killerSide,
+          victimSide,
+          piece: victim,
+          move,
+          board: GameBoard,
+        };
+        const moriMoraKeys = getMoriMoraState(context);
+        const mmResult = applyMoriMoraRewards(context, moriMoraKeys);
+        if (mmResult && mmResult.moraFired) h.moraTag = true;
+        if (mmResult && mmResult.moriFired) h.moriTag = true;
+        if (mmResult && mmResult.moriGifts) {
+          h.moriGifts = mmResult.moriGifts;
+          h.moriSide = victimSide;
         }
+        if (mmResult && mmResult.moraGifts) {
+          h.moraGifts = mmResult.moraGifts;
+          h.moraSide = killerSide;
+        }
+        if (mmResult && (mmResult.moraFired || mmResult.moriFired))
+          h.moriMoraApplied = true;
+        if (mmResult && mmResult.moriMana) {
+          h.moriMana = mmResult.moriMana;
+        }
+        if (mmResult && mmResult.moraMana) {
+          h.moraMana = mmResult.moraMana;
+        }
+        let io = '';
+        if (mmResult && mmResult.moraFired) io += ' -N';
+        if (mmResult && mmResult.moriFired) io += ' -L';
+        if (io) h.ioSuffix = io;
       }
 
       GameBoard.fiftyMove = 0;
@@ -525,46 +524,44 @@ export function MakeMove(move, moveType = '') {
     const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
     ClearPiece(to);
 
-    {
-      if (commit && !h.moriMoraApplied) {
-        const killerSide = side === COLOURS.WHITE ? 'white' : 'black';
-        const victimPiece = targetPieceAtTo;
-        const victimSide =
-          PieceCol[victimPiece] === COLOURS.WHITE ? 'white' : 'black';
-        const sameSide = killerSide === victimSide;
-        const context = {
-          killerSide,
-          victimSide,
-          piece: victimPiece,
-          move,
-          board: GameBoard,
-        };
-        const moriMoraKeys = getMoriMoraState(context);
-        if (sameSide) moriMoraKeys.moraKeys = [];
-        const mmResult = applyMoriMoraRewards(context, moriMoraKeys);
-        if (mmResult && mmResult.moraFired) h.moraTag = true;
-        if (mmResult && mmResult.moriFired) h.moriTag = true;
-        if (mmResult && mmResult.moriGifts) {
-          h.moriGifts = mmResult.moriGifts;
-          h.moriSide = victimSide;
-        }
-        if (mmResult && mmResult.moraGifts) {
-          h.moraGifts = mmResult.moraGifts;
-          h.moraSide = killerSide;
-        }
-        if (mmResult && (mmResult.moraFired || mmResult.moriFired))
-          h.moriMoraApplied = true;
-        if (mmResult && mmResult.moriMana) {
-          h.moriMana = mmResult.moriMana;
-        }
-        if (mmResult && mmResult.moraMana) {
-          h.moraMana = mmResult.moraMana;
-        }
-        let io = '';
-        if (mmResult && mmResult.moraFired) io += ' -N';
-        if (mmResult && mmResult.moriFired) io += ' -L';
-        if (io) h.ioSuffix = io;
+    if (commit && !h.moriMoraApplied) {
+      const killerSide = side === COLOURS.WHITE ? 'white' : 'black';
+      const victimPiece = targetPieceAtTo;
+      const victimSide =
+        PieceCol[victimPiece] === COLOURS.WHITE ? 'white' : 'black';
+      const sameSide = killerSide === victimSide;
+      const context = {
+        killerSide,
+        victimSide,
+        piece: victimPiece,
+        move,
+        board: GameBoard,
+      };
+      const moriMoraKeys = getMoriMoraState(context);
+      if (sameSide) moriMoraKeys.moraKeys = [];
+      const mmResult = applyMoriMoraRewards(context, moriMoraKeys);
+      if (mmResult && mmResult.moraFired) h.moraTag = true;
+      if (mmResult && mmResult.moriFired) h.moriTag = true;
+      if (mmResult && mmResult.moriGifts) {
+        h.moriGifts = mmResult.moriGifts;
+        h.moriSide = victimSide;
       }
+      if (mmResult && mmResult.moraGifts) {
+        h.moraGifts = mmResult.moraGifts;
+        h.moraSide = killerSide;
+      }
+      if (mmResult && (mmResult.moraFired || mmResult.moriFired))
+        h.moriMoraApplied = true;
+      if (mmResult && mmResult.moriMana) {
+        h.moriMana = mmResult.moriMana;
+      }
+      if (mmResult && mmResult.moraMana) {
+        h.moraMana = mmResult.moraMana;
+      }
+      let io = '';
+      if (mmResult && mmResult.moraFired) io += ' -N';
+      if (mmResult && mmResult.moriFired) io += ' -L';
+      if (io) h.ioSuffix = io;
     }
 
     GameBoard.fiftyMove = 0;
@@ -592,6 +589,38 @@ export function MakeMove(move, moveType = '') {
   ) {
     ClearPiece(to);
     AddPiece(to, promoEpsilon);
+    try {
+      const cfg =
+        side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+
+      if (
+        (promoEpsilon === PIECES.wV && side === COLOURS.WHITE) ||
+        (promoEpsilon === PIECES.bV && side === COLOURS.BLACK)
+      ) {
+        if (cfg[4] & 1024) {
+          if (side === COLOURS.WHITE) {
+            whiteArcaneConfig.modsDIV -= 1;
+            h.modsDIVConsumed = true;
+            if ((GameBoard.whiteArcane[4] & POWERBIT.modsREA) === 0) {
+              GameBoard.whiteArcane[4] |= POWERBIT.modsREA;
+              whiteArcaneConfig.modsREA = 0;
+            }
+            whiteArcaneConfig.modsREA += 1;
+          }
+          if (side === COLOURS.BLACK) {
+            blackArcaneConfig.modsDIV -= 1;
+            h.modsDIVConsumed = true;
+            if ((GameBoard.blackArcane[4] & POWERBIT.modsREA) === 0) {
+              GameBoard.blackArcane[4] |= POWERBIT.modsREA;
+              blackArcaneConfig.modsREA = 0;
+            }
+            blackArcaneConfig.modsREA += 1;
+          }
+        }
+      }
+    } catch (e) {
+      /* defensive ignore */
+    }
   }
 
   if (TOSQ(move) > 0 && isConsumeFlag(move) && !isShift(move)) {
@@ -717,9 +746,17 @@ export function MakeMove(move, moveType = '') {
   {
     const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
     const sKey = sumnKeyFromMove(move);
-    if (sKey) cfg[sKey] = (cfg[sKey] ?? 0) - 1;
+    if (sKey && commit) {
+      cfg[sKey] = (cfg[sKey] ?? 0) - 1;
+      h.spellKey = sKey;
+      h.spellCfg = cfg;
+    }
     const shKey = shiftKeyFromMove(move, moverPiece);
-    if (shKey) cfg[shKey] = (cfg[shKey] ?? 0) - 1;
+    if (shKey && commit) {
+      cfg[shKey] = (cfg[shKey] ?? 0) - 1;
+      h.shiftKey = shKey;
+      h.shiftCfg = cfg;
+    }
   }
 
   if (TOSQ(move) === 0 && FROMSQ(move) > 0 && CAPTURED(move) > 0) {
@@ -899,15 +936,20 @@ export function TakeMove(wasDyadMove = false) {
 
   const promoEpsilon = !isShift(move) ? pieceEpsilon : PIECES.EMPTY;
 
-  const moverAtTo = GameBoard.pieces[to];
+  // const moverAtTo = GameBoard.pieces[to];
 
   {
-    const cfg =
-      GameBoard.side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
-    const sKey = sumnKeyFromMove(move);
-    if (sKey) cfg[sKey] = (cfg[sKey] ?? 0) + 1;
-    const shKey = shiftKeyFromMove(move, moverAtTo);
-    if (shKey) cfg[shKey] = (cfg[shKey] ?? 0) + 1;
+    const h = GameBoard.history[GameBoard.hisPly];
+    if (h.spellKey && h.spellCfg) {
+      h.spellCfg[h.spellKey] = (h.spellCfg[h.spellKey] ?? 0) + 1;
+      h.spellKey = undefined;
+      h.spellCfg = undefined;
+    }
+    if (h.shiftKey && h.shiftCfg) {
+      h.shiftCfg[h.shiftKey] = (h.shiftCfg[h.shiftKey] ?? 0) + 1;
+      h.shiftKey = undefined;
+      h.shiftCfg = undefined;
+    }
   }
 
   if (GameBoard.enPas !== SQUARES.NO_SQ) HASH_EP();
@@ -996,29 +1038,26 @@ export function TakeMove(wasDyadMove = false) {
     (move & (MFLAGSWAP | MFLAGSUMN | MFLAGEP)) === 0
   ) {
     AddPiece(to, captured);
-
-    {
-      const h = GameBoard.history[GameBoard.hisPly];
-      if (h && h.moriMana) {
-        const { side, steps, keys = [] } = h.moriMana;
-        const cfg = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
-        for (let i = 0; i < keys.length; i++) {
-          const k = keys[i];
-          cfg[k] = Math.max(0, (cfg[k] | 0) - 1);
-        }
-        ArcanaProgression.rewindBy(side, steps, keys);
-        h.moriMana = undefined;
+    const h = GameBoard.history[GameBoard.hisPly];
+    if (h && h.moriMana) {
+      const { side, steps, keys = [] } = h.moriMana;
+      const cfg = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+      for (let i = 0; i < keys.length; i++) {
+        const k = keys[i];
+        cfg[k] = Math.max(0, (cfg[k] | 0) - 1);
       }
-      if (h && h.moraMana) {
-        const { side, steps, keys = [] } = h.moraMana;
-        const cfg = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
-        for (let i = 0; i < keys.length; i++) {
-          const k = keys[i];
-          cfg[k] = Math.max(0, (cfg[k] | 0) - 1);
-        }
-        ArcanaProgression.rewindBy(side, steps, keys);
-        h.moraMana = undefined;
+      ArcanaProgression.rewindBy(side, steps, keys);
+      h.moriMana = undefined;
+    }
+    if (h && h.moraMana) {
+      const { side, steps, keys = [] } = h.moraMana;
+      const cfg = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+      for (let i = 0; i < keys.length; i++) {
+        const k = keys[i];
+        cfg[k] = Math.max(0, (cfg[k] | 0) - 1);
       }
+      ArcanaProgression.rewindBy(side, steps, keys);
+      h.moraMana = undefined;
     }
 
     const cfg =
@@ -1040,6 +1079,28 @@ export function TakeMove(wasDyadMove = false) {
     if (GameBoard.pieces[from] === expectedPromo) {
       ClearPiece(from);
       AddPiece(from, GameBoard.side === COLOURS.WHITE ? PIECES.wP : PIECES.bP);
+
+      try {
+        if (
+          (promoEpsilon === PIECES.wV && GameBoard.side === COLOURS.WHITE) ||
+          (promoEpsilon === PIECES.bV && GameBoard.side === COLOURS.BLACK)
+        ) {
+          if (h.modsDIVConsumed) {
+            if (GameBoard.side === COLOURS.WHITE) {
+              whiteArcaneConfig.modsDIV += 1;
+              whiteArcaneConfig.modsREA -= 1;
+              console.log(whiteArcaneConfig);
+            }
+            if (GameBoard.side === COLOURS.BLACK) {
+              blackArcaneConfig.modsDIV += 1;
+              blackArcaneConfig.modsREA -= 1;
+            }
+            h.modsDIVConsumed = undefined;
+          }
+        }
+      } catch (e) {
+        /* defensive ignore */
+      }
     }
   } else if (TOSQ(move) > 0 && isSummon(move)) {
     if (promoEpsilon > 0) {

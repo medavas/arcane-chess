@@ -781,15 +781,26 @@ class UnwrappedMissionView extends React.Component<Props, State> {
 
   promotionSelectAsync(callback: () => void): Promise<void> {
     return new Promise((resolve) => {
-      this.setState({ promotionModalOpen: true });
-      this.intervalId = setInterval(() => {
-        if (this.state.placingPromotion) {
-          clearInterval(this.intervalId!);
-          this.intervalId = null;
+      if (this.arcaneChess().hasDivineReckoning()) {
+        // Auto-promote to Valkyrie when Divine Reckoning is active
+        const valkyriePiece = `${
+          this.state.playerColor === 'white' ? 'w' : 'b'
+        }V`;
+        this.setState({ placingPromotion: pieces[valkyriePiece] }, () => {
           callback();
           resolve();
-        }
-      }, 100);
+        });
+      } else {
+        this.setState({ promotionModalOpen: true });
+        this.intervalId = setInterval(() => {
+          if (this.state.placingPromotion) {
+            clearInterval(this.intervalId!);
+            this.intervalId = null;
+            callback();
+            resolve();
+          }
+        }, 100);
+      }
     });
   }
 
@@ -818,7 +829,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
               if (!entry) return null;
 
               const isInherent = entry.type === 'inherent';
-              if (!isInherent && (!value || value <= 0)) return null;
+              if (!value || value <= 0) return null;
 
               const futureSightAvailable =
                 this.state.history.length >= 4 &&

@@ -559,6 +559,13 @@
     "type": "inherent",
     "imagePath": "/modsDIM"
   },
+  "modsDIV": {
+    "id": "modsDIV",
+    "name": "Divine Reckoning",
+    "description": "Friendly Pawn automatically promote to a Valkyrie with Iron Reach. Single use.",
+    "type": "passive",
+    "imagePath": "/modsDIV"
+  },
   "moriDYA": {
     "id": "moriDYA",
     "name": "Letum Gemini",

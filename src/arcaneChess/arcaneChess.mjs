@@ -42,6 +42,7 @@ import { PrSq } from './io';
 
 export default function arcaneChess() {
   // toggle to debug - turns off turn slot unlocks
+  // debug all spells
   let debugAllSpells = false; // prod
   // let debugAllSpells = true; // dev
 
@@ -296,6 +297,13 @@ export default function arcaneChess() {
         royaltyE: GameBoard.royaltyE,
         royaltyF: GameBoard.royaltyF,
       };
+    },
+    hasDivineReckoning: () => {
+      if (GameBoard.side === COLOURS.WHITE) {
+        return whiteArcaneConfig.modsDIV > 0;
+      } else {
+        return blackArcaneConfig.modsDIV > 0;
+      }
     },
     clearRoyalties: () => {
       GameBoard.royaltyQ = {};
