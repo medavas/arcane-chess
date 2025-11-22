@@ -614,14 +614,14 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
     }));
   };
 
-  promotionSelectAsync(callback: () => void): Promise<void> {
+  promotionSelectAsync(callback: (piece: number) => void): Promise<void> {
     return new Promise((resolve) => {
       if (this.arcaneChess().hasDivineReckoning()) {
         // Auto-promote to Valkyrie when Divine Reckoning is active
         const valkyriePiece = `${this.state.playerColor === 'white' ? 'w' : 'b'
           }V`;
         this.setState({ placingPromotion: pieces[valkyriePiece] }, () => {
-          callback();
+          callback(this.state.placingPromotion!);
           resolve();
         });
       } else {
@@ -630,7 +630,7 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
           if (this.state.placingPromotion) {
             clearInterval(this.intervalId!);
             this.intervalId = null;
-            callback();
+            callback(this.state.placingPromotion);
             resolve();
           }
         }, 100);
@@ -1422,374 +1422,27 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
                     thinking: this.state.thinking,
                     playerColor: this.state.playerColor,
                     placingPromotion: this.state.placingPromotion,
+                    isDyadMove: this.state.isDyadMove,
                   }}
-                  onMove={(orig: string, dest: string) => {
-                    const swapOrTeleport = this.state.isTeleport
-                      ? 'TELEPORT'
-                      : this.state.swapType;
-                    this.chessgroundRef.current?.setAutoShapes([]);
-                    const { parsed, isInitPromotion = false } =
-                      this.arcaneChess().makeUserMove(
-                        orig,
-                        dest,
-                        this.state.placingPromotion,
-                        swapOrTeleport,
-                        this.state.placingRoyalty
-                      );
-                    if (this.state.isDyadMove) {
-                      this.arcaneChess().generatePlayableOptions();
-                      this.arcaneChess().parseCurrentFen();
-                      const dests = this.arcaneChess().getGroundMoves();
-                      if (dests.size === 0) {
-                        this.arcaneChess().takeBackHalfDyad();
-                        this.arcaneChess().deactivateDyad();
-                        this.setState((prevState) => ({
-                          ...prevState,
-                          isDyadMove: false,
-                          normalMovesOnly: false,
-                        }));
-                        return;
-                      }
-                      audioManager.playSFX('fire');
-                      this.setState((prevState) => ({
-                        ...prevState,
-                        history: [...prevState.history, [PrMove(parsed)]],
-                        fen: outputFenOfCurrentPosition(),
-                        fenHistory: [
-                          ...prevState.fenHistory,
-                          outputFenOfCurrentPosition(),
-                        ],
-                        lastMoveHistory: [
-                          ...prevState.lastMoveHistory,
-                          [orig, dest],
-                        ],
-                      }));
-                    } else {
+                  onGameStateChange={(newState) => this.setState(newState)}
+                  onGameOver={(result) => {
+                    this.setState(result, () => {
                       if (
-                        PROMOTED(parsed) > 0 ||
-                        parsed & MFLAGCNSM ||
-                        parsed & MFLAGSHFT
+                        _.includes(
+                          this.state.gameOverType,
+                          `${this.state.playerColor} mates`
+                        )
                       ) {
-                        audioManager.playSFX('fire');
-                      } else if (ARCANEFLAG(parsed) > 0) {
-                        audioManager.playSFX('spell');
-                      } else if (CAPTURED(parsed) > 0) {
-                        audioManager.playSFX('capture');
-                      } else {
-                        audioManager.playSFX('move');
-                      }
-                    }
-                    if (isInitPromotion) {
-                      this.promotionSelectAsync(() => {
-                        const { parsed } = this.arcaneChess().makeUserMove(
-                          orig,
-                          dest,
-                          this.state.placingPromotion,
-                          swapOrTeleport,
-                          this.state.placingRoyalty
+                        this.handleVictory(
+                          this.stopAndReturnTime() as number | null
                         );
-                        if (
-                          (CAPTURED(parsed) > 0 &&
-                            ARCANEFLAG(parsed) === 0) ||
-                          InCheck()
-                        ) {
-                          audioManager.playSFX('capture');
-                        } else {
-                          audioManager.playSFX('move');
-                        }
-                        if (!PrMove(parsed)) {
-                          console.log('invalid move');
-                        }
-                        if (this.state.isDyadMove) {
-                          this.setState({
-                            isDyadMove: false,
-                            normalMovesOnly: true,
-                          });
-                        } else {
-                          this.normalMoveStateAndEngineGo(parsed, orig, dest);
-                        }
-                      });
-                    } else {
-                      if (!PrMove(parsed)) {
-                        console.log('invalid move');
                       }
-                      if (this.state.isDyadMove) {
-                        this.setState((prevState) => ({
-                          ...prevState,
-                          isDyadMove: false,
-                          normalMovesOnly: true,
-                        }));
-                      } else {
-                        this.normalMoveStateAndEngineGo(parsed, orig, dest);
-                      }
-                    }
-                    this.setState({
-                      futureSightAvailable: true,
                     });
                   }}
-                  onDropNewPiece={(piece: string, key: string) => {
-                    this.chessgroundRef.current?.setAutoShapes([]);
-                    if (
-                      GameBoard.pieces[prettyToSquare(key)] === PIECES.EMPTY
-                    ) {
-                      const { parsed } = this.arcaneChess().makeUserMove(
-                        null,
-                        key,
-                        this.state.placingPiece,
-                        '',
-                        this.state.placingRoyalty
-                      );
-                      if (this.state.placingPiece > 0) {
-                        audioManager.playSFX('fire');
-                      }
-                      if (this.state.placingRoyalty > 0) {
-                        audioManager.playSFX('freeze');
-                      }
-                      if (!PrMove(parsed)) {
-                        console.log('invalid move', PrMove(parsed), piece);
-                      }
-                      this.setState(
-                        (prevState) => ({
-                          historyPly: prevState.historyPly + 1,
-                          history: [...prevState.history, PrMove(parsed)],
-                          fen: outputFenOfCurrentPosition(),
-                          fenHistory: [
-                            ...prevState.fenHistory,
-                            outputFenOfCurrentPosition(),
-                          ],
-                          lastMoveHistory: [
-                            ...prevState.lastMoveHistory,
-                            ['a0', key],
-                          ],
-                          placingPiece: 0,
-                          placingRoyalty: 0,
-                          swapType: '',
-                          offeringType: '',
-                          isTeleport: false,
-                          futureSightAvailable: true,
-                        }),
-                        () => {
-                          if (CheckAndSet()) {
-                            this.setState(
-                              {
-                                gameOver: true,
-                                gameOverType: CheckResult().gameResult,
-                              },
-                              () => {
-                                if (
-                                  _.includes(
-                                    this.state.gameOverType,
-                                    `${this.state.playerColor} mates`
-                                  )
-                                ) {
-                                  this.handleVictory(
-                                    this.stopAndReturnTime() as number | null
-                                  );
-                                }
-                              }
-                            );
-                            return;
-                          } else {
-                            this.engineGo();
-                          }
-                        }
-                      );
-                    }
-                    if (this.state.placingRoyalty !== 0) {
-                      this.setState((prevState) => ({
-                        ...prevState,
-                        royalties: {
-                          ...prevState.royalties,
-                          ...this.arcaneChess().getPrettyRoyalties(),
-                        },
-                        placingRoyalty: 0,
-                      }));
-                    }
-                  }}
-                  onSelect={(key: string) => {
-                    let char = RtyChar.split('')[this.state.placingRoyalty];
-                    const whiteLimit =
-                      100 - 10 * (8 - GameBoard.summonRankLimits[0]);
-                    const blackLimit =
-                      20 + 10 * (8 - GameBoard.summonRankLimits[1]);
-
-                    if (char === 'Y' || char === 'Z') {
-                      char = 'E';
-                    }
-
-                    if (this.state.placingRoyalty > 0) {
-                      this.chessgroundRef.current?.setAutoShapes([]);
-                      if (
-                        ((GameBoard.side === COLOURS.WHITE &&
-                          prettyToSquare(key) < whiteLimit) ||
-                          (GameBoard.side === COLOURS.BLACK &&
-                            prettyToSquare(key) > blackLimit)) &&
-                        GameBoard.pieces[prettyToSquare(key)] !== PIECES.EMPTY
-                      ) {
-                        if (
-                          (this.state.royalties?.royaltyQ?.[key] ?? 0) > 0 ||
-                          (this.state.royalties?.royaltyT?.[key] ?? 0) > 0 ||
-                          (this.state.royalties?.royaltyM?.[key] ?? 0) > 0 ||
-                          (this.state.royalties?.royaltyV?.[key] ?? 0) > 0 ||
-                          (this.state.royalties?.royaltyE?.[key] ?? 0) > 0 ||
-                          (this.state.royalties?.royaltyF?.[key] ?? 0) > 0
-                        ) {
-                          this.setState({
-                            placingRoyalty: this.state.placingRoyalty,
-                          });
-                          return;
-                        } else {
-                          const { parsed } = this.arcaneChess().makeUserMove(
-                            null,
-                            key,
-                            this.state.placingPiece,
-                            '',
-                            this.state.placingRoyalty
-                          );
-                          audioManager.playSFX('freeze');
-                          if (parsed === 0) {
-                            console.log('parsed === 0');
-                          }
-                          this.setState(
-                            (prevState) => ({
-                              ...prevState,
-                              historyPly: prevState.historyPly + 1,
-                              history: [...prevState.history, PrMove(parsed)],
-                              fen: outputFenOfCurrentPosition(),
-                              fenHistory: [
-                                ...prevState.fenHistory,
-                                outputFenOfCurrentPosition(),
-                              ],
-                              lastMoveHistory: [
-                                ...prevState.lastMoveHistory,
-                                ['a0', key],
-                              ],
-                              royalties: {
-                                ...prevState.royalties,
-                                ...this.arcaneChess().getPrettyRoyalties(),
-                              },
-                              placingPiece: 0,
-                              placingRoyalty: 0,
-                              swapType: '',
-                              isTeleport: false,
-                              offeringType: '',
-                              futureSightAvailable: true,
-                            }),
-                            () => {
-                              if (CheckAndSet()) {
-                                this.setState(
-                                  {
-                                    gameOver: true,
-                                    gameOverType: CheckResult().gameResult,
-                                  },
-                                  () => {
-                                    if (
-                                      _.includes(
-                                        this.state.gameOverType,
-                                        `${this.state.playerColor} mates`
-                                      )
-                                    ) {
-                                      this.handleVictory(
-                                        this.stopAndReturnTime() as number | null
-                                      );
-                                    }
-                                  }
-                                );
-                                return;
-                              } else {
-                                this.engineGo();
-                              }
-                            }
-                          );
-                        }
-                      } else {
-                        this.setState({
-                          placingRoyalty: this.state.placingRoyalty,
-                        });
-                      }
-                    } else if (this.state.offeringType !== '') {
-                      const dests = this.arcaneChess().getOfferingMoves(
-                        this.state.offeringType
-                      );
-                      if (
-                        dests.has(`o${this.state.offeringType}@`) &&
-                        dests
-                          .get(`o${this.state.offeringType}@`)
-                          .includes(key)
-                      ) {
-                        this.chessgroundRef.current?.setAutoShapes([]);
-                        const { parsed } = this.arcaneChess().makeUserMove(
-                          key,
-                          null,
-                          this.state.placingPiece,
-                          '',
-                          this.state.offeringType
-                        );
-                        audioManager.playSFX('spell');
-                        if (parsed === 0) {
-                          console.log('parsed === 0');
-                        }
-                        this.setState(
-                          (prevState) => ({
-                            ...prevState,
-                            historyPly: prevState.historyPly + 1,
-                            history: [...prevState.history, PrMove(parsed)],
-                            fen: outputFenOfCurrentPosition(),
-                            fenHistory: [
-                              ...prevState.fenHistory,
-                              outputFenOfCurrentPosition(),
-                            ],
-                            lastMoveHistory: [
-                              ...prevState.lastMoveHistory,
-                              [key, 'a0'],
-                            ],
-                            royalties: {
-                              ...prevState.royalties,
-                              ...this.arcaneChess().getPrettyRoyalties(),
-                            },
-                            placingPiece: 0,
-                            placingRoyalty: 0,
-                            swapType: '',
-                            offeringType: '',
-                            isTeleport: false,
-                            futureSightAvailable: true,
-                          }),
-                          () => {
-                            if (CheckAndSet()) {
-                              this.setState(
-                                {
-                                  gameOver: true,
-                                  gameOverType: CheckResult().gameResult,
-                                },
-                                () => {
-                                  if (
-                                    _.includes(
-                                      this.state.gameOverType,
-                                      `${this.state.playerColor} mates`
-                                    )
-                                  ) {
-                                    this.handleVictory(
-                                      this.stopAndReturnTime() as
-                                      | number
-                                      | null
-                                    );
-                                  }
-                                }
-                              );
-                              return;
-                            } else {
-                              this.engineGo();
-                            }
-                          }
-                        );
-                      } else {
-                        this.setState({
-                          offeringType: this.state.offeringType,
-                        });
-                      }
-                    }
-                  }}
-                  onChange={() => { }}
+                  onEngineTrigger={() => this.engineGo()}
+                  onPromotionRequest={(callback) =>
+                    this.promotionSelectAsync(callback)
+                  }
                   width="100%"
                   height="100%"
                   forwardedRef={this.chessgroundRef}
