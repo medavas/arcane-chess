@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import {
   Route,
   createBrowserRouter,
@@ -9,39 +9,39 @@ import {
 } from 'react-router-dom';
 
 import { Provider } from 'react-redux';
-import { store } from 'src/store/configureStore';
+import { store } from 'src/app/store/configureStore';
 import jwt_decode from 'jwt-decode';
-import setAuthToken from './utils/setAuthToken';
+import setAuthToken from 'src/shared/utils/setAuthToken';
 
-import { PrivateRoute } from 'src/components/PrivateRoute/PrivateRoute';
+import { PrivateRoute } from 'src/features/auth/components/PrivateRoute/PrivateRoute';
 
-import { setCurrentUser, logoutUser } from './actions/authActions';
+import { setCurrentUser, logoutUser } from 'src/features/auth/store/authActions';
 
 import '@fontsource/exo';
 import '@fontsource/exo/400-italic.css';
 import '@fontsource/exo/700-italic.css';
 
-import ConditionalAudioPlayer from './utils/audio/ConditionalAudioPlayer';
+import ConditionalAudioPlayer from 'src/shared/utils/audio/ConditionalAudioPlayer';
 
-import { FrontPage } from '././pages/frontPage/FrontPage';
+import { FrontPage } from 'src/features/landing/pages/frontPage/FrontPage';
 // import { InGameMenu } from '././pages/inGameMenu/InGameMenu';
 // import { Lab } from './pages/lab/Lab';
-import { Campaign } from '././pages/campaign/Campaign';
-import { StackQuickplay } from '././pages/stackQuickplay/StackQuickplay';
-import { Dashboard } from '././pages/dashboard/Dashboard';
-import { Book } from '././pages/book/Book';
-import { Login } from '././pages/loginRegister/Login';
-import { Register } from '././pages/loginRegister/Register';
-import { LessonView } from '././pages/lessonView/LessonView';
-import { TempleView } from '././pages/templeView/TempleView';
-import { MissionView } from '././pages/missionView/MissionView';
-import { QuickPlay } from '././pages/quickPlay/QuickPlay';
-import { LeaderBoard } from '././pages/leaderboard/LeaderBoard';
-import { Lexicon } from '././pages/lexicon/Lexicon';
-import { Manifest } from '././pages/manifest/Manifest';
-import { NotFound } from '././pages/notFound/NotFound';
+import { Campaign } from 'src/features/campaign/pages/campaign/Campaign';
+// import { StackQuickplay } from 'src/features/game/pages/stackQuickplay/StackQuickplay';
+import { Dashboard } from 'src/features/dashboard/pages/Dashboard';
+import { Book } from 'src/features/campaign/pages/book/Book';
+import { Login } from 'src/features/auth/pages/Login';
+import { Register } from 'src/features/auth/pages/Register';
+import { LessonView } from 'src/features/campaign/pages/lessonView/LessonView';
+import { TempleView } from 'src/features/campaign/pages/templeView/TempleView';
+import { MissionView } from 'src/features/campaign/pages/missionView/MissionView';
+import { QuickPlay } from 'src/features/game/pages/quickPlay/QuickPlay';
+import { LeaderBoard } from 'src/features/leaderboard/pages/leaderboard/LeaderBoard';
+import { Lexicon } from 'src/features/lexicon/pages/lexicon/Lexicon';
+import { Manifest } from 'src/features/lexicon/pages/manifest/Manifest';
+import { NotFound } from 'src/features/landing/pages/notFound/NotFound';
 
-import { Skirmish } from '././pages/skirmish/Skirmish';
+import { Skirmish } from 'src/features/game/pages/skirmish/Skirmish';
 
 import ReactDOM from 'react-dom/client';
 import Modal from 'react-modal';
@@ -128,7 +128,6 @@ const router = createBrowserRouter(
           </PrivateRoute>
         }
       />
-      <Route path="/stacktadium" element={<StackQuickplay />} />
       <Route
         path="/campaign"
         element={

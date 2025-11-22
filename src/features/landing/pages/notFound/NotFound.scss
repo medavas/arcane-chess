@@ -1,0 +1,191 @@
+﻿@import '../../../../shared/styles/variables.scss';
+
+.not-found-container.fade-in {
+  opacity: 1;
+  overflow-x: hidden !important;
+}
+
+.not-found-container {
+  width: 100vw;
+  height: 100%;
+  flex-direction: column;
+  overflow-x: hidden !important;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+
+  // Fading overlay styles
+  .fade-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 9999;
+    overflow-x: hidden;
+  }
+
+  .fade-overlay.active {
+    opacity: 1;
+  }
+
+  .not-found {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+
+    // background:
+    //   linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5)),
+    //   url(/assets/dashboard/galaxy.webp) center center / cover no-repeat;
+    .divider {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      border: none;
+    }
+
+    .row-a {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      background: transparent;
+      overflow-y: hidden;
+      overflow-x: hidden;
+
+      // Hero container (used on phone widths)
+      .hero-fullscreen {
+        width: 100%;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      // Black section below hero (phone)
+      .black-section {
+        width: 100%;
+        height: 100vh;
+        background: black;
+      }
+
+      // Other elements (intro-box, buttons, etc.) stay as defined...
+      .intro-box {
+        width: 90vw;
+        border: 4px solid $S_MENU;
+        border-top-left-radius: 40px;
+        border-bottom-right-radius: 40px;
+        margin: 20px 0;
+        background: rgba(0, 0, 0, 0.8);
+
+        img.image {
+          display: flex;
+          border-top-left-radius: 40px;
+        }
+
+        .intro {
+          display: flex;
+          flex-direction: column;
+          padding: 30px 40px;
+          border-top-left-radius: 40px;
+          border-bottom-right-radius: 40px;
+
+          >* {
+            margin: 10px 0;
+          }
+        }
+      }
+
+      .enter-buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 80vw;
+        height: 100%;
+        margin: 20px 0;
+      }
+    }
+  }
+
+  .not-found-footer {
+    width: 100%;
+    height: 400px;
+    margin-top: -400px;
+    z-index: 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .not-found-container {
+
+    // Desktop-specific adjustments (full-screen hero, etc.)
+    .not-found {
+      .row-a {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        padding: 20px 0;
+        background: transparent;
+        overflow-y: hidden;
+
+        .hero-fullscreen {
+          width: 100%;
+          height: 100vh;
+          overflow: hidden;
+        }
+
+        .black-section {
+          width: 100%;
+          height: 100vh;
+          background: black;
+        }
+
+        .intro-box {
+          width: 680px;
+          border: 4px solid $S_MENU;
+          border-top-left-radius: 40px;
+          border-bottom-right-radius: 40px;
+          margin: 20px 0;
+          background: rgba(0, 0, 0, 0.8);
+
+          img.image {
+            display: flex;
+            width: 664px;
+            border-top-left-radius: 40px;
+          }
+
+          .intro {
+            display: flex;
+            flex-direction: column;
+            padding: 30px 40px;
+            border-top-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+
+            >* {
+              margin: 10px 0;
+            }
+          }
+        }
+
+        .enter-buttons {
+          display: flex;
+          align-items: center;
+          width: 400px;
+          height: 100%;
+        }
+      }
+    }
+  }
+}

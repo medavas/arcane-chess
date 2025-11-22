@@ -1,0 +1,557 @@
+﻿@import 'src/shared/styles/_components.scss';
+
+.tactorius-board {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  .lesson-view {
+    height: 100%;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    .opponent-arcana-volume {
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: stretch;
+      flex: 1;
+      height: 480px;
+      max-width: 400px;
+      padding: 0 10px;
+      overflow: hidden;
+      .info-avatar {
+        display: flex;
+        flex-direction: row-reverse;
+        width: 100%;
+        .avatar {
+          position: relative;
+          background: #11111188;
+          width: 60px;
+          height: 60px;
+        }
+        .arcana-select {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 5px;
+          height: 60px;
+          width: 100%;
+          overflow-x: auto;
+          overflow-y: hidden;
+          white-space: nowrap;
+          background: #11111188;
+          .arcane {
+            height: 45px;
+            width: 45px;
+            flex-shrink: 0;
+            &:hover {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+      .arcana {
+        display: flex;
+        flex-direction: column;
+        height: 190px;
+        background: #11111188;
+      }
+    }
+    .time-board-time {
+      height: calc(100% - 15%);
+      max-height: 960px;
+      min-height: 480px;
+      aspect-ratio: 1;
+      position: relative;
+      .board-view {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+    .lesson-clock-buttons {
+      display: flex;
+      gap: 10px;
+      flex-direction: column;
+      justify-content: flex-end;
+      flex: 1;
+      height: 480px;
+      max-width: 400px;
+      padding: 0 10px;
+      overflow: hidden;
+      .global-volume-control {
+        display: none;
+      }
+      .lesson-text {
+        display: flex;
+        flex-grow: 1;
+        flex-shrink: 1;
+        display: flex;
+        justify-content: center;
+        background: #11111188;
+        overflow-y: scroll;
+        height: auto;
+        box-sizing: border-box;
+        padding: 20px;
+        .time-text {
+          font-size: 72px;
+        }
+      }
+      .lesson-buttons {
+        display: flex;
+        justify-content: center;
+        height: 40px;
+      }
+      .info-avatar {
+        display: grid;
+        grid-template-columns: 60px 1fr;
+        grid-auto-rows: auto;
+        column-gap: 10px;
+        width: 100%;
+        align-items: center;
+
+        .avatar {
+          grid-column: 1;
+          grid-row: 1;
+          position: relative;
+          background: rgba(34, 34, 34, 0.7);
+          width: 60px;
+          height: 60px;
+        }
+        .arcana-select-wrapper {
+          grid-column: 1 / -1;
+          grid-row: 2;
+
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+
+          width: 100%;
+          min-width: 0;
+        }
+
+        .arcana-select {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+
+          width: 100%;
+          min-width: 0;
+          height: 60px;
+
+          overflow-x: auto;
+          overflow-y: hidden;
+          white-space: nowrap;
+
+          background: rgba(34, 34, 34, 0.7);
+          scrollbar-gutter: stable;
+
+          .arcane {
+            height: 45px;
+            width: 45px;
+            flex: 0 0 auto;
+            display: inline-block;
+            &:hover {
+              cursor: pointer;
+            }
+          }
+
+          .arcane.is-active {
+            border-radius: 50%;
+            animation: arcanePulseGreen 1.5s infinite;
+            transform-origin: center center;
+            @keyframes arcanePulseGreen {
+              0% {
+                box-shadow:
+                  0 0 0 4px rgba(46, 204, 113, 0.95),
+                  0 0 25px 8px rgba(46, 204, 113, 0.8),
+                  0 0 50px 20px rgba(46, 204, 113, 0.6);
+                transform: scale(1.05);
+              }
+              50% {
+                box-shadow:
+                  0 0 0 6px rgba(46, 204, 113, 0.9),
+                  0 0 30px 10px rgba(46, 204, 113, 0.85),
+                  0 0 60px 25px rgba(46, 204, 113, 0.5);
+                transform: scale(1.12);
+              }
+              100% {
+                box-shadow:
+                  0 0 0 4px rgba(46, 204, 113, 0.95),
+                  0 0 25px 8px rgba(46, 204, 113, 0.8),
+                  0 0 50px 20px rgba(46, 204, 113, 0.6);
+                transform: scale(1.05);
+              }
+            }
+          }
+        }
+
+        .mana-bar {
+          position: relative;
+          width: 100%;
+          height: 6px;
+          background: rgba(255, 255, 255, 0.12);
+          border-radius: 4px;
+          overflow: hidden;
+          flex: 0 0 auto;
+        }
+
+        .mana-bar__fill {
+          height: 100%;
+          width: 0;
+          background: linear-gradient(90deg, #2ecc71, #27ae60);
+          transition: width 200ms ease;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .tactorius-board {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow: auto;
+    .lesson-view {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      overflow-x: hidden;
+      .opponent-arcana-volume {
+        display: flex;
+        gap: 10px;
+        flex-direction: column;
+        align-items: center;
+        flex-shrink: 0;
+        max-height: 60px;
+        padding: 0 10px 0 10px;
+        width: 100%;
+        .info-avatar {
+          display: grid;
+          grid-template-columns: 60px 1fr;
+          grid-auto-rows: auto;
+          column-gap: 10px;
+          width: 100%;
+          align-items: center;
+
+          .avatar {
+            grid-column: 1;
+            grid-row: 1;
+            position: relative;
+            background: rgba(34, 34, 34, 0.7);
+            width: 60px;
+            height: 60px;
+          }
+          .arcana-select-wrapper {
+            grid-column: 1 / -1;
+            grid-row: 2;
+
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+
+            width: 100%;
+            min-width: 0;
+          }
+
+          .arcana-select {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+
+            width: 100%;
+            min-width: 0;
+            height: 60px;
+
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+
+            background: rgba(34, 34, 34, 0.7);
+            scrollbar-gutter: stable;
+
+            .arcane {
+              height: 45px;
+              width: 45px;
+              flex: 0 0 auto;
+              display: inline-block;
+              &:hover {
+                cursor: pointer;
+              }
+            }
+
+            .arcane.is-active {
+              border-radius: 50%;
+              animation: arcanePulseGreen 1.5s infinite;
+              transform-origin: center center;
+              @keyframes arcanePulseGreen {
+                0% {
+                  box-shadow:
+                    0 0 0 4px rgba(46, 204, 113, 0.95),
+                    0 0 25px 8px rgba(46, 204, 113, 0.8),
+                    0 0 50px 20px rgba(46, 204, 113, 0.6);
+                  transform: scale(1.05);
+                }
+                50% {
+                  box-shadow:
+                    0 0 0 6px rgba(46, 204, 113, 0.9),
+                    0 0 30px 10px rgba(46, 204, 113, 0.85),
+                    0 0 60px 25px rgba(46, 204, 113, 0.5);
+                  transform: scale(1.12);
+                }
+                100% {
+                  box-shadow:
+                    0 0 0 4px rgba(46, 204, 113, 0.95),
+                    0 0 25px 8px rgba(46, 204, 113, 0.8),
+                    0 0 50px 20px rgba(46, 204, 113, 0.6);
+                  transform: scale(1.05);
+                }
+              }
+            }
+          }
+
+          .mana-bar {
+            position: relative;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 4px;
+            overflow: hidden;
+            flex: 0 0 auto;
+          }
+
+          .mana-bar__fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            transition: width 200ms ease;
+          }
+        }
+        .global-volume-control {
+          display: none;
+        }
+      }
+      .time-board-time {
+        max-width: 400px;
+        min-height: 400px;
+        max-height: 400px;
+        aspect-ratio: 1;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        .board-view {
+          min-width: 400px;
+          max-width: 400px;
+          min-width: 400px;
+          max-height: 400px;
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+      .lesson-clock-buttons {
+        display: flex;
+        gap: 10px;
+        flex-direction: column-reverse;
+        min-height: 480px;
+        padding: 0 10px 0 10px;
+        .global-volume-control {
+          display: flex;
+        }
+        .lesson-text {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 400px;
+          padding: 20px;
+          background: #11111188;
+          .time-text {
+            font-size: 72px;
+          }
+        }
+        .lesson-buttons {
+          display: flex;
+        }
+        .info-avatar {
+          position: relative;
+          display: flex;
+          align-self: center;
+          width: 360px;
+          .info {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #11111188;
+            .name {
+              text-align: right;
+            }
+            .arcana-select {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 100%;
+              .arcane:hover {
+                cursor: pointer;
+              }
+            }
+            // .player-time {
+            //   width: 140px;
+            //   .time-text {
+            //     width: 10
+            //   }
+            // }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .tactorius-board {
+    width: 100%;
+    height: 100vh;
+    justify-content: flex-start;
+    align-items: flex-start;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    .lesson-view {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      .opponent-arcana-volume {
+        display: flex;
+        gap: 10px;
+        flex-direction: column;
+        justify-content: center;
+        margin: 10px;
+
+        .info-avatar {
+          display: flex;
+          flex-direction: row-reverse;
+          .avatar {
+            min-width: 60px;
+            height: 60px;
+          }
+          .info {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            margin-right: 10px;
+            .name {
+              text-align: right;
+            }
+          }
+        }
+        .arcana {
+          display: flex;
+          flex-direction: column;
+          height: 390px;
+          width: 380px;
+          background: #11111188;
+        }
+      }
+      .time-board-time {
+        max-width: 360px;
+        min-height: 360px;
+        max-height: 360px;
+        aspect-ratio: 1;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        .board-view {
+          min-width: 360px;
+          max-width: 360px;
+          min-width: 360px;
+          max-height: 360px;
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+      .lesson-clock-buttons {
+        display: flex;
+        flex-direction: column-reverse;
+        width: 380px;
+        height: 480px;
+        justify-content: center;
+        align-items: center;
+        margin: 10px;
+        .lesson-text {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 380px;
+          height: 400px;
+          padding: 20px;
+          background: #11111188;
+          .time-text {
+            font-size: 72px;
+          }
+        }
+        .lesson-buttons {
+          display: flex;
+          justify-content: center;
+          width: 380px;
+          height: 40px;
+        }
+        .info-avatar {
+          display: flex;
+          margin-top: 10px;
+          width: 380px;
+          height: 80px;
+          .avatar {
+            max-width: 60px;
+            height: 60px;
+            background: #11111188;
+          }
+          .info {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            margin-left: 10px;
+            background: #11111188;
+            .name {
+              text-align: right;
+            }
+          }
+        }
+      }
+    }
+  }
+}
