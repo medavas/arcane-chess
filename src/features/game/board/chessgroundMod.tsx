@@ -38,10 +38,10 @@ export interface IChessground {
   turnColor?: string;
   movable?: any; // Replace `any` with a more specific type if available
   events?: any; // Replace `any` with a more specific type if available
-  forwardedRef: React.Ref<IChessgroundApi>;
+  forwardedRef?: React.Ref<IChessgroundApi>;
   royalties?:
-    | { [key: string]: { [key: string]: number | undefined } }
-    | undefined;
+  | { [key: string]: { [key: string]: number | undefined } }
+  | undefined;
   // Adding an index signature for additional flexibility
   [key: string]: any;
 }
@@ -68,7 +68,7 @@ export class Chessground extends React.Component<IChessground> {
   }
 
   buildConfigFromProps(props: IChessground): Record<string, any> {
-    const config: { events: Record<string, any>; [key: string]: any } = {
+    const config: { events: Record<string, any>;[key: string]: any } = {
       events: {},
     };
 
