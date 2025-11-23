@@ -4,12 +4,11 @@ import { connect } from 'react-redux';
 import { logoutUser } from 'src/features/auth/store/authActions';
 import { withRouter } from 'src/shared/hooks/withRouter/withRouter';
 import Button from 'src/shared/components/Button/Button';
-import './Dashboard1.scss';
 
 import GlobalVolumeControl from 'src/shared/utils/audio/GlobalVolumeControl';
-import DashboardModal from './DashboardModal';
 
 import { audioManager } from 'src/shared/utils/audio/AudioManager';
+import DashboardModal from '../components/DashboardModal/DashboardModal';
 
 // Define the structure for props if any are expected
 interface DashboardProps {
@@ -69,12 +68,10 @@ export class UnwrappedDashboard extends React.Component<
   render() {
     return (
       <div
-        className={`dashboard ${this.state.fadeIn ? 'fade-in' : ''} ${
-          this.state.fadeOut ? 'fade-out' : ''
-        }`}
+        className={`dashboard ${this.state.fadeIn ? 'fade-in' : ''} ${this.state.fadeOut ? 'fade-out' : ''
+          }`}
       >
         <div className={`fade-overlay ${this.state.fadeOut ? 'active' : ''}`} />
-        <DashboardModal />
         <div className="dashboard-content">
           <div className="nav-bar">
             <Link
@@ -230,8 +227,8 @@ export class UnwrappedDashboard extends React.Component<
             <div className="menu-item-description">
               {
                 this.state.menuItemDescriptions[
-                  this.state
-                    .hoverNav as keyof DashboardState['menuItemDescriptions']
+                this.state
+                  .hoverNav as keyof DashboardState['menuItemDescriptions']
                 ]
               }
             </div>
