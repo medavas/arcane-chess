@@ -8,7 +8,7 @@
     "build": "npm run build:server && npm run build:frontend && npm run build:css",
     "build:frontend": "vite build --outDir dist/frontend && tsc -p tsconfig.json",
     "build:server": "tsc -p tsconfig.server.json",
-    "build:css": "sass src/styles/main.scss dist/frontend/main.css",
+    "build:css": "sass src/shared/styles/main.scss dist/frontend/main.css",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "redis": "docker start redis",
