@@ -59,14 +59,12 @@ import {
   clearArcanaConfig,
 } from 'src/features/game/engine/arcaneDefs.mjs';
 
-import Button from 'src/shared/components/Button/Button';
-import ChessClock from '../../components/Clock/Clock';
-
-import { BoardUX } from 'src/features/game/components/BoardUX/BoardUX';
 import { IChessgroundApi } from 'src/features/game/board/chessgroundMod';
-
-import { getProgressState } from 'src/features/game/engine/arcaneDefs.mjs';
+import ChessClock from '../../components/Clock/Clock';
 import { SpellHandler } from 'src/features/game/utils/SpellHandler';
+import Button from 'src/shared/components/Button/Button';
+import { BoardUX } from 'src/features/game/components/BoardUX/BoardUX';
+import { ArcanaSelector } from 'src/features/game/components/ArcanaSelector/ArcanaSelector';
 
 const arcana: ArcanaMap = arcanaJson as ArcanaMap;
 
@@ -843,118 +841,11 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
     }
   };
 
-  arcanaSelect = (color: string) => {
-    const progress = getProgressState(color as 'white' | 'black');
-    const pct = Math.round(progress.pct * 100);
-    const untilNext = progress.untilNext;
-    const tier = progress.tier;
 
-    return (
-      <div className="arcana-select-wrapper">
-        <div className="arcana-select">
-          {_.map(
-            color === 'white' ? whiteArcaneConfig : blackArcaneConfig,
-            (value: number, key: string) => {
-              const entry = arcana[key];
-              if (!entry) return null;
-
-              const isInherent = entry.type === 'inherent';
-              if (!value || value <= 0) return null;
-
-              const futureSightAvailable =
-                this.state.history.length >= 4 &&
-                this.state.futureSightAvailable;
-
-              const isDisabled =
-                this.state.playerColor !== color ||
-                this.state.thinking ||
-                (!futureSightAvailable && key === 'modsFUT');
-
-              const active = this.isArcaneActive(key, color);
-              const dyadName =
-                typeof this.arcaneChess().getDyadName === 'function'
-                  ? this.arcaneChess().getDyadName()
-                  : '';
-              const dyadOwner =
-                typeof this.arcaneChess().getDyadOwner === 'function'
-                  ? this.arcaneChess().getDyadOwner()
-                  : undefined;
-              let dyadStillActive = false;
-              if (key.startsWith('dyad') && dyadName === key) {
-                if (dyadOwner === color) dyadStillActive = true;
-              }
-              const effectiveActive = active || dyadStillActive;
-              const trojanActive =
-                this.arcaneChess().getIfTrojanGambitExists(
-                  this.state.engineColor
-                ) && key === 'modsTRO';
-
-              return (
-                <div
-                  className="arcane-select__item"
-                  key={key}
-                  style={{
-                    position: 'relative',
-                    display: 'inline-block',
-                    marginRight: 6,
-                  }}
-                >
-                  <div className="arcane-select__item-count">
-                    {isInherent ? 'INH' : value}
-                  </div>
-                  <img
-                    key={key}
-                    className={`arcane${effectiveActive ? ' is-active' : ''}${trojanActive
-                      ? ' trojan-active'
-                      : this.state.hoverArcane === key
-                        ? ' focus'
-                        : ''
-                      }`}
-                    src={`/assets/arcanaImages${entry.imagePath}.svg`}
-                    style={{
-                      opacity: isDisabled ? 0.4 : 1,
-                      cursor: isDisabled
-                        ? 'not-allowed'
-                        : `url('/assets/images/cursors/pointer.svg') 12 4, pointer`,
-                    }}
-                    onClick={() => {
-                      if (isDisabled) return;
-                      this.handleArcanaClick(key);
-                    }}
-                    onMouseEnter={() => this.toggleHover(key)}
-                    onMouseLeave={() => this.toggleHover('')}
-                  />
-                </div>
-              );
-            }
-          )}
-        </div>
-        <div
-          className="mana-bar"
-          title={`Tier ${tier} – ${untilNext} move${untilNext === 1 ? '' : 's'
-            } to next`}
-        >
-          <div className="mana-bar__fill" style={{ width: `${pct}%` }} />
-        </div>
-      </div>
-    );
-  };
 
   handleArcanaClick = (key: string) => this.spellHandler.handleArcanaClick(key);
 
-  renderManaBar = (color: 'white' | 'black') => {
-    const prog = getProgressState(color);
-    const fill = Math.round(prog.pct * 100);
 
-    return (
-      <div
-        className="mana-bar"
-        title={`Tier ${prog.tier} • ${prog.untilNext} move(s) to next grant`}
-      >
-        <div className="mana-bar__fill" style={{ width: `${fill}%` }} />
-      </div>
-    );
-  };
 
   getRandomFaction = () => {
     const factions = ['chi', 'omega', 'sigma', 'lambda', 'nu', 'mu'];
@@ -1113,7 +1004,39 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
                   </div>
                 </div>
                 <div className="board-arcana">
-                  {this.arcanaSelect(this.state.engineColor)}
+                  <ArcanaSelector
+                    color={this.state.engineColor as 'white' | 'black'}
+                    arcaneConfig={
+                      (this.state.engineColor === 'white'
+                        ? whiteArcaneConfig
+                        : blackArcaneConfig) as Record<
+                          string,
+                          number | string | undefined
+                        >
+                    }
+                    playerColor={this.state.playerColor}
+                    thinking={this.state.thinking}
+                    historyLength={this.state.history.length}
+                    futureSightAvailable={this.state.futureSightAvailable}
+                    hoverArcane={this.state.hoverArcane}
+                    engineColor={this.state.engineColor}
+                    dyadName={
+                      typeof this.arcaneChess().getDyadName === 'function'
+                        ? this.arcaneChess().getDyadName()
+                        : ''
+                    }
+                    dyadOwner={
+                      typeof this.arcaneChess().getDyadOwner === 'function'
+                        ? this.arcaneChess().getDyadOwner()
+                        : undefined
+                    }
+                    trojanGambitExists={this.arcaneChess().getIfTrojanGambitExists(
+                      this.state.engineColor
+                    )}
+                    onSpellClick={this.handleArcanaClick}
+                    onHover={this.toggleHover}
+                    isArcaneActive={this.isArcaneActive}
+                  />
                 </div>
               </div>
               <div id="dialogue" className="dialogue">
@@ -1350,7 +1273,39 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
                   </div>
                 </div>
                 <div className="board-arcana">
-                  {this.arcanaSelect(this.state.playerColor)}
+                  <ArcanaSelector
+                    color={this.state.playerColor as 'white' | 'black'}
+                    arcaneConfig={
+                      (this.state.playerColor === 'white'
+                        ? whiteArcaneConfig
+                        : blackArcaneConfig) as Record<
+                          string,
+                          number | string | undefined
+                        >
+                    }
+                    playerColor={this.state.playerColor}
+                    thinking={this.state.thinking}
+                    historyLength={this.state.history.length}
+                    futureSightAvailable={this.state.futureSightAvailable}
+                    hoverArcane={this.state.hoverArcane}
+                    engineColor={this.state.engineColor}
+                    dyadName={
+                      typeof this.arcaneChess().getDyadName === 'function'
+                        ? this.arcaneChess().getDyadName()
+                        : ''
+                    }
+                    dyadOwner={
+                      typeof this.arcaneChess().getDyadOwner === 'function'
+                        ? this.arcaneChess().getDyadOwner()
+                        : undefined
+                    }
+                    trojanGambitExists={this.arcaneChess().getIfTrojanGambitExists(
+                      this.state.engineColor
+                    )}
+                    onSpellClick={this.handleArcanaClick}
+                    onHover={this.toggleHover}
+                    isArcaneActive={this.isArcaneActive}
+                  />
                 </div>
               </div>
             </div>
