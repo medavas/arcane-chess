@@ -650,6 +650,76 @@ export function applyMoriMoraRewards(context, keys) {
   return { moriFired, moraFired, moriGifts, moraGifts, moriMana, moraMana };
 }
 
+export function getGainState(context) {
+  const { side, piece } = context;
+
+  const live = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+
+  const getLiveKeys = (live, prefix) =>
+    Object.keys(live).filter(
+      (k) =>
+        k.startsWith(prefix) &&
+        ((live[k] | 0) > 0 || live[k] === true || live[k] === 'true')
+    );
+
+  const gainAll = getLiveKeys(live, 'gain');
+
+  // Check piece type eligibility
+  const isPawn = PiecePawn[piece] === BOOL.TRUE;
+  const isValkyrie = piece === PIECES.wV || piece === PIECES.bV;
+  const isMinorPiece =
+    piece === PIECES.wB ||
+    piece === PIECES.bB ||
+    piece === PIECES.wN ||
+    piece === PIECES.bN ||
+    piece === PIECES.wZ ||
+    piece === PIECES.bZ ||
+    piece === PIECES.wU ||
+    piece === PIECES.bU;
+
+  const filterKeys = (arr) =>
+    arr.filter((k) => {
+      if (k === 'gainPAW') return isPawn;
+      if (k === 'gainVAL') return isValkyrie;
+      if (k === 'gainDYA') return isMinorPiece;
+      return false;
+    });
+
+  return filterKeys(gainAll);
+}
+
+export function applyGainRewards(context, keys) {
+  if (!keys || keys.length === 0) return { fired: false, gifts: [] };
+
+  const gifts = [];
+  let fired = false;
+
+  for (const key of keys) {
+    fired = true;
+    if (key === 'gainDYA') {
+      offerGrant(context.side, 'dyadA', 1);
+      gifts.push('dyadA');
+      // Consume the gain spell
+      const cfg = context.side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+      cfg[key] = (cfg[key] || 0) - 1;
+    } else if (key === 'gainVAL') {
+      offerGrant(context.side, 'sumnRV', 1);
+      gifts.push('sumnRV');
+      // Consume the gain spell
+      const cfg = context.side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+      cfg[key] = (cfg[key] || 0) - 1;
+    } else if (key === 'gainPAW') {
+      offerGrant(context.side, 'sumnP', 1);
+      gifts.push('sumnP');
+      // Consume the gain spell
+      const cfg = context.side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+      cfg[key] = (cfg[key] || 0) - 1;
+    }
+  }
+
+  return { fired, gifts };
+}
+
 export function getProgressState(side) {
   return ArcanaProgression.getProgressState(side);
 }

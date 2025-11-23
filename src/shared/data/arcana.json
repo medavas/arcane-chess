@@ -642,5 +642,26 @@
     "description": "On any of your opponent's piece death, gain 2 mana tempo.",
     "type": "inherent",
     "imagePath": "/moraMAN"
+  },
+  "gainDYA": {
+    "id": "gainDYA",
+    "name": "Dyad Reckoning",
+    "description": "When a friendly Bishop, Knight, Zebra, or Unicorn reaches the opposite side of the board, you gain a Dyad.",
+    "type": "passive",
+    "imagePath": "/gainALL"
+  },
+  "gainVAL": {
+    "id": "gainVAL",
+    "name": "Titan's Reckoning",
+    "description": "When a friendly Valkyrie reaches the opposite side of the board, you gain a Royalty Valkyrie Summon.",
+    "type": "passive",
+    "imagePath": "/gainALL"
+  },
+  "gainPAW": {
+    "id": "gainPAW",
+    "name": "Soldier's Reckoning",
+    "description": "When a friendly Pawn reaches the opposite side of the board, you gain a Pawn Summon.",
+    "type": "passive",
+    "imagePath": "/gainALL"
   }
 }

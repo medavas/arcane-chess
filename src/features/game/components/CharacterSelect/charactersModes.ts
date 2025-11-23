@@ -204,8 +204,43 @@ const padModes = (modes: Record<string, GameModeType>) => {
 };
 
 export const modes: Record<string, GameModeType> = padModes({
-  test1: {
-    name: 'Release Test 1',
+  test5: {
+    name: 'Release Test 5',
+    white: {
+      arcana: [
+        // arcana.sumnRI,
+        // arcana.moriNOR,
+        // arcana.shftK,
+        // arcana.shftA,
+        // arcana.moriMAN,
+        // arcana.modsINH,
+        // arcana.modsDIV,
+        // arcana.modsEXT,
+        // arcana.sumnP,
+        // arcana.sumnP,
+        // arcana.sumnP,
+        // arcana.sumnP,
+        arcana.gainDYA,
+        arcana.gainDYA,
+        arcana.gainDYA,
+        arcana.gainDYA,
+      ],
+      setup: 'RNWTKWNR',
+    },
+    black: {
+      arcana: [
+        // arcana.sumnRG, arcana.sumnV, arcana.modsBAN,
+        arcana.modsINH,
+        arcana.modsDIV,
+        arcana.gainDYA,
+        arcana.gainDYA,
+        arcana.gainDYA,
+        arcana.gainDYA,
+      ],
+      setup: '4k3',
+    },
+  }, test4: {
+    name: 'Release Test 4',
     white: {
       arcana: [
         // arcana.sumnRI,
@@ -232,8 +267,8 @@ export const modes: Record<string, GameModeType> = padModes({
       setup: '4k3',
     },
   },
-  test2: {
-    name: 'Release Test 2',
+  test3: {
+    name: 'Release Test 3',
     white: {
       arcana: [arcana.shftA, arcana.modsGLU, arcana.moriPAW],
       setup: 'RNBTKWSR',
@@ -243,8 +278,8 @@ export const modes: Record<string, GameModeType> = padModes({
       setup: 'rnbmkwsr',
     },
   },
-  test3: {
-    name: 'Release Test 3',
+  test2: {
+    name: 'Release Test 2',
     white: {
       arcana: [arcana.shftI, arcana.moraDYA, arcana.offrK],
       setup: 'RNBMKWSR',
@@ -254,8 +289,8 @@ export const modes: Record<string, GameModeType> = padModes({
       setup: 'rnbqkwsr',
     },
   },
-  test4: {
-    name: 'Release Test 4',
+  test1: {
+    name: 'Release Test 1',
     white: {
       arcana: [
         arcana.moraMAN,

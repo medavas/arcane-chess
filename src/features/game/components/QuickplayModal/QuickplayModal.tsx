@@ -325,7 +325,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
   };
 
   componentDidMount() {
-    this.randomGameMode('test1');
+    this.randomGameMode('test5');
   }
 
   descriptions = (): Record<string, string> => {

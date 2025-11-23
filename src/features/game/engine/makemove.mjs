@@ -28,6 +28,8 @@ import {
   offerRevert,
   getMoriMoraState,
   applyMoriMoraRewards,
+  getGainState,
+  applyGainRewards,
   POWERBIT,
 } from './arcaneDefs';
 import {
@@ -800,6 +802,37 @@ export function MakeMove(move, moveType = '') {
     }
   }
 
+  // Check for gain spell triggers (pieces reaching opposite rank)
+  if (commit && !isSwap(move) && !isSummon(move) && TOSQ(move) > 0) {
+    const movedPiece = GameBoard.pieces[to];
+    const toRank = RanksBrd[to];
+    const moverSide = side === COLOURS.WHITE ? 'white' : 'black';
+
+    // White pieces reaching rank 8, or black pieces reaching rank 1
+    const reachedOppositeRank =
+      (side === COLOURS.WHITE && toRank === RANKS.RANK_8) ||
+      (side === COLOURS.BLACK && toRank === RANKS.RANK_1);
+
+    if (reachedOppositeRank && movedPiece !== PIECES.EMPTY) {
+      const gainContext = {
+        side: moverSide,
+        piece: movedPiece,
+        move,
+        board: GameBoard,
+      };
+      const gainKeys = getGainState(gainContext);
+      if (gainKeys && gainKeys.length > 0) {
+        const gainResult = applyGainRewards(gainContext, gainKeys);
+        if (gainResult && gainResult.fired) {
+          h.gainTag = true;
+          h.gainGifts = gainResult.gifts;
+          h.gainSide = moverSide;
+          h.gainKeys = gainKeys;
+        }
+      }
+    }
+  }
+
   if (
     SqAttacked(
       GameBoard.pList[PCEINDEX(Kings[GameBoard.side ^ 1], 0)],
@@ -981,6 +1014,23 @@ export function TakeMove(wasDyadMove = false) {
     cfg[k] = Math.max(0, (cfg[k] || 0) - 1);
     h.grantedArcanaKey = undefined;
     h.grantedArcanaSide = undefined;
+  }
+
+  // Revert gain spell rewards
+  if (h && h.gainTag && h.gainGifts && h.gainKeys && h.gainSide) {
+    const cfg = h.gainSide === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+    // Revert the granted arcana
+    for (const gift of h.gainGifts) {
+      offerRevert(h.gainSide, gift, 1);
+    }
+    // Restore the consumed gain spells
+    for (const key of h.gainKeys) {
+      cfg[key] = (cfg[key] || 0) + 1;
+    }
+    h.gainTag = undefined;
+    h.gainGifts = undefined;
+    h.gainKeys = undefined;
+    h.gainSide = undefined;
   }
 
   if (TOSQ(move) > 0 && isConsumeFlag(move) && !isShift(move)) {
