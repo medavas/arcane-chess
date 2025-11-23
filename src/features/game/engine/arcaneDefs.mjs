@@ -163,12 +163,14 @@ export const POWERBIT = {
   moriROY: 2, // inherent
   moriPAW: 4, // inherent
   moriNOR: 8, // inherent
+  moriMAN: 16, // inherent
 
   // 7 on opponent piece death 4
   moraDYA: 1, // inherent
   moraROY: 2, // inherent
   moraPAW: 4, // inherent
   moraNOR: 8, // inherent
+  moraMAN: 16, // inherent
 
   // 8 area inherent 4
   areaC: 1,

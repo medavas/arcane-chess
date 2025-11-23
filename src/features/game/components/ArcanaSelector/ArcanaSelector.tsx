@@ -118,11 +118,11 @@ export const ArcanaSelector: React.FC<ArcanaSelectorProps> = ({
                 })}
             </div>
             <div
-                className="mana-bar"
+                className="arcana-charge-bar"
                 title={`Tier ${tier} – ${untilNext} move${untilNext === 1 ? '' : 's'
                     } to next`}
             >
-                <div className="mana-bar__fill" style={{ width: `${pct}%` }} />
+                <div className="arcana-charge-bar__fill" style={{ width: `${pct}%` }} />
             </div>
         </div>
     );

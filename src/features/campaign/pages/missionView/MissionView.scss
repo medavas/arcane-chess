@@ -3,6 +3,7 @@
 .tactorius-board {
   height: 100%;
   width: 100%;
+
   .mission-view {
     height: 100%;
     overflow: hidden;
@@ -10,6 +11,7 @@
     flex: 1;
     justify-content: center;
     align-items: center;
+
     .opponent-dialogue-arcana {
       display: flex;
       gap: 10px;
@@ -21,6 +23,7 @@
       max-width: 400px;
       padding: 0 10px;
       overflow: hidden;
+
       .info-avatar {
         display: grid;
         grid-template-columns: 60px 1fr;
@@ -37,6 +40,7 @@
           width: 60px;
           height: 60px;
         }
+
         .arcana-select-wrapper {
           grid-column: 1 / -1;
           grid-row: 2;
@@ -84,11 +88,13 @@
               justify-content: center;
               box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
             }
+
             .arcane {
               height: 40px;
               width: 40px;
               flex: 0 0 auto;
               display: inline-block;
+
               &:hover {
                 cursor: pointer;
               }
@@ -99,6 +105,7 @@
             border-radius: 50%;
             animation: arcanePulseGreen 1.5s infinite;
             transform-origin: center center;
+
             @keyframes arcanePulseGreen {
               0% {
                 box-shadow:
@@ -107,6 +114,7 @@
                   0 0 50px 20px rgba(46, 204, 113, 0.6);
                 transform: scale(1.05);
               }
+
               50% {
                 box-shadow:
                   0 0 0 6px rgba(46, 204, 113, 0.9),
@@ -114,6 +122,7 @@
                   0 0 60px 25px rgba(46, 204, 113, 0.5);
                 transform: scale(1.12);
               }
+
               100% {
                 box-shadow:
                   0 0 0 4px rgba(46, 204, 113, 0.95),
@@ -125,7 +134,7 @@
           }
         }
 
-        .mana-bar {
+        .arcana-charge-bar {
           position: relative;
           width: 100%;
           height: 6px;
@@ -135,39 +144,45 @@
           flex: 0 0 auto;
         }
 
-        .mana-bar__fill {
+        .arcana-charge-bar__fill {
           height: 100%;
           width: 0;
           background: linear-gradient(90deg, #2ecc71, #27ae60);
           transition: width 200ms ease;
         }
       }
+
       .dialogue {
         height: 190px;
         padding: 20px;
         background: rgba(34, 34, 34, 0.7);
         overflow-y: scroll;
       }
+
       .arcana {
         display: flex;
         flex-direction: column;
         height: 190px;
         background: rgba(34, 34, 34, 0.7);
+
         .arcana-side-buttons {
           height: 40px;
           display: flex;
         }
       }
+
       .buttons {
         display: flex;
       }
     }
+
     .time-board-time {
       height: calc(100% - 15%);
       max-height: 960px;
       min-height: 480px;
       aspect-ratio: 1;
       position: relative;
+
       .board-view {
         position: absolute;
         top: 0;
@@ -179,6 +194,7 @@
         align-items: center;
       }
     }
+
     .nav-history-buttons-player {
       display: flex;
       gap: 10px;
@@ -189,6 +205,7 @@
       max-width: 400px;
       padding: 0 10px;
       overflow: hidden;
+
       .timer {
         display: flex;
         justify-content: center;
@@ -196,9 +213,11 @@
         padding: 10px;
         background-color: rgba(34, 34, 34, 0.7);
       }
+
       .nav {
         display: flex;
       }
+
       .history {
         display: flex;
         flex-direction: column;
@@ -206,34 +225,42 @@
         height: 200px;
         overflow-y: scroll;
         padding: 10px;
+
         .pgn-list {
           height: 200px;
           width: 20px;
           overflow-y: scroll;
         }
+
         .full-move {
           display: flex;
           margin: 5px;
         }
+
         .pgn-item {
           width: 120px;
           text-align: left;
         }
+
         .move-number {
           margin: 0 20px 0 5px;
           width: 20px;
           text-align: left;
         }
       }
+
       .global-volume-control {
         display: none;
       }
+
       .buttons {
         display: none;
       }
+
       .dialogue {
         display: none;
       }
+
       .info-avatar {
         display: grid;
         grid-template-columns: 60px 1fr;
@@ -250,6 +277,7 @@
           width: 60px;
           height: 60px;
         }
+
         .arcana-select-wrapper {
           grid-column: 1 / -1;
           grid-row: 2;
@@ -297,11 +325,13 @@
               justify-content: center;
               box-shadow: 0 0 3px rgba(0, 0, 0, 0.6);
             }
+
             .arcane {
               height: 40px;
               width: 40px;
               flex: 0 0 auto;
               display: inline-block;
+
               &:hover {
                 cursor: pointer;
               }
@@ -312,6 +342,7 @@
             border-radius: 50%;
             animation: arcanePulseGreen 1.5s infinite;
             transform-origin: center center;
+
             @keyframes arcanePulseGreen {
               0% {
                 box-shadow:
@@ -320,6 +351,7 @@
                   0 0 50px 20px rgba(46, 204, 113, 0.6);
                 transform: scale(1.05);
               }
+
               50% {
                 box-shadow:
                   0 0 0 6px rgba(46, 204, 113, 0.9),
@@ -327,6 +359,7 @@
                   0 0 60px 25px rgba(46, 204, 113, 0.5);
                 transform: scale(1.12);
               }
+
               100% {
                 box-shadow:
                   0 0 0 4px rgba(46, 204, 113, 0.95),
@@ -338,7 +371,7 @@
           }
         }
 
-        .mana-bar {
+        .arcana-charge-bar {
           position: relative;
           width: 100%;
           height: 6px;
@@ -348,7 +381,7 @@
           flex: 0 0 auto;
         }
 
-        .mana-bar__fill {
+        .arcana-charge-bar__fill {
           height: 100%;
           width: 0;
           background: linear-gradient(90deg, #2ecc71, #27ae60);
@@ -367,6 +400,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     overflow: auto;
+
     .mission-view {
       width: 100%;
       height: 100%;
@@ -375,6 +409,7 @@
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
+
       .opponent-dialogue-arcana {
         display: flex;
         gap: 10px;
@@ -384,15 +419,18 @@
         min-height: 60px;
         padding: 0 10px 0 10px;
         width: 100%;
+
         .info-avatar {
           display: flex;
           flex-direction: row-reverse;
           justify-content: center;
           height: 60px;
           width: 400px;
+
           .avatar {
             background: rgba(34, 34, 34, 0.7);
           }
+
           .info {
             width: 100%;
             display: flex;
@@ -401,31 +439,38 @@
             align-items: center;
             background: rgba(34, 34, 34, 0.7);
             margin-right: 10px;
+
             .name {
               text-align: right;
             }
+
             .arcana-select {
               display: flex;
               height: 100%;
               overflow-y: scroll;
               padding: 13px 13px 0 13px;
+
               .arcane {
                 height: 60px;
                 width: 60px;
               }
+
               .arcane:hover {
                 cursor: pointer;
               }
             }
           }
         }
+
         .dialogue {
           display: none;
         }
+
         .buttons {
           display: none;
         }
       }
+
       .time-board-time {
         max-width: 400px;
         min-height: 400px;
@@ -434,6 +479,7 @@
         position: relative;
         display: flex;
         justify-content: center;
+
         .board-view {
           min-width: 400px;
           max-width: 400px;
@@ -449,48 +495,58 @@
           align-items: center;
         }
       }
+
       .nav-history-buttons-player {
         display: flex;
         gap: 10px;
         flex-direction: column-reverse;
         min-height: 480px;
+
         .nav {
           display: flex;
         }
+
         .history {
           display: flex;
           flex-direction: column;
           background-color: rgba(34, 34, 34, 0.7);
           overflow-y: scroll;
           padding: 10px;
+
           .pgn-list {
             height: 200px;
             width: 20px;
             overflow-y: scroll;
           }
+
           .full-move {
             display: flex;
             margin: 5px;
           }
+
           .pgn-item {
             width: 120px;
             text-align: left;
           }
+
           .move-number {
             margin: 0 20px 0 5px;
             width: 20px;
             text-align: left;
           }
         }
+
         .global-volume-control {
           display: flex;
         }
+
         .buttons {
           display: flex;
           flex-direction: row-reverse;
           height: 40px;
           width: 100%;
         }
+
         .dialogue {
           display: flex;
           height: 190px;
@@ -498,20 +554,24 @@
           background: rgba(34, 34, 34, 0.7);
           overflow-y: scroll;
         }
+
         .info-avatar {
           display: flex;
           flex-direction: row-reverse;
           justify-content: center;
           height: 60px;
+
           .info {
             display: none;
           }
+
           .arcana-select {
             display: flex;
             justify-content: flex-start;
             align-items: center;
             height: 100%;
             white-space: nowrap;
+
             .arcane:hover {
               cursor: pointer;
             }
@@ -530,6 +590,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     overflow: auto;
+
     .mission-view {
       width: 100%;
       height: 100%;
@@ -538,6 +599,7 @@
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
+
       .time-board-time {
         max-width: 360px;
         min-height: 360px;
@@ -546,6 +608,7 @@
         position: relative;
         display: flex;
         justify-content: center;
+
         .board-view {
           min-width: 360px;
           max-width: 360px;

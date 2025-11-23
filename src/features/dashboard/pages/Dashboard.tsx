@@ -164,9 +164,8 @@ export class UnwrappedDashboard extends React.Component<
 
     return (
       <div
-        className={`dashboard ${this.state.fadeIn ? 'fade-in' : ''} ${
-          this.state.fadeOut ? 'fade-out' : ''
-        }`}
+        className={`dashboard ${this.state.fadeIn ? 'fade-in' : ''} ${this.state.fadeOut ? 'fade-out' : ''
+          }`}
         ref={this.rootRef}
       >
         <div className={`fade-overlay ${this.state.fadeOut ? 'active' : ''}`} />
@@ -287,9 +286,8 @@ export class UnwrappedDashboard extends React.Component<
               </button>
             </Link>
             <div
-              className={`nav-item has-sub ${
-                openSubKey === 'ARENA' ? 'open' : ''
-              }`}
+              className={`nav-item has-sub ${openSubKey === 'ARENA' ? 'open' : ''
+                }`}
               onMouseEnter={() => this.setHover('arena')}
             >
               <button
@@ -345,9 +343,8 @@ export class UnwrappedDashboard extends React.Component<
               </div>
             </div>
             <div
-              className={`nav-item has-sub ${
-                openSubKey === 'FORUM' ? 'open' : ''
-              }`}
+              className={`nav-item has-sub ${openSubKey === 'FORUM' ? 'open' : ''
+                }`}
               onMouseEnter={() => this.setHover('forum')}
               onFocus={() => this.setHover('forum')}
             >
@@ -369,9 +366,8 @@ export class UnwrappedDashboard extends React.Component<
               ></div>
             </div>
             <div
-              className={`nav-item has-sub ${
-                openSubKey === 'MANIFEST' ? 'open' : ''
-              }`}
+              className={`nav-item has-sub ${openSubKey === 'MANIFEST' ? 'open' : ''
+                }`}
               onMouseEnter={() => this.setHover('manifest2')}
               onFocus={() => this.setHover('manifest2')}
             >
@@ -464,7 +460,7 @@ export class UnwrappedDashboard extends React.Component<
               <ul>
                 <li>
                   Quality of life improvements – Board now highlights potential
-                  moves that will use a shift arcana. Mana bar - countdown
+                  moves that will use a shift arcana. Arcana charge bar - countdown
                   visual to next arcana unlock. Arcana badge visuals updated.
                 </li>
                 <li>
@@ -510,7 +506,7 @@ export class UnwrappedDashboard extends React.Component<
             </div>
             <div className="news-item">
               <h4>
-                Patch 2.5 Live: Hexweaver Update, Mana, Pawn Update
+                Patch 2.5 Live: Hexweaver Update, Arcana Charge, Pawn Update
                 <h6>Source: medavas</h6>
                 <h6>Date: September 2025</h6>
                 <h6>Category: Mechanics</h6>
@@ -522,7 +518,7 @@ export class UnwrappedDashboard extends React.Component<
                   summon.
                 </li>
                 <li>
-                  Mana: unlockable time slots. Arcana in your inventory unlock
+                  Arcana Charge: unlockable time slots. Arcana in your inventory unlock
                   incrementally after a certain number of turns automatically.
                   Less overwhelming and promotes resource management.
                 </li>

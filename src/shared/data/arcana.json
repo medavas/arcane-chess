@@ -603,8 +603,8 @@
   },
   "moriMAN": {
     "id": "moriMAN",
-    "name": "Letum Mana",
-    "description": "On any of your piece death, gain 2 mana tempo.",
+    "name": "Letum Arcana Charge",
+    "description": "On any of your piece death, gain 2 arcana charge tempo.",
     "type": "inherent",
     "imagePath": "/moriMAN"
   },
@@ -638,8 +638,8 @@
   },
   "moraMAN": {
     "id": "moraMAN",
-    "name": "Nex Mana",
-    "description": "On any of your opponent's piece death, gain 2 mana tempo.",
+    "name": "Nex Arcana Charge",
+    "description": "On any of your opponent's piece death, gain 2 arcana charge tempo.",
     "type": "inherent",
     "imagePath": "/moraMAN"
   },
