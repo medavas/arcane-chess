@@ -24,34 +24,16 @@ import GlobalVolumeControl from 'src/shared/utils/audio/GlobalVolumeControl';
 import arcanaJson from 'src/shared/data/arcana.json';
 
 import arcaneChess from 'src/features/game/engine/arcaneChess.mjs';
-// import {
-//   arcane as arcaneChess,
-//   arcaneChessWorker,
-// } from 'src/features/game/engine/arcaneChessInstance.js';
 import {
   GameBoard,
   InCheck,
-  TOSQ,
-  FROMSQ,
-  PROMOTED,
-  ARCANEFLAG,
-  CAPTURED,
-  MFLAGSUMN,
-  MFLAGCNSM,
-  MFLAGSHFT,
 } from 'src/features/game/engine/board.mjs';
-import { PrMove, PrSq } from 'src/features/game/engine/io.mjs';
+import { PrSq } from 'src/features/game/engine/io.mjs';
 import {
-  prettyToSquare,
   PIECES,
   ARCANE_BIT_VALUES,
-  COLOURS,
-  RtyChar,
-  PceChar,
 } from 'src/features/game/engine/defs.mjs';
-import { outputFenOfCurrentPosition } from 'src/features/game/engine/board.mjs';
 import { SearchController } from 'src/features/game/engine/search.mjs';
-import { CheckAndSet, CheckResult } from 'src/features/game/engine/gui.mjs';
 
 import {
   whiteArcaneConfig,
@@ -61,17 +43,18 @@ import {
 
 import { IChessgroundApi } from 'src/features/game/board/chessgroundMod';
 
-const pieces: PieceRoyaltyTypes = PIECES;
-const royalties: PieceRoyaltyTypes = ARCANE_BIT_VALUES;
 import ChessClock from '../../components/Clock/Clock';
 import { SpellHandler } from 'src/features/game/utils/SpellHandler';
-import Button from 'src/shared/components/Button/Button';
 import { BoardUX } from 'src/features/game/components/BoardUX/BoardUX';
-import { ArcanaSelector } from 'src/features/game/components/ArcanaSelector/ArcanaSelector';
 import { GameEngineHandler } from 'src/features/game/utils/GameEngineHandler';
 import { HistoryHandler } from 'src/features/game/utils/HistoryHandler';
+import { PromotionHandler } from 'src/features/game/utils/PromotionHandler';
+import { OpponentPanel } from 'src/features/game/components/GamePanels/OpponentPanel';
+import { PlayerPanel } from 'src/features/game/components/GamePanels/PlayerPanel';
 
 const arcana: ArcanaMap = arcanaJson as ArcanaMap;
+const pieces: PieceRoyaltyTypes = PIECES;
+const royalties: PieceRoyaltyTypes = ARCANE_BIT_VALUES;
 
 interface PieceRoyaltyTypes {
   [key: string]: number;
@@ -214,6 +197,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
   spellHandler: SpellHandler;
   gameEngineHandler: GameEngineHandler;
   historyHandler: HistoryHandler;
+  promotionHandler: PromotionHandler;
 
   constructor(props: Props) {
     super(props);
@@ -356,6 +340,12 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
       anySpellActive: () => this.anySpellActive(),
       deactivateAllSpells: () => this.deactivateAllSpells(),
     });
+
+    this.promotionHandler = new PromotionHandler({
+      setState: (state, callback) => this.setState(state, callback),
+      getArcaneChess: () => this.arcaneChess(),
+      getPlayerColor: () => this.state.playerColor,
+    });
   }
 
   anySpellActive = () => this.spellHandler.anySpellActive();
@@ -425,99 +415,17 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
           (timeLeft || 1) *
           LS.config.multiplier,
       },
-      // chapterEnd: booksMap[`book${LS.chapter}`][this.state.nodeId].boss
-      //   ? true
-      //   : false,
     });
-    // below updates score in modal
     this.setState({});
-    // if (booksMap[`book${LS.chapter}`][this.state.nodeId].boss) {
-    //   const chapterPoints = _.reduce(
-    //     getLocalStorage(this.props.auth.user.username).nodeScores,
-    //     (accumulator, value) => {
-    //       return accumulator + value;
-    //     },
-    //     0
-    //   );
-    //   // set user top score if new
-    //   if (
-    //     chapterPoints >
-    //     getLocalStorage(this.props.auth.user.username).auth.user.campaign
-    //       .topScores[getLocalStorage(this.props.auth.user.username).chapter]
-    //   ) {
-    //     // Retrieve the entire data structure from local storage once
-    //     const localStorageData = getLocalStorage(this.props.auth.user.username);
-
-    //     // Calculate the chapter index
-    //     const chapterIndex =
-    //       getLocalStorage(this.props.auth.user.username).chapter - 1;
-
-    //     // Update the specific chapter points in the campaign topScores array
-    //     localStorageData.auth.user.campaign.topScores[chapterIndex] =
-    //       chapterPoints;
-
-    //     // Save the updated data back to local storage
-    //     setLocalStorage(localStorageData);
-
-    //     if (LS.auth.user.id !== '0') {
-    //       axios
-    //         .post('/api/campaign/topScores', {
-    //           userId: this.props.auth.user.id,
-    //           chapterPoints,
-    //           chapterNumber: getLocalStorage(this.props.auth.user.username)
-    //             .chapter,
-    //         })
-    //         .then((res) => {
-    //           // console.log(res);
-    //         })
-    //         .catch((err) => {
-    //           console.log('top score post err: ', err);
-    //         });
-    //     }
-    //   }
-    // }
   };
 
-  handlePromotion = (piece: string) => {
-    this.setState((prevState) => ({
-      ...prevState,
-      placingPromotion:
-        pieces[`${this.state.playerColor === 'white' ? 'w' : 'b'}${piece}`],
-    }));
-  };
+  handlePromotion = (piece: string) => this.promotionHandler.handlePromotion(piece);
 
   promotionSelectAsync(callback: (piece: number) => void): Promise<void> {
-    return new Promise((resolve) => {
-      if (this.arcaneChess().hasDivineReckoning()) {
-        // Auto-promote to Valkyrie when Divine Reckoning is active
-        const valkyriePiece = `${this.state.playerColor === 'white' ? 'w' : 'b'
-          }V`;
-        this.setState({ placingPromotion: pieces[valkyriePiece] }, () => {
-          callback(this.state.placingPromotion!);
-          resolve();
-        });
-      } else {
-        this.setState({ promotionModalOpen: true });
-        this.intervalId = setInterval(() => {
-          if (this.state.placingPromotion) {
-            clearInterval(this.intervalId!);
-            this.intervalId = null;
-            callback(this.state.placingPromotion);
-            resolve();
-          }
-        }, 100);
-      }
-    });
+    return this.promotionHandler.promotionSelectAsyncWithState(callback, () => this.state);
   }
 
-  handleModalClose = (pieceType: string) => {
-    this.setState({
-      placingPromotion:
-        pieces[`${this.state.playerColor === 'white' ? 'w' : 'b'}${pieceType}`],
-      gameOver: false,
-      promotionModalOpen: false,
-    });
-  };
+  handleModalClose = (pieceType: string) => this.promotionHandler.handleModalClose(pieceType);
 
   analyzeGame = () => {
     this.setState({
@@ -587,8 +495,6 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
     }
   };
 
-
-
   getRandomFaction = () => {
     const factions = ['chi', 'omega', 'sigma', 'lambda', 'nu', 'mu'];
     const randomIndex = Math.floor(Math.random() * factions.length);
@@ -601,7 +507,6 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
     this.spellHandler.isArcaneActive(key, color);
 
   render() {
-    // const greekLetters = ['X', 'Ω', 'Θ', 'Σ', 'Λ', 'Φ', 'M', 'N'];
     const gameBoardTurn = GameBoard.side === 0 ? 'white' : 'black';
     const LS = getLocalStorage(this.props.auth.user.username);
     const sortedHistory = _.chunk(this.state.history, 2);
@@ -615,7 +520,6 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
             position: 'absolute',
             height: '100vh',
             width: '100vw',
-            // background: 'url(/assets/pages/tactorius.webp)',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             backgroundRepeat: 'no-repeat',
@@ -673,8 +577,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
           <TactoriusModal
             isOpen={this.state.gameOver}
             handleClose={() => this.analyzeGame()}
-            // modalType={this.state.endScenario}
-            message={this.state.gameOverType} // interpolate
+            message={this.state.gameOverType}
             score={LS.nodeScores[this.state.nodeId]}
             type={
               this.state.gameOverType.split(' ')[1] === 'mates' &&
@@ -691,107 +594,45 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
               this.handleModalClose(pieceType)
             }
           />
-          <div
-            className="quickplay-view"
-          // style={{
-          //   background:
-          //     this.state.theme === 'black'
-          //       ? ''
-          //       : `url(assets/pages/tactoriusb.webp) no-repeat center center fixed`,
-          // }}
-          >
-            <div className="opponent-dialogue-arcana">
-              <div className="info-avatar">
-                <div className="avatar">
-                  {/* <img
-                    src={`/assets/avatars/${this.state.engineAvatar}.webp`}
-                    style={{
-                      height: '60px',
-                      width: '60px',
-                      objectFit: 'contain',
-                    }}
-                  /> */}
-                </div>
-                <div>
-                  <ArcanaSelector
-                    color={this.state.engineColor as 'white' | 'black'}
-                    arcaneConfig={
-                      (this.state.engineColor === 'white'
-                        ? whiteArcaneConfig
-                        : blackArcaneConfig) as Record<
-                          string,
-                          number | string | undefined
-                        >
-                    }
-                    playerColor={this.state.playerColor}
-                    thinking={this.state.thinking}
-                    historyLength={this.state.history.length}
-                    futureSightAvailable={this.state.futureSightAvailable}
-                    hoverArcane={this.state.hoverArcane}
-                    engineColor={this.state.engineColor}
-                    dyadName={
-                      typeof this.arcaneChess().getDyadName === 'function'
-                        ? this.arcaneChess().getDyadName()
-                        : ''
-                    }
-                    dyadOwner={
-                      typeof this.arcaneChess().getDyadOwner === 'function'
-                        ? this.arcaneChess().getDyadOwner()
-                        : undefined
-                    }
-                    trojanGambitExists={this.arcaneChess().getIfTrojanGambitExists(
-                      this.state.engineColor
-                    )}
-                    onSpellClick={this.handleArcanaClick}
-                    onHover={this.toggleHover}
-                    isArcaneActive={this.isArcaneActive}
-                  />
-                </div>
-              </div>
-              <div id="dialogue" className="dialogue">
-                {this.state.hoverArcane !== '' ? (
-                  <div className="arcana-detail">
-                    <h3>{arcana[this.state.hoverArcane].name}</h3>
-                    <p>{arcana[this.state.hoverArcane].description}</p>
-                  </div>
-                ) : (
-                  <ul style={{ padding: '0' }}>
-                    {this.state.thinking ? (
-                      'The engine is thinking...'
-                    ) : trojanActive ? (
-                      <li>
-                        Trojan Gambit activated! Must take via en passant.
-                      </li>
-                    ) : (
-                      this.state.dialogue.map((item, key) => {
-                        return <li key={key}>{item}</li>;
-                      })
-                    )}
-                  </ul>
-                )}
-              </div>
-              <div className="buttons">
-                <Button
-                  className="tertiary"
-                  onClick={() => {
-                    audioManager.playSFX('defeat');
-                    this.setState({
-                      gameOver: true,
-                      gameOverType: `${this.state.playerColor} resigns`,
-                    });
-                  }}
-                  color="B"
-                  // strong={true}
-                  text="RESIGN"
-                  width={100}
-                  // fontSize={30}
-                  backgroundColorOverride="#222222"
-                />
-              </div>
-              <div className="global-volume-control">
-                <GlobalVolumeControl />
-              </div>
-            </div>
+          <div className="quickplay-view">
+            <OpponentPanel
+              engineColor={this.state.engineColor}
+              playerColor={this.state.playerColor}
+              whiteFaction={this.state.whiteFaction}
+              blackFaction={this.state.blackFaction}
+              arcaneConfig={
+                this.state.engineColor === 'white'
+                  ? whiteArcaneConfig
+                  : blackArcaneConfig
+              }
+              thinking={this.state.thinking}
+              hoverArcane={this.state.hoverArcane}
+              dialogue={this.state.dialogue}
+              trojanActive={trojanActive}
+              futureSightAvailable={this.state.futureSightAvailable}
+              historyLength={this.state.history.length}
+              dyadName={
+                typeof this.arcaneChess().getDyadName === 'function'
+                  ? this.arcaneChess().getDyadName()
+                  : ''
+              }
+              dyadOwner={
+                typeof this.arcaneChess().getDyadOwner === 'function'
+                  ? this.arcaneChess().getDyadOwner()
+                  : undefined
+              }
+              onSpellClick={this.handleArcanaClick}
+              onHover={this.toggleHover}
+              isArcaneActive={this.isArcaneActive}
+              onResign={() => {
+                audioManager.playSFX('defeat');
+                this.setState({
+                  gameOver: true,
+                  gameOverType: `${this.state.playerColor} resigns`,
+                });
+              }}
+              avatar={this.state.engineAvatar}
+            />
             <div className="time-board-time">
               <div className="board-view tactorius-default-board">
                 <BoardUX
@@ -801,12 +642,17 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                     fen: this.state.fen,
                     turnColor: gameBoardTurn,
                     orientation: this.state.playerColor,
-                    lastMove:
-                      this.state.lastMoveHistory[this.state.historyPly - 1],
+                    lastMove: this.state.lastMoveHistory[this.state.historyPly - 1],
                     check: InCheck() ? true : false,
                     royalties: this.state.royalties,
-                    whiteFaction: this.state.whiteFaction,
-                    blackFaction: this.state.blackFaction,
+                    whiteFaction:
+                      this.state.whiteFaction === 'tau'
+                        ? 'normal'
+                        : this.state.whiteFaction,
+                    blackFaction:
+                      this.state.blackFaction === 'tau'
+                        ? 'normal'
+                        : this.state.blackFaction,
                     whiteVisible: this.arcaneChess().getInvisibility()[0] <= 0,
                     blackVisible: this.arcaneChess().getInvisibility()[1] <= 0,
                   }}
@@ -821,9 +667,6 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                     placingPromotion: this.state.placingPromotion,
                     isDyadMove: this.state.isDyadMove,
                   }}
-                  width={'100%'}
-                  height={'100%'}
-                  // theme={this.state.theme}
                   onGameStateChange={(newState) => this.setState(newState)}
                   onGameOver={(result) => {
                     this.setState(result, () => {
@@ -849,164 +692,50 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                   onPromotionRequest={(callback) =>
                     this.promotionSelectAsync(callback)
                   }
+                  width="100%"
+                  height="100%"
                 />
               </div>
             </div>
-            <div className="nav-history-buttons-player">
-              <div className="global-volume-control">
-                <GlobalVolumeControl />
-              </div>
-              <div className="buttons">
-                <Button
-                  className="tertiary"
-                  onClick={() => {
-                    audioManager.playSFX('defeat');
-                    this.setState({
-                      gameOver: true,
-                      gameOverType: `${this.state.playerColor} resigns`,
-                    });
-                  }}
-                  color="B"
-                  // strong={true}
-                  text="RESIGN"
-                  width={100}
-                  // fontSize={30}
-                  backgroundColorOverride="#222222"
-                />
-              </div>
-              <div className="nav">
-                <Button
-                  className="tertiary"
-                  onClick={() => this.navigateHistory('start')}
-                  color="B"
-                  strong={true}
-                  variant="<<"
-                  width={100}
-                  fontSize={30}
-                  backgroundColorOverride="#222222"
-                />
-                <Button
-                  className="tertiary"
-                  onClick={() => this.navigateHistory('back')}
-                  color="B"
-                  strong={true}
-                  variant="<"
-                  width={100}
-                  fontSize={30}
-                  backgroundColorOverride="#222222"
-                />
-                <Button
-                  className="tertiary"
-                  onClick={() => this.navigateHistory('forward')}
-                  color="B"
-                  strong={true}
-                  variant=">"
-                  width={100}
-                  fontSize={30}
-                  backgroundColorOverride="#222222"
-                />
-                <Button
-                  className="tertiary"
-                  onClick={() => this.navigateHistory('end')}
-                  color="B"
-                  strong={true}
-                  variant=">>"
-                  width={100}
-                  fontSize={30}
-                  backgroundColorOverride="#222222"
-                />
-              </div>
-              <div id="history" className="history">
-                {sortedHistory.map((fullMove, fullMoveIndex) => {
-                  return (
-                    <p className="full-move" key={fullMoveIndex}>
-                      <span className="move-number">{fullMoveIndex + 1}.</span>
-                      <Button
-                        className="tertiary"
-                        text={fullMove[0]}
-                        color="B"
-                        height={20}
-                        onClick={() => {
-                          this.navigateHistory('jump', fullMoveIndex * 2 + 1);
-                        }}
-                        backgroundColorOverride="#00000000"
-                      />
-                      <Button
-                        className="tertiary"
-                        text={fullMove[1]}
-                        color="B"
-                        height={20}
-                        onClick={() => {
-                          this.navigateHistory('jump', fullMoveIndex * 2 + 2);
-                        }}
-                        backgroundColorOverride="#00000000"
-                      />
-                    </p>
-                  );
-                })}
-              </div>
-              <div id="dialogue" className="dialogue">
-                {this.state.hoverArcane !== '' ? (
-                  <div className="arcana-detail">
-                    <h3>{arcana[this.state.hoverArcane].name}</h3>
-                    <p>{arcana[this.state.hoverArcane].description}</p>
-                  </div>
-                ) : (
-                  <ul style={{ padding: '0' }}>
-                    {this.state.dialogue.map((item, key) => {
-                      return <li key={key}>{item}</li>;
-                    })}
-                  </ul>
-                )}
-              </div>
-              <div className="info-avatar">
-                <div className="avatar">
-                  {/* <img
-                    src="/assets/avatars/normal.webp"
-                    style={{
-                      height: '60px',
-                      width: '60px',
-                      objectFit: 'contain',
-                    }}
-                  /> */}
-                </div>
-                <div className="board-arcana">
-                  <ArcanaSelector
-                    color={this.state.playerColor as 'white' | 'black'}
-                    arcaneConfig={
-                      (this.state.playerColor === 'white'
-                        ? whiteArcaneConfig
-                        : blackArcaneConfig) as Record<
-                          string,
-                          number | string | undefined
-                        >
-                    }
-                    playerColor={this.state.playerColor}
-                    thinking={this.state.thinking}
-                    historyLength={this.state.history.length}
-                    futureSightAvailable={this.state.futureSightAvailable}
-                    hoverArcane={this.state.hoverArcane}
-                    engineColor={this.state.engineColor}
-                    dyadName={
-                      typeof this.arcaneChess().getDyadName === 'function'
-                        ? this.arcaneChess().getDyadName()
-                        : ''
-                    }
-                    dyadOwner={
-                      typeof this.arcaneChess().getDyadOwner === 'function'
-                        ? this.arcaneChess().getDyadOwner()
-                        : undefined
-                    }
-                    trojanGambitExists={this.arcaneChess().getIfTrojanGambitExists(
-                      this.state.engineColor
-                    )}
-                    onSpellClick={this.handleArcanaClick}
-                    onHover={this.toggleHover}
-                    isArcaneActive={this.isArcaneActive}
-                  />
-                </div>
-              </div>
-            </div>
+            <PlayerPanel
+              playerColor={this.state.playerColor}
+              engineColor={this.state.engineColor}
+              whiteFaction={this.state.whiteFaction}
+              blackFaction={this.state.blackFaction}
+              arcaneConfig={
+                this.state.playerColor === 'white'
+                  ? whiteArcaneConfig
+                  : blackArcaneConfig
+              }
+              history={this.state.history}
+              sortedHistory={sortedHistory}
+              navigateHistory={(type, targetIndex) => this.navigateHistory(type, targetIndex)}
+              thinking={this.state.thinking}
+              hoverArcane={this.state.hoverArcane}
+              dialogue={this.state.dialogue}
+              futureSightAvailable={this.state.futureSightAvailable}
+              dyadName={
+                typeof this.arcaneChess().getDyadName === 'function'
+                  ? this.arcaneChess().getDyadName()
+                  : ''
+              }
+              dyadOwner={
+                typeof this.arcaneChess().getDyadOwner === 'function'
+                  ? this.arcaneChess().getDyadOwner()
+                  : undefined
+              }
+              trojanActive={trojanActive}
+              onSpellClick={this.handleArcanaClick}
+              onHover={this.toggleHover}
+              isArcaneActive={this.isArcaneActive}
+              onResign={() => {
+                audioManager.playSFX('defeat');
+                this.setState({
+                  gameOver: true,
+                  gameOverType: `${this.state.playerColor} resigns`,
+                });
+              }}
+            />
           </div>
         </div>
       </div>
