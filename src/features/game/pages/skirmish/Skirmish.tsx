@@ -65,6 +65,8 @@ import { SpellHandler } from 'src/features/game/utils/SpellHandler';
 import Button from 'src/shared/components/Button/Button';
 import { BoardUX } from 'src/features/game/components/BoardUX/BoardUX';
 import { ArcanaSelector } from 'src/features/game/components/ArcanaSelector/ArcanaSelector';
+import { GameEngineHandler } from 'src/features/game/utils/GameEngineHandler';
+import { HistoryHandler } from 'src/features/game/utils/HistoryHandler';
 
 const arcana: ArcanaMap = arcanaJson as ArcanaMap;
 
@@ -205,14 +207,16 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
   };
   hasMounted = false;
   arcaneChess;
-  engineFaction;
+  engineFaction = 'normal';
   chessgroundRef = createRef<IChessgroundApi>();
   chessclockRef = createRef<ChessClock>();
   intervalId: NodeJS.Timeout | null = null;
   spellHandler: SpellHandler;
+  gameEngineHandler: GameEngineHandler;
+  historyHandler: HistoryHandler;
+
   constructor(props: Props) {
     super(props);
-    this.engineFaction = this.getRandomFaction();
     this.state = {
       turn: 'white',
       playerInc: null,
@@ -272,7 +276,7 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
       skirmishModalOpen: true,
       futureSightAvailable: true,
       glitchActive: false,
-      engineAvatar: this.engineFaction,
+      engineAvatar: 'normal',
       dialogueList: {
         win1: '',
         win2: '',
@@ -319,6 +323,42 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
       addDialogue: (message) => this.setState((prev) => ({ dialogue: [...prev.dialogue, message] })),
       activateGlitch: () => this.setState({ glitchActive: true }),
     });
+
+    this.gameEngineHandler = new GameEngineHandler({
+      setState: (state, callback) => this.setState(state, callback),
+      getArcaneChess: () => this.arcaneChess(),
+      getChessgroundRef: () => this.chessgroundRef,
+      getStopAndReturnTime: () => this.stopAndReturnTime() as number | null,
+      handleVictory: (timeLeft) => this.handleVictory(timeLeft),
+      getState: () => ({
+        thinking: this.state.thinking,
+        glitchActive: this.state.glitchActive,
+        thinkingTime: this.state.thinkingTime,
+        engineDepth: this.state.engineDepth,
+        engineColor: this.state.engineColor,
+        playerColor: this.state.playerColor,
+        dialogue: this.state.dialogue,
+        dialogueList: this.state.dialogueList,
+        history: this.state.history,
+        fenHistory: this.state.fenHistory,
+        lastMoveHistory: this.state.lastMoveHistory,
+        royalties: this.state.royalties,
+        turn: this.state.turn,
+        historyPly: this.state.historyPly,
+        placingRoyalty: this.state.placingRoyalty,
+        gameOverType: this.state.gameOverType,
+      }),
+    });
+
+    this.historyHandler = new HistoryHandler({
+      setState: (state, callback) => this.setState(state, callback),
+      getState: () => ({
+        historyPly: this.state.historyPly,
+        fenHistory: this.state.fenHistory,
+      }),
+      anySpellActive: () => this.anySpellActive(),
+      deactivateAllSpells: () => this.deactivateAllSpells(),
+    });
   }
 
   anySpellActive = () => this.spellHandler.anySpellActive();
@@ -345,161 +385,9 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
       {} as Record<string, number>
     );
 
-  engineGo = () => {
-    this.setState({
-      thinking: true,
-    });
-    new Promise<{ bestMove: any; text: any }>((resolve) => {
-      if (this.state.glitchActive) {
-        const glitchMove = arcaneChess().engineGlitch();
-        if (CAPTURED(glitchMove) > 0 && ARCANEFLAG(glitchMove) === 0) {
-          audioManager.playSFX('capture');
-        } else {
-          audioManager.playSFX('move');
-        }
-        resolve(glitchMove);
-      } else {
-        arcaneChess()
-          .engineReply(
-            this.state.thinkingTime,
-            this.state.engineDepth,
-            this.state.engineColor
-          )
-          .then(({ bestMove, text }) => {
-            if (
-              (CAPTURED(bestMove) !== 0 && bestMove & MFLAGSUMN) ||
-              text.some((t: string) => t.includes('phantom mist')) ||
-              text.some((t: string) => t.includes('bulletproof'))
-            ) {
-              audioManager.playSFX('freeze');
-            } else if (
-              PROMOTED(bestMove) ||
-              bestMove & MFLAGSUMN ||
-              bestMove & MFLAGCNSM ||
-              bestMove & MFLAGSHFT ||
-              (PROMOTED(bestMove) && bestMove & MFLAGSUMN)
-            ) {
-              audioManager.playSFX('fire');
-            } else if (ARCANEFLAG(bestMove) > 0) {
-              audioManager.playSFX('spell');
-            } else if (CAPTURED(bestMove) > 0) {
-              audioManager.playSFX('capture');
-            } else {
-              audioManager.playSFX('move');
-            }
-            resolve({ bestMove, text });
-          });
-      }
-    })
-      .then((reply) => {
-        const { bestMove, text } = reply;
-        this.setState(
-          (prevState) => {
-            const updatedDialogue = [
-              ...prevState.dialogue,
-              ...text
-                .map((key: string) => {
-                  if (key in prevState.dialogueList) {
-                    const value = prevState.dialogueList[key];
-                    return !prevState.dialogue.includes(value) ? '' : '';
-                  }
-                  return key;
-                })
-                .filter((value: string | null) => value),
-            ];
-            return {
-              ...prevState,
-              dialogue: [...updatedDialogue],
-              pvLine: GameBoard.cleanPV,
-              historyPly: prevState.historyPly + 1,
-              history: [...prevState.history, PrMove(bestMove)],
-              fen: outputFenOfCurrentPosition(),
-              fenHistory: [
-                ...prevState.fenHistory,
-                outputFenOfCurrentPosition(),
-              ],
-              lastMoveHistory: [
-                ...prevState.lastMoveHistory,
-                [PrSq(FROMSQ(bestMove)), PrSq(TOSQ(bestMove))],
-              ],
-              thinking: false,
-              turn: prevState.turn === 'white' ? 'black' : 'white',
-              royalties: {
-                ...prevState.royalties,
-                ...this.arcaneChess().getPrettyRoyalties(),
-              },
-              glitchActive: false,
-            };
-          },
-          () => {
-            if (CheckAndSet()) {
-              this.setState({
-                gameOver: true,
-                gameOverType: CheckResult().gameResult,
-              });
-              audioManager.playSFX('defeat');
-              return;
-            }
-          }
-        );
-      })
-      .catch((error) => {
-        console.error('An error occurred:', error);
-      });
-  };
+  engineGo = () => this.gameEngineHandler.engineGo();
 
-  getHintAndScore = (level: number) => {
-    audioManager.playSFX('spell');
-    this.setState(
-      {
-        thinking: true,
-        hoverArcane: '',
-      },
-      () => {
-        setTimeout(() => {
-          arcaneChess()
-            .engineSuggestion(this.state.playerColor, level)
-            .then((reply: any) => {
-              const { bestMove, temporalPincer } = reply;
-              let newDialogue: string[] = [];
-              if (level === 1) {
-                newDialogue = [
-                  ...this.state.dialogue,
-                  PrSq(FROMSQ(bestMove)) || PrMove(bestMove).split('@')[0],
-                ];
-                this.chessgroundRef.current?.setAutoShapes([
-                  {
-                    orig: PrSq(FROMSQ(bestMove)) || 'a0',
-                    brush: 'yellow',
-                  },
-                ]);
-              } else if (level === 2) {
-                newDialogue = [...this.state.dialogue, PrMove(bestMove)];
-                this.chessgroundRef.current?.setAutoShapes([
-                  {
-                    orig: PrSq(FROMSQ(bestMove)) || PrSq(TOSQ(bestMove)),
-                    dest: !FROMSQ(bestMove) ? null : PrSq(TOSQ(bestMove)),
-                    brush: 'yellow',
-                  },
-                ]);
-              } else if (level === 3) {
-                newDialogue = [...this.state.dialogue, temporalPincer];
-              }
-              this.setState(
-                {
-                  dialogue: newDialogue,
-                  thinking: false,
-                  hoverArcane: '',
-                },
-                () => {
-                  audioManager.playSFX('spell');
-                }
-              );
-            });
-        }, 0);
-      }
-    );
-  };
+  getHintAndScore = (level: number) => this.gameEngineHandler.getHintAndScore(level);
 
   onChangeUses = (e: React.ChangeEvent<HTMLSelectElement>, power: string) => {
     const uses = Number(e.target.value) || e.target.value;
@@ -640,154 +528,15 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
     });
   };
 
-  normalMoveStateAndEngineGo = (parsed: number, orig: string, dest: string) => {
-    const char = RtyChar.split('')[this.state.placingRoyalty];
-    this.setState(
-      (prevState) => {
-        const newHistory = [...prevState.history];
-        const lastIndex = newHistory.length - 1;
-        if (Array.isArray(newHistory[lastIndex])) {
-          newHistory[lastIndex] = [...newHistory[lastIndex], PrMove(parsed)];
-        } else {
-          newHistory.push(PrMove(parsed));
-        }
-        return {
-          historyPly: prevState.historyPly + 1,
-          history: newHistory,
-          fen: outputFenOfCurrentPosition(),
-          fenHistory: [...prevState.fenHistory, outputFenOfCurrentPosition()],
-          lastMoveHistory:
-            prevState.historyPly < prevState.lastMoveHistory.length
-              ? prevState.lastMoveHistory.map((moves, index) =>
-                index === prevState.historyPly
-                  ? [...moves, orig, dest]
-                  : moves
-              )
-              : [...prevState.lastMoveHistory, [orig, dest]],
-          placingPiece: 0,
-          placingRoyalty: 0,
-          placingPromotion: 0,
-          promotionModalOpen: false,
-          normalMovesOnly: false,
-          swapType: '',
-          isTeleport: false,
-          offeringType: '',
-          royalties: {
-            ...prevState.royalties,
-            royaltyQ: _.mapValues(prevState.royalties.royaltyQ, (value) => {
-              return typeof value === 'undefined' ? value : (value -= 1);
-            }),
-            royaltyT: _.mapValues(prevState.royalties.royaltyT, (value) => {
-              return typeof value === 'undefined' ? value : (value -= 1);
-            }),
-            royaltyM: _.mapValues(prevState.royalties.royaltyM, (value) => {
-              return typeof value === 'undefined' ? value : (value -= 1);
-            }),
-            royaltyV: _.mapValues(prevState.royalties.royaltyV, (value) => {
-              return typeof value === 'undefined' ? value : (value -= 1);
-            }),
-            royaltyE: _.mapValues(prevState.royalties.royaltyE, (value) => {
-              return typeof value === 'undefined' ? value : (value -= 1);
-            }),
-            royaltyF: _.mapValues(prevState.royalties.royaltyF, (value) => {
-              return typeof value === 'undefined' ? value : (value -= 1);
-            }),
-            [`royalty${char}`]: {
-              ...prevState.royalties[`royalty${char}`],
-              [dest]: 8,
-            },
-          },
-        };
-      },
-      () => {
-        if (CheckAndSet()) {
-          this.setState(
-            {
-              gameOver: true,
-              gameOverType: CheckResult().gameResult,
-            },
-            () => {
-              if (
-                _.includes(
-                  this.state.gameOverType,
-                  `${this.state.playerColor} mates`
-                )
-              ) {
-                this.handleVictory(this.stopAndReturnTime() as number | null);
-              }
-            }
-          );
-          return;
-        } else {
-          this.engineGo();
-        }
-      }
-    );
-  };
+  normalMoveStateAndEngineGo = (parsed: number, orig: string, dest: string) =>
+    this.gameEngineHandler.normalMoveStateAndEngineGo(parsed, orig, dest);
 
   navigateHistory(type: string, targetIndex?: number) {
-    this.setState((prevState) => {
-      let newFenIndex = prevState.historyPly;
-      switch (type) {
-        case 'back':
-          if (newFenIndex > 0) {
-            audioManager.playSFX('move');
-            newFenIndex -= 1;
-          }
-          break;
-        case 'forward':
-          if (newFenIndex < prevState.fenHistory.length - 1) {
-            audioManager.playSFX('move');
-            newFenIndex += 1;
-          }
-          break;
-        case 'start':
-          if (newFenIndex !== 0) {
-            audioManager.playSFX('move');
-            newFenIndex = 0;
-          }
-          break;
-        case 'end':
-          if (newFenIndex !== prevState.fenHistory.length - 1) {
-            audioManager.playSFX('move');
-            newFenIndex = prevState.fenHistory.length - 1;
-          }
-          break;
-        case 'jump':
-          if (
-            targetIndex !== undefined &&
-            targetIndex >= 0 &&
-            targetIndex < prevState.fenHistory.length
-          ) {
-            audioManager.playSFX('move');
-            newFenIndex = targetIndex;
-          }
-          break;
-      }
-      return {
-        ...prevState,
-        historyPly: newFenIndex,
-        fen: prevState.fenHistory[newFenIndex],
-      };
-    });
+    this.historyHandler.navigateHistory(type, targetIndex);
   }
 
   handleKeyDown(event: KeyboardEvent) {
-    switch (event.key) {
-      case 'ArrowLeft':
-        this.navigateHistory('back');
-        break;
-      case 'ArrowRight':
-        this.navigateHistory('forward');
-        break;
-      case 'Escape':
-        if (this.anySpellActive()) {
-          this.deactivateAllSpells();
-        }
-        break;
-      default:
-        break;
-    }
+    this.historyHandler.handleKeyDown(event);
   }
 
   componentDidUpdate() {
@@ -847,11 +596,7 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
 
 
 
-  getRandomFaction = () => {
-    const factions = ['chi', 'omega', 'sigma', 'lambda', 'nu', 'mu'];
-    const randomIndex = Math.floor(Math.random() * factions.length);
-    return factions[randomIndex];
-  };
+
 
   isArcaneActive = (key: string, color?: string) =>
     this.spellHandler.isArcaneActive(key, color);
