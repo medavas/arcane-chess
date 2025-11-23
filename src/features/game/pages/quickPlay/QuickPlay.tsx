@@ -66,6 +66,7 @@ import { BoardUX } from 'src/features/game/components/BoardUX/BoardUX';
 import { IChessgroundApi } from 'src/features/game/board/chessgroundMod';
 
 import { getProgressState } from 'src/features/game/engine/arcaneDefs.mjs';
+import { SpellHandler } from 'src/features/game/utils/SpellHandler';
 
 const arcana: ArcanaMap = arcanaJson as ArcanaMap;
 
@@ -210,6 +211,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
   chessgroundRef = createRef<IChessgroundApi>();
   chessclockRef = createRef<ChessClock>();
   intervalId: NodeJS.Timeout | null = null;
+  spellHandler: SpellHandler;
   constructor(props: Props) {
     super(props);
     this.engineFaction = this.getRandomFaction();
@@ -290,51 +292,40 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
     this.chessgroundRef = React.createRef();
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleContextMenu = this.handleContextMenu.bind(this);
+
+    // Initialize spell handler
+    this.spellHandler = new SpellHandler({
+      getArcaneChess: () => this.arcaneChess(),
+      getPlayerColor: () => this.state.playerColor,
+      getSelectedSide: () => this.state.selectedSide,
+      getThinking: () => this.state.thinking,
+      getFutureSightAvailable: () => this.state.futureSightAvailable,
+      getHistory: () => this.state.history,
+      getHistoryPly: () => this.state.historyPly,
+      getFenHistory: () => this.state.fenHistory,
+      getLastMoveHistory: () => this.state.lastMoveHistory,
+      getDialogue: () => this.state.dialogue,
+      getChessgroundRef: () => this.chessgroundRef,
+      getSpellState: () => ({
+        placingPiece: this.state.placingPiece,
+        swapType: this.state.swapType,
+        isTeleport: this.state.isTeleport,
+        placingRoyalty: this.state.placingRoyalty,
+        offeringType: this.state.offeringType,
+        isDyadMove: this.state.isDyadMove,
+        normalMovesOnly: this.state.normalMovesOnly,
+        hoverArcane: this.state.hoverArcane,
+      }),
+      updateSpellState: (updates) => this.setState(updates as any),
+      updateHistory: (updates) => this.setState(updates as any),
+      addDialogue: (message) => this.setState((prev) => ({ dialogue: [...prev.dialogue, message] })),
+      activateGlitch: () => this.setState({ glitchActive: true }),
+    });
   }
 
-  anySpellActive = () =>
-    this.state.placingPiece > 0 ||
-    this.state.swapType !== '' ||
-    this.state.isTeleport === true ||
-    this.state.placingRoyalty > 0 ||
-    this.state.offeringType !== '' ||
-    this.state.isDyadMove === true;
+  anySpellActive = () => this.spellHandler.anySpellActive();
 
-  deactivateAllSpells = () => {
-    try {
-      const dyadClock =
-        typeof this.arcaneChess().getDyadClock === 'function'
-          ? this.arcaneChess().getDyadClock()
-          : 0;
-
-      if (this.state.isDyadMove) {
-        if (
-          dyadClock === 1 &&
-          typeof this.arcaneChess().takeBackHalfDyad === 'function'
-        ) {
-          this.arcaneChess().takeBackHalfDyad();
-        }
-        if (typeof this.arcaneChess().deactivateDyad === 'function') {
-          this.arcaneChess().deactivateDyad();
-        }
-      }
-    } catch (e) {
-      console.warn(e);
-    }
-
-    this.chessgroundRef.current?.setAutoShapes([]);
-
-    this.setState({
-      placingPiece: 0,
-      swapType: '',
-      isTeleport: false,
-      placingRoyalty: 0,
-      offeringType: '',
-      isDyadMove: false,
-      normalMovesOnly: false,
-      hoverArcane: '',
-    });
-  };
+  deactivateAllSpells = () => this.spellHandler.deactivateAllSpells();
 
   handleContextMenu(event: MouseEvent) {
     if (!this.anySpellActive()) return;
@@ -342,9 +333,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
     this.deactivateAllSpells();
   }
 
-  toggleHover = (arcane: string) => {
-    this.setState({ hoverArcane: arcane });
-  };
+  toggleHover = (arcane: string) => this.spellHandler.toggleHover(arcane);
 
   transformedPositions = (royaltyType: State['royalties']) =>
     _.reduce(
@@ -934,6 +923,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                         : `url('/assets/images/cursors/pointer.svg') 12 4, pointer`,
                     }}
                     onClick={() => {
+                      console.log('QuickPlay: Clicked spell', key, 'isDisabled:', isDisabled);
                       if (isDisabled) return;
                       this.handleArcanaClick(key);
                     }}
@@ -956,192 +946,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
     );
   };
 
-  handleArcanaClick = (key: string) => {
-    const { playerColor } = this.state;
-    const arcane = this.arcaneChess();
-    const entry = arcana[key];
-    if (!entry) return;
-
-    if (this.state.thinking || this.state.playerColor !== playerColor) return;
-
-    this.setState({
-      placingPiece: 0,
-      placingRoyalty: 0,
-      swapType: '',
-      offeringType: '',
-      isTeleport: false,
-      isDyadMove: false,
-    });
-
-    // === SUMMONS ===
-    if (key.startsWith('sumn')) {
-      const dyadClock = arcane.getDyadClock();
-      if (dyadClock > 0 || this.state.isDyadMove) return;
-
-      const suffix = key.slice(4);
-      const side = this.state.selectedSide === 'white' ? 'w' : 'b';
-
-      if (key.startsWith('sumnR') && suffix.length > 1) {
-        const rKey = suffix.toUpperCase();
-        const royaltyCode = royalties[rKey];
-        // toggle off if already selected
-        if (this.state.placingRoyalty === royaltyCode) {
-          this.setState({ placingRoyalty: 0 });
-          return;
-        }
-        this.setState({
-          placingRoyalty: royaltyCode || 0,
-        });
-        return;
-      }
-
-      const unit = suffix.toUpperCase();
-      const pieceCode = pieces[`${side}${unit}`];
-      // toggle off when clicking same summon badge again
-      if (this.state.placingPiece === pieceCode) {
-        this.setState({ placingPiece: 0 });
-        return;
-      }
-
-      this.setState({
-        placingPiece: pieceCode || 0,
-      });
-      return;
-    }
-
-    // === SWAP ===
-    if (key.startsWith('swap')) {
-      const dyadClock = arcane.getDyadClock();
-      if (dyadClock > 0 || this.state.isDyadMove) return;
-      this.setState({
-        swapType: this.state.swapType === '' ? key.split('swap')[1] : '',
-      });
-      return;
-    }
-
-    // === OFFER ===
-    if (key.startsWith('offr')) {
-      const dyadClock = arcane.getDyadClock();
-      if (dyadClock > 0 || this.state.isDyadMove) return;
-      this.setState({
-        offeringType:
-          this.state.offeringType === '' ? key.split('offr')[1] : '',
-      });
-      return;
-    }
-
-    // === SPELL: Bulletproof ===
-    if (key === 'modsSUS') {
-      if (GameBoard.suspend > 0) return;
-      audioManager.playSFX('freeze');
-      arcane.useBulletproof(playerColor);
-      this.setState((prev) => ({
-        dialogue: [
-          ...prev.dialogue,
-          `${playerColor} used bulletproof — no captures, checks, or promotions for 3 turns!`,
-        ],
-      }));
-      return;
-    }
-
-    // === DYAD ===
-    if (key.startsWith('dyad')) {
-      const dyadClock = arcane.getDyadClock();
-      const dyadName =
-        typeof arcane.getDyadName === 'function' ? arcane.getDyadName() : '';
-      const dyadOwner =
-        typeof arcane.getDyadOwner === 'function'
-          ? arcane.getDyadOwner()
-          : undefined;
-      // if clicking the same dyad badge that is already active for the selected side,
-      // revert if halfway through (dyadClock === 1), otherwise deactivate
-      if (dyadName === key && dyadOwner === this.state.selectedSide) {
-        if (dyadClock === 1) {
-          try {
-            if (typeof arcane.takeBackHalfDyad === 'function') {
-              arcane.takeBackHalfDyad();
-            }
-          } catch (e) {
-            console.warn(e);
-          }
-          this.setState((prev) => ({
-            isDyadMove: true,
-            normalMovesOnly: true,
-            history: prev.history.slice(0, -1),
-            fen: outputFenOfCurrentPosition(),
-            fenHistory: prev.fenHistory.slice(0, -1),
-            lastMoveHistory: prev.lastMoveHistory.slice(0, -1),
-          }));
-          return;
-        }
-        try {
-          if (typeof arcane.deactivateDyad === 'function') {
-            arcane.deactivateDyad();
-          }
-        } catch (e) {
-          console.warn(e);
-        }
-        this.setState({ isDyadMove: false, normalMovesOnly: false });
-        return;
-      }
-
-      if (this.state.isDyadMove && dyadClock === 0) {
-        arcane.deactivateDyad();
-        this.setState({ isDyadMove: false, normalMovesOnly: false });
-      } else if (dyadClock === 1) {
-        arcane.takeBackHalfDyad();
-        this.setState((prev) => ({
-          isDyadMove: true,
-          normalMovesOnly: true,
-          history: prev.history.slice(0, -1),
-          fen: outputFenOfCurrentPosition(),
-          fenHistory: prev.fenHistory.slice(0, -1),
-          lastMoveHistory: prev.lastMoveHistory.slice(0, -1),
-        }));
-      } else {
-        arcane.activateDyad(key);
-        arcane.parseCurrentFen();
-        arcane.generatePlayableOptions();
-        const dests = arcane.getGroundMoves();
-        if (dests.size === 0) {
-          arcane.deactivateDyad();
-          this.setState({ isDyadMove: false, normalMovesOnly: false });
-        } else {
-          this.setState({ isDyadMove: true, normalMovesOnly: true });
-        }
-      }
-      return;
-    }
-
-    // === FUTURE SIGHT ===
-    if (key === 'modsFUT') {
-      const { futureSightAvailable } = this.state;
-      if (!futureSightAvailable) return;
-      audioManager.playSFX('spell');
-      arcane.takeBackMove(4, playerColor, this.state.history);
-      this.setState((prev) => ({
-        historyPly: prev.historyPly - 4,
-        fen: outputFenOfCurrentPosition(),
-        fenHistory: prev.fenHistory.slice(0, -4),
-        lastMoveHistory: prev.lastMoveHistory.slice(0, -4),
-        futureSightAvailable: false,
-      }));
-      return;
-    }
-
-    // === TELEPORT ===
-    if (key === 'shftT') {
-      this.setState({ isTeleport: !this.state.isTeleport });
-      return;
-    }
-
-    // === GLITCH ===
-    if (key === 'modsGLI') {
-      audioManager.playSFX('spell');
-      arcane.subtractArcanaUse('modsGLI', playerColor);
-      this.setState({ glitchActive: true });
-    }
-  };
+  handleArcanaClick = (key: string) => this.spellHandler.handleArcanaClick(key);
 
   renderManaBar = (color: 'white' | 'black') => {
     const prog = getProgressState(color);
@@ -1163,42 +968,8 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
     return factions[randomIndex];
   };
 
-  isArcaneActive = (key: string, color?: string) => {
-    // Only show active for badges that belong to the currently selected side
-    if (typeof color !== 'undefined' && color !== this.state.selectedSide)
-      return false;
-
-    if (key === 'shftT') return this.state.isTeleport;
-
-    if (key.includes('dyad')) return this.state.isDyadMove;
-
-    if (key.includes('swap')) {
-      const type = key.split('swap')[1];
-      return this.state.swapType === type;
-    }
-
-    if (key.includes('offr')) {
-      const type = key.split('offr')[1];
-      return this.state.offeringType === type;
-    }
-
-    if (!key.startsWith('sumn')) return false;
-
-    if (key.includes('sumnR') && key !== 'sumnR') {
-      const rKey = key.split('sumn')[1];
-      const expected = royalties[rKey] ?? -1;
-      return this.state.placingRoyalty === expected;
-    }
-    const id = key.slice(4);
-    if (!id) return false;
-    const pieceKey =
-      id.toUpperCase() === 'X'
-        ? `${this.state.selectedSide === 'white' ? 'w' : 'b'}X`
-        : `${this.state.selectedSide === 'white' ? 'w' : 'b'}${id}`;
-
-    const expectedPiece = (PIECES as Record<string, number>)[pieceKey] ?? -1;
-    return this.state.placingPiece === expectedPiece;
-  };
+  isArcaneActive = (key: string, color?: string) =>
+    this.spellHandler.isArcaneActive(key, color);
 
   render() {
     // const greekLetters = ['X', 'Ω', 'Θ', 'Σ', 'Λ', 'Φ', 'M', 'N'];
