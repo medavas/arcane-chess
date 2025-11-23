@@ -1612,6 +1612,11 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                     }
                   />
                 </div>
+              </div>
+              <div className="nav-history-buttons-player">
+                <div className="global-volume-control">
+                  <GlobalVolumeControl />
+                </div>
                 <div className="buttons">
                   {/* <Button
                 className="tertiary"

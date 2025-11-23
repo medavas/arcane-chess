@@ -9,7 +9,10 @@ import 'src/features/game/board/styles/chessground.scss';
 import 'src/features/game/board/styles/normal.scss';
 import 'src/features/game/board/styles/lambda.scss';
 
-import { setLocalStorage, getLocalStorage } from 'src/shared/utils/handleLocalStorage';
+import {
+  setLocalStorage,
+  getLocalStorage,
+} from 'src/shared/utils/handleLocalStorage';
 import { audioManager } from 'src/shared/utils/audio/AudioManager';
 
 import TactoriusModal from 'src/shared/components/Modal/Modal';
@@ -1364,17 +1367,14 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                     fen: this.state.fen,
                     turnColor: gameBoardTurn,
                     orientation: this.state.playerColor,
-                    lastMove: this.state.lastMoveHistory[
-                      this.state.historyPly - 1
-                    ],
+                    lastMove:
+                      this.state.lastMoveHistory[this.state.historyPly - 1],
                     check: InCheck() ? true : false,
                     royalties: this.state.royalties,
                     whiteFaction: this.state.whiteFaction,
                     blackFaction: this.state.blackFaction,
-                    whiteVisible:
-                      this.arcaneChess().getInvisibility()[0] <= 0,
-                    blackVisible:
-                      this.arcaneChess().getInvisibility()[1] <= 0,
+                    whiteVisible: this.arcaneChess().getInvisibility()[0] <= 0,
+                    blackVisible: this.arcaneChess().getInvisibility()[1] <= 0,
                   }}
                   interactionState={{
                     placingPiece: this.state.placingPiece,
@@ -1410,6 +1410,11 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                     this.promotionSelectAsync(callback)
                   }
                 />
+              </div>
+            </div>
+            <div className="nav-history-buttons-player">
+              <div className="global-volume-control">
+                <GlobalVolumeControl />
               </div>
               <div className="buttons">
                 <Button

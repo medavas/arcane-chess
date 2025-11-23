@@ -130,7 +130,7 @@ export const POWERBIT = {
 
   // 4 mods 25
   modsCON: 1, // passive
-  // modsAET: 2, // ON BY DEFAULT
+  modsAET: 2, // active
   modsFUG: 4, // inherent
   modsSIL: 8, // inherent
   modsINH: 16, // inherent
@@ -241,7 +241,7 @@ const POWER_BY_KEY = {
   sumnRH: 5,
   sumnRI: 5,
   modsCON: 1,
-  modsAET: 3,
+  modsAET: 2,
   modsFUG: 3,
   modsSIL: 4,
   modsINH: 4,

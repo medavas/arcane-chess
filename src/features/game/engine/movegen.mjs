@@ -1289,12 +1289,20 @@ export function GenerateMoves(
         if (GameBoard.pieces[sq + 10] === PIECES.EMPTY) {
           AddWhitePawnQuietMove(sq, sq + 10, 0, 0, capturesOnly);
         }
-        if (RanksBrd[sq] === RANKS.RANK_1 || RanksBrd[sq] === RANKS.RANK_2) {
-          if (GameBoard.pieces[sq + 20] === PIECES.EMPTY) {
-            AddQuietMove(
-              MOVE(sq, sq + 20, PIECES.EMPTY, PIECES.EMPTY, MFLAGPS),
-              capturesOnly
-            );
+        if (
+          (GameBoard.pieces[sq + 10] === PIECES.EMPTY &&
+            GameBoard.pieces[sq + 20] === PIECES.EMPTY) ||
+          // aetherstep
+          (GameBoard.pieces[sq + 20] === PIECES.EMPTY &&
+            GameBoard.whiteArcane[4] & 2)
+        ) {
+          if (RanksBrd[sq] === RANKS.RANK_1 || RanksBrd[sq] === RANKS.RANK_2) {
+            if (GameBoard.pieces[sq + 20] === PIECES.EMPTY) {
+              AddQuietMove(
+                MOVE(sq, sq + 20, PIECES.EMPTY, PIECES.EMPTY, MFLAGPS),
+                capturesOnly
+              );
+            }
           }
         }
 
@@ -1654,12 +1662,20 @@ export function GenerateMoves(
         if (GameBoard.pieces[sq - 10] === PIECES.EMPTY) {
           AddBlackPawnQuietMove(sq, sq - 10, 0, 0, capturesOnly);
         }
-        if (RanksBrd[sq] === RANKS.RANK_8 || RanksBrd[sq] === RANKS.RANK_7) {
-          if (GameBoard.pieces[sq - 20] === PIECES.EMPTY) {
-            AddQuietMove(
-              MOVE(sq, sq - 20, PIECES.EMPTY, PIECES.EMPTY, MFLAGPS),
-              capturesOnly
-            );
+        if (
+          (GameBoard.pieces[sq - 10] === PIECES.EMPTY &&
+            GameBoard.pieces[sq - 20] === PIECES.EMPTY) ||
+          // aetherstep
+          (GameBoard.pieces[sq - 20] === PIECES.EMPTY &&
+            GameBoard.blackArcane[4] & 2)
+        ) {
+          if (RanksBrd[sq] === RANKS.RANK_8 || RanksBrd[sq] === RANKS.RANK_7) {
+            if (GameBoard.pieces[sq - 20] === PIECES.EMPTY) {
+              AddQuietMove(
+                MOVE(sq, sq - 20, PIECES.EMPTY, PIECES.EMPTY, MFLAGPS),
+                capturesOnly
+              );
+            }
           }
         }
 
