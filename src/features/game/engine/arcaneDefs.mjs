@@ -7,6 +7,7 @@ export const whiteArcaneInventory = {};
 export const blackArcaneInventory = {};
 
 const grantedByKey = { white: Object.create(null), black: Object.create(null) };
+const grantedByOffering = { white: Object.create(null), black: Object.create(null) };
 
 export const setWhiteArcana = (pool) => {
   Object.keys(whiteArcaneInventory).forEach(
@@ -17,6 +18,7 @@ export const setWhiteArcana = (pool) => {
   });
   Object.keys(whiteArcaneConfig).forEach((k) => delete whiteArcaneConfig[k]);
   grantedByKey.white = Object.create(null);
+  grantedByOffering.white = Object.create(null);
   ArcanaProgression.resetSide('white');
   return whiteArcaneInventory;
 };
@@ -30,6 +32,7 @@ export const setBlackArcana = (pool) => {
   });
   Object.keys(blackArcaneConfig).forEach((k) => delete blackArcaneConfig[k]);
   grantedByKey.black = Object.create(null);
+  grantedByOffering.black = Object.create(null);
   ArcanaProgression.resetSide('black');
   return blackArcaneInventory;
 };
@@ -302,6 +305,7 @@ export function incLiveArcana(side, key, delta = 1) {
 export function offerGrant(side, key, qty = 1) {
   const inv = side === 'white' ? whiteArcaneInventory : blackArcaneInventory;
   const live = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+  const offeringTracker = side === 'white' ? grantedByOffering.white : grantedByOffering.black;
 
   const curLive = live[key] | 0;
   const curCap = inv[key] | 0;
@@ -310,23 +314,33 @@ export function offerGrant(side, key, qty = 1) {
     const targetCap = Math.max(curCap, curLive + qty);
     inv[key] = targetCap;
     incLiveArcana(side, key, +qty);
+    // Track that this key was granted by an offering
+    offeringTracker[key] = (offeringTracker[key] | 0) + qty;
   } else {
     inv[key] = Math.max(curCap, 1);
     incLiveArcana(side, key, curLive >= 1 ? 0 : +1);
+    // Track that this key was granted by an offering
+    if (curLive < 1) offeringTracker[key] = 1;
   }
 }
 
 export function offerRevert(side, key, qty = 1) {
   const inv = side === 'white' ? whiteArcaneInventory : blackArcaneInventory;
   const live = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+  const offeringTracker = side === 'white' ? grantedByOffering.white : grantedByOffering.black;
 
   if (isStackingKey(key)) {
     incLiveArcana(side, key, -qty);
     const liveNow = live[key] | 0;
     inv[key] = Math.max(liveNow, (inv[key] | 0) - qty);
+    // Remove from offering tracker
+    offeringTracker[key] = Math.max(0, (offeringTracker[key] | 0) - qty);
+    if (offeringTracker[key] === 0) delete offeringTracker[key];
   } else {
     if ((live[key] | 0) > 0) incLiveArcana(side, key, -1);
     inv[key] = Math.max(live[key] | 0, 0);
+    // Remove from offering tracker
+    if (offeringTracker[key]) delete offeringTracker[key];
   }
 }
 
@@ -399,14 +413,16 @@ const ArcanaProgression = (() => {
   // Core—choose one key to grant based on tier & remaining capacity
   function grantOne(s) {
     const t = tier(s);
+    const offeringTracker = s === 'white' ? grantedByOffering.white : grantedByOffering.black;
 
+    // Exclude keys that were granted by offerings from progression grants
     let pool = universeFor(s).filter(
-      (k) => (POWER_BY_KEY[k] ?? 1) <= t && remainingFor(s, k) > 0
+      (k) => (POWER_BY_KEY[k] ?? 1) <= t && remainingFor(s, k) > 0 && !offeringTracker[k]
     );
 
     // If nothing fits current tier, fall back to the smallest POWER_BY_KEY that still has remaining
     if (!pool.length) {
-      const all = universeFor(s).filter((k) => remainingFor(s, k) > 0);
+      const all = universeFor(s).filter((k) => remainingFor(s, k) > 0 && !offeringTracker[k]);
       if (!all.length) return null;
       let minP = Infinity;
       for (const k of all) {
