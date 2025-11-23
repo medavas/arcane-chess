@@ -424,6 +424,25 @@ export class UnwrappedDashboard extends React.Component<
             <h1 className="news-title">Transmissions</h1>
             <div className="news-item">
               <h4>
+                Patch 2.8 Live: Turkey Bowl Update
+                <h6>Source: medavas</h6>
+                <h6>Date: November 2025</h6>
+                <h6>Category: Mechanics</h6>
+              </h4>
+              <ul>
+                <li>
+                  Football season is here, so I've added a few "touchdown" related arcana.
+                </li>
+                <li>
+                  Divine Reckoning - when one of your Pawns reach the back rank, it promotes automatically to a Valkyrie with Iron Reach.
+                </li>
+                <li>
+                  Reckoning Variants (gain) - when one of your minor pieces reach the back rank, you get a reward.
+                </li>
+              </ul>
+            </div>
+            <div className="news-item">
+              <h4>
                 Patch 2.7 Live: Halloween Update
                 <h6>Source: medavas</h6>
                 <h6>Date: October 2025</h6>
