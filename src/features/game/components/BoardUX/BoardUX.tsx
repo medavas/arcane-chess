@@ -49,8 +49,8 @@ interface BoardUXProps {
     };
     onGameStateChange: (newState: any) => void;
     onGameOver: (result: any) => void;
-    onEngineTrigger: () => void;
     onPromotionRequest: (callback: (promotedPiece: number) => void) => void;
+    onMove: (parsed: number, orig: string, dest: string) => void;
     width?: string | number;
     height?: string | number;
     viewOnly?: boolean;
@@ -63,9 +63,8 @@ export const BoardUX: React.FC<BoardUXProps> = ({
     gameState,
     interactionState,
     onGameStateChange,
-    onGameOver,
-    onEngineTrigger,
     onPromotionRequest,
+    onMove,
     width = '100%',
     height = '100%',
     viewOnly = false,
@@ -157,7 +156,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
                         normalMovesOnly: true,
                     });
                 } else {
-                    normalMoveStateAndEngineGo(parsed, orig, dest);
+                    onMove(parsed, orig, dest);
                 }
             });
         } else {
@@ -170,7 +169,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
                     normalMovesOnly: true,
                 });
             } else {
-                normalMoveStateAndEngineGo(parsed, orig, dest);
+                onMove(parsed, orig, dest);
             }
         }
         onGameStateChange({
@@ -178,38 +177,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         });
     };
 
-    const normalMoveStateAndEngineGo = (parsed: number, orig: string, dest: string) => {
-        onGameStateChange({
-            historyPly: (gameState as any).historyPly + 1, // Need historyPly in gameState
-            history: [...(gameState as any).history || [], PrMove(parsed)],
-            fen: outputFenOfCurrentPosition(),
-            fenHistory: [
-                ...(gameState as any).fenHistory || [],
-                outputFenOfCurrentPosition(),
-            ],
-            lastMoveHistory: [
-                ...(gameState as any).lastMoveHistory || [],
-                [orig, dest],
-            ],
-            placingPiece: 0,
-            placingRoyalty: 0,
-            swapType: '',
-            offeringType: '',
-            isTeleport: false,
-            futureSightAvailable: true,
-        });
 
-        if (CheckAndSet()) {
-            const result = CheckResult().gameResult;
-            onGameOver({
-                gameOver: true,
-                gameOverType: result,
-            });
-            // Handle victory logic in parent based on gameOverType?
-        } else {
-            onEngineTrigger();
-        }
-    };
 
     const handleDropNewPiece = (piece: string, key: string) => {
         // @ts-ignore
@@ -232,7 +200,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
                 console.log('invalid move', PrMove(parsed), piece);
             }
 
-            normalMoveStateAndEngineGo(parsed, 'a0', key); // Using 'a0' as placeholder for drop origin
+            onMove(parsed, 'a0', key); // Using 'a0' as placeholder for drop origin
         }
         if (interactionState.placingRoyalty !== 0) {
             onGameStateChange({
@@ -296,7 +264,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
                         },
                     });
 
-                    normalMoveStateAndEngineGo(parsed, 'a0', key);
+                    onMove(parsed, 'a0', key);
                 }
             } else {
                 onGameStateChange({
@@ -330,7 +298,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
                     },
                 });
 
-                normalMoveStateAndEngineGo(parsed, key, 'a0');
+                onMove(parsed, key, 'a0');
             } else {
                 onGameStateChange({
                     offeringType: interactionState.offeringType,

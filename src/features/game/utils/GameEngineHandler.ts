@@ -120,7 +120,7 @@ export class GameEngineHandler {
                             dialogue: [...updatedDialogue],
                             pvLine: GameBoard.cleanPV,
                             historyPly: prevState.historyPly + 1,
-                            history: [...prevState.history, PrMove(bestMove)],
+                            history: [...prevState.history.slice(0, prevState.historyPly), PrMove(bestMove)],
                             fen: outputFenOfCurrentPosition(),
                             fenHistory: [
                                 ...prevState.fenHistory,
@@ -219,18 +219,15 @@ export class GameEngineHandler {
 
         this.callbacks.setState(
             (prevState: any) => {
-                const newHistory = [...prevState.history];
-                const lastIndex = newHistory.length - 1;
-                if (Array.isArray(newHistory[lastIndex])) {
-                    newHistory[lastIndex] = [...newHistory[lastIndex], PrMove(parsed)];
-                } else {
-                    newHistory.push(PrMove(parsed));
-                }
+                // Slice history to the current ply to allow branching/overwriting future
+                const newHistory = prevState.history.slice(0, prevState.historyPly);
+                newHistory.push(PrMove(parsed));
+
                 return {
                     historyPly: prevState.historyPly + 1,
                     history: newHistory,
                     fen: outputFenOfCurrentPosition(),
-                    fenHistory: [...prevState.fenHistory, outputFenOfCurrentPosition()],
+                    fenHistory: [...prevState.fenHistory.slice(0, prevState.historyPly + 1), outputFenOfCurrentPosition()],
                     lastMoveHistory:
                         prevState.historyPly < prevState.lastMoveHistory.length
                             ? prevState.lastMoveHistory.map((moves: any, index: number) =>

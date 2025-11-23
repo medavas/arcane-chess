@@ -1054,7 +1054,13 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                         }
                       });
                     }}
-                    onEngineTrigger={() => this.engineGo()}
+                    onMove={(parsed, orig, dest) =>
+                      this.gameEngineHandler.normalMoveStateAndEngineGo(
+                        parsed,
+                        orig,
+                        dest
+                      )
+                    }
                     onPromotionRequest={(callback) =>
                       this.promotionSelectAsync(callback)
                     }
