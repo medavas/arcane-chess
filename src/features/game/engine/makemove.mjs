@@ -46,6 +46,7 @@ import {
   PceChar,
   RANKS,
   RanksBrd,
+  KiDir,
 } from './defs';
 import { ARCANE_BIT_VALUES, RtyChar } from './defs.mjs';
 
@@ -580,6 +581,53 @@ export function MakeMove(move, moveType = '') {
       (consume && !isShift(move)))
   ) {
     MovePiece(from, to);
+
+    // Hermit AoE: Apply royalty effect to surrounding squares
+    const isHermitPiece = (moverPiece === PIECES.wH || moverPiece === PIECES.bH);
+    if (isHermitPiece) {
+      const cfg = side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+      const hasHermitToken = (cfg[10] & 1) !== 0;  // toknHER
+      const hasHemlockToken = (cfg[10] & 2) !== 0;  // toknHEM
+      const isHermit = hasHermitToken && !hasHemlockToken;
+      const isNomad = hasHermitToken && hasHemlockToken;
+
+      if (isHermit || isNomad) {
+        const arcCfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+        const hasAreaQ = arcCfg.areaQ > 0;
+        const hasAreaT = arcCfg.areaT > 0;
+
+        // Determine which royalty type to use
+        let royaltyType;
+        if (hasAreaQ && hasAreaT) {
+          royaltyType = 'V';  // Vanguard (both Q and T)
+        } else if (hasAreaQ) {
+          royaltyType = 'Q';  // Queen
+        } else if (hasAreaT) {
+          royaltyType = 'T';  // Templar
+        } else {
+          royaltyType = 'M';  // Mystic (default)
+        }
+
+        const royaltyMap = GameBoard[`royalty${royaltyType}`];
+        const hermitPattern = KiDir;  // User requested King move pattern for AoE
+
+        // Remove AoE from old position (with boundary checking)
+        for (let i = 0; i < hermitPattern.length; i++) {
+          const oldSq = from + hermitPattern[i];
+          if (oldSq >= 0 && oldSq < 120 && royaltyMap[oldSq] > 0) {
+            royaltyMap[oldSq] = 0;
+          }
+        }
+
+        // Apply AoE to new position (with boundary checking)
+        for (let i = 0; i < hermitPattern.length; i++) {
+          const newSq = to + hermitPattern[i];
+          if (newSq >= 0 && newSq < 120) {
+            royaltyMap[newSq] = 9;
+          }
+        }
+      }
+    }
   }
 
   if (
@@ -727,6 +775,37 @@ export function MakeMove(move, moveType = '') {
       if (map && (map[to] === undefined || map[to] <= 0)) map[to] = 9;
     } else if (promoEpsilon > 0) {
       AddPiece(to, promoEpsilon, true);
+
+      // Instant AoE for summoned Hermit/Nomad
+      if (promoEpsilon === PIECES.wH || promoEpsilon === PIECES.bH) {
+        const cfg =
+          side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+        const hasHermitToken = (cfg[10] & 1) !== 0;
+        // const hasHemlockToken = (cfg[10] & 2) !== 0;
+
+        if (hasHermitToken) {
+          // Hermit or Nomad
+          const arcCfg =
+            side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+          const hasAreaQ = arcCfg.areaQ > 0;
+          const hasAreaT = arcCfg.areaT > 0;
+
+          let royaltyType = 'M';
+          if (hasAreaQ && hasAreaT) royaltyType = 'V';
+          else if (hasAreaQ) royaltyType = 'Q';
+          else if (hasAreaT) royaltyType = 'T';
+
+          const royaltyMap = GameBoard[`royalty${royaltyType}`];
+          const hermitPattern = KiDir;
+
+          for (let i = 0; i < hermitPattern.length; i++) {
+            const newSq = to + hermitPattern[i];
+            if (newSq >= 0 && newSq < 120) {
+              royaltyMap[newSq] = 9;
+            }
+          }
+        }
+      }
     }
   }
 
@@ -1079,6 +1158,54 @@ export function TakeMove(wasDyadMove = false) {
       (consume && !isShift(move)))
   ) {
     MovePiece(to, from);
+
+    // Hermit AoE: Restore AoE when undoing move
+    const movedPiece = GameBoard.pieces[from];
+    const isHermitPiece = (movedPiece === PIECES.wH || movedPiece === PIECES.bH);
+    if (isHermitPiece) {
+      const cfg = GameBoard.side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+      const hasHermitToken = (cfg[8] & 1) !== 0;  // toknHER
+      const hasHemlockToken = (cfg[8] & 2) !== 0;  // toknHEM
+      const isHermit = hasHermitToken && !hasHemlockToken;
+      const isNomad = hasHermitToken && hasHemlockToken;
+
+      if (isHermit || isNomad) {
+        const arcCfg = GameBoard.side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+        const hasAreaQ = arcCfg.areaQ > 0;
+        const hasAreaT = arcCfg.areaT > 0;
+
+        // Determine which royalty type to use
+        let royaltyType;
+        if (hasAreaQ && hasAreaT) {
+          royaltyType = 'V';  // Vanguard (both Q and T)
+        } else if (hasAreaQ) {
+          royaltyType = 'Q';  // Queen
+        } else if (hasAreaT) {
+          royaltyType = 'T';  // Templar
+        } else {
+          royaltyType = 'M';  // Mystic (default)
+        }
+
+        const royaltyMap = GameBoard[`royalty${royaltyType}`];
+        const hermitPattern = [-20, -12, -8, 8, 12, 20];  // HerShftDir
+
+        // Remove AoE from 'to' position (where it was)
+        for (let i = 0; i < hermitPattern.length; i++) {
+          const oldSq = to + hermitPattern[i];
+          if (oldSq >= 0 && oldSq < 120 && royaltyMap[oldSq] > 0) {
+            royaltyMap[oldSq] = 0;
+          }
+        }
+
+        // Restore AoE to 'from' position (where it should be)
+        for (let i = 0; i < hermitPattern.length; i++) {
+          const newSq = from + hermitPattern[i];
+          if (newSq >= 0 && newSq < 120) {
+            royaltyMap[newSq] = 9;
+          }
+        }
+      }
+    }
   }
 
   if (

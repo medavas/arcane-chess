@@ -182,6 +182,10 @@ export const POWERBIT = {
   gainDYA: 1,
   gainVAL: 2,
   gainPAW: 4,
+
+  // 10 tokens passive 2
+  toknHER: 1,
+  toknHEM: 2,
 };
 
 export const varVars = {
@@ -287,6 +291,8 @@ const POWER_BY_KEY = {
   offrZ: 4,
   offrQ: 4,
   offrR: 4,
+  toknHER: 3,
+  toknHEM: 4,
 };
 
 function sideKey(x) {
@@ -356,6 +362,7 @@ const STACKING_PREFIXES = [
   'mora',
   'area',
   'gain',
+  'tokn',
 ];
 const STACKING_EXCEPTIONS = new Set([
   'modsSUS',

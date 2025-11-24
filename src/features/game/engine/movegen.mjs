@@ -46,7 +46,10 @@ import {
   WrDir,
   SpDir,
   ShoDir,
+  HrDir,
   HerShftDir,
+  HemlockHopA,
+  HemlockHopB,
   BanDirSp,
   // BanDirWr,
   PCEINDEX,
@@ -155,6 +158,22 @@ export function AddCaptureMove(move, consume = false, capturesOnly = false) {
   )
     return;
 
+  // fill this in for canceling /returning on the move if the captured piece is only hermit variant
+  if (capturedPiece === PIECES.wH || capturedPiece === PIECES.bH) {
+    const capSide = PieceCol[capturedPiece];
+    const capArcane =
+      capSide === COLOURS.WHITE
+        ? GameBoard.whiteArcane
+        : GameBoard.blackArcane;
+    const hasHermit = (capArcane[10] & 1) !== 0;
+    const hasHemlock = (capArcane[10] & 2) !== 0;
+
+    // If it has Hermit token but NOT Hemlock token, it's a pure Hermit and cannot be captured
+    if (hasHermit && !hasHemlock) {
+      return;
+    }
+  }
+
   if ((capturesOnly && !consume) || !capturesOnly) {
     if (move & MFLAGSWAP) {
       GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply + 1]] = move;
@@ -186,7 +205,7 @@ export function AddQuietMove(move, capturesOnly) {
     } else {
       GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply + 1]] =
         GameBoard.searchHistory[
-          GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
+        GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
         ];
     }
     GameBoard.moveListStart[GameBoard.ply + 1]++;
@@ -442,6 +461,9 @@ export const generatePowers = () => {
       offr: 0,
       mori: 0,
       mora: 0,
+      gain: 0,
+      area: 0,
+      tokn: 0
     };
 
     // todo: this function needs to be generated on click on at least swap so piece movements like captures or other edge cases don't overlap
@@ -461,6 +483,9 @@ export const generatePowers = () => {
     powerBits[5] |= powerTypes.offr;
     powerBits[6] |= powerTypes.mori;
     powerBits[7] |= powerTypes.mora;
+    powerBits[8] |= powerTypes.gain;
+    powerBits[10] |= powerTypes.area;
+    powerBits[10] |= powerTypes.tokn;
 
     GameBoard.whiteArcane = powerBits;
 
@@ -476,6 +501,9 @@ export const generatePowers = () => {
       offr: 0,
       mori: 0,
       mora: 0,
+      gain: 0,
+      area: 0,
+      tokn: 0
     };
 
     _.forEach(blackArcaneConfig, (value, key) => {
@@ -493,6 +521,9 @@ export const generatePowers = () => {
     powerBits[5] |= powerTypes.offr;
     powerBits[6] |= powerTypes.mori;
     powerBits[7] |= powerTypes.mora;
+    powerBits[8] |= powerTypes.gain;
+    powerBits[10] |= powerTypes.area;
+    powerBits[10] |= powerTypes.tokn;
 
     GameBoard.blackArcane = powerBits;
 
@@ -518,6 +549,10 @@ export const getHerrings = (color) => {
         herringsArr.push(index);
       }
     });
+  }
+  const arcane = color === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+  if ((arcane[10] & 1) !== 0 || (arcane[10] & 2) !== 0) {
+    return [];
   }
   return herringsArr;
 };
@@ -749,7 +784,7 @@ export function GenerateMoves(
           if (
             i === j ||
             GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][i]] ===
-              GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
+            GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
           ) {
             continue;
           }
@@ -1163,7 +1198,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.whiteArcane[3]
                 ) {
                   if (
@@ -1205,7 +1240,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.blackArcane[3]
                 ) {
                   if (
@@ -2348,6 +2383,16 @@ export function GenerateMoves(
         let dirVariants = DirNum[pce];
         let dirArray = PceDir[pce];
 
+        // H-pieces don't use standard PceDir if they have tokens (Hermit/Hemlock)
+        // This ensures Hermit/Hemlock don't inherit the base Herring movement
+        if (pce === PIECES.wH || pce === PIECES.bH) {
+          const arcane = GameBoard.side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+          if ((arcane[10] & 1) !== 0 || (arcane[10] & 2) !== 0) {
+            dirVariants = 0;
+            dirArray = [];
+          }
+        }
+
         if (
           pce === PIECES.wT ||
           pce === PIECES.bT ||
@@ -2407,11 +2452,16 @@ export function GenerateMoves(
             if (GameBoard.pieces[t_sq] !== PIECES.EMPTY) {
               const targetPieceColor = PieceCol[GameBoard.pieces[t_sq]];
 
-              if (
-                (pce === PIECES.wH || pce === PIECES.bH) &&
-                !(currentArcanaSide[4] & 1048576)
-              )
-                continue;
+              // H-piece uses shift movement system, skip standard capture
+              // UNLESS it is a Nomad (Hermit + Hemlock tokens) AND has 5D Sword
+              if (pce === PIECES.wH || pce === PIECES.bH) {
+                const hasHermit = (currentArcanaSide[10] & 1) !== 0;
+                const hasHemlock = (currentArcanaSide[10] & 2) !== 0;
+                const isNomad = hasHermit && hasHemlock;
+
+                if (!isNomad || !has5thDimensionSword) continue;
+              }
+
               if (
                 targetPieceColor !== GameBoard.side &&
                 targetPieceColor !== COLOURS.BOTH
@@ -2484,14 +2534,21 @@ export function GenerateMoves(
 
         const pieces = GameBoard.pieces;
         const side = GameBoard.side;
-
         const wantE = eCanShift;
         const wantS = sCanShift;
         const wantW = wCanShift;
 
-        const isHermit = (currentArcanaSide[4] & 1048576) !== 0;
-        const wantHerring = hCanShift && !isHermit;
-        const wantHermit = hCanShift && isHermit;
+
+        const hasHermit = (currentArcanaSide[10] & 1) !== 0;
+        const hasHemlock = (currentArcanaSide[10] & 2) !== 0;
+        const isNomad = hasHermit && hasHemlock;
+        const isHermit = hasHermit && (pce === PIECES.wH || pce === PIECES.bH);
+        const isHemlock = hasHemlock && (pce === PIECES.wH || pce === PIECES.bH);
+        const isHUnit = (pce === PIECES.wH || pce === PIECES.bH);
+
+        const wantHermit = isHermit;
+        const wantHemlock = isHemlock;
+        const wantNomad = isNomad && (pce === PIECES.wH || pce === PIECES.bH);
 
         // Shogun is a king-specific shift: only enable it when the mover is a King
         const wantShogun =
@@ -2612,8 +2669,35 @@ export function GenerateMoves(
         if (wantS) runShift(12, (i) => WrDir[i]);
         if (wantW) runShift(12, (i) => SpDir[i]);
 
-        if (wantHerring) runShift(6, (i) => HerShftDir[i], false);
-        if (wantHermit) runShift(6, (i) => HerShftDir[i]);
+        // H-Unit Logic: Token-driven shift generation
+        if (isHUnit) {
+          const canCap5D = has5thDimensionSword;
+
+          // 1. Herring Pattern (HrDir)
+          // Handled by standard loop (PceDir) for Pure Herring.
+          // For Nomad (who has tokens), standard loop is disabled, so we add it here.
+          if (wantNomad) {
+            runShift(6, (i) => HrDir[i], canCap5D);
+          }
+
+          // 2. Hermit Pattern (HerShftDir)
+          // Active for: Hermit OR Nomad
+          if (wantHermit || wantNomad) {
+            // Hermit is non-capturable (quiet only), unless Nomad with 5D Sword
+            const cap = wantNomad ? canCap5D : false;
+            runShift(6, (i) => HerShftDir[i], cap);
+          }
+
+          // 3. Hemlock Pattern (HopA, HopB)
+          // Active for: Hemlock OR Nomad
+          if (wantHemlock || wantNomad) {
+            // If Nomad, restricted to 5D sword. Else normal capture.
+            const cap = wantNomad ? canCap5D : true;
+            runShift(12, (i) => HemlockHopA[i], cap);
+            // uncomment below for hemlock ext
+            // runShift(4, (i) => HemlockHopB[i], cap);
+          }
+        }
 
         if (wantBanS) runShift(12, (i) => BanDirSp[i], false);
         // if (wantBanW) runShift(12, (i) => BanDirWr[i], false);

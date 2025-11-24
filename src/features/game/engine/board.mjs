@@ -33,6 +33,8 @@ import {
   WrDir,
   HrDir,
   HerShftDir,
+  HemlockHopA,
+  HemlockHopB,
   ZeDir,
   UnDir,
   PieceValkyrie,
@@ -138,8 +140,8 @@ GameBoard.material = new Array(2); // WHITE, BLACK material of pieces
 GameBoard.pceNum = new Array(31); // indexed by Pce
 GameBoard.pList = new Array(31 * 36);
 
-GameBoard.whiteArcane = [0, 0, 0, 0, 0, 0];
-GameBoard.blackArcane = [0, 0, 0, 0, 0, 0];
+GameBoard.whiteArcane = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+GameBoard.blackArcane = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 GameBoard.summonRankLimits = [6, 6];
 GameBoard.crazyHouse = [false, false];
@@ -361,9 +363,9 @@ export function PrintPieceLists() {
     for (pceNum = 0; pceNum < GameBoard.pceNum[piece]; pceNum++) {
       console.log(
         'Piece ' +
-          PceChar[piece] +
-          ' on ' +
-          PrSq(GameBoard.pList[PCEINDEX(piece, pceNum)])
+        PceChar[piece] +
+        ' on ' +
+        PrSq(GameBoard.pList[PCEINDEX(piece, pceNum)])
       );
     }
   }
@@ -418,8 +420,8 @@ export function ResetBoard() {
   GameBoard.posKey = 0;
   GameBoard.moveListStart[GameBoard.ply] = 0;
 
-  GameBoard.whiteArcane = [0, 0, 0, 0, 0];
-  GameBoard.blackArcane = [0, 0, 0, 0, 0];
+  GameBoard.whiteArcane = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+  GameBoard.blackArcane = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   // GameBoard.crazyHouse = [false, false];
 
@@ -713,7 +715,7 @@ export let InCheck = () => {
 export let currentArcanaSide =
   GameBoard.side === 0 ? GameBoard.whiteArcane : GameBoard.blackArcane;
 export let has5thDimensionSword = currentArcanaSide[4] & 262144;
-export let hasHermit = currentArcanaSide[4] & 1048576;
+export let hasHermit = currentArcanaSide[8] & 1;  // toknHER
 
 export let pawnCanShift =
   currentArcanaSide[1] & 1 || currentArcanaSide[1] & 256;
@@ -772,7 +774,8 @@ export function SqAttacked(sq, side) {
     side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
 
   const has5th = (arc[4] & 262144) !== 0;
-  const hasHerm = (arc[4] & 1048576) !== 0;
+  const hasHerm = (arc[8] & 1) !== 0;  // toknHER
+  const hasHeml = (arc[8] & 2) !== 0;  // toknHEM
 
   const pawnShift = arc[1] & 1 || arc[1] & 256;
   const equusShift = arc[1] & 2 || arc[1] & 256;
@@ -801,7 +804,13 @@ export function SqAttacked(sq, side) {
     has5th;
 
   const hasHermitShiftAttack = (p) =>
-    herringShift && PieceHerring[p] === BOOL.TRUE && has5th && hasHerm;
+    herringShift && PieceHerring[p] === BOOL.TRUE && has5th && hasHerm && !hasHeml;
+
+  const hasHemlockShiftAttack = (p) =>
+    herringShift && PieceHerring[p] === BOOL.TRUE && hasHeml && !hasHerm;
+
+  const hasNomadShiftAttack = (p) =>
+    herringShift && PieceHerring[p] === BOOL.TRUE && hasHerm && hasHeml;
 
   // OVERRIDES - SQUARE CONDITION ATTACKS
 
@@ -1075,6 +1084,84 @@ export function SqAttacked(sq, side) {
       !(GameBoard.royaltyE[sq + HerShftDir[index]] > 0)
     )
       return BOOL.TRUE;
+  }
+
+  // Hemlock hop attacks (only when Hemlock token held, not Hermit)
+  if (hasHeml && !hasHerm) {
+    for (index = 0; index < 4; index++) {
+      pce = GameBoard.pieces[sq + HemlockHopA[index]];
+      if (
+        hasHemlockShiftAttack(pce) &&
+        pce !== SQUARES.OFFBOARD &&
+        PieceCol[pce] === side &&
+        !overridePresent(sq + HemlockHopA[index]) &&
+        !(GameBoard.royaltyE[sq + HemlockHopA[index]] > 0)
+      )
+        return BOOL.TRUE;
+    }
+    for (index = 0; index < 4; index++) {
+      pce = GameBoard.pieces[sq + HemlockHopB[index]];
+      if (
+        hasHemlockShiftAttack(pce) &&
+        pce !== SQUARES.OFFBOARD &&
+        PieceCol[pce] === side &&
+        !overridePresent(sq + HemlockHopB[index]) &&
+        !(GameBoard.royaltyE[sq + HemlockHopB[index]] > 0)
+      )
+        return BOOL.TRUE;
+    }
+  }
+
+  // Nomad (Trinity) attacks - all patterns (when both tokens held)
+  if (hasHerm && hasHeml) {
+    // HrDir pattern
+    for (index = 0; index < 6; index++) {
+      pce = GameBoard.pieces[sq + HrDir[index]];
+      if (
+        hasNomadShiftAttack(pce) &&
+        pce !== SQUARES.OFFBOARD &&
+        PieceCol[pce] === side &&
+        !overridePresent(sq + HrDir[index]) &&
+        !(GameBoard.royaltyE[sq + HrDir[index]] > 0)
+      )
+        return BOOL.TRUE;
+    }
+    // HerShftDir pattern
+    for (index = 0; index < 6; index++) {
+      pce = GameBoard.pieces[sq + HerShftDir[index]];
+      if (
+        hasNomadShiftAttack(pce) &&
+        pce !== SQUARES.OFFBOARD &&
+        PieceCol[pce] === side &&
+        !overridePresent(sq + HerShftDir[index]) &&
+        !(GameBoard.royaltyE[sq + HerShftDir[index]] > 0)
+      )
+        return BOOL.TRUE;
+    }
+    // HemlockHopA pattern
+    for (index = 0; index < 4; index++) {
+      pce = GameBoard.pieces[sq + HemlockHopA[index]];
+      if (
+        hasNomadShiftAttack(pce) &&
+        pce !== SQUARES.OFFBOARD &&
+        PieceCol[pce] === side &&
+        !overridePresent(sq + HemlockHopA[index]) &&
+        !(GameBoard.royaltyE[sq + HemlockHopA[index]] > 0)
+      )
+        return BOOL.TRUE;
+    }
+    // HemlockHopB pattern
+    for (index = 0; index < 4; index++) {
+      pce = GameBoard.pieces[sq + HemlockHopB[index]];
+      if (
+        hasNomadShiftAttack(pce) &&
+        pce !== SQUARES.OFFBOARD &&
+        PieceCol[pce] === side &&
+        !overridePresent(sq + HemlockHopB[index]) &&
+        !(GameBoard.royaltyE[sq + HemlockHopB[index]] > 0)
+      )
+        return BOOL.TRUE;
+    }
   }
 
   // Zebra

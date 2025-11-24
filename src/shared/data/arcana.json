@@ -562,7 +562,7 @@
   "modsDIM": {
     "id": "modsDIM",
     "name": "5th Dimension Steel",
-    "description": "Capture pieces on shift moves.",
+    "description": "Capture pieces on shift moves. Hermit can capture or be captured",
     "type": "inherent",
     "imagePath": "/modsDIM"
   },
@@ -663,5 +663,47 @@
     "description": "When a friendly Bishop, Knight, Zebra, or Unicorn reaches the opposite side of the board, you gain a Pawn Summon.",
     "type": "passive",
     "imagePath": "/gainALL"
+  },
+  "areaC": {
+    "id": "areaC",
+    "name": "Hiding Lantern",
+    "description": "",
+    "type": "inherent",
+    "imagePath": "/areaC"
+  },
+  "areaM": {
+    "id": "areaM",
+    "name": "Mystical Battlecry",
+    "description": "",
+    "type": "inherent",
+    "imagePath": "/areaM"
+  },
+  "areaT": {
+    "id": "areaT",
+    "name": "Crusader's Battlecry",
+    "description": "",
+    "type": "inherent",
+    "imagePath": "/areaT"
+  },
+  "areaQ": {
+    "id": "areaQ",
+    "name": "Regal Battlecry",
+    "description": "",
+    "type": "inherent",
+    "imagePath": "/areaQ"
+  },
+  "toknHER": {
+    "id": "toknHER",
+    "name": "Hermit",
+    "description": "",
+    "type": "inherent",
+    "imagePath": "/toknHER"
+  },
+  "toknHEM": {
+    "id": "toknHEM",
+    "name": "Hemlock",
+    "description": "",
+    "type": "inherent",
+    "imagePath": "/toknHEM"
   }
 }

@@ -99,7 +99,6 @@ export class SpellHandler {
     };
 
     handleArcanaClick = (key: string): void => {
-        console.log('SpellHandler: handleArcanaClick called with key:', key);
         const playerColor = this.callbacks.getPlayerColor();
         const arcane = this.callbacks.getArcaneChess();
         const entry = (arcanaJson as any)[key];
@@ -110,7 +109,6 @@ export class SpellHandler {
 
         const thinking = this.callbacks.getThinking();
         const callbackColor = this.callbacks.getPlayerColor();
-        console.log('SpellHandler: State check:', { thinking, callbackColor, playerColor });
 
         if (thinking || callbackColor !== playerColor) {
             console.log('SpellHandler: Early return due to thinking or color mismatch');
