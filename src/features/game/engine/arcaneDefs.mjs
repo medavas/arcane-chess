@@ -373,7 +373,7 @@ const STACKING_EXCEPTIONS = new Set([
   'modsFUT',
   'modsCON',
   'modsSUR',
-  // 'modsENS',
+  'modsENS',
 ]);
 
 function isStackingKey(key) {

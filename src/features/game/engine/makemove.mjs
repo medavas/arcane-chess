@@ -627,7 +627,7 @@ export function MakeMove(move, moveType = '') {
         targetPieceAtTo === PIECES.wS || targetPieceAtTo === PIECES.bS ||
         targetPieceAtTo === PIECES.wW || targetPieceAtTo === PIECES.bW;
 
-      if (isEnsnarePiece) {
+      if (isEnsnarePiece && victimConfig.modsENS > 0) {
         GameBoard.royaltyE[to] = 9;
         const victimConfig = victimSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
         victimConfig.modsENS -= 1;
