@@ -112,9 +112,9 @@ const router = createBrowserRouter(
       <Route
         path="/quickplay"
         element={
-          <PrivateRoute>
-            <QuickPlay />
-          </PrivateRoute>
+          // <PrivateRoute>
+          <QuickPlay />
+          // </PrivateRoute>
         }
       />
       <Route
