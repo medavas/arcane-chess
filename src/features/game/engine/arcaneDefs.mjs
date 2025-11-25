@@ -131,7 +131,7 @@ export const POWERBIT = {
   swapDEP: 1,
   swapADJ: 2,
 
-  // 4 mods 25
+  // 4 mods 26
   modsCON: 1, // passive
   modsAET: 2, // active
   modsFUG: 4, // inherent
@@ -144,7 +144,7 @@ export const POWERBIT = {
   modsEXT: 512, // inherent
   modsDIV: 1024, //              divine reckoning
   modsTRO: 2048, // inherent     // trojan horse
-  modsREI: 4096, // inherent     . reincarnet to one spell I think
+  modsREI: 4096, // inherent     . reincarnet for cons and offr
   modsSOV: 8192, // passive      sovereign (summon pieces have square conditions - deprecate?
   modsDOP: 16384, // passive     doppleganger
   modsMAG: 32768, // active      magnet
@@ -157,6 +157,7 @@ export const POWERBIT = {
   modsY: 4194304, // passive     // .
   modsZ: 8388608, // passive     // .
   modsHUR: 16777216, // passive  // hurricane
+  modsENS: 33554432, // passive  // ensnarement
 
   // 6 on your piece death 4
   moriDYA: 1, // inherent
@@ -273,6 +274,7 @@ const POWER_BY_KEY = {
   modsFOG: 2,
   modsMIS: 2,
   modsHUR: 3,
+  modsENS: 3,
   offrA: 1,
   offrB: 1,
   offrC: 1,
@@ -371,6 +373,7 @@ const STACKING_EXCEPTIONS = new Set([
   'modsFUT',
   'modsCON',
   'modsSUR',
+  // 'modsENS',
 ]);
 
 function isStackingKey(key) {

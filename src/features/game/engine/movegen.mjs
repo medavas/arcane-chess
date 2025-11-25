@@ -485,8 +485,8 @@ export const generatePowers = () => {
     powerBits[6] |= powerTypes.mori;
     powerBits[7] |= powerTypes.mora;
     powerBits[8] |= powerTypes.gain;
-    powerBits[10] |= powerTypes.area;
-    powerBits[10] |= powerTypes.tokn;
+    powerBits[9] |= powerTypes.area;
+    powerBits[9] |= powerTypes.tokn;
 
     GameBoard.whiteArcane = powerBits;
 
@@ -523,7 +523,7 @@ export const generatePowers = () => {
     powerBits[6] |= powerTypes.mori;
     powerBits[7] |= powerTypes.mora;
     powerBits[8] |= powerTypes.gain;
-    powerBits[10] |= powerTypes.area;
+    powerBits[9] |= powerTypes.area;
     powerBits[10] |= powerTypes.tokn;
 
     GameBoard.blackArcane = powerBits;

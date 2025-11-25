@@ -583,9 +583,16 @@
   "modsDIV": {
     "id": "modsDIV",
     "name": "Divine Reckoning",
-    "description": "Friendly Pawn automatically promote to a Valkyrie with Iron Reach. Single use.",
+    "description": "Friendly Pawn automatically promote to a Valkyrie with Iron Reach.",
     "type": "passive",
     "imagePath": "/modsDIV"
+  },
+  "modsENS": {
+    "id": "modsENS",
+    "name": "Ensnarement",
+    "description": "When a Bishop, Knight, Zebra, Unicorn, Rook, Wraith, or Spectre is captured, the capturing piece becomes frozen.",
+    "type": "passive",
+    "imagePath": "/modsENS"
   },
   "moriDYA": {
     "id": "moriDYA",

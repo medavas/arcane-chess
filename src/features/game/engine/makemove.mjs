@@ -609,6 +609,31 @@ export function MakeMove(move, moveType = '') {
         }
       }
     }
+
+    // modsENS: Ensnarement
+    // When a Bishop, Knight, Zebra, Unicorn, Rook, Wraith, or Spectre is captured, the capturing piece becomes frozen.
+    const victimSide = PieceCol[targetPieceAtTo];
+    const victimArcane = victimSide === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+    const victimConfig = victimSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+    const hasEnsnarement = (victimArcane[4] & 33554432) !== 0; // modsENS
+
+    if (hasEnsnarement) {
+      const isEnsnarePiece =
+        targetPieceAtTo === PIECES.wB || targetPieceAtTo === PIECES.bB ||
+        targetPieceAtTo === PIECES.wN || targetPieceAtTo === PIECES.bN ||
+        targetPieceAtTo === PIECES.wZ || targetPieceAtTo === PIECES.bZ ||
+        targetPieceAtTo === PIECES.wU || targetPieceAtTo === PIECES.bU ||
+        targetPieceAtTo === PIECES.wR || targetPieceAtTo === PIECES.bR ||
+        targetPieceAtTo === PIECES.wS || targetPieceAtTo === PIECES.bS ||
+        targetPieceAtTo === PIECES.wW || targetPieceAtTo === PIECES.bW;
+
+      if (isEnsnarePiece) {
+        GameBoard.royaltyE[to] = 9;
+        const victimConfig = victimSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+        victimConfig.modsENS -= 1;
+        h.modsENSConsumed = true;
+      }
+    }
   }
 
   if (
@@ -1290,6 +1315,13 @@ export function TakeMove(wasDyadMove = false) {
     const cfg =
       GameBoard.side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
     if (move & MFLAGPS) cfg['modsSUR'] += 1;
+
+    if (h.modsENSConsumed) {
+      const victimSide = GameBoard.side ^ 1;
+      const victimConfig = victimSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+      victimConfig.modsENS += 1;
+      h.modsENSConsumed = undefined;
+    }
   }
 
   if (
