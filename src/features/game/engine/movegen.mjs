@@ -452,7 +452,7 @@ export const generatePlayableOptions = (
 // get binary representation of powers that are non-zero for the current player
 export const generatePowers = () => {
   if (GameBoard.side === COLOURS.WHITE) {
-    let powerBits = [0, 0, 0, 0, 0, 0];
+    let powerBits = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     const powerTypes = {
       dyad: 0,
       sumn: 0,
@@ -486,13 +486,13 @@ export const generatePowers = () => {
     powerBits[7] |= powerTypes.mora;
     powerBits[8] |= powerTypes.gain;
     powerBits[9] |= powerTypes.area;
-    powerBits[9] |= powerTypes.tokn;
+    powerBits[10] |= powerTypes.tokn;
 
     GameBoard.whiteArcane = powerBits;
 
     return powerBits;
   } else {
-    let powerBits = [0, 0, 0, 0, 0, 0];
+    let powerBits = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     const powerTypes = {
       dyad: 0,
       sumn: 0,

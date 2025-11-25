@@ -841,16 +841,6 @@ export function MakeMove(move, moveType = '') {
     } else if (promoEpsilon > 0) {
       AddPiece(to, promoEpsilon, true);
 
-      // Grant Hermit/Hemlock tokens
-      if (captured === 13) {
-        if (side === COLOURS.WHITE) GameBoard.whiteArcane[10] |= 1;
-        else GameBoard.blackArcane[10] |= 1;
-      }
-      if (captured === 14) {
-        if (side === COLOURS.WHITE) GameBoard.whiteArcane[10] |= 2;
-        else GameBoard.blackArcane[10] |= 2;
-      }
-
       // Instant AoE for summoned Hermit/Nomad
       if (promoEpsilon === PIECES.wH || promoEpsilon === PIECES.bH) {
         const cfg =
@@ -1239,8 +1229,8 @@ export function TakeMove(wasDyadMove = false) {
     const isHermitPiece = (movedPiece === PIECES.wH || movedPiece === PIECES.bH);
     if (isHermitPiece) {
       const cfg = GameBoard.side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
-      const hasHermitToken = (cfg[8] & 1) !== 0;  // toknHER
-      const hasHemlockToken = (cfg[8] & 2) !== 0;  // toknHEM
+      const hasHermitToken = (cfg[10] & 1) !== 0;  // toknHER
+      const hasHemlockToken = (cfg[10] & 2) !== 0;  // toknHEM
       const isHermit = hasHermitToken && !hasHemlockToken;
       const isNomad = hasHermitToken && hasHemlockToken;
 
@@ -1262,7 +1252,7 @@ export function TakeMove(wasDyadMove = false) {
         }
 
         const royaltyMap = GameBoard[`royalty${royaltyType}`];
-        const hermitPattern = [-20, -12, -8, 8, 12, 20];  // HerShftDir
+        const hermitPattern = KiDir;
 
         // Remove AoE from 'to' position (where it was)
         for (let i = 0; i < hermitPattern.length; i++) {
