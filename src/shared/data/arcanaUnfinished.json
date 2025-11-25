@@ -685,12 +685,12 @@
     "type": "inherent",
     "imagePath": "/moraNOR"
   },
-  "areaC": {
-    "id": "areaC",
+  "areaF": {
+    "id": "areaF",
     "name": "Hiding Lantern",
     "description": "",
     "type": "inherent",
-    "imagePath": "/areaC"
+    "imagePath": "/areaF"
   },
   "areaM": {
     "id": "areaM",

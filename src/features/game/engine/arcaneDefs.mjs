@@ -174,7 +174,7 @@ export const POWERBIT = {
   moraMAN: 16, // inherent
 
   // 8 area inherent 4
-  areaC: 1,
+  areaF: 1,
   areaM: 2,
   areaT: 4,
   areaQ: 8,
