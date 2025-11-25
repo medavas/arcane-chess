@@ -134,7 +134,9 @@ export function AddCaptureMove(move, consume = false, capturesOnly = false) {
     GameBoard.pieces[TOSQ(move)] === PIECES.wX ||
     GameBoard.pieces[TOSQ(move)] === PIECES.bX;
 
-  if (isTargetExile && !(has5thDimensionSword && move & MFLAGSHFT)) {
+  if (isTargetExile && !(has5thDimensionSword)
+    // && move & MFLAGSHFT) // TBD
+  ) {
     return;
   }
 
@@ -168,9 +170,8 @@ export function AddCaptureMove(move, consume = false, capturesOnly = false) {
     const hasHermit = (capArcane[10] & 1) !== 0;
     const hasHemlock = (capArcane[10] & 2) !== 0;
 
-    // If it has Hermit token, it cannot be captured UNLESS attacker has 5D Sword
-    // OR if it also has Hemlock token (Nomad), it IS capturable
-    if (hasHermit && !hasHemlock && !has5thDimensionSword) {
+    // If it has Hemlock token, it cannot be captured
+    if ((hasHermit || hasHemlock) && !has5thDimensionSword) {
       return;
     }
   }

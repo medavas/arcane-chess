@@ -400,7 +400,7 @@
   },
   "shftG": {
     "id": "shftG",
-    "name": "Shade Merge",
+    "name": "Liquid",
     "description": "Spectre and Wraith gain the other's moveset, no capturing.",
     "type": "passive",
     "imagePath": "/shftG"
@@ -685,12 +685,12 @@
     "type": "passive",
     "imagePath": "/gainALL"
   },
-  "areaC": {
-    "id": "areaC",
+  "areaF": {
+    "id": "areaF",
     "name": "Hiding Lantern",
     "description": "",
     "type": "inherent",
-    "imagePath": "/areaC"
+    "imagePath": "/areaF"
   },
   "areaM": {
     "id": "areaM",

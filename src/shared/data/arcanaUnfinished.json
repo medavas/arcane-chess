@@ -386,7 +386,7 @@
   },
   "shftG": {
     "id": "shftG",
-    "name": "Shade Merge",
+    "name": "Liquid",
     "description": "Spectre and Wraith gain the other's moveset, no capturing.",
     "type": "passive",
     "imagePath": "/shftG"

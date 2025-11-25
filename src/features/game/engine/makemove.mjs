@@ -617,7 +617,7 @@ export function MakeMove(move, moveType = '') {
     const victimConfig = victimSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
     const hasEnsnarement = (victimArcane[4] & 33554432) !== 0; // modsENS
 
-    if (hasEnsnarement) {
+    if (victimConfig.modsENS > 0) {
       const isEnsnarePiece =
         targetPieceAtTo === PIECES.wB || targetPieceAtTo === PIECES.bB ||
         targetPieceAtTo === PIECES.wN || targetPieceAtTo === PIECES.bN ||
@@ -627,9 +627,8 @@ export function MakeMove(move, moveType = '') {
         targetPieceAtTo === PIECES.wS || targetPieceAtTo === PIECES.bS ||
         targetPieceAtTo === PIECES.wW || targetPieceAtTo === PIECES.bW;
 
-      if (isEnsnarePiece && victimConfig.modsENS > 0) {
-        GameBoard.royaltyE[to] = 9;
-        const victimConfig = victimSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+      if (isEnsnarePiece) {
+        GameBoard.royaltyE[to] = 4;
         victimConfig.modsENS -= 1;
         h.modsENSConsumed = true;
       }
