@@ -2,25 +2,31 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+
   .types-header {
     color: #ccc;
+
     ul {
       margin: 0;
       padding-left: 14px;
+
       li {
         margin: 2px 0;
       }
     }
   }
-  .inventory {
+
+  .spellBook {
     display: flex;
     flex-direction: column;
     gap: 4px;
+
     .arcane-item {
       display: flex;
       align-items: center;
       gap: 12px;
       padding: 6px 0;
+
       .thumb {
         width: 40px;
         height: 40px;
@@ -28,33 +34,40 @@
         border-radius: 4px;
         flex-shrink: 0;
       }
+
       .content {
         display: flex;
         flex-direction: column;
         padding: 10px;
+
         .title-row {
           display: flex;
           align-items: center;
           gap: 4px;
           margin: 0;
+
           .name {
             color: #eee;
           }
+
           .type {
             text-transform: capitalize;
             opacity: 0.7;
           }
         }
+
         .description {
           color: #aaa;
           margin: 0;
         }
       }
     }
+
     .arcane-section {
       display: flex;
       flex-direction: column;
       gap: 4px;
+
       .arcane-section-list {
         display: flex;
         flex-direction: column;
@@ -62,6 +75,7 @@
         margin-left: 8px;
       }
     }
+
     .arcane-section.is-open:hover {
       background-color: #222;
       transition: background-color 0.2s ease;
@@ -69,6 +83,7 @@
         url('/assets/images/cursors/pointer.svg') 12 4,
         pointer;
     }
+
     .arcane-section.is-open {
       background-color: transparent;
     }

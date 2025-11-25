@@ -100,9 +100,8 @@ export default class ArcanaList extends React.Component<
         <div className="title-row">
           <div className="name">{arcaneItem.name}</div>
           <div
-            className={`type pill pill-${
-              arcaneItem.type?.toLowerCase?.() || 'unknown'
-            }`}
+            className={`type pill pill-${arcaneItem.type?.toLowerCase?.() || 'unknown'
+              }`}
           >
             {arcaneItem.type}
           </div>
@@ -162,7 +161,7 @@ export default class ArcanaList extends React.Component<
           />
         </div>
 
-        <div className="inventory vertical">
+        <div className="spellBook vertical">
           {others.map(([key, item]) => this.renderArcanaItem(key, item))}
 
           {sectionPrefixes.map((prefix) => {

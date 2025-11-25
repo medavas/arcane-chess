@@ -154,7 +154,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
       multiplier: getLocalStorage(this.props.auth.user.username)?.config
         .multiplier,
       nodeScores: getLocalStorage(this.props.auth.user.username)?.nodeScores,
-      inventory: getLocalStorage(this.props.auth.user.username)?.inventory,
+      spellBook: getLocalStorage(this.props.auth.user.username)?.spellBook,
       endChapterOpen: getLocalStorage(this.props.auth.user.username)
         ?.chapterEnd,
       playerColor: getLocalStorage(this.props.auth.user.username)?.config.color,
@@ -228,8 +228,8 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
       selectedSwatch.split('-')[0] === 'mission'
         ? '+'
         : selectedSwatch.split('-')[0] === 'temple'
-        ? '-'
-        : '';
+          ? '-'
+          : '';
 
     return (
       <>
@@ -254,7 +254,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
       },
       arcana: LS.arcana,
       nodeScores: LS.nodeScores,
-      inventory: LS.inventory,
+      spellBook: LS.spellBook,
       nodeId: LS.nodeId,
       chapterEnd: LS.chapterEnd,
       difficulty: LS.difficulty,
@@ -439,12 +439,12 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
             <TactoriusModal
               isOpen={this.state.armoryOpen}
               type="armory"
-              // imgPath="public/assets/treeBoat.jpg"
+            // imgPath="public/assets/treeBoat.jpg"
             />
             <TactoriusModal
               isOpen={this.state.endChapterOpen}
               type="chapterEnd"
-              // imgPath="public/assets/treeBoat.jpg"
+            // imgPath="public/assets/treeBoat.jpg"
             />
             <div className="book">
               <div className="hud">
@@ -493,9 +493,8 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                           </div>
                           <img
                             key={key}
-                            className={`arcane ${
-                              this.state.hoverArcane === key ? 'focus' : ''
-                            }`}
+                            className={`arcane ${this.state.hoverArcane === key ? 'focus' : ''
+                              }`}
                             src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
                             style={{
                               height: '50px',
@@ -517,7 +516,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                 <div className="center">
                   {/* Click on a chapter to view its details. If the chapter is a
                   mission, you can click or hover on arcana badges for
-                  additional information or to add them to your inventory. Use
+                  additional information or to add them to your spellBook. Use
                   the Story button to switch between chess and story details,
                   and click the Start button to begin the chapter. */}
                   <GlobalVolumeControl />
@@ -651,7 +650,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                                 config: updatedConfig,
                                 arcana: updatedArcana,
                                 nodeScores: currLS.nodeScores,
-                                inventory: currLS.inventory,
+                                spellBook: currLS.spellBook,
                                 nodeId: node.id,
                                 chapterEnd: currLS.chapterEnd,
                                 difficulty: currLS.difficulty,
@@ -666,7 +665,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                 {this.state.selectedTab === 'story' ? (
                   <div
                     key={this.state.bookTheme}
-                    className="description-inventory story-column"
+                    className="description-spellBook story-column"
                     style={
                       {
                         //   display: 'flex',
@@ -770,7 +769,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                         // }}
                         orientation={
                           this.state.playerColor === 'black' &&
-                          this.state.selectedSwatch.split('-')[0] === 'mission'
+                            this.state.selectedSwatch.split('-')[0] === 'mission'
                             ? 'black'
                             : 'white'
                         }
@@ -821,8 +820,8 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                   </div>
                 ) : null}
                 <div
-                  className="description-inventory"
-                  // style={{ zIndex: 100 }}
+                  className="description-spellBook"
+                // style={{ zIndex: 100 }}
                 >
                   <div className="description">
                     {this.state.selectedSwatch !== '' ? (
@@ -853,12 +852,12 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                                     {p}
                                     {this.state.book[this.state.selectedSwatch]
                                       .boss && (
-                                      <span style={{ color: 'red' }}>
-                                        This is a boss level. Completing this
-                                        mission will reset your progress in this
-                                        chapter.
-                                      </span>
-                                    )}
+                                        <span style={{ color: 'red' }}>
+                                          This is a boss level. Completing this
+                                          mission will reset your progress in this
+                                          chapter.
+                                        </span>
+                                      )}
                                   </p>
                                 ))}
                             </div>
@@ -867,7 +866,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                       </div>
                     ) : null}
                   </div>
-                  <div className="inventory">
+                  <div className="spellBook">
                     <div
                       className="time-arcana"
                       style={{ background: '#77777788' }}
@@ -880,7 +879,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                         }}
                       >
                         {this.state.selectedSwatch === '' ? null : this.state
-                            .playerColor === 'white' ? (
+                          .playerColor === 'white' ? (
                           <ArcanaSelect
                             auth={this.props.auth}
                             isPlayerArcana
@@ -929,7 +928,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                         }}
                       >
                         {this.state.selectedSwatch === '' ? null : this.state
-                            .playerColor === 'black' ? (
+                          .playerColor === 'black' ? (
                           <ArcanaSelect
                             auth={this.props.auth}
                             isPlayerArcana

@@ -537,7 +537,7 @@ export class UnwrappedDashboard extends React.Component<
                   summon.
                 </li>
                 <li>
-                  Arcana Charge: unlockable time slots. Arcana in your inventory unlock
+                  Arcana Charge: unlockable time slots. Arcana in your spellBook unlock
                   incrementally after a certain number of turns automatically.
                   Less overwhelming and promotes resource management.
                 </li>

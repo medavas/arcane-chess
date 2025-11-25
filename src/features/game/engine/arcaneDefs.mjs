@@ -3,38 +3,38 @@ import { PIECES, PceChar, PiecePawn, BOOL } from './defs.mjs';
 export const whiteArcaneConfig = {};
 export const blackArcaneConfig = {};
 
-export const whiteArcaneInventory = {};
-export const blackArcaneInventory = {};
+export const whiteArcaneSpellBook = {};
+export const blackArcaneSpellBook = {};
 
 const grantedByKey = { white: Object.create(null), black: Object.create(null) };
 const grantedByOffering = { white: Object.create(null), black: Object.create(null) };
 
 export const setWhiteArcana = (pool) => {
-  Object.keys(whiteArcaneInventory).forEach(
-    (k) => delete whiteArcaneInventory[k]
+  Object.keys(whiteArcaneSpellBook).forEach(
+    (k) => delete whiteArcaneSpellBook[k]
   );
   Object.keys(pool || {}).forEach((k) => {
-    whiteArcaneInventory[k] = pool[k] | 0;
+    whiteArcaneSpellBook[k] = pool[k] | 0;
   });
   Object.keys(whiteArcaneConfig).forEach((k) => delete whiteArcaneConfig[k]);
   grantedByKey.white = Object.create(null);
   grantedByOffering.white = Object.create(null);
   ArcanaProgression.resetSide('white');
-  return whiteArcaneInventory;
+  return whiteArcaneSpellBook;
 };
 
 export const setBlackArcana = (pool) => {
-  Object.keys(blackArcaneInventory).forEach(
-    (k) => delete blackArcaneInventory[k]
+  Object.keys(blackArcaneSpellBook).forEach(
+    (k) => delete blackArcaneSpellBook[k]
   );
   Object.keys(pool || {}).forEach((k) => {
-    blackArcaneInventory[k] = pool[k] | 0;
+    blackArcaneSpellBook[k] = pool[k] | 0;
   });
   Object.keys(blackArcaneConfig).forEach((k) => delete blackArcaneConfig[k]);
   grantedByKey.black = Object.create(null);
   grantedByOffering.black = Object.create(null);
   ArcanaProgression.resetSide('black');
-  return blackArcaneInventory;
+  return blackArcaneSpellBook;
 };
 
 export const clearArcanaConfig = () => {
@@ -300,9 +300,9 @@ function sideKey(x) {
 }
 
 export function incLiveArcana(side, key, delta = 1) {
-  const inv = side === 'white' ? whiteArcaneInventory : blackArcaneInventory;
+  const spellBook = side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
   const live = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
-  const cap = inv[key] | 0;
+  const cap = spellBook[key] | 0;
   const cur = live[key] | 0;
   const next =
     delta > 0 ? Math.min(cap, cur + delta) : Math.max(0, cur + delta);
@@ -311,21 +311,21 @@ export function incLiveArcana(side, key, delta = 1) {
 }
 
 export function offerGrant(side, key, qty = 1) {
-  const inv = side === 'white' ? whiteArcaneInventory : blackArcaneInventory;
+  const spellBook = side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
   const live = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
   const offeringTracker = side === 'white' ? grantedByOffering.white : grantedByOffering.black;
 
   const curLive = live[key] | 0;
-  const curCap = inv[key] | 0;
+  const curCap = spellBook[key] | 0;
 
   if (isStackingKey(key)) {
     const targetCap = Math.max(curCap, curLive + qty);
-    inv[key] = targetCap;
+    spellBook[key] = targetCap;
     incLiveArcana(side, key, +qty);
     // Track that this key was granted by an offering
     offeringTracker[key] = (offeringTracker[key] | 0) + qty;
   } else {
-    inv[key] = Math.max(curCap, 1);
+    spellBook[key] = Math.max(curCap, 1);
     incLiveArcana(side, key, curLive >= 1 ? 0 : +1);
     // Track that this key was granted by an offering
     if (curLive < 1) offeringTracker[key] = 1;
@@ -333,20 +333,20 @@ export function offerGrant(side, key, qty = 1) {
 }
 
 export function offerRevert(side, key, qty = 1) {
-  const inv = side === 'white' ? whiteArcaneInventory : blackArcaneInventory;
+  const spellBook = side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
   const live = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
   const offeringTracker = side === 'white' ? grantedByOffering.white : grantedByOffering.black;
 
   if (isStackingKey(key)) {
     incLiveArcana(side, key, -qty);
     const liveNow = live[key] | 0;
-    inv[key] = Math.max(liveNow, (inv[key] | 0) - qty);
+    spellBook[key] = Math.max(liveNow, (spellBook[key] | 0) - qty);
     // Remove from offering tracker
     offeringTracker[key] = Math.max(0, (offeringTracker[key] | 0) - qty);
     if (offeringTracker[key] === 0) delete offeringTracker[key];
   } else {
     if ((live[key] | 0) > 0) incLiveArcana(side, key, -1);
-    inv[key] = Math.max(live[key] | 0, 0);
+    spellBook[key] = Math.max(live[key] | 0, 0);
     // Remove from offering tracker
     if (offeringTracker[key]) delete offeringTracker[key];
   }
@@ -381,13 +381,13 @@ function isStackingKey(key) {
 }
 
 function remainingFor(side, key) {
-  const inv = side === 'white' ? whiteArcaneInventory : blackArcaneInventory;
+  const spellBook = side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
   const live = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
-  return (inv[key] | 0) - (live[key] | 0);
+  return (spellBook[key] | 0) - (live[key] | 0);
 }
 function universeFor(side) {
-  const inv = side === 'white' ? whiteArcaneInventory : blackArcaneInventory;
-  return Object.keys(inv).filter((k) => (inv[k] | 0) > 0);
+  const spellBook = side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
+  return Object.keys(spellBook).filter((k) => (spellBook[k] | 0) > 0);
 }
 
 const ArcanaProgression = (() => {

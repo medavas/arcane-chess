@@ -12,7 +12,7 @@ interface ArcanaMap {
 }
 interface Character {
   name: string;
-  inventory: ArcanaDetail[];
+  spellBook: ArcanaDetail[];
   setup: string;
   imagePath: string;
   color: string;
@@ -54,7 +54,7 @@ const emptyArcane = {
 const unpaddedCharacters = [
   {
     name: 'The Warlord',
-    inventory: [arcana.dyadK, arcana.dyadQ, arcana.dyadR],
+    spellBook: [arcana.dyadK, arcana.dyadQ, arcana.dyadR],
     setup: 'RNBQKBNR',
     imagePath: 'warlord',
     color: Y,
@@ -63,7 +63,7 @@ const unpaddedCharacters = [
   },
   {
     name: 'The Banshee',
-    inventory: [arcana.dyadW, arcana.dyadW, arcana.sumnW, arcana.sumnW],
+    spellBook: [arcana.dyadW, arcana.dyadW, arcana.sumnW, arcana.sumnW],
     setup: 'RNWQKWNR',
     imagePath: 'banshee',
     color: V,
@@ -72,7 +72,7 @@ const unpaddedCharacters = [
   },
   {
     name: 'The Ghoul',
-    inventory: [arcana.sumnS, arcana.sumnS, arcana.dyadS, arcana.dyadS],
+    spellBook: [arcana.sumnS, arcana.sumnS, arcana.dyadS, arcana.dyadS],
     setup: 'RSBQKBSR',
     imagePath: 'ghoul',
     color: V,
@@ -80,7 +80,7 @@ const unpaddedCharacters = [
   },
   // {
   //   name: 'The Politician',
-  //   inventory: [arcana.modsINH, arcana.offrC],
+  //   spellBook: [arcana.modsINH, arcana.offrC],
   //   setup: 'RNBVKBNR',
   //   imagePath: 'politician',
   //   color: R,
@@ -88,7 +88,7 @@ const unpaddedCharacters = [
   // },
   {
     name: 'The Phoenix',
-    inventory: [arcana.dyadA, arcana.modsTEM, arcana.sumnRA, arcana.sumnRQ],
+    spellBook: [arcana.dyadA, arcana.modsTEM, arcana.sumnRA, arcana.sumnRQ],
     setup: 'RNBQKBNR',
     imagePath: 'phoenix',
     color: O,
@@ -96,7 +96,7 @@ const unpaddedCharacters = [
   },
   {
     name: 'The Anarchist',
-    inventory: [arcana.modsTRO, arcana.offrE, arcana.sumnX],
+    spellBook: [arcana.modsTRO, arcana.offrE, arcana.sumnX],
     setup: 'RNBTKBNR',
     imagePath: 'anarchist',
     color: R,
@@ -104,7 +104,7 @@ const unpaddedCharacters = [
   },
   {
     name: 'The Solider',
-    inventory: [arcana.shftP, arcana.shftN, arcana.shftB, arcana.shftR],
+    spellBook: [arcana.shftP, arcana.shftN, arcana.shftB, arcana.shftR],
     setup: 'RNBQKBNR',
     imagePath: 'soldier',
     color: B,
@@ -112,7 +112,7 @@ const unpaddedCharacters = [
   },
   {
     name: 'The Prophet',
-    inventory: [
+    spellBook: [
       arcana.modsIMP,
       arcana.modsIMP,
       arcana.modsORA,
@@ -127,7 +127,7 @@ const unpaddedCharacters = [
   },
   {
     name: 'The Barbarian',
-    inventory: [arcana.sumnX, arcana.sumnR, arcana.dyadA],
+    spellBook: [arcana.sumnX, arcana.sumnR, arcana.dyadA],
     setup: 'RNBQKBNR',
     imagePath: 'barbarian',
     color: R,
@@ -135,7 +135,7 @@ const unpaddedCharacters = [
   },
   {
     name: 'The Transcendent',
-    inventory: [arcana.sumnRV, arcana.dyadV, arcana.modsTEM, arcana.modsEXT],
+    spellBook: [arcana.sumnRV, arcana.dyadV, arcana.modsTEM, arcana.modsEXT],
     setup: 'RNMVKTNR',
     imagePath: 'transcendent',
     color: Y,
@@ -143,7 +143,7 @@ const unpaddedCharacters = [
   },
   {
     name: 'The Demon',
-    inventory: [arcana.sumnX, arcana.modsCON, arcana.sumnRE, arcana.sumnRY],
+    spellBook: [arcana.sumnX, arcana.modsCON, arcana.sumnRE, arcana.sumnRY],
     setup: 'RSWTKWSR',
     imagePath: 'demon',
     color: R,
@@ -151,7 +151,7 @@ const unpaddedCharacters = [
   },
   {
     name: 'The Hexweaver',
-    inventory: [arcana.sumnH, arcana.sumnRY, arcana.sumnRZ, arcana.sumnRA],
+    spellBook: [arcana.sumnH, arcana.sumnRY, arcana.sumnRZ, arcana.sumnRA],
     setup: 'RNBQKBNR',
     imagePath: 'wizard',
     color: V,
@@ -159,20 +159,20 @@ const unpaddedCharacters = [
   },
 ];
 
-export const startingInventory = Array(6).fill(emptyArcane);
+export const startingSpellBook = Array(6).fill(emptyArcane);
 
-export const padInventory = (characters: Character[]) => {
+export const padSpellBook = (characters: Character[]) => {
   return characters.map((character) => ({
     ...character,
     imagePath: `${path}${character.imagePath}`,
-    inventory: [
-      ...character.inventory,
-      ...Array(6 - character.inventory.length).fill(arcana.empty),
+    spellBook: [
+      ...character.spellBook,
+      ...Array(6 - character.spellBook.length).fill(arcana.empty),
     ],
   }));
 };
 
-export const characters = padInventory(unpaddedCharacters);
+export const characters = padSpellBook(unpaddedCharacters);
 
 // MODES
 const padArcana = (arcana: ArcanaDetail[]) => {

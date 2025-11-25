@@ -22,7 +22,7 @@ import 'src/features/game/board/styles/gamma.scss';
 import ArcanaSelect from 'src/features/campaign/components/ArcanaSelect/ArcanaSelect';
 import ArmySelect from 'src/features/game/components/ArmySelect/ArmySelect';
 
-import { startingInventory } from 'src/features/game/components/CharacterSelect/charactersModes';
+import { startingSpellBook } from 'src/features/game/components/CharacterSelect/charactersModes';
 
 
 import arcanaJson from 'src/shared/data/arcana.json';
@@ -205,8 +205,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
         autopromotion: 'Select',
       },
 
-      whiteArcana: [...startingInventory],
-      blackArcana: [...startingInventory],
+      whiteArcana: [...startingSpellBook],
+      blackArcana: [...startingSpellBook],
       whiteSetup: 'RNBQKBNR',
       blackSetup: 'rnbqkbnr',
 
@@ -255,9 +255,9 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
     }));
   };
 
-  transformedInventory = (inventory: ArcanaDetail[]) => {
+  transformedSpellBook = (spellBook: ArcanaDetail[]) => {
     const object: { [key: string]: number } = {};
-    _.forEach(inventory, (item) => {
+    _.forEach(spellBook, (item) => {
       if (item.id === 'empty') return;
       object[item.id] = (object[item.id] || 0) + 1;
     });
@@ -356,7 +356,7 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
       .map((aid) => arcana[aid])
       .filter(Boolean)
       .slice(0, 6) as ArcanaDetail[];
-    const invCounts = this.transformedInventory(inv);
+    const invCounts = this.transformedSpellBook(inv);
 
     const roleColor =
       role === 'engine' ? this.state.engineColor : this.state.playerColor;
@@ -440,8 +440,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
         blackArcana: nextBlackArc,
       },
       () => {
-        const wCounts = this.transformedInventory(this.state.whiteArcana);
-        const bCounts = this.transformedInventory(this.state.blackArcana);
+        const wCounts = this.transformedSpellBook(this.state.whiteArcana);
+        const bCounts = this.transformedSpellBook(this.state.blackArcana);
 
         this.props.updateConfig?.('whiteSetup', this.state.whiteSetup);
         this.props.updateConfig?.('blackSetup', this.state.blackSetup);
@@ -467,8 +467,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
   };
 
   start = () => {
-    const wCounts = this.transformedInventory(this.state.whiteArcana);
-    const bCounts = this.transformedInventory(this.state.blackArcana);
+    const wCounts = this.transformedSpellBook(this.state.whiteArcana);
+    const bCounts = this.transformedSpellBook(this.state.blackArcana);
     if (this.props.updateConfig) {
       this.props.updateConfig('whiteSetup', this.state.whiteSetup);
       this.props.updateConfig('blackSetup', this.state.blackSetup);
@@ -728,7 +728,7 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                       style={{ flex: '0 1 var(--arcana-w)' }}
                     >
                       <ArcanaSelect
-                        inventory={
+                        spellBook={
                           this.state.engineColor === 'white'
                             ? this.state.whiteArcana
                             : this.state.blackArcana
@@ -807,7 +807,7 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                       style={{ flex: '0 1 var(--arcana-w)' }}
                     >
                       <ArcanaSelect
-                        inventory={
+                        spellBook={
                           this.state.playerColor === 'white'
                             ? this.state.whiteArcana
                             : this.state.blackArcana

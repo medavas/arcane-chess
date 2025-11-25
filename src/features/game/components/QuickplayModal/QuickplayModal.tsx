@@ -19,7 +19,7 @@ import ArcanaSelect from 'src/features/campaign/components/ArcanaSelect/ArcanaSe
 import ArmySelect, { armies } from 'src/features/game/components/ArmySelect/ArmySelect';
 
 import {
-  startingInventory,
+  startingSpellBook,
   modes,
   characters,
 } from 'src/features/game/components/CharacterSelect/charactersModes';
@@ -81,7 +81,7 @@ interface ArcanaMap {
 
 interface Character {
   name: string;
-  inventory: ArcanaDetail[];
+  spellBook: ArcanaDetail[];
   setup: string;
   imagePath: string;
   color: string;
@@ -108,8 +108,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
         autopromotion: 'Select',
       },
       hoverId: '',
-      whiteArcana: [...startingInventory],
-      blackArcana: [...startingInventory],
+      whiteArcana: [...startingSpellBook],
+      blackArcana: [...startingSpellBook],
       whiteSetup: 'RNBQKBNR',
       blackSetup: 'rnbqkbnr',
       playerColor: 'white',
@@ -164,9 +164,9 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
     }));
   };
 
-  transformedInventory = (inventory: ArcanaDetail[]) => {
+  transformedSpellBook = (spellBook: ArcanaDetail[]) => {
     const object: { [key: string]: number } = {};
-    _.forEach(inventory, (item) => {
+    _.forEach(spellBook, (item) => {
       if (item.id === 'empty') return;
       if (object[item.id] > 0) {
         object[item.id] += 1;
@@ -185,8 +185,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
     const characterA = _.sample(characters) as Character;
     const characterB = _.sample(characters) as Character;
 
-    const configArcanaA = this.transformedInventory(characterA?.inventory);
-    const configArcanaB = this.transformedInventory(characterB?.inventory);
+    const configArcanaA = this.transformedSpellBook(characterA?.spellBook);
+    const configArcanaB = this.transformedSpellBook(characterB?.spellBook);
 
     if (!this.props.updateConfig) return;
 
@@ -201,8 +201,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       this.setState({
         whiteSetup: characterA.setup,
         blackSetup: characterA.setup,
-        whiteArcana: characterA.inventory,
-        blackArcana: characterA.inventory,
+        whiteArcana: characterA.spellBook,
+        blackArcana: characterA.spellBook,
         showArmySelect: '',
         showArcanaSelect: '',
         showCharacterSelect: '',
@@ -231,8 +231,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       this.setState({
         whiteSetup: characterA.setup,
         blackSetup: characterB.setup,
-        whiteArcana: characterA.inventory,
-        blackArcana: characterB.inventory,
+        whiteArcana: characterA.spellBook,
+        blackArcana: characterB.spellBook,
         showArmySelect: '',
         showArcanaSelect: '',
         showCharacterSelect: '',
@@ -243,19 +243,19 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
   };
 
   trueRandomize = (type: 'same' | 'different') => {
-    const inventoryA = _.sampleSize(arcanaJson, 6) as ArcanaDetail[];
-    const inventoryB = _.sampleSize(arcanaJson, 6) as ArcanaDetail[];
+    const spellBookA = _.sampleSize(arcanaJson, 6) as ArcanaDetail[];
+    const spellBookB = _.sampleSize(arcanaJson, 6) as ArcanaDetail[];
 
-    const configArcanaA = this.transformedInventory(inventoryA);
-    const configArcanaB = this.transformedInventory(inventoryB);
+    const configArcanaA = this.transformedSpellBook(spellBookA);
+    const configArcanaB = this.transformedSpellBook(spellBookB);
 
     const characterASetup = _.sample(armies) as string;
     const characterBSetup = _.sample(armies)?.toLowerCase() as string;
 
     if (!this.props.updateConfig) return;
 
-    console.log('White Arcana:', inventoryA, configArcanaA);
-    console.log('Black Arcana:', inventoryB, configArcanaB);
+    console.log('White Arcana:', spellBookA, configArcanaA);
+    console.log('Black Arcana:', spellBookB, configArcanaB);
 
     if (type === 'same') {
       this.props.updateConfig('wArcana', configArcanaA);
@@ -268,8 +268,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       this.setState({
         whiteSetup: characterASetup,
         blackSetup: characterASetup,
-        whiteArcana: inventoryA,
-        blackArcana: inventoryA,
+        whiteArcana: spellBookA,
+        blackArcana: spellBookA,
         showArmySelect: '',
         showArcanaSelect: '',
         showCharacterSelect: '',
@@ -286,8 +286,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       this.setState({
         whiteSetup: characterASetup,
         blackSetup: characterBSetup,
-        whiteArcana: inventoryA,
-        blackArcana: inventoryB,
+        whiteArcana: spellBookA,
+        blackArcana: spellBookB,
         showArmySelect: '',
         showArcanaSelect: '',
         showCharacterSelect: '',
@@ -305,8 +305,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
 
     const { white, black } = chosenMode;
 
-    this.props.updateConfig('wArcana', this.transformedInventory(white.arcana));
-    this.props.updateConfig('bArcana', this.transformedInventory(black.arcana));
+    this.props.updateConfig('wArcana', this.transformedSpellBook(white.arcana));
+    this.props.updateConfig('bArcana', this.transformedSpellBook(black.arcana));
     this.props.updateConfig('whiteSetup', white.setup);
     this.props.updateConfig('blackSetup', black.setup);
 
@@ -332,8 +332,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
     return {
       playerSwapSides: `Human is playing with the ${this.state.playerColor} pieces. Click to swap sides.`,
       engineSwapSides: `Engine is playing with the ${this.state.engineColor} pieces. Click to swap sides.`,
-      playerCharacter: 'Click to choose an inventory of spells for the human.',
-      engineCharacter: 'Click to choose an inventory of spells for the engine.',
+      playerCharacter: 'Click to choose an spellBook of spells for the human.',
+      engineCharacter: 'Click to choose an spellBook of spells for the engine.',
       playerArmy: "The human's army, click to choose a different setup.",
       engineArmy: "The engine's army, click to choose a different setup.",
       promotion:
@@ -342,11 +342,11 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       gameMode: 'Choose a tutorial, or balanced scenario, or themed battle.',
       gameModeRand: 'Click to roll a new game mode.',
       tempRandSame:
-        'The human and engine get a random, matching army and inventory of spells from the existing template themes.',
+        'The human and engine get a random, matching army and spellBook of spells from the existing template themes.',
       tempRandDiff:
-        'The human and engine get a random, different army and inventory of spells from the existing template themes.',
+        'The human and engine get a random, different army and spellBook of spells from the existing template themes.',
       trueRandSame:
-        'The human and engine get a truly random, matching army and inventory of spells from all options available.',
+        'The human and engine get a truly random, matching army and spellBook of spells from all options available.',
       start: 'Rock and Roll!',
       trueRandDiff:
         'This one is truly random and unbalanced... but great for experimenting! Click if you dare.',
@@ -493,8 +493,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                               color={this.state.engineColor}
                               isOpen={this.state.showCharacterSelect}
                               sendCharacterSelect={(character) => {
-                                const configArcana = this.transformedInventory(
-                                  character.inventory
+                                const configArcana = this.transformedSpellBook(
+                                  character.spellBook
                                 );
                                 if (this.props.updateConfig)
                                   this.props.updateConfig(
@@ -507,14 +507,14 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                                   );
                                 if (this.state.engineColor === 'white') {
                                   this.setState({
-                                    whiteArcana: character.inventory,
+                                    whiteArcana: character.spellBook,
                                     whiteSetup: character.setup,
                                     engineCharacterImgPath: character.imagePath,
                                   });
                                 }
                                 if (this.state.engineColor === 'black') {
                                   this.setState({
-                                    blackArcana: character.inventory,
+                                    blackArcana: character.spellBook,
                                     blackSetup: character.setup.toLowerCase(),
                                     engineCharacterImgPath: character.imagePath,
                                   });
@@ -542,7 +542,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                       </div>
                       <div className="arcana">
                         <ArcanaSelect
-                          inventory={
+                          spellBook={
                             this.state.engineColor === 'white'
                               ? this.state.whiteArcana
                               : this.state.blackArcana
@@ -563,9 +563,9 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                             });
                           }}
                           color={this.state.engineColor}
-                          updateInventory={(inventory) => {
+                          updateSpellBook={(spellBook) => {
                             const configArcana =
-                              this.transformedInventory(inventory);
+                              this.transformedSpellBook(spellBook);
                             if (this.props.updateConfig)
                               this.props.updateConfig(
                                 `${this.state.engineColor === 'white' ? 'w' : 'b'
@@ -574,13 +574,13 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                               );
                             if (this.state.engineColor === 'white') {
                               this.setState({
-                                whiteArcana: inventory,
+                                whiteArcana: spellBook,
                                 engineCharacterImgPath: '',
                               });
                             }
                             if (this.state.engineColor === 'black') {
                               this.setState({
-                                blackArcana: inventory,
+                                blackArcana: spellBook,
                                 engineCharacterImgPath: '',
                               });
                             }
@@ -759,8 +759,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                               color={this.state.playerColor}
                               isOpen={this.state.showCharacterSelect}
                               sendCharacterSelect={(character) => {
-                                const configArcana = this.transformedInventory(
-                                  character.inventory
+                                const configArcana = this.transformedSpellBook(
+                                  character.spellBook
                                 );
                                 if (this.props.updateConfig)
                                   this.props.updateConfig(
@@ -773,14 +773,14 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                                   );
                                 if (this.state.playerColor === 'white') {
                                   this.setState({
-                                    whiteArcana: character.inventory,
+                                    whiteArcana: character.spellBook,
                                     whiteSetup: character.setup,
                                     playerCharacterImgPath: character.imagePath,
                                   });
                                 }
                                 if (this.state.playerColor === 'black') {
                                   this.setState({
-                                    blackArcana: character.inventory,
+                                    blackArcana: character.spellBook,
                                     blackSetup: character.setup.toLowerCase(),
                                     playerCharacterImgPath: character.imagePath,
                                   });
@@ -808,7 +808,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                       </div>
                       <div className="arcana">
                         <ArcanaSelect
-                          inventory={
+                          spellBook={
                             this.state.playerColor === 'white'
                               ? this.state.whiteArcana
                               : this.state.blackArcana
@@ -829,9 +829,9 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                             });
                           }}
                           color={this.state.playerColor}
-                          updateInventory={(inventory) => {
+                          updateSpellBook={(spellBook) => {
                             const configArcana =
-                              this.transformedInventory(inventory);
+                              this.transformedSpellBook(spellBook);
                             if (this.props.updateConfig)
                               this.props.updateConfig(
                                 `${this.state.playerColor === 'white' ? 'w' : 'b'
@@ -840,13 +840,13 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                               );
                             if (this.state.playerColor === 'white') {
                               this.setState({
-                                whiteArcana: inventory,
+                                whiteArcana: spellBook,
                                 playerCharacterImgPath: '',
                               });
                             }
                             if (this.state.playerColor === 'black') {
                               this.setState({
-                                blackArcana: inventory,
+                                blackArcana: spellBook,
                                 playerCharacterImgPath: '',
                               });
                             }
@@ -1047,10 +1047,10 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                       (mode) => mode.name === val
                     );
                     if (selectedMode && this.props.updateConfig) {
-                      const whiteConfigArcana = this.transformedInventory(
+                      const whiteConfigArcana = this.transformedSpellBook(
                         selectedMode.white.arcana
                       );
-                      const blackConfigArcana = this.transformedInventory(
+                      const blackConfigArcana = this.transformedSpellBook(
                         selectedMode.black.arcana
                       );
                       this.props.updateConfig(

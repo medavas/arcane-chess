@@ -10,6 +10,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+
   .book {
     width: 1280px;
     height: 100%;
@@ -19,36 +20,43 @@
     grid-template-columns: 1280px;
     grid-template-rows: 1fr 480px;
     overflow: hidden;
+
     .hud {
       display: flex;
       width: 100%;
       min-height: 100%;
       max-height: 580px;
       background: #11111188;
+
       .left {
         z-index: 30;
         width: 400px;
         height: 100px;
         display: flex;
         flex-direction: column;
+
         a {
           display: inline-block;
           width: auto;
         }
+
         .arcana-helper {
           width: 400px;
           height: 65px;
         }
       }
+
       .center {
         display: flex;
         justify-content: flex-end;
         // align-items: center;
         width: 480px;
       }
+
       .right {
         display: flex;
         flex-direction: column;
+
         .buttons {
           z-index: 30;
           display: flex;
@@ -56,18 +64,21 @@
           width: 400px;
           height: 100%;
         }
+
         .score {
           display: flex;
           justify-content: center;
           align-items: center;
           height: 100%;
           width: 100%;
+
           .multiplier {
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100px;
           }
+
           .points {
             text-align: right;
             display: flex;
@@ -75,6 +86,7 @@
             width: 300px;
             min-width: 20px;
             padding-right: 20px;
+
             .digit-box {
               display: flex;
               width: 16px;
@@ -86,19 +98,23 @@
         }
       }
     }
+
     .content {
       display: grid;
       grid-template-columns: 400px 480px 400px;
       grid-template-rows: 480px;
       background: #11111100;
+
       .nodes {
         width: 100%;
         background: #11111188;
         overflow-y: scroll;
+
         .node {
           .node-title {
             margin: 10px;
           }
+
           .node-description {
             p {
               margin: 10px;
@@ -106,29 +122,37 @@
           }
         }
       }
+
       .chess-tab {
         .tactorius-board {
           height: 480px;
           width: 480px;
+
           .tactorius {
             height: 480px;
             width: 480px;
           }
         }
       }
-      .description-inventory.story-column {
+
+      .description-spellBook.story-column {
         width: 100%;
+
         .story-text {
           display: flex;
           width: 100%;
           overflow-y: scroll;
+
           .node {
             margin: 10px;
+
             .node-title {
               text-align: center;
             }
+
             .node-description {
               padding-bottom: 20px;
+
               p {
                 margin: 10px;
               }
@@ -136,7 +160,8 @@
           }
         }
       }
-      .description-inventory {
+
+      .description-spellBook {
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -144,14 +169,18 @@
         width: 400px;
         height: 480px;
         background: #11111188;
+
         .description {
           width: 400px;
           height: 480px;
+
           .node {
             margin: 20px;
+
             .node-title {
               text-align: center;
             }
+
             .node-description {
               p {
                 margin: 10px;
@@ -159,17 +188,20 @@
             }
           }
         }
-        .inventory {
+
+        .spellBook {
           display: flex;
           justify-content: center;
           align-items: center;
           width: 400px;
           height: 300px;
+
           .time-arcana {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+
             .time {
               display: flex;
               justify-content: center;
@@ -177,10 +209,12 @@
               height: 60px;
               width: 180px;
             }
+
             .arcana-picker-wrapper {
               position: relative;
               height: 240px;
               width: 200px;
+
               .arcana-picker {
                 display: grid;
                 align-items: center;
@@ -189,6 +223,7 @@
                 width: 200px;
                 height: calc(100% - 40px);
                 overflow-y: scroll;
+
                 .arcane {
                   height: 60px;
                   width: 60px;
@@ -209,6 +244,7 @@
     width: 100%;
     overflow-y: auto;
     padding: 0;
+
     .book {
       all: unset;
       display: flex;
@@ -217,6 +253,7 @@
       height: auto;
       margin: 0 auto;
       padding: 0;
+
       .hud {
         all: unset;
         display: flex;
@@ -225,14 +262,17 @@
         width: 100%;
         height: auto;
         overflow: visible;
+
         .left {
           display: flex;
           flex-direction: row;
           justify-content: space-between;
         }
+
         .center {
           width: 360px;
         }
+
         .right {
           all: unset;
           display: flex;
@@ -242,6 +282,7 @@
           width: 100%;
           padding: 10px;
           box-sizing: border-box;
+
           .score {
             display: flex;
             justify-content: center;
@@ -251,6 +292,7 @@
           }
         }
       }
+
       .content {
         all: unset;
         display: flex;
@@ -259,6 +301,7 @@
         width: 100%;
         height: auto;
         overflow: visible;
+
         .nodes {
           all: unset;
           position: relative;
@@ -267,24 +310,29 @@
           padding: 10px;
           background: #11111188;
         }
+
         .chess-tab {
           all: unset;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          .description-inventory {
+
+          .description-spellBook {
             display: flex;
             flex-direction: column-reverse;
             width: 100%;
             height: auto;
             padding: 10px;
-            .inventory {
+
+            .spellBook {
               width: 100%;
               height: auto;
             }
-            .inventory .time-arcana {
+
+            .spellBook .time-arcana {
               all: unset;
+
               .arcana {
                 all: unset;
                 grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
@@ -292,6 +340,7 @@
               }
             }
           }
+
           .tactorius-board {
             min-width: 360px;
             max-width: 360px;

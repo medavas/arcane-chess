@@ -15,10 +15,10 @@ interface ArcanaDetail {
 }
 
 interface ArcanaSelectProps {
-  inventory: ArcanaDetail[];
+  spellBook: ArcanaDetail[];
   color: string;
   isOpen: boolean;
-  updateInventory?: (inventory: ArcanaDetail[]) => void;
+  updateSpellBook?: (spellBook: ArcanaDetail[]) => void;
   updateHover?: (arcane: ArcanaDetail) => void;
   handleToggle?: () => void;
   /** When true, disables hovering and clicking. */
@@ -27,7 +27,7 @@ interface ArcanaSelectProps {
 
 interface ArcanaSelectState {
   hoverId: string;
-  currentInventorySlot: number;
+  currentSpellBookSlot: number;
 }
 
 interface ArcanaMap {
@@ -44,61 +44,61 @@ export default class ArcanaSelect extends React.Component<
     super(props);
     this.state = {
       hoverId: '',
-      currentInventorySlot: -1,
+      currentSpellBookSlot: -1,
     };
   }
 
   updateSlot = (newValue: ArcanaDetail) => {
-    const { inventory, updateInventory, handleToggle, updateHover, readOnly } =
+    const { spellBook, updateSpellBook, handleToggle, updateHover, readOnly } =
       this.props;
-    const { currentInventorySlot } = this.state;
+    const { currentSpellBookSlot } = this.state;
 
     if (readOnly) return;
 
-    const updatedInventory = [...inventory];
-    updatedInventory[currentInventorySlot] = newValue;
+    const updatedSpellBook = [...spellBook];
+    updatedSpellBook[currentSpellBookSlot] = newValue;
 
-    updateInventory?.(updatedInventory);
+    updateSpellBook?.(updatedSpellBook);
     handleToggle?.();
     updateHover?.(newValue);
 
     this.setState({
-      currentInventorySlot: -1,
+      currentSpellBookSlot: -1,
       hoverId: '',
     });
   };
 
   render() {
-    const { inventory, isOpen, updateHover, handleToggle, readOnly } =
+    const { spellBook, isOpen, updateHover, handleToggle, readOnly } =
       this.props;
-    const { hoverId, currentInventorySlot } = this.state;
+    const { hoverId, currentSpellBookSlot } = this.state;
     const cursorInteractive =
       "url('/assets/images/cursors/pointer.svg') 12 4, pointer";
 
     return (
       <div className="arcane-select">
-        <div className="inventory">
-          {inventory.map((arcane, key) => (
+        <div className="spellBook">
+          {spellBook.map((arcane, key) => (
             <div
               key={key}
               className="arcane-wrapper"
               style={
-                key === currentInventorySlot
+                key === currentSpellBookSlot
                   ? {
-                      display: 'inline-block',
-                      borderRadius: '50%',
-                      border: '2px solid white',
-                      width: '60px',
-                      height: '60px',
-                      overflow: 'hidden',
-                    }
+                    display: 'inline-block',
+                    borderRadius: '50%',
+                    border: '2px solid white',
+                    width: '60px',
+                    height: '60px',
+                    overflow: 'hidden',
+                  }
                   : {}
               }
               onMouseEnter={() => {
                 updateHover?.(arcane);
                 this.setState({
                   hoverId: arcane.id,
-                  currentInventorySlot: key,
+                  currentSpellBookSlot: key,
                 });
               }}
               onMouseLeave={() => {
@@ -106,7 +106,7 @@ export default class ArcanaSelect extends React.Component<
                 if (!isOpen) {
                   this.setState({
                     hoverId: '',
-                    currentInventorySlot: -1,
+                    currentSpellBookSlot: -1,
                   });
                 }
               }}
@@ -114,11 +114,11 @@ export default class ArcanaSelect extends React.Component<
                 readOnly
                   ? undefined
                   : () => {
-                      handleToggle?.();
-                      this.setState({
-                        currentInventorySlot: key,
-                      });
-                    }
+                    handleToggle?.();
+                    this.setState({
+                      currentSpellBookSlot: key,
+                    });
+                  }
               }
               aria-disabled={readOnly || undefined}
             >
@@ -152,17 +152,17 @@ export default class ArcanaSelect extends React.Component<
                   readOnly
                     ? undefined
                     : () => {
-                        updateHover?.(arcaneObject);
-                        this.setState({ hoverId: key });
-                      }
+                      updateHover?.(arcaneObject);
+                      this.setState({ hoverId: key });
+                    }
                 }
                 onMouseLeave={
                   readOnly
                     ? undefined
                     : () => {
-                        updateHover?.({} as ArcanaDetail);
-                        this.setState({ hoverId: '' });
-                      }
+                      updateHover?.({} as ArcanaDetail);
+                      this.setState({ hoverId: '' });
+                    }
                 }
                 onClick={
                   readOnly ? undefined : () => this.updateSlot(arcaneObject)

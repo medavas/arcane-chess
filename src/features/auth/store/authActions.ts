@@ -27,35 +27,35 @@ import {
 // Register User
 export const registerUser =
   (userData: object, navigate: (path: string) => void) =>
-  (dispatch: AppDispatch) => {
-    axios
-      .post('/api/users/register', userData)
-      .then((res) => {
-        setLocalStorage({
-          auth: {
-            user: {
-              id: res.data._id,
-              username: res.data.username,
-              campaign: {
-                topScores: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] as number[],
+    (dispatch: AppDispatch) => {
+      axios
+        .post('/api/users/register', userData)
+        .then((res) => {
+          setLocalStorage({
+            auth: {
+              user: {
+                id: res.data._id,
+                username: res.data.username,
+                campaign: {
+                  topScores: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] as number[],
+                },
               },
             },
-          },
-          chapter: 0,
-          config: {},
-          nodeScores: {},
-          inventory: {},
-          nodeId: '',
+            chapter: 0,
+            config: {},
+            nodeScores: {},
+            spellBook: {},
+            nodeId: '',
+          });
+          navigate('/login');
+        })
+        .catch((err) => {
+          dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data,
+          });
         });
-        navigate('/login');
-      })
-      .catch((err) => {
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data,
-        });
-      });
-  };
+    };
 
 export const getGuestUserFromLocalStorage = () => {
   const guestKey = Object.keys(localStorage).find((key) =>

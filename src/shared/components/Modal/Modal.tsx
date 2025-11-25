@@ -144,7 +144,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       chapter: this.props.chapterNumber,
       config: this.state.config,
       nodeScores: {},
-      inventory: {},
+      spellBook: {},
       nodeId: 'lesson-1',
       chapterEnd: false,
     });
@@ -408,11 +408,10 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                           return (
                             <img
                               key={key}
-                              className={`arcane ${
-                                this.state.hoverArcane === `${key}`
+                              className={`arcane ${this.state.hoverArcane === `${key}`
                                   ? 'focus'
                                   : ''
-                              }`}
+                                }`}
                               src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
                               onMouseEnter={() => this.toggleHover(`${key}`)}
                               onMouseLeave={() => this.toggleHover('')}
@@ -440,7 +439,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                         chapter: 0,
                         config: {},
                         nodeScores: {},
-                        inventory: {},
+                        spellBook: {},
                         nodeId: '',
                         chapterEnd: false,
                       });

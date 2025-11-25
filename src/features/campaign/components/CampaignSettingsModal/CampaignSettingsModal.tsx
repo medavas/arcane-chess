@@ -125,7 +125,7 @@ class UnwrappedCampaignSettingsModal extends React.Component<
       chapter: this.props.chapterNumber,
       config: this.state.config,
       nodeScores: {},
-      inventory: {},
+      spellBook: {},
       nodeId: 'lesson-1',
       chapterEnd: false,
     });
@@ -204,8 +204,8 @@ class UnwrappedCampaignSettingsModal extends React.Component<
                     this.state.hoverDifficulty === 'novice'
                       ? '2px solid #3f48cc'
                       : currLS.difficulty === 'novice'
-                      ? '2px solid #3f48cc'
-                      : 'none',
+                        ? '2px solid #3f48cc'
+                        : 'none',
                   borderRadius: '5px',
                   cursor:
                     "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
@@ -257,8 +257,8 @@ class UnwrappedCampaignSettingsModal extends React.Component<
                     this.state.hoverDifficulty === 'intermediate'
                       ? '2px solid #34aa48'
                       : currLS.difficulty === 'intermediate'
-                      ? '2px solid #34aa48'
-                      : 'none',
+                        ? '2px solid #34aa48'
+                        : 'none',
                   borderRadius: '5px',
                   cursor:
                     "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
@@ -310,8 +310,8 @@ class UnwrappedCampaignSettingsModal extends React.Component<
                     this.state.hoverDifficulty === 'advanced'
                       ? '2px solid #d9b800'
                       : currLS.difficulty === 'advanced'
-                      ? '2px solid #d9b800'
-                      : 'none',
+                        ? '2px solid #d9b800'
+                        : 'none',
                   borderRadius: '5px',
                   cursor:
                     "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
@@ -363,8 +363,8 @@ class UnwrappedCampaignSettingsModal extends React.Component<
                     this.state.hoverDifficulty === 'expert'
                       ? '2px solid #c53939'
                       : currLS.difficulty === 'expert'
-                      ? '2px solid #c53939'
-                      : 'none',
+                        ? '2px solid #c53939'
+                        : 'none',
                   borderRadius: '5px',
                   cursor:
                     "url('/assets/images/cursors/pointer.svg') 12 4, pointer",

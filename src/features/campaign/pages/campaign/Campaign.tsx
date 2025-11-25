@@ -151,7 +151,7 @@ export class UnwrappedCampaign extends React.Component<
                 difficulty: 'novice',
                 nodeScores: {},
                 arcana: {},
-                inventory: {},
+                spellBook: {},
                 nodeId: '',
                 chapterEnd: false,
               });
@@ -168,7 +168,7 @@ export class UnwrappedCampaign extends React.Component<
               chapter: 0,
               config: {},
               nodeScores: {},
-              inventory: {},
+              spellBook: {},
               nodeId: '',
               chapterEnd: false,
             });

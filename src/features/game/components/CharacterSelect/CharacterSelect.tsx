@@ -17,7 +17,7 @@ interface CharacterSelectState {
 
 interface CharacterType {
   name: string;
-  inventory: ArcanaDetail[];
+  spellBook: ArcanaDetail[];
   setup: string;
   imagePath: string;
   color: string;
