@@ -569,6 +569,46 @@ export function MakeMove(move, moveType = '') {
 
     GameBoard.fiftyMove = 0;
     if (move & MFLAGPS) cfg['modsSUR'] -= 1;
+
+    // Hermit AOE: Clear AOE if Hermit is captured
+    const isHermitCapture = (targetPieceAtTo === PIECES.wH || targetPieceAtTo === PIECES.bH);
+    if (isHermitCapture) {
+      const capturedSide = PieceCol[targetPieceAtTo];
+      const capCfg = capturedSide === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+      const hasHermitToken = (capCfg[10] & 1) !== 0; // toknHER
+      const hasHemlockToken = (capCfg[10] & 2) !== 0; // toknHEM
+      const isHermit = hasHermitToken && !hasHemlockToken;
+      const isNomad = hasHermitToken && hasHemlockToken;
+
+      if (isHermit || isNomad) {
+        const arcCfg = capturedSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+        const hasAreaQ = arcCfg.areaQ > 0;
+        const hasAreaT = arcCfg.areaT > 0;
+
+        // Determine which royalty type to use
+        let royaltyType;
+        if (hasAreaQ && hasAreaT) {
+          royaltyType = 'V'; // Vanguard (both Q and T)
+        } else if (hasAreaQ) {
+          royaltyType = 'Q'; // Queen
+        } else if (hasAreaT) {
+          royaltyType = 'T'; // Templar
+        } else {
+          royaltyType = 'M'; // Mystic (default)
+        }
+
+        const royaltyMap = GameBoard[`royalty${royaltyType}`];
+        const hermitPattern = KiDir; // King's move pattern
+
+        // Remove AOE from captured position
+        for (let i = 0; i < hermitPattern.length; i++) {
+          const oldSq = to + hermitPattern[i];
+          if (oldSq >= 0 && oldSq < 120 && royaltyMap[oldSq] > 0) {
+            royaltyMap[oldSq] = 0;
+          }
+        }
+      }
+    }
   }
 
   if (
@@ -623,7 +663,7 @@ export function MakeMove(move, moveType = '') {
         for (let i = 0; i < hermitPattern.length; i++) {
           const newSq = to + hermitPattern[i];
           if (newSq >= 0 && newSq < 120) {
-            royaltyMap[newSq] = 9;
+            royaltyMap[newSq] = 999;
           }
         }
       }
@@ -776,6 +816,16 @@ export function MakeMove(move, moveType = '') {
     } else if (promoEpsilon > 0) {
       AddPiece(to, promoEpsilon, true);
 
+      // Grant Hermit/Hemlock tokens
+      if (captured === 13) {
+        if (side === COLOURS.WHITE) GameBoard.whiteArcane[10] |= 1;
+        else GameBoard.blackArcane[10] |= 1;
+      }
+      if (captured === 14) {
+        if (side === COLOURS.WHITE) GameBoard.whiteArcane[10] |= 2;
+        else GameBoard.blackArcane[10] |= 2;
+      }
+
       // Instant AoE for summoned Hermit/Nomad
       if (promoEpsilon === PIECES.wH || promoEpsilon === PIECES.bH) {
         const cfg =
@@ -801,7 +851,7 @@ export function MakeMove(move, moveType = '') {
           for (let i = 0; i < hermitPattern.length; i++) {
             const newSq = to + hermitPattern[i];
             if (newSq >= 0 && newSq < 120) {
-              royaltyMap[newSq] = 9;
+              royaltyMap[newSq] = 999;
             }
           }
         }
@@ -1201,7 +1251,7 @@ export function TakeMove(wasDyadMove = false) {
         for (let i = 0; i < hermitPattern.length; i++) {
           const newSq = from + hermitPattern[i];
           if (newSq >= 0 && newSq < 120) {
-            royaltyMap[newSq] = 9;
+            royaltyMap[newSq] = 999;
           }
         }
       }

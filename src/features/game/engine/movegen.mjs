@@ -168,8 +168,9 @@ export function AddCaptureMove(move, consume = false, capturesOnly = false) {
     const hasHermit = (capArcane[10] & 1) !== 0;
     const hasHemlock = (capArcane[10] & 2) !== 0;
 
-    // If it has Hermit token but NOT Hemlock token, it's a pure Hermit and cannot be captured
-    if (hasHermit && !hasHemlock) {
+    // If it has Hermit token, it cannot be captured UNLESS attacker has 5D Sword
+    // OR if it also has Hemlock token (Nomad), it IS capturable
+    if (hasHermit && !hasHemlock && !has5thDimensionSword) {
       return;
     }
   }
@@ -2683,17 +2684,16 @@ export function GenerateMoves(
           // 2. Hermit Pattern (HerShftDir)
           // Active for: Hermit OR Nomad
           if (wantHermit || wantNomad) {
-            // Hermit is non-capturable (quiet only), unless Nomad with 5D Sword
-            const cap = wantNomad ? canCap5D : false;
-            runShift(6, (i) => HerShftDir[i], cap);
+            // Hermit is non-capturable (quiet only)
+            runShift(6, (i) => HerShftDir[i], false);
           }
 
           // 3. Hemlock Pattern (HopA, HopB)
           // Active for: Hemlock OR Nomad
           if (wantHemlock || wantNomad) {
             // If Nomad, restricted to 5D sword. Else normal capture.
-            const cap = wantNomad ? canCap5D : true;
-            runShift(12, (i) => HemlockHopA[i], cap);
+            // Update: Hermit/Nomad cannot capture
+            runShift(12, (i) => HemlockHopA[i], false);
             // uncomment below for hemlock ext
             // runShift(4, (i) => HemlockHopB[i], cap);
           }

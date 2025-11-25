@@ -139,6 +139,20 @@
     "type": "active",
     "imagePath": "/sumnX"
   },
+  "sumnO": {
+    "id": "sumnO",
+    "name": "Summon Hermit",
+    "description": "Summon an Exile to an empty square. An Exile is a neutral piece that cannot be moved or captured.",
+    "type": "active",
+    "imagePath": "/sumnX"
+  },
+  "sumnY": {
+    "id": "sumnY",
+    "name": "Summon Hemlock",
+    "description": "Summon an Exile to an empty square. An Exile is a neutral piece that cannot be moved or captured.",
+    "type": "active",
+    "imagePath": "/sumnX"
+  },
   "sumnRQ": {
     "id": "sumnRQ",
     "name": "Royalty Queen",
