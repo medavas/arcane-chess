@@ -1083,7 +1083,7 @@ export function MakeMove(move, moveType = '') {
       GameBoard.pList[PCEINDEX(Kings[GameBoard.side], 0)],
       GameBoard.side ^ 1
     ) &&
-    (GameBoard.preset === 'DELIVERANCE' || GameBoard.suspend > 0)
+    (GameBoard.preset === 'DELIVERANCE')
   ) {
     TakeMove();
     return BOOL.FALSE;
