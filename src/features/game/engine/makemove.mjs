@@ -231,8 +231,8 @@ function rebuildRoyaltyMaps() {
   // Rebuild from tracker
   for (const id in GameBoard.hermitTracker) {
     const { type, squares, value } = GameBoard.hermitTracker[id];
-    // Skip E and F as they are managed manually
-    if (type === 'E' || type === 'F') continue;
+    // Skip E, F, and N as they are managed manually
+    if (type === 'E' || type === 'F' || type === 'N') continue;
 
     const map = GameBoard[`royalty${type}`];
     if (map) {
@@ -602,8 +602,8 @@ export function MakeMove(move, moveType = '') {
         const entry = GameBoard.hermitTracker[trackerKey];
 
         if (entry) {
-          // Manually clear E and F contributions
-          if (entry.type === 'E' || entry.type === 'F') {
+          // Manually clear E, F, and N contributions
+          if (entry.type === 'E' || entry.type === 'F' || entry.type === 'N') {
             const map = GameBoard[`royalty${entry.type}`];
             if (map) {
               for (const sq of entry.squares) {
@@ -669,12 +669,14 @@ export function MakeMove(move, moveType = '') {
         const hasAreaT = arcCfg.areaT > 0;
         const hasAreaE = arcCfg.areaE > 0;
         const hasAreaF = arcCfg.areaF > 0;
+        const hasAreaN = arcCfg.areaN > 0;
 
         let activeCount = 0;
         if (hasAreaQ) activeCount++;
         if (hasAreaT) activeCount++;
         if (hasAreaE) activeCount++;
         if (hasAreaF) activeCount++;
+        if (hasAreaN) activeCount++;
 
         // Determine which royalty type to use
         let royaltyType = 'M';
@@ -688,6 +690,7 @@ export function MakeMove(move, moveType = '') {
           else if (hasAreaT) royaltyType = 'T';
           else if (hasAreaE) royaltyType = 'E';
           else if (hasAreaF) royaltyType = 'F';
+          else if (hasAreaN) royaltyType = 'N';
         }
 
         const hermitPattern = KiDir;  // User requested King move pattern for AoE
@@ -708,8 +711,8 @@ export function MakeMove(move, moveType = '') {
         // Handle old tracker entry
         const existingEntry = GameBoard.hermitTracker[oldTrackerKey];
         if (existingEntry) {
-          // Manually clear old E and F contributions
-          if (existingEntry.type === 'E' || existingEntry.type === 'F') {
+          // Manually clear old E, F, and N contributions
+          if (existingEntry.type === 'E' || existingEntry.type === 'F' || existingEntry.type === 'N') {
             const map = GameBoard[`royalty${existingEntry.type}`];
             if (map) {
               for (const sq of existingEntry.squares) {
@@ -727,8 +730,8 @@ export function MakeMove(move, moveType = '') {
           value: 100
         };
 
-        // Manually apply new E and F contributions
-        if (royaltyType === 'E' || royaltyType === 'F') {
+        // Manually apply new E, F, and N contributions
+        if (royaltyType === 'E' || royaltyType === 'F' || royaltyType === 'N') {
           const map = GameBoard[`royalty${royaltyType}`];
           if (map) {
             for (const sq of newSquares) {
@@ -911,12 +914,14 @@ export function MakeMove(move, moveType = '') {
           const hasAreaT = arcCfg.areaT > 0;
           const hasAreaE = arcCfg.areaE > 0;
           const hasAreaF = arcCfg.areaF > 0;
+          const hasAreaN = arcCfg.areaN > 0;
 
           let activeCount = 0;
           if (hasAreaQ) activeCount++;
           if (hasAreaT) activeCount++;
           if (hasAreaE) activeCount++;
           if (hasAreaF) activeCount++;
+          if (hasAreaN) activeCount++;
 
           // Determine which royalty type to use
           let royaltyType = 'M';
@@ -930,6 +935,7 @@ export function MakeMove(move, moveType = '') {
             else if (hasAreaT) royaltyType = 'T';
             else if (hasAreaE) royaltyType = 'E';
             else if (hasAreaF) royaltyType = 'F';
+            else if (hasAreaN) royaltyType = 'N';
           }
 
           const hermitPattern = KiDir;
@@ -950,8 +956,8 @@ export function MakeMove(move, moveType = '') {
             value: 100
           };
 
-          // Manually apply E and F contributions
-          if (royaltyType === 'E' || royaltyType === 'F') {
+          // Manually apply E, F, and N contributions
+          if (royaltyType === 'E' || royaltyType === 'F' || royaltyType === 'N') {
             const map = GameBoard[`royalty${royaltyType}`];
             if (map) {
               for (const sq of newSquares) {
