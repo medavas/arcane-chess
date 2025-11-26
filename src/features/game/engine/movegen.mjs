@@ -160,21 +160,22 @@ export function AddCaptureMove(move, consume = false, capturesOnly = false) {
   )
     return;
 
+  // TODO / TBD: if you want hermit or hemlock to not be capturable
   // fill this in for canceling /returning on the move if the captured piece is only hermit variant
-  if (capturedPiece === PIECES.wH || capturedPiece === PIECES.bH) {
-    const capSide = PieceCol[capturedPiece];
-    const capArcane =
-      capSide === COLOURS.WHITE
-        ? GameBoard.whiteArcane
-        : GameBoard.blackArcane;
-    const hasHermit = (capArcane[10] & 1) !== 0;
-    const hasHemlock = (capArcane[10] & 2) !== 0;
+  // if (capturedPiece === PIECES.wH || capturedPiece === PIECES.bH) {
+  //   const capSide = PieceCol[capturedPiece];
+  //   const capArcane =
+  //     capSide === COLOURS.WHITE
+  //       ? GameBoard.whiteArcane
+  //       : GameBoard.blackArcane;
+  //   const hasHermit = (capArcane[10] & 1) !== 0;
+  //   const hasHemlock = (capArcane[10] & 2) !== 0;
 
-    // If it has Hemlock token, it cannot be captured
-    if ((hasHermit || hasHemlock) && !has5thDimensionSword) {
-      return;
-    }
-  }
+  //   // If it has Hemlock token, it cannot be captured
+  //   if ((hasHermit || hasHemlock) && !has5thDimensionSword) {
+  //     return;
+  //   }
+  // }
 
   if ((capturesOnly && !consume) || !capturesOnly) {
     if (move & MFLAGSWAP) {
