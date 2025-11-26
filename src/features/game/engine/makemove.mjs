@@ -209,6 +209,35 @@ export function MovePiece(from, to) {
   }
 }
 
+function getPieceIndex(sq, pce) {
+  for (let index = 0; index < GameBoard.pceNum[pce]; index++) {
+    if (GameBoard.pList[PCEINDEX(pce, index)] === sq) {
+      return index;
+    }
+  }
+  return -1;
+}
+
+function rebuildRoyaltyMaps() {
+  // Clear existing maps
+  for (const k in GameBoard.royaltyQ) GameBoard.royaltyQ[k] = 0;
+  for (const k in GameBoard.royaltyT) GameBoard.royaltyT[k] = 0;
+  for (const k in GameBoard.royaltyM) GameBoard.royaltyM[k] = 0;
+  for (const k in GameBoard.royaltyV) GameBoard.royaltyV[k] = 0;
+  // Note: royaltyE and royaltyF are not managed by hermitTracker (Ensnarement/Frost)
+
+  // Rebuild from tracker
+  for (const id in GameBoard.hermitTracker) {
+    const { type, squares, value } = GameBoard.hermitTracker[id];
+    const map = GameBoard[`royalty${type}`];
+    if (map) {
+      for (const sq of squares) {
+        map[sq] = (map[sq] || 0) + value;
+      }
+    }
+  }
+}
+
 const getSumnCaptureForRoyalty = (move, captured) => {
   return (move & MFLAGSUMN) !== 0 ? captured : PIECES.EMPTY;
 };
@@ -268,41 +297,28 @@ function shiftKeyFromMove(move, moverPiece) {
 }
 
 function decAllRoyaltyMaps() {
-  const q = GameBoard.royaltyQ;
-  const t = GameBoard.royaltyT;
-  const m = GameBoard.royaltyM;
-  const v = GameBoard.royaltyV;
+  // Decrement tracker values
+  for (const id in GameBoard.hermitTracker) {
+    const tracker = GameBoard.hermitTracker[id];
+    tracker.value = Math.max(0, tracker.value - 1);
+  }
+  rebuildRoyaltyMaps();
+
+  // Handle non-tracker maps (E and F)
   const e = GameBoard.royaltyE;
   const f = GameBoard.royaltyF;
-  for (const k in q) q[k] = q[k] === undefined ? 0 : q[k] - 1;
-  for (const k in t) t[k] = t[k] === undefined ? 0 : t[k] - 1;
-  for (const k in m) m[k] = m[k] === undefined ? 0 : m[k] - 1;
-  for (const k in v) v[k] = v[k] === undefined ? 0 : v[k] - 1;
-  for (const k in e) e[k] = e[k] === undefined ? 0 : e[k] - 1;
-  for (const k in f) f[k] = f[k] === undefined ? 0 : f[k] - 1;
+  for (const k in e) e[k] = e[k] === undefined || e[k] <= 0 ? 0 : e[k] - 1;
+  for (const k in f) f[k] = f[k] === undefined || f[k] <= 0 ? 0 : f[k] - 1;
 }
 
 function snapshotRoyaltyMapsTo(h) {
-  const hQ = h.royaltyQ || (h.royaltyQ = {});
-  const hT = h.royaltyT || (h.royaltyT = {});
-  const hM = h.royaltyM || (h.royaltyM = {});
-  const hV = h.royaltyV || (h.royaltyV = {});
+  h.hermitTracker = JSON.parse(JSON.stringify(GameBoard.hermitTracker));
+
   const hE = h.royaltyE || (h.royaltyE = {});
   const hF = h.royaltyF || (h.royaltyF = {});
-  const q = GameBoard.royaltyQ;
-  const t = GameBoard.royaltyT;
-  const m = GameBoard.royaltyM;
-  const v = GameBoard.royaltyV;
   const e = GameBoard.royaltyE;
   const f = GameBoard.royaltyF;
-  for (const k in hQ) delete hQ[k];
-  for (const k in q) hQ[k] = q[k];
-  for (const k in hT) delete hT[k];
-  for (const k in t) hT[k] = t[k];
-  for (const k in hM) delete hM[k];
-  for (const k in m) hM[k] = m[k];
-  for (const k in hV) delete hV[k];
-  for (const k in v) hV[k] = v[k];
+
   for (const k in hE) delete hE[k];
   for (const k in e) hE[k] = e[k];
   for (const k in hF) delete hF[k];
@@ -310,28 +326,16 @@ function snapshotRoyaltyMapsTo(h) {
 }
 
 function restoreRoyaltyMapsFrom(h) {
-  const q = GameBoard.royaltyQ;
-  const t = GameBoard.royaltyT;
-  const m = GameBoard.royaltyM;
-  const v = GameBoard.royaltyV;
+  GameBoard.hermitTracker = JSON.parse(JSON.stringify(h.hermitTracker || {}));
+  rebuildRoyaltyMaps();
+
   const e = GameBoard.royaltyE;
   const f = GameBoard.royaltyF;
-  const hQ = h.royaltyQ || {};
-  const hT = h.royaltyT || {};
-  const hM = h.royaltyM || {};
-  const hV = h.royaltyV || {};
   const hE = h.royaltyE || {};
   const hF = h.royaltyF || {};
-  for (const k in q) delete q[k];
-  for (const k in t) delete t[k];
-  for (const k in m) delete m[k];
-  for (const k in v) delete v[k];
+
   for (const k in e) delete e[k];
   for (const k in f) delete f[k];
-  for (const k in hQ) q[k] = hQ[k];
-  for (const k in hT) t[k] = hT[k];
-  for (const k in hM) m[k] = hM[k];
-  for (const k in hV) v[k] = hV[k];
   for (const k in hE) e[k] = hE[k];
   for (const k in hF) f[k] = hF[k];
 }
@@ -598,11 +602,28 @@ export function MakeMove(move, moveType = '') {
         const hermitPattern = KiDir; // King's move pattern
 
         // Remove AOE from captured position
-        for (let i = 0; i < hermitPattern.length; i++) {
-          const oldSq = to + hermitPattern[i];
-          if (oldSq >= 0 && oldSq < 120 && royaltyMap[oldSq] > 0) {
-            royaltyMap[oldSq] = 0;
-          }
+        // We need to identify which Hermit this was.
+        // Since it's captured, we can't look it up in the piece list anymore (it's gone).
+        // However, we can infer it was the piece at 'to'.
+        // But wait, we need a unique ID for the tracker.
+        // Using 'piece index' (e.g., wH_0, wH_1) is standard.
+        // We need to know the index of the captured piece.
+        // ClearPiece was called above, so the piece is removed from pList.
+        // We should have captured the index BEFORE ClearPiece?
+        // Actually, ClearPiece manages pList shifts.
+        // This is tricky. If we use pList index as ID, shifting breaks it.
+        // We should use a unique ID that persists.
+        // But the engine doesn't have unique IDs for pieces.
+        // Alternative: The tracker keys can be based on the SQUARE they are on?
+        // "Hermit at square X".
+        // If a Hermit moves from A to B, we update "Hermit at A" to "Hermit at B".
+        // If a Hermit is captured at B, we remove "Hermit at B".
+        // This handles multiple Hermits correctly as long as two Hermits can't be on the same square (they can't).
+
+        const trackerKey = `hermit_${to}`;
+        if (GameBoard.hermitTracker[trackerKey]) {
+          delete GameBoard.hermitTracker[trackerKey];
+          rebuildRoyaltyMaps();
         }
       }
     }
@@ -672,21 +693,47 @@ export function MakeMove(move, moveType = '') {
         const royaltyMap = GameBoard[`royalty${royaltyType}`];
         const hermitPattern = KiDir;  // User requested King move pattern for AoE
 
-        // Remove AoE from old position (with boundary checking)
-        for (let i = 0; i < hermitPattern.length; i++) {
-          const oldSq = from + hermitPattern[i];
-          if (oldSq >= 0 && oldSq < 120 && royaltyMap[oldSq] > 0) {
-            royaltyMap[oldSq] = 0;
-          }
-        }
+        // Update tracker: Move from 'from' to 'to'
+        const oldTrackerKey = `hermit_${from}`;
+        const newTrackerKey = `hermit_${to}`;
 
-        // Apply AoE to new position (with boundary checking)
+        // Calculate new squares
+        const newSquares = [];
         for (let i = 0; i < hermitPattern.length; i++) {
           const newSq = to + hermitPattern[i];
           if (newSq >= 0 && newSq < 120) {
-            royaltyMap[newSq] = 999;
+            newSquares.push(newSq);
           }
         }
+
+        // If we have an existing tracker entry, move it. If not (e.g. just summoned or first move), create it.
+        // Wait, if it was just summoned, it wouldn't be in the tracker yet?
+        // Actually, if it's a normal move, it should be there.
+        // But we need to handle the case where it might not be (defensive).
+
+        const existingEntry = GameBoard.hermitTracker[oldTrackerKey];
+        const value = existingEntry ? existingEntry.value : 100; // Default to 100 if fresh
+
+        // Delete old, add new
+        if (GameBoard.hermitTracker[oldTrackerKey]) delete GameBoard.hermitTracker[oldTrackerKey];
+
+        GameBoard.hermitTracker[newTrackerKey] = {
+          type: royaltyType,
+          squares: newSquares,
+          value: 100 // Reset to 100 on move? Or keep decayed value?
+          // User said: "when it times down after a few moves... so that when two hermit overlap and one moves away it doesnt fully revert"
+          // And "when its 100 + 100 - a few turns go by its 195 then that hermit moves its minus 95"
+          // This implies the moving hermit takes its CURRENT value with it?
+          // Or does it refresh to 100?
+          // "keep track of the current value that a certain royalty square is at"
+          // Usually moving a unit refreshes its aura.
+          // Let's assume refresh to 100 for now as that's standard for "casting an aura".
+          // If the user wants the aura to STAY decayed even after moving, that's very specific.
+          // "GameBoard still remembers that an aura is being cast to that square"
+          // I will reset to 100 on move.
+        };
+
+        rebuildRoyaltyMaps();
       }
     }
   }
@@ -859,12 +906,22 @@ export function MakeMove(move, moveType = '') {
           const royaltyMap = GameBoard[`royalty${royaltyType}`];
           const hermitPattern = KiDir;
 
+          // Create tracker entry for summoned Hermit
+          const trackerKey = `hermit_${to}`;
+          const newSquares = [];
           for (let i = 0; i < hermitPattern.length; i++) {
             const newSq = to + hermitPattern[i];
             if (newSq >= 0 && newSq < 120) {
-              royaltyMap[newSq] = 999;
+              newSquares.push(newSq);
             }
           }
+
+          GameBoard.hermitTracker[trackerKey] = {
+            type: royaltyType,
+            squares: newSquares,
+            value: 100
+          };
+          rebuildRoyaltyMaps();
         }
       }
     }
@@ -1221,52 +1278,8 @@ export function TakeMove(wasDyadMove = false) {
     MovePiece(to, from);
 
     // Hermit AoE: Restore AoE when undoing move
-    const movedPiece = GameBoard.pieces[from];
-    const isHermitPiece = (movedPiece === PIECES.wH || movedPiece === PIECES.bH);
-    if (isHermitPiece) {
-      const cfg = GameBoard.side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
-      const hasHermitToken = (cfg[10] & 1) !== 0;  // toknHER
-      const hasHemlockToken = (cfg[10] & 2) !== 0;  // toknHEM
-      const isHermit = hasHermitToken && !hasHemlockToken;
-      const isNomad = hasHermitToken && hasHemlockToken;
-
-      if (isHermit || isNomad) {
-        const arcCfg = GameBoard.side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
-        const hasAreaQ = arcCfg.areaQ > 0;
-        const hasAreaT = arcCfg.areaT > 0;
-
-        // Determine which royalty type to use
-        let royaltyType;
-        if (hasAreaQ && hasAreaT) {
-          royaltyType = 'V';  // Vanguard (both Q and T)
-        } else if (hasAreaQ) {
-          royaltyType = 'Q';  // Queen
-        } else if (hasAreaT) {
-          royaltyType = 'T';  // Templar
-        } else {
-          royaltyType = 'M';  // Mystic (default)
-        }
-
-        const royaltyMap = GameBoard[`royalty${royaltyType}`];
-        const hermitPattern = KiDir;
-
-        // Remove AoE from 'to' position (where it was)
-        for (let i = 0; i < hermitPattern.length; i++) {
-          const oldSq = to + hermitPattern[i];
-          if (oldSq >= 0 && oldSq < 120 && royaltyMap[oldSq] > 0) {
-            royaltyMap[oldSq] = 0;
-          }
-        }
-
-        // Restore AoE to 'from' position (where it should be)
-        for (let i = 0; i < hermitPattern.length; i++) {
-          const newSq = from + hermitPattern[i];
-          if (newSq >= 0 && newSq < 120) {
-            royaltyMap[newSq] = 999;
-          }
-        }
-      }
-    }
+    // Logic is handled by restoreRoyaltyMapsFrom(h) which restores the tracker state.
+    // No manual intervention needed here.
   }
 
   if (

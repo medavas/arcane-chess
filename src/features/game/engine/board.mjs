@@ -157,6 +157,7 @@ GameBoard.royaltyM = {};
 GameBoard.royaltyV = {};
 GameBoard.royaltyE = {};
 GameBoard.royaltyF = {};
+GameBoard.hermitTracker = {};
 
 GameBoard.preset;
 
@@ -436,6 +437,7 @@ export function ResetBoard() {
   // GameBoard.royaltyM = {};
   // GameBoard.royaltyV = {};
   // GameBoard.royaltyE = {};
+  GameBoard.hermitTracker = {};
 
   // GameBoard.suspend = 0; // += not =
   // GameBoard.invisibility = [0, 0];
