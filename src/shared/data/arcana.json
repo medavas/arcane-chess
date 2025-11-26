@@ -345,7 +345,7 @@
   "offrO": {
     "id": "offrO",
     "name": "Wandering Gambit",
-    "description": "Offer a friendly Q, T, or M to gain a Herring summon, and Jester moveset",
+    "description": "Offer a friendly Q, T, or M to gain a Herring summon, and Hermit token",
     "type": "active",
     "imagePath": "/offrO"
   },
@@ -411,13 +411,6 @@
     "description": "Spectre and Wraith gain the other's moveset, no capturing.",
     "type": "passive",
     "imagePath": "/shftG"
-  },
-  "shftH": {
-    "id": "shftH",
-    "name": "Jester",
-    "description": "Move a Herring or Hermit in the rotated hex pattern, no capturing.",
-    "type": "passive",
-    "imagePath": "/shftH"
   },
   "shftK": {
     "id": "shftK",

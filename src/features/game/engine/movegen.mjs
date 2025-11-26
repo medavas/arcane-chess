@@ -2679,32 +2679,80 @@ export function GenerateMoves(
         if (wantS) runShift(12, (i) => WrDir[i]);
         if (wantW) runShift(12, (i) => SpDir[i]);
 
-        // H-Unit Logic: Token-driven shift generation
+        // H-Unit Logic: Token-driven movement generation
         if (isHUnit) {
           const canCap5D = has5thDimensionSword;
+
+          // Helper function for H-Unit natural movement (no shift flag)
+          const runNaturalMovement = (dirCount, getDir) => {
+            for (let i = 0; i < dirCount; i++) {
+              const targetSq = sq + getDir(i);
+              if (SQOFFBOARD(targetSq) === BOOL.TRUE) continue;
+
+              const targetPiece = pieces[targetSq];
+
+              const herringAllowed =
+                !herrings.length ||
+                (herrings.length && _.includes(herrings, targetSq));
+
+              // QUIET moves only (H-Units cannot capture without 5D Sword)
+              if (targetPiece === PIECES.EMPTY) {
+                if (canQuiet && herringAllowed) {
+                  AddQuietMove(
+                    MOVE(
+                      sq,
+                      targetSq,
+                      PIECES.EMPTY,
+                      PIECES.EMPTY,
+                      0  // NO SHIFT FLAG - this is natural movement
+                    ),
+                    capturesOnly
+                  );
+                }
+              }
+              // CAPTURE with 5D Sword only
+              else if (
+                has5thDimensionSword &&
+                PieceCol[targetPiece] !== side &&
+                herringAllowed
+              ) {
+                AddCaptureMove(
+                  MOVE(
+                    sq,
+                    targetSq,
+                    targetPiece,
+                    PIECES.EMPTY,
+                    0  // NO SHIFT FLAG - this is natural movement
+                  ),
+                  false,
+                  capturesOnly
+                );
+              }
+            }
+          };
 
           // 1. Herring Pattern (HrDir)
           // Handled by standard loop (PceDir) for Pure Herring.
           // For Nomad (who has tokens), standard loop is disabled, so we add it here.
+          // This is NATURAL movement for Nomad - does NOT require shift spells
           if (wantNomad) {
-            runShift(6, (i) => HrDir[i], canCap5D);
+            runNaturalMovement(6, (i) => HrDir[i]);
           }
 
           // 2. Hermit Pattern (HerShftDir)
           // Active for: Hermit OR Nomad
+          // This is the Hermit's NATURAL movement pattern - does NOT require shift spells
           if (wantHermit || wantNomad) {
-            // Hermit is non-capturable (quiet only)
-            runShift(6, (i) => HerShftDir[i], has5thDimensionSword);
+            runNaturalMovement(6, (i) => HerShftDir[i]);
           }
 
-          // 3. Hemlock Pattern (HopA, HopB)
+          // 3. Hemlock Pattern (HemlockHopA)
           // Active for: Hemlock OR Nomad
+          // This is the Hemlock's NATURAL movement pattern - does NOT require shift spells
           if (wantHemlock || wantNomad) {
-            // If Nomad, restricted to 5D sword. Else normal capture.
-            // Update: Hermit/Nomad cannot capture
-            runShift(12, (i) => HemlockHopA[i], has5thDimensionSword);
-            // uncomment below for hemlock ext
-            // runShift(4, (i) => HemlockHopB[i], cap);
+            runNaturalMovement(12, (i) => HemlockHopA[i]);
+            // uncomment below for hemlock ext (HemlockHopB pattern)
+            // runNaturalMovement(4, (i) => HemlockHopB[i]);
           }
         }
 
@@ -2767,8 +2815,7 @@ export function GenerateMoves(
         pieceHasSpecific = true;
       if ((cs & 32) !== 0 && (mover === PIECES.wW || mover === PIECES.bW))
         pieceHasSpecific = true;
-      if ((cs & 64) !== 0 && (mover === PIECES.wH || mover === PIECES.bH))
-        pieceHasSpecific = true;
+      // shftH (bit 64) removed - Hermit no longer has a specific shift spell
       if ((cs & 512) !== 0 && (mover === PIECES.wK || mover === PIECES.bK))
         pieceHasSpecific = true;
 
@@ -2777,7 +2824,8 @@ export function GenerateMoves(
 
       const canQuiet = !capturesOnly && !herrings.length;
 
-      // BLOCK ECLIPSE ADJACENT-HOP FOR UNICORN/ZEBRA
+      // BLOCK ECLIPSE ADJACENT-HOP FOR PIECES WITH OVERLAPPING NATURAL MOVEMENT
+      // Unicorn/Zebra/Wraith/Exile: natural knight-like jumps overlap with Eclipse hops
       const isUnicornOrZebraOrWraithOrExile =
         mover === PIECES.wU ||
         mover === PIECES.bU ||
