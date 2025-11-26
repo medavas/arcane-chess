@@ -685,20 +685,6 @@
     "type": "passive",
     "imagePath": "/gainALL"
   },
-  "areaF": {
-    "id": "areaF",
-    "name": "Hiding Lantern",
-    "description": "",
-    "type": "inherent",
-    "imagePath": "/areaF"
-  },
-  "areaM": {
-    "id": "areaM",
-    "name": "Mystical Battlecry",
-    "description": "",
-    "type": "inherent",
-    "imagePath": "/areaM"
-  },
   "areaT": {
     "id": "areaT",
     "name": "Crusader's Battlecry",
@@ -712,6 +698,20 @@
     "description": "",
     "type": "inherent",
     "imagePath": "/areaQ"
+  },
+  "areaE": {
+    "id": "areaE",
+    "name": "Ice Howl",
+    "description": "Hermit aura casts Entanglement.",
+    "type": "inherent",
+    "imagePath": "/areaE"
+  },
+  "areaF": {
+    "id": "areaF",
+    "name": "Hiding Lantern",
+    "description": "Hermit aura casts Fog of War.",
+    "type": "inherent",
+    "imagePath": "/areaF"
   },
   "toknHER": {
     "id": "toknHER",

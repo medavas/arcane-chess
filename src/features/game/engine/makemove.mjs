@@ -225,10 +225,15 @@ function rebuildRoyaltyMaps() {
   for (const k in GameBoard.royaltyM) GameBoard.royaltyM[k] = 0;
   for (const k in GameBoard.royaltyV) GameBoard.royaltyV[k] = 0;
   // Note: royaltyE and royaltyF are not managed by hermitTracker (Ensnarement/Frost)
+  // EXCEPT for Hermit contributions which are additive/subtractive, but we don't rebuild them here
+  // because we can't easily distinguish Hermit contributions from others if we wipe them.
 
   // Rebuild from tracker
   for (const id in GameBoard.hermitTracker) {
     const { type, squares, value } = GameBoard.hermitTracker[id];
+    // Skip E and F as they are managed manually
+    if (type === 'E' || type === 'F') continue;
+
     const map = GameBoard[`royalty${type}`];
     if (map) {
       for (const sq of squares) {
@@ -582,46 +587,21 @@ export function MakeMove(move, moveType = '') {
       const isNomad = hasHermitToken && hasHemlockToken;
 
       if (isHermit || isNomad) {
-        const arcCfg = capturedSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
-        const hasAreaQ = arcCfg.areaQ > 0;
-        const hasAreaT = arcCfg.areaT > 0;
-
-        // Determine which royalty type to use
-        let royaltyType;
-        if (hasAreaQ && hasAreaT) {
-          royaltyType = 'V'; // Vanguard (both Q and T)
-        } else if (hasAreaQ) {
-          royaltyType = 'Q'; // Queen
-        } else if (hasAreaT) {
-          royaltyType = 'T'; // Templar
-        } else {
-          royaltyType = 'M'; // Mystic (default)
-        }
-
-        const royaltyMap = GameBoard[`royalty${royaltyType}`];
-        const hermitPattern = KiDir; // King's move pattern
-
         // Remove AOE from captured position
-        // We need to identify which Hermit this was.
-        // Since it's captured, we can't look it up in the piece list anymore (it's gone).
-        // However, we can infer it was the piece at 'to'.
-        // But wait, we need a unique ID for the tracker.
-        // Using 'piece index' (e.g., wH_0, wH_1) is standard.
-        // We need to know the index of the captured piece.
-        // ClearPiece was called above, so the piece is removed from pList.
-        // We should have captured the index BEFORE ClearPiece?
-        // Actually, ClearPiece manages pList shifts.
-        // This is tricky. If we use pList index as ID, shifting breaks it.
-        // We should use a unique ID that persists.
-        // But the engine doesn't have unique IDs for pieces.
-        // Alternative: The tracker keys can be based on the SQUARE they are on?
-        // "Hermit at square X".
-        // If a Hermit moves from A to B, we update "Hermit at A" to "Hermit at B".
-        // If a Hermit is captured at B, we remove "Hermit at B".
-        // This handles multiple Hermits correctly as long as two Hermits can't be on the same square (they can't).
-
         const trackerKey = `hermit_${to}`;
-        if (GameBoard.hermitTracker[trackerKey]) {
+        const entry = GameBoard.hermitTracker[trackerKey];
+
+        if (entry) {
+          // Manually clear E and F contributions
+          if (entry.type === 'E' || entry.type === 'F') {
+            const map = GameBoard[`royalty${entry.type}`];
+            if (map) {
+              for (const sq of entry.squares) {
+                map[sq] = Math.max(0, (map[sq] || 0) - entry.value);
+              }
+            }
+          }
+
           delete GameBoard.hermitTracker[trackerKey];
           rebuildRoyaltyMaps();
         }
@@ -677,20 +657,29 @@ export function MakeMove(move, moveType = '') {
         const arcCfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
         const hasAreaQ = arcCfg.areaQ > 0;
         const hasAreaT = arcCfg.areaT > 0;
+        const hasAreaE = arcCfg.areaE > 0;
+        const hasAreaF = arcCfg.areaF > 0;
+
+        let activeCount = 0;
+        if (hasAreaQ) activeCount++;
+        if (hasAreaT) activeCount++;
+        if (hasAreaE) activeCount++;
+        if (hasAreaF) activeCount++;
 
         // Determine which royalty type to use
-        let royaltyType;
-        if (hasAreaQ && hasAreaT) {
-          royaltyType = 'V';  // Vanguard (both Q and T)
-        } else if (hasAreaQ) {
-          royaltyType = 'Q';  // Queen
-        } else if (hasAreaT) {
-          royaltyType = 'T';  // Templar
+        let royaltyType = 'M';
+        if (activeCount === 0) {
+          royaltyType = 'M';
+        } else if (activeCount > 1) {
+          royaltyType = 'V';
         } else {
-          royaltyType = 'M';  // Mystic (default)
+          // Exactly one active
+          if (hasAreaQ) royaltyType = 'Q';
+          else if (hasAreaT) royaltyType = 'T';
+          else if (hasAreaE) royaltyType = 'E';
+          else if (hasAreaF) royaltyType = 'F';
         }
 
-        const royaltyMap = GameBoard[`royalty${royaltyType}`];
         const hermitPattern = KiDir;  // User requested King move pattern for AoE
 
         // Update tracker: Move from 'from' to 'to'
@@ -706,32 +695,37 @@ export function MakeMove(move, moveType = '') {
           }
         }
 
-        // If we have an existing tracker entry, move it. If not (e.g. just summoned or first move), create it.
-        // Wait, if it was just summoned, it wouldn't be in the tracker yet?
-        // Actually, if it's a normal move, it should be there.
-        // But we need to handle the case where it might not be (defensive).
-
+        // Handle old tracker entry
         const existingEntry = GameBoard.hermitTracker[oldTrackerKey];
-        const value = existingEntry ? existingEntry.value : 100; // Default to 100 if fresh
+        if (existingEntry) {
+          // Manually clear old E and F contributions
+          if (existingEntry.type === 'E' || existingEntry.type === 'F') {
+            const map = GameBoard[`royalty${existingEntry.type}`];
+            if (map) {
+              for (const sq of existingEntry.squares) {
+                map[sq] = Math.max(0, (map[sq] || 0) - existingEntry.value);
+              }
+            }
+          }
+          delete GameBoard.hermitTracker[oldTrackerKey];
+        }
 
-        // Delete old, add new
-        if (GameBoard.hermitTracker[oldTrackerKey]) delete GameBoard.hermitTracker[oldTrackerKey];
-
+        // Add new tracker entry
         GameBoard.hermitTracker[newTrackerKey] = {
           type: royaltyType,
           squares: newSquares,
-          value: 100 // Reset to 100 on move? Or keep decayed value?
-          // User said: "when it times down after a few moves... so that when two hermit overlap and one moves away it doesnt fully revert"
-          // And "when its 100 + 100 - a few turns go by its 195 then that hermit moves its minus 95"
-          // This implies the moving hermit takes its CURRENT value with it?
-          // Or does it refresh to 100?
-          // "keep track of the current value that a certain royalty square is at"
-          // Usually moving a unit refreshes its aura.
-          // Let's assume refresh to 100 for now as that's standard for "casting an aura".
-          // If the user wants the aura to STAY decayed even after moving, that's very specific.
-          // "GameBoard still remembers that an aura is being cast to that square"
-          // I will reset to 100 on move.
+          value: 100
         };
+
+        // Manually apply new E and F contributions
+        if (royaltyType === 'E' || royaltyType === 'F') {
+          const map = GameBoard[`royalty${royaltyType}`];
+          if (map) {
+            for (const sq of newSquares) {
+              map[sq] = (map[sq] || 0) + 100;
+            }
+          }
+        }
 
         rebuildRoyaltyMaps();
       }
@@ -897,13 +891,29 @@ export function MakeMove(move, moveType = '') {
             side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
           const hasAreaQ = arcCfg.areaQ > 0;
           const hasAreaT = arcCfg.areaT > 0;
+          const hasAreaE = arcCfg.areaE > 0;
+          const hasAreaF = arcCfg.areaF > 0;
 
+          let activeCount = 0;
+          if (hasAreaQ) activeCount++;
+          if (hasAreaT) activeCount++;
+          if (hasAreaE) activeCount++;
+          if (hasAreaF) activeCount++;
+
+          // Determine which royalty type to use
           let royaltyType = 'M';
-          if (hasAreaQ && hasAreaT) royaltyType = 'V';
-          else if (hasAreaQ) royaltyType = 'Q';
-          else if (hasAreaT) royaltyType = 'T';
+          if (activeCount === 0) {
+            royaltyType = 'M';
+          } else if (activeCount > 1) {
+            royaltyType = 'V';
+          } else {
+            // Exactly one active
+            if (hasAreaQ) royaltyType = 'Q';
+            else if (hasAreaT) royaltyType = 'T';
+            else if (hasAreaE) royaltyType = 'E';
+            else if (hasAreaF) royaltyType = 'F';
+          }
 
-          const royaltyMap = GameBoard[`royalty${royaltyType}`];
           const hermitPattern = KiDir;
 
           // Create tracker entry for summoned Hermit
@@ -921,6 +931,17 @@ export function MakeMove(move, moveType = '') {
             squares: newSquares,
             value: 100
           };
+
+          // Manually apply E and F contributions
+          if (royaltyType === 'E' || royaltyType === 'F') {
+            const map = GameBoard[`royalty${royaltyType}`];
+            if (map) {
+              for (const sq of newSquares) {
+                map[sq] = (map[sq] || 0) + 100;
+              }
+            }
+          }
+
           rebuildRoyaltyMaps();
         }
       }
