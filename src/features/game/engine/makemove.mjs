@@ -255,9 +255,6 @@ function shiftKeyFromMove(move, moverPiece) {
     case PIECES.bS:
     case PIECES.bW:
       return 'shftG';
-    case PIECES.wH:
-    case PIECES.bH:
-      return 'shftH';
     case PIECES.wK:
     case PIECES.bK:
       return 'shftK';

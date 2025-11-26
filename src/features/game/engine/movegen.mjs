@@ -2460,9 +2460,8 @@ export function GenerateMoves(
               if (pce === PIECES.wH || pce === PIECES.bH) {
                 const hasHermit = (currentArcanaSide[10] & 1) !== 0;
                 const hasHemlock = (currentArcanaSide[10] & 2) !== 0;
-                const isNomad = hasHermit && hasHemlock;
 
-                if (!isNomad || !has5thDimensionSword) continue;
+                if (hasHermit || hasHemlock) continue;
               }
 
               if (
@@ -2658,7 +2657,8 @@ export function GenerateMoves(
                   targetPiece,
                   // Same decision as for quiet shifts: prefer specific spell
                   // unless Myriad is the only available shift for this piece.
-                  !useMyriadPiece ? pce : EPSILON_MYRIAD_CONST,
+                  // EXCEPTION: Hermit/Hemlock (H-Unit) always uses specific ID to avoid Myriad consumption
+                  !useMyriadPiece || isHUnit ? pce : EPSILON_MYRIAD_CONST,
                   MFLAGSHFT
                 ),
                 false,
@@ -2687,7 +2687,7 @@ export function GenerateMoves(
           // Active for: Hermit OR Nomad
           if (wantHermit || wantNomad) {
             // Hermit is non-capturable (quiet only)
-            runShift(6, (i) => HerShftDir[i], false);
+            runShift(6, (i) => HerShftDir[i], has5thDimensionSword);
           }
 
           // 3. Hemlock Pattern (HopA, HopB)
@@ -2695,7 +2695,7 @@ export function GenerateMoves(
           if (wantHemlock || wantNomad) {
             // If Nomad, restricted to 5D sword. Else normal capture.
             // Update: Hermit/Nomad cannot capture
-            runShift(12, (i) => HemlockHopA[i], false);
+            runShift(12, (i) => HemlockHopA[i], has5thDimensionSword);
             // uncomment below for hemlock ext
             // runShift(4, (i) => HemlockHopB[i], cap);
           }
