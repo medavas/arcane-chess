@@ -492,7 +492,7 @@
   "modsSUS": {
     "id": "modsSUS",
     "name": "Bulletproof",
-    "description": "Prevent any captures, checks or promotions for 3 turns.",
+    "description": "Prevent any captures for 3 turns.",
     "type": "active",
     "imagePath": "/modsSUS"
   },
@@ -575,8 +575,8 @@
   },
   "modsDIM": {
     "id": "modsDIM",
-    "name": "5th Dimension Steel",
-    "description": "Capture pieces on shift moves. Hermit can capture or be captured",
+    "name": "5th Dimension Sword",
+    "description": "Capture pieces on shift moves. Hermits and Hemlocks may capture.",
     "type": "inherent",
     "imagePath": "/modsDIM"
   },
@@ -716,14 +716,14 @@
   "toknHER": {
     "id": "toknHER",
     "name": "Hermit",
-    "description": "",
+    "description": "Casts an aura of square conditions. Can't capture. Overrides Herring. Stacks with Hemlock.",
     "type": "inherent",
     "imagePath": "/toknHER"
   },
   "toknHEM": {
     "id": "toknHEM",
     "name": "Hemlock",
-    "description": "",
+    "description": "1 up 1 over and 1 up 3 over move pattern similar to Knight, moves across the other side of the board. Overrides Herring. Stacks with Hermit.",
     "type": "inherent",
     "imagePath": "/toknHEM"
   }
