@@ -695,14 +695,14 @@
   "areaT": {
     "id": "areaT",
     "name": "Crusader's Battlecry",
-    "description": "",
+    "description": "Hermit casts Royalty Templar Aura.",
     "type": "inherent",
     "imagePath": "/areaT"
   },
   "areaQ": {
     "id": "areaQ",
     "name": "Regal Battlecry",
-    "description": "",
+    "description": "Hermit casts Royalty Queen Aura.",
     "type": "inherent",
     "imagePath": "/areaQ"
   },
@@ -720,10 +720,17 @@
     "type": "inherent",
     "imagePath": "/areaF"
   },
+  "areaN": {
+    "id": "areaN",
+    "name": "Aura of Disarmament",
+    "description": "Disarmament aura for Hermit.",
+    "type": "inherent",
+    "imagePath": "/areaN"
+  },
   "toknHER": {
     "id": "toknHER",
     "name": "Hermit",
-    "description": "Casts an aura of square conditions. Can't capture. Overrides Herring. Stacks with Hemlock.",
+    "description": "Casts an aura of Royalty Mystic square conditions. Can't capture. Overrides Herring. Stacks with Hemlock.",
     "type": "inherent",
     "imagePath": "/toknHER"
   },
