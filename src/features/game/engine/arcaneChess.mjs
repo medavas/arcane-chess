@@ -280,6 +280,7 @@ export default function arcaneChess() {
         royaltyV: GameBoard.royaltyV,
         royaltyE: GameBoard.royaltyE,
         royaltyF: GameBoard.royaltyF,
+        royaltyN: GameBoard.royaltyN,
       };
       const transformedRoyalties = _.mapValues(royalties, (value) => {
         return _.mapKeys(value, (subValue, key) => {
@@ -296,6 +297,7 @@ export default function arcaneChess() {
         royaltyV: GameBoard.royaltyV,
         royaltyE: GameBoard.royaltyE,
         royaltyF: GameBoard.royaltyF,
+        royaltyN: GameBoard.royaltyN,
       };
     },
     hasDivineReckoning: () => {
@@ -312,6 +314,7 @@ export default function arcaneChess() {
       GameBoard.royaltyV = {};
       GameBoard.royaltyE = {};
       GameBoard.royaltyF = {};
+      GameBoard.royaltyN = {};
     },
     changeVarVars: (varVar) => {
       if (varVar === 'NORMAL') {

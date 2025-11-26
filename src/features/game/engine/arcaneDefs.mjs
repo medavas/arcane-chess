@@ -93,6 +93,7 @@ export const POWERBIT = {
   sumnRG: 8388608, //  // 5x5
   sumnRH: 16777216, // // entangle fog
   sumnRI: 33554432, // // ra
+  sumnRN: 67108864, // // disarm
 
   // 5 active 18
   offrA: 1,
@@ -250,6 +251,7 @@ const POWER_BY_KEY = {
   sumnRG: 5,
   sumnRH: 5,
   sumnRI: 5,
+  sumnRN: 5,
   modsCON: 1,
   modsAET: 2,
   modsFUG: 3,

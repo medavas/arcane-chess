@@ -45,6 +45,7 @@ export const ARCANE_BIT_VALUES = {
   RG: 40,
   RH: 41,
   RI: 42,
+  RN: 43,
   ATK: 8,
   DEP: 9,
   ADJ: 10,
@@ -129,7 +130,7 @@ export function updateStartFen(newFen) {
 }
 
 export let PceChar = '.PNBRQKpnbrqkXSHTMVshtmvZUzuWwx';
-export let RtyChar = '.'.repeat(31) + 'QTMVEYZAFGHI';
+export let RtyChar = '.'.repeat(31) + 'QTMVEYZAFGHIN';
 export let SideChar = 'wb-';
 export let RankChar = '12345678';
 export let FileChar = 'abcdefgh';
@@ -927,6 +928,7 @@ export const loopSummon = [
   ARCANE_BIT_VALUES.RG,
   ARCANE_BIT_VALUES.RH,
   ARCANE_BIT_VALUES.RI,
+  ARCANE_BIT_VALUES.RN,
   0,
   PIECES.bP,
   PIECES.bS,
@@ -954,16 +956,17 @@ export const loopSummon = [
   ARCANE_BIT_VALUES.RG,
   ARCANE_BIT_VALUES.RH,
   ARCANE_BIT_VALUES.RI,
+  ARCANE_BIT_VALUES.RN,
   0,
 ];
 export const loopSummonFlag = [
   1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32768,
   65536, 131072, 262144, 524288, 1048576, 2097152, 4194304, 8388608, 16777216,
-  33554432, 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192,
-  16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152, 4194304,
-  8388608, 16777216, 33554432, 0,
+  33554432, 67108864, 0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048,
+  4096, 8192, 16384, 32768, 65536, 131072, 262144, 524288, 1048576, 2097152,
+  4194304, 8388608, 16777216, 33554432, 67108864, 0,
 ];
-export const loopSummonIndex = [0, 27];
+export const loopSummonIndex = [0, 29];
 
 export const Mirror64 = [
   56, 57, 58, 59, 60, 61, 62, 63, 48, 49, 50, 51, 52, 53, 54, 55, 40, 41, 42,

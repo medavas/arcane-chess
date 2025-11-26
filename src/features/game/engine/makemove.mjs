@@ -51,7 +51,7 @@ import {
 import { ARCANE_BIT_VALUES, RtyChar } from './defs.mjs';
 
 const royaltyIndexMapRestructure = [
-  0, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
+  0, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43
 ];
 
 // cap 30 = capturable exile
@@ -312,8 +312,10 @@ function decAllRoyaltyMaps() {
   // Handle non-tracker maps (E and F)
   const e = GameBoard.royaltyE;
   const f = GameBoard.royaltyF;
+  const n = GameBoard.royaltyN;
   for (const k in e) e[k] = e[k] === undefined || e[k] <= 0 ? 0 : e[k] - 1;
   for (const k in f) f[k] = f[k] === undefined || f[k] <= 0 ? 0 : f[k] - 1;
+  for (const k in n) n[k] = n[k] === undefined || n[k] <= 0 ? 0 : n[k] - 1;
 }
 
 function snapshotRoyaltyMapsTo(h) {
@@ -321,13 +323,17 @@ function snapshotRoyaltyMapsTo(h) {
 
   const hE = h.royaltyE || (h.royaltyE = {});
   const hF = h.royaltyF || (h.royaltyF = {});
+  const hN = h.royaltyN || (h.royaltyN = {});
   const e = GameBoard.royaltyE;
   const f = GameBoard.royaltyF;
+  const n = GameBoard.royaltyN;
 
   for (const k in hE) delete hE[k];
   for (const k in e) hE[k] = e[k];
   for (const k in hF) delete hF[k];
   for (const k in f) hF[k] = f[k];
+  for (const k in hN) delete hN[k];
+  for (const k in n) hN[k] = n[k];
 }
 
 function restoreRoyaltyMapsFrom(h) {
@@ -336,13 +342,17 @@ function restoreRoyaltyMapsFrom(h) {
 
   const e = GameBoard.royaltyE;
   const f = GameBoard.royaltyF;
+  const n = GameBoard.royaltyN;
   const hE = h.royaltyE || {};
   const hF = h.royaltyF || {};
+  const hN = h.royaltyN || {};
 
   for (const k in e) delete e[k];
   for (const k in f) delete f[k];
+  for (const k in n) delete n[k];
   for (const k in hE) e[k] = hE[k];
   for (const k in hF) f[k] = hF[k];
+  for (const k in hN) n[k] = hN[k];
 }
 
 export function MakeMove(move, moveType = '') {
@@ -804,6 +814,7 @@ export function MakeMove(move, moveType = '') {
         if (GameBoard.royaltyM[square] > 0) GameBoard.royaltyM[square] = 0;
         if (GameBoard.royaltyV[square] > 0) GameBoard.royaltyV[square] = 0;
         if (GameBoard.royaltyF[square] > 0) GameBoard.royaltyF[square] = 0;
+        if (GameBoard.royaltyN[square] > 0) GameBoard.royaltyN[square] = 0;
         GameBoard.royaltyE[square] = 9;
       }
     } else if (captured === 8) {
@@ -814,6 +825,7 @@ export function MakeMove(move, moveType = '') {
         if (GameBoard.royaltyM[square] > 0) GameBoard.royaltyM[square] = 0;
         if (GameBoard.royaltyV[square] > 0) GameBoard.royaltyV[square] = 0;
         if (GameBoard.royaltyF[square] > 0) GameBoard.royaltyF[square] = 0;
+        if (GameBoard.royaltyN[square] > 0) GameBoard.royaltyN[square] = 0;
         GameBoard.royaltyE[square] = 9;
       }
     } else if (captured === 9) {
@@ -824,6 +836,7 @@ export function MakeMove(move, moveType = '') {
         if (GameBoard.royaltyM[square] > 0) GameBoard.royaltyM[square] = 0;
         if (GameBoard.royaltyV[square] > 0) GameBoard.royaltyV[square] = 0;
         if (GameBoard.royaltyE[square] > 0) GameBoard.royaltyE[square] = 0;
+        if (GameBoard.royaltyN[square] > 0) GameBoard.royaltyN[square] = 0;
         GameBoard.royaltyF[square] = 9;
       }
     } else if (captured === 10) {
@@ -834,6 +847,7 @@ export function MakeMove(move, moveType = '') {
         if (GameBoard.royaltyM[square] > 0) GameBoard.royaltyM[square] = 0;
         if (GameBoard.royaltyV[square] > 0) GameBoard.royaltyV[square] = 0;
         if (GameBoard.royaltyE[square] > 0) GameBoard.royaltyE[square] = 0;
+        if (GameBoard.royaltyN[square] > 0) GameBoard.royaltyN[square] = 0;
         GameBoard.royaltyF[square] = 9;
       }
     } else if (captured === 11) {
@@ -844,6 +858,7 @@ export function MakeMove(move, moveType = '') {
         if (GameBoard.royaltyM[square] > 0) GameBoard.royaltyM[square] = 0;
         if (GameBoard.royaltyV[square] > 0) GameBoard.royaltyV[square] = 0;
         if (GameBoard.royaltyE[square] > 0) GameBoard.royaltyE[square] = 0;
+        if (GameBoard.royaltyN[square] > 0) GameBoard.royaltyN[square] = 0;
         GameBoard.royaltyF[square] = 9;
       }
       for (let i = 0; i < FIVE_SQUARE_B.length; i++) {
@@ -853,6 +868,7 @@ export function MakeMove(move, moveType = '') {
         if (GameBoard.royaltyM[square] > 0) GameBoard.royaltyM[square] = 0;
         if (GameBoard.royaltyV[square] > 0) GameBoard.royaltyV[square] = 0;
         if (GameBoard.royaltyE[square] > 0) GameBoard.royaltyF[square] = 0;
+        if (GameBoard.royaltyN[square] > 0) GameBoard.royaltyN[square] = 0;
         GameBoard.royaltyE[square] = 9;
       }
     } else if (captured === 12) {
@@ -861,6 +877,8 @@ export function MakeMove(move, moveType = '') {
       if (GameBoard.royaltyM[to] > 0) GameBoard.royaltyM[to] = 0;
       if (GameBoard.royaltyV[to] > 0) GameBoard.royaltyE[to] = 0;
       if (GameBoard.royaltyE[to] > 0) GameBoard.royaltyF[to] = 0;
+      if (GameBoard.royaltyF[to] > 0) GameBoard.royaltyF[to] = 0;
+      if (GameBoard.royaltyN[to] > 0) GameBoard.royaltyN[to] = 0;
       GameBoard.royaltyM[to - 11] = 9;
       GameBoard.royaltyQ[to - 10] = 9;
       GameBoard.royaltyM[to - 9] = 9;

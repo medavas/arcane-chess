@@ -130,6 +130,10 @@ export function AddCaptureMove(move, consume = false, capturesOnly = false) {
     return;
   }
 
+  if (GameBoard.royaltyN[FROMSQ(move)] > 0) {
+    return;
+  }
+
   const isTargetExile =
     GameBoard.pieces[TOSQ(move)] === PIECES.wX ||
     GameBoard.pieces[TOSQ(move)] === PIECES.bX;
@@ -1148,6 +1152,7 @@ export function GenerateMoves(
         40: 10,
         41: 11,
         42: 12,
+        43: 13,
       };
       if (
         userSummonPceRty > 0 ||
@@ -1210,7 +1215,8 @@ export function GenerateMoves(
                     GameBoard.royaltyT[sq] > 0 ||
                     GameBoard.royaltyM[sq] > 0 ||
                     GameBoard.royaltyV[sq] > 0 ||
-                    GameBoard.royaltyE[sq] > 0
+                    GameBoard.royaltyE[sq] > 0 ||
+                    GameBoard.royaltyN[sq] > 0
                   ) {
                     continue;
                   }

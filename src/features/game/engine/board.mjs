@@ -157,6 +157,7 @@ GameBoard.royaltyM = {};
 GameBoard.royaltyV = {};
 GameBoard.royaltyE = {};
 GameBoard.royaltyF = {};
+GameBoard.royaltyN = {};
 GameBoard.hermitTracker = {};
 
 GameBoard.preset;
@@ -770,7 +771,8 @@ export function SqAttacked(sq, side) {
     GameBoard.royaltyT[t_sq] > 0 ||
     GameBoard.royaltyM[t_sq] > 0 ||
     GameBoard.royaltyV[t_sq] > 0 ||
-    GameBoard.royaltyE[t_sq] > 0;
+    GameBoard.royaltyE[t_sq] > 0 ||
+    GameBoard.royaltyN[t_sq] > 0;
 
   const arc =
     side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;

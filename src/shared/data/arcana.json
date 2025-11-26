@@ -188,6 +188,13 @@
     "type": "active",
     "imagePath": "/sumnRE"
   },
+  "sumnRN": {
+    "id": "sumnRN",
+    "name": "Disarm",
+    "description": "Summon a square condition where the piece on the target square may not make any capture moves.",
+    "type": "active",
+    "imagePath": "/sumnRN"
+  },
   "sumnRY": {
     "id": "sumnRY",
     "name": "Hexweaver's Tornado",
