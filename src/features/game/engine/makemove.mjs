@@ -227,7 +227,7 @@ function rebuildRoyaltyMaps() {
   for (const k in GameBoard.royaltyT) GameBoard.royaltyT[k] = 0;
   for (const k in GameBoard.royaltyM) GameBoard.royaltyM[k] = 0;
   for (const k in GameBoard.royaltyV) GameBoard.royaltyV[k] = 0;
-  // Note: royaltyE and royaltyF are not managed by hermitTracker (Ensnarement/Frost)
+  // Note: royaltyE and royaltyF are not managed by hermitTracker (Hexlash/Frost)
   // EXCEPT for Hermit contributions which are additive/subtractive, but we don't rebuild them here
   // because we can't easily distinguish Hermit contributions from others if we wipe them.
 
@@ -249,6 +249,7 @@ function rebuildRoyaltyMaps() {
 const getSumnCaptureForRoyalty = (move, captured) => {
   return (move & MFLAGSUMN) !== 0 ? captured : PIECES.EMPTY;
 };
+
 
 function sumnKeyFromMove(move) {
   if ((move & MFLAGSUMN) === 0) return null;
@@ -323,7 +324,7 @@ function decAllRoyaltyMaps() {
 }
 
 function snapshotRoyaltyMapsTo(h) {
-  h.hermitTracker = JSON.parse(JSON.stringify(GameBoard.hermitTracker));
+  h.hermitTracker = JSON.parse(JSON.stringify(GameBoard.hermitTracker || {}));
 
   const hE = h.royaltyE || (h.royaltyE = {});
   const hF = h.royaltyF || (h.royaltyF = {});
@@ -701,15 +702,15 @@ export function MakeMove(move, moveType = '') {
       }
     }
 
-    // modsENS: Ensnarement
+    // modsHEX: Hexlash
     // When a Bishop, Knight, Zebra, Unicorn, Rook, Wraith, or Spectre is captured, the capturing piece becomes frozen.
     const victimSide = PieceCol[targetPieceAtTo];
     const victimArcane = victimSide === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
     const victimConfig = victimSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
-    const hasEnsnarement = (victimArcane[4] & 33554432) !== 0; // modsENS
+    // const hasHexlash = (victimArcane[4] & 33554432) !== 0; // modsHEX
 
-    if (victimConfig.modsENS > 0) {
-      const isEnsnarePiece =
+    if (victimConfig.modsHEX > 0) {
+      const isHexlashPiece =
         targetPieceAtTo === PIECES.wB || targetPieceAtTo === PIECES.bB ||
         targetPieceAtTo === PIECES.wN || targetPieceAtTo === PIECES.bN ||
         targetPieceAtTo === PIECES.wZ || targetPieceAtTo === PIECES.bZ ||
@@ -718,10 +719,10 @@ export function MakeMove(move, moveType = '') {
         targetPieceAtTo === PIECES.wS || targetPieceAtTo === PIECES.bS ||
         targetPieceAtTo === PIECES.wW || targetPieceAtTo === PIECES.bW;
 
-      if (isEnsnarePiece) {
+      if (isHexlashPiece) {
         GameBoard.royaltyE[to] = 4;
-        victimConfig.modsENS -= 1;
-        h.modsENSConsumed = true;
+        victimConfig.modsHEX -= 1;
+        h.modsHEXConsumed = true;
       }
     }
   }
@@ -1447,11 +1448,11 @@ export function TakeMove(wasDyadMove = false) {
       GameBoard.side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
     if (move & MFLAGPS) cfg['modsSUR'] += 1;
 
-    if (h.modsENSConsumed) {
+    if (h.modsHEXConsumed) {
       const victimSide = GameBoard.side ^ 1;
       const victimConfig = victimSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
-      victimConfig.modsENS += 1;
-      h.modsENSConsumed = undefined;
+      victimConfig.modsHEX += 1;
+      h.modsHEXConsumed = undefined;
     }
   }
 

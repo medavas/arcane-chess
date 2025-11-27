@@ -158,7 +158,7 @@ export const POWERBIT = {
   modsGLA: 4194304, // inherent  // glare - rook attacks apply disarmament
   modsZ: 8388608, // passive     // .
   modsHUR: 16777216, // passive  // hurricane
-  modsENS: 33554432, // passive  // ensnarement
+  modsHEX: 33554432, // passive  // hexlash
 
   // 6 on your piece death 4
   moriDYA: 1, // inherent
@@ -291,7 +291,7 @@ const POWER_BY_KEY = {
   modsFOG: 2,
   modsMIS: 2,
   modsHUR: 3,
-  modsENS: 3,
+  modsHEX: 3,
   offrA: 1,
   offrB: 1,
   offrC: 1,
@@ -390,7 +390,7 @@ const STACKING_EXCEPTIONS = new Set([
   'modsFUT',
   'modsCON',
   'modsSUR',
-  'modsENS',
+  'modsHEX',
 ]);
 
 function isStackingKey(key) {

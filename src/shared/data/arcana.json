@@ -587,12 +587,12 @@
     "type": "passive",
     "imagePath": "/modsDIV"
   },
-  "modsENS": {
-    "id": "modsENS",
-    "name": "Ensnarement",
+  "modsHEX": {
+    "id": "modsHEX",
+    "name": "Hexlash",
     "description": "When a Bishop, Knight, Zebra, Unicorn, Rook, Wraith, or Spectre is captured, the capturing piece becomes frozen.",
     "type": "passive",
-    "imagePath": "/modsENS"
+    "imagePath": "/modsHEX"
   },
   "modsGLA": {
     "id": "modsGLA",
