@@ -594,6 +594,13 @@
     "type": "passive",
     "imagePath": "/modsENS"
   },
+  "modsGLA": {
+    "id": "modsGLA",
+    "name": "Glare",
+    "description": "Any opponent piece attacked by a friendly Rook has Disarmament.",
+    "type": "inherent",
+    "imagePath": "/modsGLA"
+  },
   "moriDYA": {
     "id": "moriDYA",
     "name": "Letum Gemini",

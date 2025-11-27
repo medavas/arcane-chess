@@ -152,10 +152,10 @@ export const POWERBIT = {
   modsBLA: 65536, // active      black hole
   modsSUR: 131072, // passive    pawn surge
   modsDIM: 262144, // passive    5th dimension sword
-  modsHER: 524288, // passive    hermit
-  modsHEM: 1048576, // inherent  hemlock
+  // modsHER: 524288, // passive    hermit
+  // modsHEM: 1048576, // inherent  hemlock
   modsBAN: 2097152, // inherent  // banshee
-  modsY: 4194304, // passive     // .
+  modsGLA: 4194304, // inherent  // glare - rook attacks apply disarmament
   modsZ: 8388608, // passive     // .
   modsHUR: 16777216, // passive  // hurricane
   modsENS: 33554432, // passive  // ensnarement
@@ -195,6 +195,20 @@ export const POWERBIT = {
 export const varVars = {
   // insert things like 960, crazyhouse, summons vs freezes, koh, xcheck, horde,
 };
+
+// Glare: Configure which pieces can cast Glare (apply Disarmament to attacked squares)
+// By default, only Rooks cast Glare. You can add other pieces here.
+export const GLARE_CASTER_PIECES = {
+  white: [PIECES.wR],  // White Rooks
+  black: [PIECES.bR],  // Black Rooks
+};
+
+// Helper function to check if a piece can cast Glare
+export function canCastGlare(piece, side) {
+  const casters = side === 'white' || side === 0 ? GLARE_CASTER_PIECES.white : GLARE_CASTER_PIECES.black;
+  return casters.includes(piece);
+}
+
 
 // unneeded / depoerecated
 export const POWERS = (config) => {
@@ -273,7 +287,6 @@ const POWER_BY_KEY = {
   modsSUR: 1,
   modsDIM: 2,
   modsRES: 2,
-  modsHER: 4,
   modsBAN: 5,
   modsFOG: 2,
   modsMIS: 2,

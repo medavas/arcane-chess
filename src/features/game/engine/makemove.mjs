@@ -19,6 +19,7 @@ import {
   HASH_EP,
   HASH_SIDE,
   SqAttacked,
+  SQOFFBOARD,
 } from './board';
 import {
   whiteArcaneConfig,
@@ -31,6 +32,7 @@ import {
   getGainState,
   applyGainRewards,
   POWERBIT,
+  canCastGlare,
 } from './arcaneDefs';
 import {
   COLOURS,
@@ -47,6 +49,7 @@ import {
   RANKS,
   RanksBrd,
   KiDir,
+  RkDir,
 } from './defs';
 import { ARCANE_BIT_VALUES, RtyChar } from './defs.mjs';
 
@@ -309,10 +312,11 @@ function decAllRoyaltyMaps() {
   }
   rebuildRoyaltyMaps();
 
-  // Handle non-tracker maps (E and F)
+  // Handle non-tracker maps (E, F, and N)
   const e = GameBoard.royaltyE;
   const f = GameBoard.royaltyF;
   const n = GameBoard.royaltyN;
+
   for (const k in e) e[k] = e[k] === undefined || e[k] <= 0 ? 0 : e[k] - 1;
   for (const k in f) f[k] = f[k] === undefined || f[k] <= 0 ? 0 : f[k] - 1;
   for (const k in n) n[k] = n[k] === undefined || n[k] <= 0 ? 0 : n[k] - 1;
@@ -353,6 +357,85 @@ function restoreRoyaltyMapsFrom(h) {
   for (const k in hE) e[k] = hE[k];
   for (const k in hF) f[k] = hF[k];
   for (const k in hN) n[k] = hN[k];
+}
+
+
+
+// Glare: Recalculate all Glare effects for both sides using tracker system
+// This is needed to handle discovered attacks when pieces move/are captured
+function recalculateAllGlare(commit = true) {
+  if (!commit) return;
+
+  const n = GameBoard.royaltyN;
+
+  // First, clear all existing Glare tracker entries and their contributions
+  const glareTrackerKeys = Object.keys(GameBoard.hermitTracker).filter(k => k.startsWith('glare_'));
+  for (const key of glareTrackerKeys) {
+    const entry = GameBoard.hermitTracker[key];
+    if (entry && entry.type === 'N') {
+      // Manually clear the contributions
+      for (const sq of entry.squares) {
+        n[sq] = Math.max(0, (n[sq] || 0) - entry.value);
+      }
+    }
+    delete GameBoard.hermitTracker[key];
+  }
+
+  // Recalculate Glare for both sides
+  for (const side of [COLOURS.WHITE, COLOURS.BLACK]) {
+    const arcane = side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+    const hasGlare = (arcane[4] & POWERBIT.modsGLA) !== 0;
+
+    if (!hasGlare) continue;
+
+    // Find all Glare-casting pieces for this side
+    for (let sq = 21; sq <= 98; sq++) {
+      if (SQOFFBOARD(sq) === BOOL.TRUE) continue;
+
+      const piece = GameBoard.pieces[sq];
+      if (piece === PIECES.EMPTY) continue;
+      if (PieceCol[piece] !== side) continue;
+
+      if (canCastGlare(piece, side)) {
+        // Calculate which squares this Rook attacks
+        const attackedSquares = [];
+        const opponentSide = side === COLOURS.WHITE ? COLOURS.BLACK : COLOURS.WHITE;
+
+        for (let i = 0; i < 4; i++) {
+          const dir = RkDir[i];
+          let t_sq = sq + dir;
+
+          while (SQOFFBOARD(t_sq) === BOOL.FALSE) {
+            const targetPiece = GameBoard.pieces[t_sq];
+
+            if (targetPiece !== PIECES.EMPTY) {
+              if (PieceCol[targetPiece] === opponentSide) {
+                attackedSquares.push(t_sq);
+              }
+              break;
+            }
+
+            t_sq += dir;
+          }
+        }
+
+        // Create tracker entry for this Glare source
+        if (attackedSquares.length > 0) {
+          const trackerKey = `glare_${sq}`;
+          GameBoard.hermitTracker[trackerKey] = {
+            type: 'N',
+            squares: attackedSquares,
+            value: 100
+          };
+
+          // Manually apply the contributions
+          for (const t_sq of attackedSquares) {
+            n[t_sq] = (n[t_sq] || 0) + 100;
+          }
+        }
+      }
+    }
+  }
 }
 
 export function MakeMove(move, moveType = '') {
@@ -1152,6 +1235,10 @@ export function MakeMove(move, moveType = '') {
     }
   }
 
+  // Glare: Recalculate all Glare at the end of every move
+  // This ensures Disarmament is removed when pieces move away from attacks
+  recalculateAllGlare(commit);
+
   return BOOL.TRUE;
 }
 
@@ -1443,4 +1530,8 @@ export function TakeMove(wasDyadMove = false) {
       h.offrGifts = undefined;
     }
   }
+
+  // Glare: Recalculate all Glare after undoing a move
+  // This ensures discovered attacks are properly handled on undo
+  recalculateAllGlare(true);
 }
