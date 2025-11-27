@@ -157,6 +157,12 @@ function trimHistory(commit) {
 
 export function ClearPiece(sq, summon = false) {
   let pce = GameBoard.pieces[sq];
+
+  // Debug: Check if trying to clear an empty square
+  if (pce === PIECES.EMPTY) {
+    return;
+  }
+
   let col = PieceCol[pce];
   let index;
   let t_pceNum = -1;
@@ -175,12 +181,23 @@ export function ClearPiece(sq, summon = false) {
     }
   }
 
+  if (t_pceNum === -1) {
+    return; // Don't corrupt piece lists
+  }
+
   GameBoard.pceNum[pce]--;
   GameBoard.pList[PCEINDEX(pce, t_pceNum)] =
     GameBoard.pList[PCEINDEX(pce, GameBoard.pceNum[pce])];
 }
 
 export function AddPiece(sq, pce, summon = false) {
+  // Debug: Check if adding piece to occupied square
+  const existingPiece = GameBoard.pieces[sq];
+  if (existingPiece !== PIECES.EMPTY) {
+    console.error(`AddPiece: Attempting to add ${PceChar[pce]} to occupied square ${sq} which contains ${PceChar[existingPiece]}`);
+    console.trace(); // Show stack trace
+  }
+
   let col = PieceCol[pce];
 
   HASH_PCE(pce, sq);
@@ -443,6 +460,20 @@ export function MakeMove(move, moveType = '') {
   let from = FROMSQ(move);
   let to = TOSQ(move);
   let side = GameBoard.side;
+
+  // Validate square indices
+  if (from > 0 && (from < 21 || from > 98 || GameBoard.pieces[from] === 100)) {
+    return BOOL.FALSE;
+  }
+
+  if (to > 0 && (to < 21 || to > 98)) {
+    return BOOL.FALSE;
+  }
+
+  // Check for board corruption at destination
+  if (to > 0 && GameBoard.pieces[to] === 100) {
+    return BOOL.FALSE;
+  }
 
   let captured = CAPTURED(move);
   let pieceEpsilon = PROMOTED(move);
@@ -981,6 +1012,12 @@ export function MakeMove(move, moveType = '') {
       const map = GameBoard[`royalty${sym}`];
       if (map && (map[to] === undefined || map[to] <= 0)) map[to] = 9;
     } else if (promoEpsilon > 0) {
+      // Store any existing piece at the destination for proper undo
+      const existingPiece = GameBoard.pieces[to];
+      if (existingPiece !== PIECES.EMPTY) {
+        h.summonOverwrittenPiece = existingPiece;
+        ClearPiece(to);
+      }
       AddPiece(to, promoEpsilon, true);
 
       // Instant AoE for summoned Hermit/Nomad
@@ -1496,6 +1533,11 @@ export function TakeMove(wasDyadMove = false) {
   } else if (TOSQ(move) > 0 && isSummon(move)) {
     if (promoEpsilon > 0) {
       ClearPiece(to, true);
+      // Restore any piece that was overwritten by the summon
+      if (h.summonOverwrittenPiece && h.summonOverwrittenPiece !== PIECES.EMPTY) {
+        AddPiece(to, h.summonOverwrittenPiece);
+        h.summonOverwrittenPiece = undefined;
+      }
     }
   } else if (TOSQ(move) > 0 && isSwap(move)) {
     const putBack = GameBoard.pieces[from];
