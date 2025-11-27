@@ -163,6 +163,11 @@ export function ClearPiece(sq, summon = false) {
     return;
   }
 
+  if (sq === 83 || sq === 33) {
+    console.log(`ClearPiece called on ${sq === 83 ? 'c7' : 'c2'} (piece: ${PceChar[pce]})`);
+    console.trace();
+  }
+
   let col = PieceCol[pce];
   let index;
   let t_pceNum = -1;
@@ -182,6 +187,7 @@ export function ClearPiece(sq, summon = false) {
   }
 
   if (t_pceNum === -1) {
+    console.error(`ClearPiece: Piece ${PceChar[pce]} at ${sq} not found in pList`);
     return; // Don't corrupt piece lists
   }
 
@@ -195,7 +201,12 @@ export function AddPiece(sq, pce, summon = false) {
   const existingPiece = GameBoard.pieces[sq];
   if (existingPiece !== PIECES.EMPTY) {
     console.error(`AddPiece: Attempting to add ${PceChar[pce]} to occupied square ${sq} which contains ${PceChar[existingPiece]}`);
-    console.trace(); // Show stack trace
+    // console.trace(); // Show stack trace
+  }
+
+  if (sq === 83 || sq === 33) {
+    console.log(`AddPiece called on ${sq === 83 ? 'c7' : 'c2'} with piece ${PceChar[pce]}`);
+    console.trace();
   }
 
   let col = PieceCol[pce];
@@ -212,6 +223,15 @@ export function AddPiece(sq, pce, summon = false) {
 }
 
 export function MovePiece(from, to) {
+  if (to === 83 || to === 33) {
+    console.log(`MovePiece to ${to === 83 ? 'c7' : 'c2'} from ${from}`);
+    console.trace();
+  }
+  if (from === 83 || from === 33) {
+    console.log(`MovePiece from ${from === 83 ? 'c7' : 'c2'} to ${to}`);
+    console.trace();
+  }
+
   let index = 0;
   let pce = GameBoard.pieces[from];
 
@@ -863,7 +883,6 @@ export function MakeMove(move, moveType = '') {
   if (
     TOSQ(move) > 0 &&
     promoEpsilon !== PIECES.EMPTY &&
-    !isShift(move) &&
     !isSummon(move) &&
     !isSwap(move)
   ) {
@@ -1496,7 +1515,6 @@ export function TakeMove(wasDyadMove = false) {
   if (
     TOSQ(move) > 0 &&
     promoEpsilon !== PIECES.EMPTY &&
-    !isShift(move) &&
     !isSummon(move) &&
     !isSwap(move)
   ) {
