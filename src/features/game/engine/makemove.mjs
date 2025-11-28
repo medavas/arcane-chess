@@ -163,11 +163,6 @@ export function ClearPiece(sq, summon = false) {
     return;
   }
 
-  if (sq === 83 || sq === 33) {
-    console.log(`ClearPiece called on ${sq === 83 ? 'c7' : 'c2'} (piece: ${PceChar[pce]})`);
-    console.trace();
-  }
-
   let col = PieceCol[pce];
   let index;
   let t_pceNum = -1;
@@ -187,8 +182,7 @@ export function ClearPiece(sq, summon = false) {
   }
 
   if (t_pceNum === -1) {
-    console.error(`ClearPiece: Piece ${PceChar[pce]} at ${sq} not found in pList`);
-    return; // Don't corrupt piece lists
+    return;
   }
 
   GameBoard.pceNum[pce]--;
@@ -197,18 +191,6 @@ export function ClearPiece(sq, summon = false) {
 }
 
 export function AddPiece(sq, pce, summon = false) {
-  // Debug: Check if adding piece to occupied square
-  const existingPiece = GameBoard.pieces[sq];
-  if (existingPiece !== PIECES.EMPTY) {
-    console.error(`AddPiece: Attempting to add ${PceChar[pce]} to occupied square ${sq} which contains ${PceChar[existingPiece]}`);
-    // console.trace(); // Show stack trace
-  }
-
-  if (sq === 83 || sq === 33) {
-    console.log(`AddPiece called on ${sq === 83 ? 'c7' : 'c2'} with piece ${PceChar[pce]}`);
-    console.trace();
-  }
-
   let col = PieceCol[pce];
 
   HASH_PCE(pce, sq);
@@ -223,15 +205,6 @@ export function AddPiece(sq, pce, summon = false) {
 }
 
 export function MovePiece(from, to) {
-  if (to === 83 || to === 33) {
-    console.log(`MovePiece to ${to === 83 ? 'c7' : 'c2'} from ${from}`);
-    console.trace();
-  }
-  if (from === 83 || from === 33) {
-    console.log(`MovePiece from ${from === 83 ? 'c7' : 'c2'} to ${to}`);
-    console.trace();
-  }
-
   let index = 0;
   let pce = GameBoard.pieces[from];
 
@@ -1255,9 +1228,6 @@ export function MakeMove(move, moveType = '') {
     HASH_SIDE();
   }
 
-  if (!move) {
-    console.log('make move error', move);
-  }
 
   if (SqAttacked(GameBoard.pList[PCEINDEX(Kings[side], 0)], side ^ 1)) {
     TakeMove();
@@ -1540,6 +1510,7 @@ export function TakeMove(wasDyadMove = false) {
             if (GameBoard.side === COLOURS.BLACK) {
               blackArcaneConfig.modsDIV += 1;
               blackArcaneConfig.modsREA -= 1;
+              console.log(blackArcaneConfig);
             }
             h.modsDIVConsumed = undefined;
           }
