@@ -98,8 +98,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       config: {
         multiplier: LS.config.multiplier,
         color: LS.config.color,
-        thinkingTime: 2,
-        engineDepth: 1,
+        thinkingTime: 4,
+        engineDepth: 3,
         clock: LS.config.clock,
         blunderVision: false,
         threatVision: false,
