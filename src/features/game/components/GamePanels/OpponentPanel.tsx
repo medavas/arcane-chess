@@ -8,10 +8,7 @@ import {
   whiteArcaneSpellBook,
   blackArcaneSpellBook,
 } from 'src/features/game/engine/arcaneDefs.mjs';
-import arcanaJson from 'src/shared/data/arcana.json';
 import './OpponentPanel.scss';
-
-const arcana: any = arcanaJson;
 
 interface OpponentPanelProps {
   engineColor: string;

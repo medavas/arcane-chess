@@ -43,8 +43,6 @@ export const OldArcanaSelector: React.FC<ArcanaSelectorProps> = ({
 }) => {
   const progress = getProgressState(color);
   const pct = Math.round(progress.pct * 100);
-  const untilNext = progress.untilNext;
-  const tier = progress.tier;
 
   return (
     <div className="arcana-select-wrapper">
@@ -55,7 +53,6 @@ export const OldArcanaSelector: React.FC<ArcanaSelectorProps> = ({
             const entry = arcana[key];
             if (!entry) return null;
 
-            const numericValue = typeof value === 'number' ? value : 0;
             const isInherent = entry.type === 'inherent';
 
             // Skip if no value (unless inherent, but usually inherent has value 1 or similar in config?)

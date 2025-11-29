@@ -54,7 +54,7 @@ import {
 import { ARCANE_BIT_VALUES, RtyChar } from './defs.mjs';
 
 const royaltyIndexMapRestructure = [
-  0, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43
+  0, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
 ];
 
 // cap 30 = capturable exile
@@ -222,15 +222,6 @@ export function MovePiece(from, to) {
   }
 }
 
-function getPieceIndex(sq, pce) {
-  for (let index = 0; index < GameBoard.pceNum[pce]; index++) {
-    if (GameBoard.pList[PCEINDEX(pce, index)] === sq) {
-      return index;
-    }
-  }
-  return -1;
-}
-
 function rebuildRoyaltyMaps() {
   // Clear existing maps
   for (const k in GameBoard.royaltyQ) GameBoard.royaltyQ[k] = 0;
@@ -259,7 +250,6 @@ function rebuildRoyaltyMaps() {
 const getSumnCaptureForRoyalty = (move, captured) => {
   return (move & MFLAGSUMN) !== 0 ? captured : PIECES.EMPTY;
 };
-
 
 function sumnKeyFromMove(move) {
   if ((move & MFLAGSUMN) === 0) return null;
@@ -370,8 +360,6 @@ function restoreRoyaltyMapsFrom(h) {
   for (const k in hN) n[k] = hN[k];
 }
 
-
-
 // Glare: Recalculate all Glare effects for both sides using tracker system
 // This is needed to handle discovered attacks when pieces move/are captured
 function recalculateAllGlare(commit = true) {
@@ -380,7 +368,9 @@ function recalculateAllGlare(commit = true) {
   const n = GameBoard.royaltyN;
 
   // First, clear all existing Glare tracker entries and their contributions
-  const glareTrackerKeys = Object.keys(GameBoard.hermitTracker).filter(k => k.startsWith('glare_'));
+  const glareTrackerKeys = Object.keys(GameBoard.hermitTracker).filter((k) =>
+    k.startsWith('glare_')
+  );
   for (const key of glareTrackerKeys) {
     const entry = GameBoard.hermitTracker[key];
     if (entry && entry.type === 'N') {
@@ -394,7 +384,8 @@ function recalculateAllGlare(commit = true) {
 
   // Recalculate Glare for both sides
   for (const side of [COLOURS.WHITE, COLOURS.BLACK]) {
-    const arcane = side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+    const arcane =
+      side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
     const hasGlare = (arcane[4] & POWERBIT.modsGLA) !== 0;
 
     if (!hasGlare) continue;
@@ -410,7 +401,8 @@ function recalculateAllGlare(commit = true) {
       if (canCastGlare(piece, side)) {
         // Calculate which squares this Rook attacks
         const attackedSquares = [];
-        const opponentSide = side === COLOURS.WHITE ? COLOURS.BLACK : COLOURS.WHITE;
+        const opponentSide =
+          side === COLOURS.WHITE ? COLOURS.BLACK : COLOURS.WHITE;
 
         for (let i = 0; i < 4; i++) {
           const dir = RkDir[i];
@@ -436,7 +428,7 @@ function recalculateAllGlare(commit = true) {
           GameBoard.hermitTracker[trackerKey] = {
             type: 'N',
             squares: attackedSquares,
-            value: 100
+            value: 100,
           };
 
           // Manually apply the contributions
@@ -695,10 +687,14 @@ export function MakeMove(move, moveType = '') {
     if (move & MFLAGPS) cfg['modsSUR'] -= 1;
 
     // Hermit AOE: Clear AOE if Hermit is captured
-    const isHermitCapture = (targetPieceAtTo === PIECES.wH || targetPieceAtTo === PIECES.bH);
+    const isHermitCapture =
+      targetPieceAtTo === PIECES.wH || targetPieceAtTo === PIECES.bH;
     if (isHermitCapture) {
       const capturedSide = PieceCol[targetPieceAtTo];
-      const capCfg = capturedSide === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+      const capCfg =
+        capturedSide === COLOURS.WHITE
+          ? GameBoard.whiteArcane
+          : GameBoard.blackArcane;
       const hasHermitToken = (capCfg[10] & 1) !== 0; // toknHER
       const hasHemlockToken = (capCfg[10] & 2) !== 0; // toknHEM
       const isHermit = hasHermitToken && !hasHemlockToken;
@@ -729,19 +725,26 @@ export function MakeMove(move, moveType = '') {
     // modsHEX: Hexlash
     // When a Bishop, Knight, Zebra, Unicorn, Rook, Wraith, or Spectre is captured, the capturing piece becomes frozen.
     const victimSide = PieceCol[targetPieceAtTo];
-    const victimArcane = victimSide === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
-    const victimConfig = victimSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+    const victimConfig =
+      victimSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
     // const hasHexlash = (victimArcane[4] & 33554432) !== 0; // modsHEX
 
     if (victimConfig.modsHEX > 0) {
       const isHexlashPiece =
-        targetPieceAtTo === PIECES.wB || targetPieceAtTo === PIECES.bB ||
-        targetPieceAtTo === PIECES.wN || targetPieceAtTo === PIECES.bN ||
-        targetPieceAtTo === PIECES.wZ || targetPieceAtTo === PIECES.bZ ||
-        targetPieceAtTo === PIECES.wU || targetPieceAtTo === PIECES.bU ||
-        targetPieceAtTo === PIECES.wR || targetPieceAtTo === PIECES.bR ||
-        targetPieceAtTo === PIECES.wS || targetPieceAtTo === PIECES.bS ||
-        targetPieceAtTo === PIECES.wW || targetPieceAtTo === PIECES.bW;
+        targetPieceAtTo === PIECES.wB ||
+        targetPieceAtTo === PIECES.bB ||
+        targetPieceAtTo === PIECES.wN ||
+        targetPieceAtTo === PIECES.bN ||
+        targetPieceAtTo === PIECES.wZ ||
+        targetPieceAtTo === PIECES.bZ ||
+        targetPieceAtTo === PIECES.wU ||
+        targetPieceAtTo === PIECES.bU ||
+        targetPieceAtTo === PIECES.wR ||
+        targetPieceAtTo === PIECES.bR ||
+        targetPieceAtTo === PIECES.wS ||
+        targetPieceAtTo === PIECES.bS ||
+        targetPieceAtTo === PIECES.wW ||
+        targetPieceAtTo === PIECES.bW;
 
       if (isHexlashPiece) {
         GameBoard.royaltyE[to] = 4;
@@ -763,16 +766,18 @@ export function MakeMove(move, moveType = '') {
     MovePiece(from, to);
 
     // Hermit AoE: Apply royalty effect to surrounding squares
-    const isHermitPiece = (moverPiece === PIECES.wH || moverPiece === PIECES.bH);
+    const isHermitPiece = moverPiece === PIECES.wH || moverPiece === PIECES.bH;
     if (isHermitPiece) {
-      const cfg = side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
-      const hasHermitToken = (cfg[10] & 1) !== 0;  // toknHER
-      const hasHemlockToken = (cfg[10] & 2) !== 0;  // toknHEM
+      const cfg =
+        side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+      const hasHermitToken = (cfg[10] & 1) !== 0; // toknHER
+      const hasHemlockToken = (cfg[10] & 2) !== 0; // toknHEM
       const isHermit = hasHermitToken && !hasHemlockToken;
       const isNomad = hasHermitToken && hasHemlockToken;
 
       if (isHermit || isNomad) {
-        const arcCfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+        const arcCfg =
+          side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
         const hasAreaQ = arcCfg.areaQ > 0;
         const hasAreaT = arcCfg.areaT > 0;
         const hasAreaE = arcCfg.areaE > 0;
@@ -801,7 +806,7 @@ export function MakeMove(move, moveType = '') {
           else if (hasAreaN) royaltyType = 'N';
         }
 
-        const hermitPattern = KiDir;  // User requested King move pattern for AoE
+        const hermitPattern = KiDir; // User requested King move pattern for AoE
 
         // Update tracker: Move from 'from' to 'to'
         const oldTrackerKey = `hermit_${from}`;
@@ -820,7 +825,11 @@ export function MakeMove(move, moveType = '') {
         const existingEntry = GameBoard.hermitTracker[oldTrackerKey];
         if (existingEntry) {
           // Manually clear old E, F, and N contributions
-          if (existingEntry.type === 'E' || existingEntry.type === 'F' || existingEntry.type === 'N') {
+          if (
+            existingEntry.type === 'E' ||
+            existingEntry.type === 'F' ||
+            existingEntry.type === 'N'
+          ) {
             const map = GameBoard[`royalty${existingEntry.type}`];
             if (map) {
               for (const sq of existingEntry.squares) {
@@ -835,7 +844,7 @@ export function MakeMove(move, moveType = '') {
         GameBoard.hermitTracker[newTrackerKey] = {
           type: royaltyType,
           squares: newSquares,
-          value: 100
+          value: 100,
         };
 
         // Manually apply new E, F, and N contributions
@@ -1015,7 +1024,9 @@ export function MakeMove(move, moveType = '') {
       // Instant AoE for summoned Hermit/Nomad
       if (promoEpsilon === PIECES.wH || promoEpsilon === PIECES.bH) {
         const cfg =
-          side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+          side === COLOURS.WHITE
+            ? GameBoard.whiteArcane
+            : GameBoard.blackArcane;
         const hasHermitToken = (cfg[10] & 1) !== 0;
         // const hasHemlockToken = (cfg[10] & 2) !== 0;
 
@@ -1066,11 +1077,15 @@ export function MakeMove(move, moveType = '') {
           GameBoard.hermitTracker[trackerKey] = {
             type: royaltyType,
             squares: newSquares,
-            value: 100
+            value: 100,
           };
 
           // Manually apply E, F, and N contributions
-          if (royaltyType === 'E' || royaltyType === 'F' || royaltyType === 'N') {
+          if (
+            royaltyType === 'E' ||
+            royaltyType === 'F' ||
+            royaltyType === 'N'
+          ) {
             const map = GameBoard[`royalty${royaltyType}`];
             if (map) {
               for (const sq of newSquares) {
@@ -1228,7 +1243,6 @@ export function MakeMove(move, moveType = '') {
     HASH_SIDE();
   }
 
-
   if (SqAttacked(GameBoard.pList[PCEINDEX(Kings[side], 0)], side ^ 1)) {
     TakeMove();
     return BOOL.FALSE;
@@ -1238,7 +1252,7 @@ export function MakeMove(move, moveType = '') {
       GameBoard.pList[PCEINDEX(Kings[GameBoard.side], 0)],
       GameBoard.side ^ 1
     ) &&
-    (GameBoard.preset === 'DELIVERANCE')
+    GameBoard.preset === 'DELIVERANCE'
   ) {
     TakeMove();
     return BOOL.FALSE;
@@ -1476,7 +1490,8 @@ export function TakeMove(wasDyadMove = false) {
 
     if (h.modsHEXConsumed) {
       const victimSide = GameBoard.side ^ 1;
-      const victimConfig = victimSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+      const victimConfig =
+        victimSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
       victimConfig.modsHEX += 1;
       h.modsHEXConsumed = undefined;
     }
@@ -1523,7 +1538,10 @@ export function TakeMove(wasDyadMove = false) {
     if (promoEpsilon > 0) {
       ClearPiece(to, true);
       // Restore any piece that was overwritten by the summon
-      if (h.summonOverwrittenPiece && h.summonOverwrittenPiece !== PIECES.EMPTY) {
+      if (
+        h.summonOverwrittenPiece &&
+        h.summonOverwrittenPiece !== PIECES.EMPTY
+      ) {
         AddPiece(to, h.summonOverwrittenPiece);
         h.summonOverwrittenPiece = undefined;
       }

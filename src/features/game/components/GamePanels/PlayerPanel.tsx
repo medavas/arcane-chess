@@ -10,10 +10,7 @@ import {
   whiteArcaneSpellBook,
   blackArcaneSpellBook,
 } from 'src/features/game/engine/arcaneDefs.mjs';
-import arcanaJson from 'src/shared/data/arcana.json';
 import './PlayerPanel.scss';
-
-const arcana: any = arcanaJson;
 
 interface PlayerPanelProps {
   playerColor: string;

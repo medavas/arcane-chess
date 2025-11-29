@@ -24,7 +24,7 @@ import arcaneJson from 'src/shared/data/arcana.json';
 import arcaneChess from 'src/features/game/engine/arcaneChess.mjs';
 import { GameBoard, InCheck } from 'src/features/game/engine/board.mjs';
 import { PrSq } from 'src/features/game/engine/io.mjs';
-import { PIECES, ARCANE_BIT_VALUES } from 'src/features/game/engine/defs.mjs';
+import { PIECES } from 'src/features/game/engine/defs.mjs';
 import { SearchController } from 'src/features/game/engine/search.mjs';
 
 import {
@@ -46,7 +46,6 @@ import { PlayerPanel } from 'src/features/game/components/GamePanels/PlayerPanel
 const arcana: ArcanaMap = arcaneJson as ArcanaMap;
 
 const pieces: PieceRoyaltyTypes = PIECES;
-const royalties: PieceRoyaltyTypes = ARCANE_BIT_VALUES;
 
 interface PieceRoyaltyTypes {
   [key: string]: number;

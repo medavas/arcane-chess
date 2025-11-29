@@ -19,20 +19,10 @@ import TactoriusModal from 'src/shared/components/Modal/Modal';
 import PromotionModal from 'src/features/game/components/PromotionModal/PromotionModal';
 import QuickplayModal from 'src/features/game/components/QuickplayModal/QuickplayModal';
 
-import GlobalVolumeControl from 'src/shared/utils/audio/GlobalVolumeControl';
-
-import arcanaJson from 'src/shared/data/arcana.json';
-
 import arcaneChess from 'src/features/game/engine/arcaneChess.mjs';
-import {
-  GameBoard,
-  InCheck,
-} from 'src/features/game/engine/board.mjs';
+import { GameBoard, InCheck } from 'src/features/game/engine/board.mjs';
 import { PrSq } from 'src/features/game/engine/io.mjs';
-import {
-  PIECES,
-  ARCANE_BIT_VALUES,
-} from 'src/features/game/engine/defs.mjs';
+import { PIECES } from 'src/features/game/engine/defs.mjs';
 import { SearchController } from 'src/features/game/engine/search.mjs';
 
 import {
@@ -52,24 +42,10 @@ import { PromotionHandler } from 'src/features/game/utils/PromotionHandler';
 import { OpponentPanel } from 'src/features/game/components/GamePanels/OpponentPanel';
 import { PlayerPanel } from 'src/features/game/components/GamePanels/PlayerPanel';
 
-const arcana: ArcanaMap = arcanaJson as ArcanaMap;
 const pieces: PieceRoyaltyTypes = PIECES;
-const royalties: PieceRoyaltyTypes = ARCANE_BIT_VALUES;
 
 interface PieceRoyaltyTypes {
   [key: string]: number;
-}
-
-interface ArcanaDetail {
-  id: string;
-  name: string;
-  description: string;
-  type: string;
-  imagePath: string;
-}
-
-interface ArcanaMap {
-  [key: string]: ArcanaDetail;
 }
 
 interface State {
@@ -301,7 +277,8 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
       }),
       updateSpellState: (updates) => this.setState(updates as any),
       updateHistory: (updates) => this.setState(updates as any),
-      addDialogue: (message) => this.setState((prev) => ({ dialogue: [...prev.dialogue, message] })),
+      addDialogue: (message) =>
+        this.setState((prev) => ({ dialogue: [...prev.dialogue, message] })),
       activateGlitch: () => this.setState({ glitchActive: true }),
     });
 
@@ -374,7 +351,8 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
 
   engineGo = () => this.gameEngineHandler.engineGo();
 
-  getHintAndScore = (level: number) => this.gameEngineHandler.getHintAndScore(level);
+  getHintAndScore = (level: number) =>
+    this.gameEngineHandler.getHintAndScore(level);
 
   onChangeUses = (e: React.ChangeEvent<HTMLSelectElement>, power: string) => {
     const uses = Number(e.target.value) || e.target.value;
@@ -407,10 +385,10 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
         [this.state.nodeId]:
           Math.abs(
             100000 -
-            Math.abs(
-              GameBoard.material[this.state.playerColor === 'white' ? 0 : 1] -
-              GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
-            )
+              Math.abs(
+                GameBoard.material[this.state.playerColor === 'white' ? 0 : 1] -
+                  GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
+              )
           ) *
           (timeLeft || 1) *
           LS.config.multiplier,
@@ -419,13 +397,18 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
     this.setState({});
   };
 
-  handlePromotion = (piece: string) => this.promotionHandler.handlePromotion(piece);
+  handlePromotion = (piece: string) =>
+    this.promotionHandler.handlePromotion(piece);
 
   promotionSelectAsync(callback: (piece: number) => void): Promise<void> {
-    return this.promotionHandler.promotionSelectAsyncWithState(callback, () => this.state);
+    return this.promotionHandler.promotionSelectAsyncWithState(
+      callback,
+      () => this.state
+    );
   }
 
-  handleModalClose = (pieceType: string) => this.promotionHandler.handleModalClose(pieceType);
+  handleModalClose = (pieceType: string) =>
+    this.promotionHandler.handleModalClose(pieceType);
 
   analyzeGame = () => {
     this.setState({
@@ -565,8 +548,9 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                 } else {
                   value =
                     pieces[
-                    `${this.state.playerColor === 'white' ? 'w' : 'b'
-                    }${value}`
+                      `${
+                        this.state.playerColor === 'white' ? 'w' : 'b'
+                      }${value}`
                     ];
                 }
               }
@@ -581,7 +565,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
             score={LS.nodeScores[this.state.nodeId]}
             type={
               this.state.gameOverType.split(' ')[1] === 'mates' &&
-                this.state.playerColor === this.state.gameOverType.split(' ')[0]
+              this.state.playerColor === this.state.gameOverType.split(' ')[0]
                 ? 'victory-qp'
                 : 'defeat-qp'
             }
@@ -642,7 +626,8 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                     fen: this.state.fen,
                     turnColor: gameBoardTurn,
                     orientation: this.state.playerColor,
-                    lastMove: this.state.lastMoveHistory[this.state.historyPly - 1],
+                    lastMove:
+                      this.state.lastMoveHistory[this.state.historyPly - 1],
                     check: InCheck() ? true : false,
                     royalties: this.state.royalties,
                     whiteFaction:
@@ -709,7 +694,9 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
               }
               history={this.state.history}
               sortedHistory={sortedHistory}
-              navigateHistory={(type, targetIndex) => this.navigateHistory(type, targetIndex)}
+              navigateHistory={(type, targetIndex) =>
+                this.navigateHistory(type, targetIndex)
+              }
               thinking={this.state.thinking}
               hoverArcane={this.state.hoverArcane}
               dialogue={this.state.dialogue}

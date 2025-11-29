@@ -32,30 +32,10 @@ import arcaneChess from 'src/features/game/engine/arcaneChess.mjs';
 //   arcaneChessWorker,
 // } from 'src/features/game/engine/arcaneChessInstance.js';
 
-import {
-  GameBoard,
-  InCheck,
-  TOSQ,
-  FROMSQ,
-  PROMOTED,
-  ARCANEFLAG,
-  CAPTURED,
-  MFLAGSUMN,
-  MFLAGCNSM,
-  MFLAGSHFT,
-} from 'src/features/game/engine/board.mjs';
-import { PrMove, PrSq } from 'src/features/game/engine/io.mjs';
-import {
-  prettyToSquare,
-  PIECES,
-  ARCANE_BIT_VALUES,
-  COLOURS,
-  RtyChar,
-  PceChar,
-} from 'src/features/game/engine/defs.mjs';
-import { outputFenOfCurrentPosition } from 'src/features/game/engine/board.mjs';
+import { GameBoard, InCheck } from 'src/features/game/engine/board.mjs';
+import { PrSq } from 'src/features/game/engine/io.mjs';
+import { PIECES } from 'src/features/game/engine/defs.mjs';
 import { SearchController } from 'src/features/game/engine/search.mjs';
-import { CheckAndSet, CheckResult } from 'src/features/game/engine/gui.mjs';
 
 import {
   whiteArcaneConfig,
@@ -103,7 +83,6 @@ const booksMap: { [key: string]: { [key: string]: Node } } = {
 const arcana: ArcanaMap = arcanaJson as ArcanaMap;
 
 const pieces: PieceRoyaltyTypes = PIECES;
-const royalties: PieceRoyaltyTypes = ARCANE_BIT_VALUES;
 
 interface PieceRoyaltyTypes {
   [key: string]: number;

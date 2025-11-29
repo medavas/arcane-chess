@@ -49,7 +49,6 @@ import {
   HrDir,
   HerShftDir,
   HemlockHopA,
-  HemlockHopB,
   BanDirSp,
   // BanDirWr,
   PCEINDEX,
@@ -610,7 +609,6 @@ export function GenerateMoves(
   let bishopCanShift = currentArcanaSide[1] & 4 || currentArcanaSide[1] & 256;
   let rookCanShift = currentArcanaSide[1] & 8 || currentArcanaSide[1] & 256;
   let ghostCanShift = currentArcanaSide[1] & 32 || currentArcanaSide[1] & 256;
-  let herringCanShift = currentArcanaSide[1] & 64 || currentArcanaSide[1] & 256;
   let kingCanShift = currentArcanaSide[1] & 512 || currentArcanaSide[1] & 256;
 
   const herringArray = getHerrings(GameBoard.side);
@@ -2444,13 +2442,6 @@ export function GenerateMoves(
           wCanShift = ghostCanShift;
         }
 
-        let hCanShift = false;
-        if (pce === PIECES.wH) {
-          hCanShift = herringCanShift;
-        } else if (pce === PIECES.bH) {
-          hCanShift = herringCanShift;
-        }
-
         for (let index = 0; index < dirVariants; index++) {
           let dir = dirArray[index];
           t_sq = sq + dir;
@@ -2687,8 +2678,6 @@ export function GenerateMoves(
 
         // H-Unit Logic: Token-driven movement generation
         if (isHUnit) {
-          const canCap5D = has5thDimensionSword;
-
           // Helper function for H-Unit natural movement (no shift flag)
           const runNaturalMovement = (dirCount, getDir) => {
             for (let i = 0; i < dirCount; i++) {
