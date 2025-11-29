@@ -6,6 +6,8 @@
     grid-template-columns: repeat(6, 50px);
     grid-auto-rows: 50px;
     gap: 2px;
+    position: relative;
+    z-index: 1;
 
     @media (max-width: 640px) {
       grid-template-columns: repeat(5, 50px);
@@ -34,8 +36,8 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 400px;
-    z-index: 1001;
+    bottom: 0;
+    z-index: 1002;
     background: rgba(5, 5, 20, 0.98);
     pointer-events: all;
     border: 2px solid rgba(79, 72, 204, 0.6);
@@ -56,7 +58,6 @@
       grid-template-columns: repeat(4, 50px);
       gap: 6px;
       padding: 12px;
-      height: 350px;
     }
 
     .arcane {

@@ -163,6 +163,14 @@
       position: relative;
       z-index: 100;
       overflow: visible;
+      
+      &:has(.arcana-block) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
     }
 
     .army-section {
