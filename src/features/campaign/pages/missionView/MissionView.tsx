@@ -24,8 +24,6 @@ import { swapArmies } from 'src/shared/utils/utils';
 import TactoriusModal from 'src/shared/components/Modal/Modal';
 import PromotionModal from 'src/features/game/components/PromotionModal/PromotionModal';
 
-import arcanaJson from 'src/shared/data/arcana.json';
-
 import arcaneChess from 'src/features/game/engine/arcaneChess.mjs';
 // import {
 //   arcane as arcaneChess,
@@ -51,6 +49,7 @@ import { BoardUX } from 'src/features/game/components/BoardUX/BoardUX';
 import { ArcanaSelector } from 'src/features/game/components/ArcanaSelector/ArcanaSelector';
 import { GameEngineHandler } from 'src/features/game/utils/GameEngineHandler';
 import { HistoryHandler } from 'src/features/game/utils/HistoryHandler';
+import { OpponentPanel } from 'src/features/game/components/GamePanels/OpponentPanel';
 
 import book1 from 'src/shared/data/books/book1.json';
 import book2 from 'src/shared/data/books/book2.json';
@@ -80,24 +79,10 @@ const booksMap: { [key: string]: { [key: string]: Node } } = {
   book12,
 };
 
-const arcana: ArcanaMap = arcanaJson as ArcanaMap;
-
 const pieces: PieceRoyaltyTypes = PIECES;
 
 interface PieceRoyaltyTypes {
   [key: string]: number;
-}
-
-interface ArcanaDetail {
-  id: string;
-  name: string;
-  description: string;
-  type: string;
-  imagePath: string;
-}
-
-interface ArcanaMap {
-  [key: string]: ArcanaDetail;
 }
 
 interface Node {
@@ -893,100 +878,46 @@ class UnwrappedMissionView extends React.Component<Props, State> {
               }
             />
             <div className="mission-view">
-              <div className="opponent-dialogue-arcana">
-                <div className="info-avatar">
-                  <div className="avatar">
-                    {/* {this.state.opponent !== '' ? (
-                      <img
-                        src={`/assets/avatars/${this.state.opponent}.webp`}
-                        style={{
-                          width: '60px',
-                          height: '60px',
-                          objectFit: 'contain',
-                        }}
-                      />
-                    ) : null} */}
-                  </div>
-                  <div className="board-arcana">
-                    <ArcanaSelector
-                      color={this.state.engineColor as 'white' | 'black'}
-                      arcaneConfig={
-                        (this.state.engineColor === 'white'
-                          ? whiteArcaneConfig
-                          : blackArcaneConfig) as Record<
-                          string,
-                          number | string | undefined
-                        >
-                      }
-                      playerColor={this.state.playerColor}
-                      thinking={this.state.thinking}
-                      historyLength={this.state.history.length}
-                      futureSightAvailable={this.state.futureSightAvailable}
-                      hoverArcane={this.state.hoverArcane}
-                      engineColor={this.state.engineColor}
-                      dyadName={
-                        typeof this.arcaneChess().getDyadName === 'function'
-                          ? this.arcaneChess().getDyadName()
-                          : ''
-                      }
-                      dyadOwner={
-                        typeof this.arcaneChess().getDyadOwner === 'function'
-                          ? this.arcaneChess().getDyadOwner()
-                          : undefined
-                      }
-                      trojanGambitExists={this.arcaneChess().getIfTrojanGambitExists(
-                        this.state.engineColor
-                      )}
-                      onSpellClick={this.handleArcanaClick}
-                      onHover={this.toggleHover}
-                      isArcaneActive={this.isArcaneActive}
-                    />
-                  </div>
-                </div>
-                <div id="dialogue" className="dialogue">
-                  {this.state.hoverArcane !== '' ? (
-                    <div className="arcana-detail">
-                      <h3>{arcana[this.state.hoverArcane].name}</h3>
-                      <p>{arcana[this.state.hoverArcane].description}</p>
-                    </div>
-                  ) : (
-                    <ul style={{ padding: '0' }}>
-                      {this.state.thinking ? (
-                        'The engine is thinking...'
-                      ) : trojanActive ? (
-                        <li className="banner banner--trojan">
-                          Trojan Gambit activated! Must take via en passant.
-                        </li>
-                      ) : (
-                        this.state.dialogue.map((item, key) => {
-                          return <li key={key}>{item}</li>;
-                        })
-                      )}
-                    </ul>
-                  )}
-                </div>
-                <div className="buttons">
-                  <Button
-                    className="tertiary"
-                    onClick={() => {
-                      this.stopAndReturnTime();
-                      this.setState({
-                        gameOver: true,
-                        gameOverType: `${this.state.playerColor} resigns.`,
-                      });
-                    }}
-                    color="S"
-                    // strong={true}
-                    text="RESIGN"
-                    width={100}
-                    // fontSize={30}
-                    backgroundColorOverride="#222222"
-                  />
-                </div>
-                <div className="global-volume-control">
-                  <GlobalVolumeControl />
-                </div>
-              </div>
+              <OpponentPanel
+                engineColor={this.state.engineColor}
+                playerColor={this.state.playerColor}
+                whiteFaction={this.state.whiteFaction}
+                blackFaction={this.state.blackFaction}
+                arcaneConfig={
+                  this.state.engineColor === 'white'
+                    ? whiteArcaneConfig
+                    : blackArcaneConfig
+                }
+                thinking={this.state.thinking}
+                hoverArcane={this.state.hoverArcane}
+                dialogue={this.state.dialogue}
+                trojanActive={trojanActive}
+                futureSightAvailable={this.state.futureSightAvailable}
+                historyLength={this.state.history.length}
+                dyadName={
+                  typeof this.arcaneChess().getDyadName === 'function'
+                    ? this.arcaneChess().getDyadName()
+                    : ''
+                }
+                dyadOwner={
+                  typeof this.arcaneChess().getDyadOwner === 'function'
+                    ? this.arcaneChess().getDyadOwner()
+                    : undefined
+                }
+                onSpellClick={this.handleArcanaClick}
+                onHover={this.toggleHover}
+                isArcaneActive={this.isArcaneActive}
+                onResign={() => {
+                  this.stopAndReturnTime();
+                  this.setState({
+                    gameOver: true,
+                    gameOverType: `${this.state.playerColor} resigns.`,
+                  });
+                }}
+                avatar={this.state.opponent}
+                showResign={true}
+                volumeControl={true}
+              />
               <div className="time-board-time">
                 <div className="board-frame"></div>
                 <div className={`board-view ${this.state.theme}-board`}>
