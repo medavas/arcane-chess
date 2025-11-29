@@ -2,12 +2,15 @@
   .dropdown {
     display: flex;
     justify-content: center;
+    align-items: center;
     height: 40px;
     width: 60px;
     border: none;
     color: white;
     background: #555555;
     text-align-last: center;
+    box-sizing: border-box;
+    padding: 0 8px;
   }
   .dropdown:hover {
     cursor: pointer;

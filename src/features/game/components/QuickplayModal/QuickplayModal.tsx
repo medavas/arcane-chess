@@ -374,14 +374,14 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
             {/* Header */}
             <div className="quickplay-header">
               <div className="header-left">
-                <Button
-                  className="tertiary"
-                  color="B"
-                  text="HOME"
+                <button
+                  className="home-button"
                   onClick={() => {
                     this.props.navigate('/');
                   }}
-                />
+                >
+                  <img className="logo" src="/assets/logoall+.png" alt="Home" />
+                </button>
               </div>
               {/* Mobile Tab Navigation */}
               <div className="tab-nav">
@@ -814,79 +814,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                     : 'settings-section'
                 }
               >
-                <h3>Game Settings</h3>
                 <div className="settings-content">
-                  <div
-                    className="quickplay-select"
-                    onMouseEnter={() => this.toggleHover('difficulty')}
-                    onMouseLeave={() => this.toggleHover('')}
-                  >
-                    <Select
-                      title="Difficulty"
-                      type="string"
-                      width={260}
-                      height={40}
-                      options={['Novice', 'Intermediate', 'Advanced', 'Expert']}
-                      defaultOption={
-                        this.state.difficulty.charAt(0).toUpperCase() +
-                        this.state.difficulty.slice(1)
-                      }
-                      onChange={(val) => {
-                        if (this.props.updateConfig)
-                          this.props.updateConfig(
-                            'difficulty',
-                            val.toLowerCase()
-                          );
-                        this.setState({ difficulty: val.toLowerCase() });
-                        if (val === 'Novice') {
-                          if (this.props.updateConfig) {
-                            this.props.updateConfig('thinkingTime', 2);
-                            this.props.updateConfig('engineDepth', 1);
-                          }
-                          this.setState((prevState) => ({
-                            config: {
-                              ...prevState.config,
-                              thinkingTime: 2,
-                              engineDepth: 1,
-                            },
-                          }));
-                        }
-                        if (val === 'Intermediate') {
-                          this.props.updateConfig!('thinkingTime', 4);
-                          this.props.updateConfig!('engineDepth', 3);
-                          this.setState((prevState) => ({
-                            config: {
-                              ...prevState.config,
-                              thinkingTime: 4,
-                              engineDepth: 3,
-                            },
-                          }));
-                        }
-                        if (val === 'Advanced') {
-                          this.props.updateConfig!('thinkingTime', 6);
-                          this.props.updateConfig!('engineDepth', 5);
-                          this.setState((prevState) => ({
-                            config: {
-                              ...prevState.config,
-                              thinkingTime: 6,
-                              engineDepth: 5,
-                            },
-                          }));
-                        }
-                        if (val === 'Expert') {
-                          this.props.updateConfig!('thinkingTime', 8);
-                          this.props.updateConfig!('engineDepth', 7);
-                          this.setState((prevState) => ({
-                            config: {
-                              ...prevState.config,
-                              thinkingTime: 8,
-                              engineDepth: 7,
-                            },
-                          }));
-                        }
-                      }}
-                    />
-                  </div>
+                  {/* Engine strength info at top */}
                   <div className="engine-strength">
                     <p>
                       ENGINE DEPTH: {this.state.config.engineDepth} half move(s)
@@ -896,87 +825,175 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                       second(s)
                     </p>
                   </div>
-                  <div
-                    className="quickplay-select"
-                    onMouseEnter={() => this.toggleHover('gameMode')}
-                    onMouseLeave={() => this.toggleHover('')}
-                  >
-                    <Select
-                      title="Game Mode"
-                      type="string"
-                      width={260}
-                      height={40}
-                      options={[
-                        ...Object.values(modes).map((mode) => mode.name),
-                      ]}
-                      defaultOption={this.state.selectedModeName}
-                      onChange={(val) => {
-                        const selectedMode = Object.values(modes).find(
-                          (mode) => mode.name === val
-                        );
-                        if (selectedMode && this.props.updateConfig) {
-                          const whiteConfigArcana = this.transformedSpellBook(
-                            selectedMode.white.arcana
+
+                  {/* 2x2 Grid: Game Mode, New Position, Difficulty, START */}
+                  <div className="settings-row">
+                    <div
+                      className="quickplay-select"
+                      onMouseEnter={() => this.toggleHover('gameMode')}
+                      onMouseLeave={() => this.toggleHover('')}
+                    >
+                      <Select
+                        // title="Game Mode"
+                        type="string"
+                        width="100%"
+                        height={40}
+                        options={[
+                          ...Object.values(modes).map((mode) => mode.name),
+                        ]}
+                        defaultOption={this.state.selectedModeName}
+                        onChange={(val) => {
+                          const selectedMode = Object.values(modes).find(
+                            (mode) => mode.name === val
                           );
-                          const blackConfigArcana = this.transformedSpellBook(
-                            selectedMode.black.arcana
-                          );
-                          this.props.updateConfig(
-                            'whiteSetup',
-                            selectedMode.white.setup
-                          );
-                          this.props.updateConfig(
-                            'blackSetup',
-                            selectedMode.black.setup
-                          );
-                          this.props.updateConfig('wArcana', whiteConfigArcana);
-                          this.props.updateConfig('bArcana', blackConfigArcana);
-                          this.setState({
-                            whiteArcana: selectedMode.white.arcana,
-                            whiteSetup: selectedMode.white.setup,
-                            blackArcana: selectedMode.black.arcana,
-                            blackSetup: selectedMode.black.setup,
-                            engineCharacterImgPath: '',
-                            playerCharacterImgPath: '',
-                            selectedModeName: val,
-                          });
+                          if (selectedMode && this.props.updateConfig) {
+                            const whiteConfigArcana = this.transformedSpellBook(
+                              selectedMode.white.arcana
+                            );
+                            const blackConfigArcana = this.transformedSpellBook(
+                              selectedMode.black.arcana
+                            );
+                            this.props.updateConfig(
+                              'whiteSetup',
+                              selectedMode.white.setup
+                            );
+                            this.props.updateConfig(
+                              'blackSetup',
+                              selectedMode.black.setup
+                            );
+                            this.props.updateConfig(
+                              'wArcana',
+                              whiteConfigArcana
+                            );
+                            this.props.updateConfig(
+                              'bArcana',
+                              blackConfigArcana
+                            );
+                            this.setState({
+                              whiteArcana: selectedMode.white.arcana,
+                              whiteSetup: selectedMode.white.setup,
+                              blackArcana: selectedMode.black.arcana,
+                              blackSetup: selectedMode.black.setup,
+                              engineCharacterImgPath: '',
+                              playerCharacterImgPath: '',
+                              selectedModeName: val,
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                    <div
+                      className="quickplay-select"
+                      onMouseEnter={() => this.toggleHover('gameModeRand')}
+                      onMouseLeave={() => this.toggleHover('')}
+                    >
+                      <Button
+                        text="New Position"
+                        className="tertiary"
+                        color="B"
+                        width="100%"
+                        height={40}
+                        onClick={() => {
+                          this.randomGameMode();
+                        }}
+                        backgroundColorOverride="linear-gradient(135deg, #00c6ff, #0072ff)"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="settings-row settings-row-buttons">
+                    <div
+                      className="quickplay-select"
+                      onMouseEnter={() => this.toggleHover('difficulty')}
+                      onMouseLeave={() => this.toggleHover('')}
+                    >
+                      <Select
+                        // title="Difficulty"
+                        type="string"
+                        width="100%"
+                        height={40}
+                        options={[
+                          'Novice',
+                          'Intermediate',
+                          'Advanced',
+                          'Expert',
+                        ]}
+                        defaultOption={
+                          this.state.difficulty.charAt(0).toUpperCase() +
+                          this.state.difficulty.slice(1)
                         }
-                      }}
-                    />
-                  </div>
-                  <div
-                    className="quickplay-select"
-                    onMouseEnter={() => this.toggleHover('gameModeRand')}
-                    onMouseLeave={() => this.toggleHover('')}
-                  >
-                    <Button
-                      text="New Position"
-                      className="tertiary"
-                      color="B"
-                      width={260}
-                      height={40}
-                      onClick={() => {
-                        this.randomGameMode();
-                      }}
-                      backgroundColorOverride="linear-gradient(135deg, #00c6ff, #0072ff)"
-                    />
-                  </div>
-                  <div
-                    className="quickplay-select"
-                    onMouseEnter={() => this.toggleHover('start')}
-                    onMouseLeave={() => this.toggleHover('')}
-                  >
-                    <Button
-                      text="START"
-                      className="primary"
-                      color="B"
-                      width={260}
-                      height={60}
-                      styles={{ marginTop: '8px' }}
-                      onClick={() => {
-                        this.props.handleClose();
-                      }}
-                    />
+                        onChange={(val) => {
+                          if (this.props.updateConfig)
+                            this.props.updateConfig(
+                              'difficulty',
+                              val.toLowerCase()
+                            );
+                          this.setState({ difficulty: val.toLowerCase() });
+                          if (val === 'Novice') {
+                            if (this.props.updateConfig) {
+                              this.props.updateConfig('thinkingTime', 2);
+                              this.props.updateConfig('engineDepth', 1);
+                            }
+                            this.setState((prevState) => ({
+                              config: {
+                                ...prevState.config,
+                                thinkingTime: 2,
+                                engineDepth: 1,
+                              },
+                            }));
+                          }
+                          if (val === 'Intermediate') {
+                            this.props.updateConfig!('thinkingTime', 4);
+                            this.props.updateConfig!('engineDepth', 3);
+                            this.setState((prevState) => ({
+                              config: {
+                                ...prevState.config,
+                                thinkingTime: 4,
+                                engineDepth: 3,
+                              },
+                            }));
+                          }
+                          if (val === 'Advanced') {
+                            this.props.updateConfig!('thinkingTime', 6);
+                            this.props.updateConfig!('engineDepth', 5);
+                            this.setState((prevState) => ({
+                              config: {
+                                ...prevState.config,
+                                thinkingTime: 6,
+                                engineDepth: 5,
+                              },
+                            }));
+                          }
+                          if (val === 'Expert') {
+                            this.props.updateConfig!('thinkingTime', 8);
+                            this.props.updateConfig!('engineDepth', 7);
+                            this.setState((prevState) => ({
+                              config: {
+                                ...prevState.config,
+                                thinkingTime: 8,
+                                engineDepth: 7,
+                              },
+                            }));
+                          }
+                        }}
+                      />
+                    </div>
+                    <div
+                      className="quickplay-select"
+                      onMouseEnter={() => this.toggleHover('start')}
+                      onMouseLeave={() => this.toggleHover('')}
+                    >
+                      <Button
+                        text="START"
+                        className="primary"
+                        color="B"
+                        width="100%"
+                        height={40}
+                        onClick={() => {
+                          this.props.handleClose();
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
