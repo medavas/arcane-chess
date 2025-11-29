@@ -15,7 +15,10 @@ import 'src/features/game/board/styles/chessground.scss';
 import 'src/features/game/board/styles/normal.scss';
 import 'src/features/game/board/styles/lambda.scss';
 
-import { setLocalStorage, getLocalStorage } from 'src/shared/utils/handleLocalStorage';
+import {
+  setLocalStorage,
+  getLocalStorage,
+} from 'src/shared/utils/handleLocalStorage';
 import { swapArmies } from 'src/shared/utils/utils';
 
 import TactoriusModal from 'src/shared/components/Modal/Modal';
@@ -292,24 +295,24 @@ class UnwrappedMissionView extends React.Component<Props, State> {
       playerInc:
         getLocalStorage(this.props.auth.user.username).config.color === 'white'
           ? booksMap[
-            `book${getLocalStorage(this.props.auth.user.username).chapter}`
-          ]?.[getLocalStorage(this.props.auth.user.username).nodeId]
-            .time[0][1]
+              `book${getLocalStorage(this.props.auth.user.username).chapter}`
+            ]?.[getLocalStorage(this.props.auth.user.username).nodeId]
+              .time[0][1]
           : booksMap[
-            `book${getLocalStorage(this.props.auth.user.username).chapter}`
-          ]?.[getLocalStorage(this.props.auth.user.username).nodeId]
-            .time[1][1],
+              `book${getLocalStorage(this.props.auth.user.username).chapter}`
+            ]?.[getLocalStorage(this.props.auth.user.username).nodeId]
+              .time[1][1],
       timeLeft: null,
       playerClock:
         getLocalStorage(this.props.auth.user.username).config.clock === false
           ? null
           : getLocalStorage(this.props.auth.user.username).config.color ===
             'white'
-            ? booksMap[
+          ? booksMap[
               `book${getLocalStorage(this.props.auth.user.username).chapter}`
             ]?.[getLocalStorage(this.props.auth.user.username).nodeId]
               .time[0][0]
-            : booksMap[
+          : booksMap[
               `book${getLocalStorage(this.props.auth.user.username).chapter}`
             ]?.[getLocalStorage(this.props.auth.user.username).nodeId]
               .time[1][0],
@@ -325,7 +328,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         ]?.[getLocalStorage(this.props.auth.user.username).nodeId]?.panels[
           'panel-1'
         ]?.turn ||
-          getLocalStorage(this.props.auth.user.username).config.color === 'white'
+        getLocalStorage(this.props.auth.user.username).config.color === 'white'
           ? 'black'
           : 'white',
       hasMounted: false,
@@ -362,20 +365,20 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         LS.config.color === 'white'
           ? this.hasMissionArcana
             ? booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
-              .whiteArcane
+                .whiteArcane
             : LS.arcana
           : // black should always be engine arcana
-          booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
-            .blackArcane,
+            booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
+              .blackArcane,
       blackArcana:
         LS.config.color === 'black'
           ? this.hasMissionArcana
             ? booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
-              .whiteArcane
+                .whiteArcane
             : LS.arcana
           : // black should always be engine arcana
-          booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
-            .blackArcane,
+            booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
+              .blackArcane,
       placingPiece: 0,
       swapType: '',
       isTeleport: false,
@@ -406,14 +409,16 @@ class UnwrappedMissionView extends React.Component<Props, State> {
       promotionModalOpen: false,
       placingPromotion:
         getLocalStorage(this.props.auth.user.username).config.autopromotion ===
-          'Select'
+        'Select'
           ? 0
           : pieces[
-          `${getLocalStorage(this.props.auth.user.username).config.color[0]
-          }${getLocalStorage(this.props.auth.user.username).config
-            .autopromotion
-          }`
-          ],
+              `${
+                getLocalStorage(this.props.auth.user.username).config.color[0]
+              }${
+                getLocalStorage(this.props.auth.user.username).config
+                  .autopromotion
+              }`
+            ],
       hint: '',
       theme: booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`].theme,
       hideCompletedPage:
@@ -463,7 +468,8 @@ class UnwrappedMissionView extends React.Component<Props, State> {
       }),
       updateSpellState: (updates) => this.setState(updates as any),
       updateHistory: (updates) => this.setState(updates as any),
-      addDialogue: (message) => this.setState((prev) => ({ dialogue: [...prev.dialogue, message] })),
+      addDialogue: (message) =>
+        this.setState((prev) => ({ dialogue: [...prev.dialogue, message] })),
       activateGlitch: () => this.setState({ glitchActive: true }),
     });
 
@@ -530,7 +536,8 @@ class UnwrappedMissionView extends React.Component<Props, State> {
 
   engineGo = () => this.gameEngineHandler.engineGo();
 
-  getHintAndScore = (level: number) => this.gameEngineHandler.getHintAndScore(level);
+  getHintAndScore = (level: number) =>
+    this.gameEngineHandler.getHintAndScore(level);
 
   onChangeUses = (e: React.ChangeEvent<HTMLSelectElement>, power: string) => {
     const uses = Number(e.target.value) || e.target.value;
@@ -591,7 +598,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         [this.state.nodeId]:
           Math.abs(
             GameBoard.material[this.state.playerColor === 'white' ? 0 : 1] -
-            GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
+              GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
           ) *
           (timeLeft || 1) *
           LS.config.multiplier,
@@ -664,8 +671,9 @@ class UnwrappedMissionView extends React.Component<Props, State> {
     return new Promise((resolve) => {
       if (this.arcaneChess().hasDivineReckoning()) {
         // Auto-promote to Valkyrie when Divine Reckoning is active
-        const valkyriePiece = `${this.state.playerColor === 'white' ? 'w' : 'b'
-          }V`;
+        const valkyriePiece = `${
+          this.state.playerColor === 'white' ? 'w' : 'b'
+        }V`;
         this.setState({ placingPromotion: pieces[valkyriePiece] }, () => {
           callback(this.state.placingPromotion!);
           resolve();
@@ -693,11 +701,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
     });
   };
 
-
-
   handleArcanaClick = (key: string) => this.spellHandler.handleArcanaClick(key);
-
-
 
   normalMoveStateAndEngineGo = (parsed: number, orig: string, dest: string) =>
     this.gameEngineHandler.normalMoveStateAndEngineGo(parsed, orig, dest);
@@ -778,7 +782,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
     const playerWins =
       this.state.gameOverType.split(' ')[1] === 'mates' &&
       getLocalStorage(this.props.auth.user.username).config.color ===
-      this.state.gameOverType.split(' ')[0];
+        this.state.gameOverType.split(' ')[0];
     const variantExpos: Record<string, string> = {
       XCHECK: '3 checks equals a win.',
       CRAZYHOUSE:
@@ -893,9 +897,10 @@ class UnwrappedMissionView extends React.Component<Props, State> {
               handleClose={() => this.setState({ gameOver: false })}
               // modalType={this.state.endScenario}
               message={`${this.state.gameOverType} 
-                ${playerWins
-                  ? this.state.victoryMessage
-                  : this.state.defeatMessage
+                ${
+                  playerWins
+                    ? this.state.victoryMessage
+                    : this.state.defeatMessage
                 }`}
               score={LS.nodeScores[this.state.nodeId]}
               type={playerWins ? 'victory' : 'defeat'}
@@ -930,9 +935,9 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                         (this.state.engineColor === 'white'
                           ? whiteArcaneConfig
                           : blackArcaneConfig) as Record<
-                            string,
-                            number | string | undefined
-                          >
+                          string,
+                          number | string | undefined
+                        >
                       }
                       playerColor={this.state.playerColor}
                       thinking={this.state.thinking}
@@ -1013,9 +1018,8 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                       fen: this.state.fen,
                       turnColor: gameBoardTurn,
                       orientation: this.state.orientation,
-                      lastMove: this.state.lastMoveHistory[
-                        this.state.historyPly - 1
-                      ],
+                      lastMove:
+                        this.state.lastMoveHistory[this.state.historyPly - 1],
                       check: InCheck() ? true : false,
                       royalties: this.state.royalties,
                       whiteFaction: this.state.whiteFaction,
@@ -1189,19 +1193,12 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                   />
                 </div>
                 <div id="dialogue" className="dialogue">
-                  {this.state.hoverArcane !== '' ? (
-                    <div className="arcana-detail">
-                      <h3>{arcana[this.state.hoverArcane].name}</h3>
-                      <p>{arcana[this.state.hoverArcane].description}</p>
-                    </div>
-                  ) : (
-                    <ul style={{ padding: '0' }}>
-                      <li>{variantExpos[this.state.preset]}</li>
-                      {this.state.dialogue.map((item, key) => {
-                        return <li key={key}>{item}</li>;
-                      })}
-                    </ul>
-                  )}
+                  <ul style={{ padding: '0' }}>
+                    <li>{variantExpos[this.state.preset]}</li>
+                    {this.state.dialogue.map((item, key) => {
+                      return <li key={key}>{item}</li>;
+                    })}
+                  </ul>
                 </div>
                 <div className="info-avatar">
                   <div className="avatar">
@@ -1223,9 +1220,9 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                         (this.state.playerColor === 'white'
                           ? whiteArcaneConfig
                           : blackArcaneConfig) as Record<
-                            string,
-                            number | string | undefined
-                          >
+                          string,
+                          number | string | undefined
+                        >
                       }
                       playerColor={this.state.playerColor}
                       thinking={this.state.thinking}

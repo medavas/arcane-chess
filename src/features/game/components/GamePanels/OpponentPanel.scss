@@ -1,0 +1,40 @@
+.opponent-dialogue-arcana {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  align-items: stretch;
+  flex-shrink: 0;
+
+  .info-avatar {
+    flex-shrink: 0;
+  }
+
+  .dialogue {
+    flex: 1;
+    min-height: 190px;
+    padding: 20px;
+    background: rgba(34, 34, 34, 0.7);
+    overflow-y: auto;
+  }
+
+  .buttons {
+    flex-shrink: 0;
+  }
+
+  .global-volume-control {
+    flex-shrink: 0;
+  }
+
+  // Mobile styles
+  @media (max-width: 768px) {
+    .dialogue {
+      min-height: 250px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .dialogue {
+      min-height: 250px;
+    }
+  }
+}

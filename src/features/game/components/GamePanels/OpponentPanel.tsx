@@ -8,9 +8,10 @@ import {
   whiteArcaneSpellBook,
   blackArcaneSpellBook,
 } from 'src/features/game/engine/arcaneDefs.mjs';
-// import arcanaJson from 'src/shared/data/arcana.json';
+import arcanaJson from 'src/shared/data/arcana.json';
+import './OpponentPanel.scss';
 
-// const arcana: any = arcanaJson;
+const arcana: any = arcanaJson;
 
 interface OpponentPanelProps {
   engineColor: string;
@@ -41,6 +42,7 @@ export const OpponentPanel: React.FC<OpponentPanelProps> = ({
   // arcaneConfig,
   thinking,
   hoverArcane,
+  dialogue,
   trojanActive,
   futureSightAvailable,
   historyLength,
@@ -87,6 +89,13 @@ export const OpponentPanel: React.FC<OpponentPanelProps> = ({
             variant="opponent"
           />
         </div>
+      </div>
+      <div id="dialogue" className="dialogue">
+        <ul style={{ padding: '0' }}>
+          {dialogue.map((item, key) => {
+            return <li key={key}>{item}</li>;
+          })}
+        </ul>
       </div>
       {showResign && (
         <div className="buttons">

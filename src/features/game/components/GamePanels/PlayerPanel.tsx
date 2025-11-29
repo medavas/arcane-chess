@@ -11,6 +11,7 @@ import {
   blackArcaneSpellBook,
 } from 'src/features/game/engine/arcaneDefs.mjs';
 import arcanaJson from 'src/shared/data/arcana.json';
+import './PlayerPanel.scss';
 
 const arcana: any = arcanaJson;
 
@@ -176,19 +177,12 @@ export const PlayerPanel: React.FC<PlayerPanelProps> = ({
         })}
       </div>
       <div id="dialogue" className="dialogue">
-        {hoverArcane !== '' ? (
-          <div className="arcana-detail">
-            <h3>{arcana[hoverArcane]?.name}</h3>
-            <p>{arcana[hoverArcane]?.description}</p>
-          </div>
-        ) : (
-          <ul style={{ padding: '0' }}>
-            {variantInfo && <li>{variantInfo}</li>}
-            {dialogue.map((item, key) => {
-              return <li key={key}>{item}</li>;
-            })}
-          </ul>
-        )}
+        <ul style={{ padding: '0' }}>
+          {variantInfo && <li>{variantInfo}</li>}
+          {dialogue.map((item, key) => {
+            return <li key={key}>{item}</li>;
+          })}
+        </ul>
       </div>
       <div className="info-avatar">
         <div className="board-arcana">

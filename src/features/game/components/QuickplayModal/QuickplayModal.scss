@@ -67,13 +67,9 @@
       margin: 0;
       .top {
         flex-direction: column;
-        height: 120px;
+        height: auto;
         .hover-text {
-          width: 360px;
-          margin: 0;
-          p {
-            width: 360px;
-          }
+          display: none;
         }
       }
       .sides {

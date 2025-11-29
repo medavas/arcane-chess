@@ -1,0 +1,85 @@
+.nav-history-buttons-player {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  align-items: stretch;
+  flex-shrink: 0;
+
+  .global-volume-control {
+    flex-shrink: 0;
+  }
+
+  .buttons {
+    flex-shrink: 0;
+  }
+
+  .nav {
+    flex-shrink: 0;
+  }
+
+  .history {
+    flex: 1;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(34, 34, 34, 0.7);
+    overflow-y: auto;
+    padding: 10px;
+
+    .pgn-list {
+      overflow-y: auto;
+    }
+
+    .full-move {
+      display: flex;
+      margin: 5px;
+      flex-shrink: 0;
+    }
+
+    .pgn-item {
+      width: 120px;
+      text-align: left;
+    }
+
+    .move-number {
+      margin: 0 20px 0 5px;
+      width: 20px;
+      text-align: left;
+    }
+  }
+
+  .dialogue {
+    flex: 1;
+    min-height: 190px;
+    padding: 20px;
+    background: rgba(34, 34, 34, 0.7);
+    overflow-y: auto;
+  }
+
+  .info-avatar {
+    flex-shrink: 0;
+  }
+
+  // Mobile styles
+  @media (max-width: 768px) {
+    .dialogue {
+      display: block;
+      min-height: 250px;
+    }
+
+    .history {
+      min-height: 200px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .dialogue {
+      min-height: 250px;
+    }
+
+    .history {
+      min-height: 220px;
+      padding: 5px;
+    }
+  }
+}
