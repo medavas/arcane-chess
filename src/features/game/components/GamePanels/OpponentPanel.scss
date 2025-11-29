@@ -1,6 +1,6 @@
 .opponent-dialogue-arcana {
   display: flex;
-  gap: 10px;
+  gap: 6px;
   flex-direction: column;
   align-items: stretch;
   flex-shrink: 0;
@@ -12,9 +12,32 @@
   .dialogue {
     flex: 1;
     min-height: 190px;
-    padding: 20px;
-    background: rgba(34, 34, 34, 0.7);
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
     overflow-y: auto;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 13px;
+    line-height: 1.5;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.5);
+      }
+    }
   }
 
   .buttons {

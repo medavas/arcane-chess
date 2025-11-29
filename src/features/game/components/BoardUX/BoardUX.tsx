@@ -79,8 +79,9 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       ? 'TELEPORT'
       : interactionState.swapType;
 
-    // @ts-ignore
-    forwardedRef?.current?.setAutoShapes([]);
+    if (forwardedRef && 'current' in forwardedRef && forwardedRef.current) {
+      forwardedRef.current.setAutoShapes([]);
+    }
 
     const { parsed, isInitPromotion = false } = game.makeUserMove(
       orig,
@@ -173,8 +174,9 @@ export const BoardUX: React.FC<BoardUXProps> = ({
   };
 
   const handleDropNewPiece = (piece: string, key: string) => {
-    // @ts-ignore
-    forwardedRef?.current?.setAutoShapes([]);
+    if (forwardedRef && 'current' in forwardedRef && forwardedRef.current) {
+      forwardedRef.current.setAutoShapes([]);
+    }
     if (GameBoard.pieces[prettyToSquare(key)] === PIECES.EMPTY) {
       const { parsed } = game.makeUserMove(
         null,
@@ -216,8 +218,9 @@ export const BoardUX: React.FC<BoardUXProps> = ({
     }
 
     if (interactionState.placingRoyalty > 0) {
-      // @ts-ignore
-      forwardedRef?.current?.setAutoShapes([]);
+      if (forwardedRef && 'current' in forwardedRef && forwardedRef.current) {
+        forwardedRef.current.setAutoShapes([]);
+      }
       if (
         ((GameBoard.side === COLOURS.WHITE &&
           prettyToSquare(key) < whiteLimit) ||
@@ -270,8 +273,9 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         dests.has(`o${interactionState.offeringType}@`) &&
         dests.get(`o${interactionState.offeringType}@`).includes(key)
       ) {
-        // @ts-ignore
-        forwardedRef?.current?.setAutoShapes([]);
+        if (forwardedRef && 'current' in forwardedRef && forwardedRef.current) {
+          forwardedRef.current.setAutoShapes([]);
+        }
         const { parsed } = game.makeUserMove(
           key,
           null,

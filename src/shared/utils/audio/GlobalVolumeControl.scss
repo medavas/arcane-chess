@@ -6,6 +6,10 @@
   flex-direction: column;
   justify-self: flex-end;
   z-index: 5;
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
 
   .volume-group {
     .volume-bar {
@@ -14,59 +18,103 @@
       .volume-slider {
         width: 120px;
         appearance: none;
-        background: linear-gradient(to right,
-            $B_MENU 0%,
-            $B_MENU var(--fill, 0%),
-            #222222 var(--fill, 0%),
-            #222222 100%);
+        background: linear-gradient(
+          to right,
+          rgba(68, 170, 255, 0.8) 0%,
+          rgba(68, 170, 255, 0.8) var(--fill, 0%),
+          rgba(255, 255, 255, 0.1) var(--fill, 0%),
+          rgba(255, 255, 255, 0.1) 100%
+        );
         background-repeat: no-repeat;
         background-size: 100% 100%;
         background-origin: content-box;
         background-clip: content-box;
-        border: none;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
         height: 20px;
         margin: 0;
-        // padding-left: 2px;
         outline: none;
 
         &::-webkit-slider-thumb {
           appearance: none;
-          width: 30px;
-          height: 20px;
-          background-color: $S_MENU;
+          width: 18px;
+          height: 18px;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.9),
+            rgba(200, 200, 200, 0.9)
+          );
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50%;
           cursor:
             url('/assets/images/cursors/pointer.svg') 12 4,
             pointer;
+          transition: all 0.2s ease;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         &::-webkit-slider-thumb:hover {
-          filter: brightness(1.5);
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 1),
+            rgba(220, 220, 220, 1)
+          );
+          box-shadow: 0 0 8px rgba(68, 170, 255, 0.6);
+          transform: scale(1.1);
         }
 
         &::-moz-range-thumb {
-          width: 30px;
-          height: 20px;
-          background-color: $S_MENU;
+          width: 18px;
+          height: 18px;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.9),
+            rgba(200, 200, 200, 0.9)
+          );
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50%;
           cursor:
             url('/assets/images/cursors/pointer.svg') 12 4,
             pointer;
+          transition: all 0.2s ease;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         &::-moz-range-thumb:hover {
-          filter: brightness(1.5);
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 1),
+            rgba(220, 220, 220, 1)
+          );
+          box-shadow: 0 0 8px rgba(68, 170, 255, 0.6);
+          transform: scale(1.1);
         }
 
         &::-ms-thumb {
-          width: 30px;
-          height: 20px;
-          background-color: $S_MENU;
+          width: 18px;
+          height: 18px;
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.9),
+            rgba(200, 200, 200, 0.9)
+          );
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50%;
           cursor:
             url('/assets/images/cursors/pointer.svg') 12 4,
             pointer;
+          transition: all 0.2s ease;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         &::-ms-thumb:hover {
-          filter: brightness(1.5);
+          background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 1),
+            rgba(220, 220, 220, 1)
+          );
+          box-shadow: 0 0 8px rgba(68, 170, 255, 0.6);
+          transform: scale(1.1);
         }
       }
 
@@ -75,9 +123,13 @@
         justify-content: center;
         align-items: center;
         font-size: 12px;
+        font-weight: 600;
         height: 20px;
         width: 40px;
-        background: #222222;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+        color: rgba(255, 255, 255, 0.9);
         cursor: url('/assets/images/cursors/default.svg'), default;
       }
     }
