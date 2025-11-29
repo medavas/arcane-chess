@@ -244,11 +244,11 @@ export const modes: Record<string, GameModeType> = padModes({
     black: {
       arcana: [
         // arcana.sumnRG, arcana.sumnV, arcana.modsBAN,
-        // arcana.modsINH,
+        arcana.modsINH,
         // arcana.modsDIV,
         // arcana.gainDYA,
         // arcana.gainDYA,
-        // arcana.gainDYA,
+        arcana.gainDYA,
         // arcana.gainDYA,
         // arcana.modsENS,
         arcana.modsDIM,

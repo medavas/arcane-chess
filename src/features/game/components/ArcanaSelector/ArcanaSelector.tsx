@@ -140,6 +140,7 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
   thinking,
   historyLength,
   futureSightAvailable,
+  hoverArcane,
   dyadName,
   dyadOwner,
   trojanGambitExists,
@@ -150,7 +151,7 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
 }) => {
   const progress = getProgressState(color);
 
-  // Local hover state
+  // Local hover state for styling only
   const [localHover, setLocalHover] = React.useState<string>('');
   const hoverTimeoutRef = React.useRef<number | null>(null);
 
@@ -199,10 +200,10 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
     [spellBook, arcaneConfig]
   );
 
-  // Get hover spell details
+  // Get hover spell details from shared hoverArcane prop (works for both player and opponent)
   const hoveredSpell = React.useMemo(
-    () => (localHover ? arcana[localHover] : null),
-    [localHover]
+    () => (hoverArcane ? arcana[hoverArcane] : null),
+    [hoverArcane]
   );
 
   // Opponent variant: horizontal layout without local hover text
