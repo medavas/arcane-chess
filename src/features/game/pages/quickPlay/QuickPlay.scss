@@ -22,9 +22,11 @@
   justify-content: center;
   align-items: center;
   background-image: url('/assets/images/textures/random-grey-variations.png'),
-    radial-gradient(circle,
+    radial-gradient(
+      circle,
       rgba(221, 221, 221, 0.6) 0%,
-      rgba(17, 17, 17, 0.2) 80%);
+      rgba(17, 17, 17, 0.2) 80%
+    );
   background-position: center;
 
   .quickplay-view {
@@ -49,19 +51,36 @@
 
       .info-avatar {
         display: grid;
-        grid-template-columns: 60px 1fr;
+        grid-template-columns: 1fr;
         grid-auto-rows: auto;
         column-gap: 10px;
         width: 100%;
-        align-items: center;
+        align-items: stretch;
 
         .avatar {
+          display: none;
           grid-column: 1;
           grid-row: 1;
           position: relative;
           background: rgba(34, 34, 34, 0.7);
           width: 60px;
           height: 60px;
+        }
+
+        .board-arcana {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .new-arcana-selector {
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .new-arcana-selector__grid {
+          max-width: 200px;
+          height: auto !important;
+          flex-shrink: 1 !important;
         }
 
         .arcana-select-wrapper {
@@ -160,18 +179,22 @@
         .arcana-charge-bar {
           position: relative;
           width: 100%;
-          height: 6px;
-          background: rgba(255, 255, 255, 0.12);
-          border-radius: 4px;
-          overflow: hidden;
+          height: auto;
+          background: transparent;
+          border-radius: 0;
+          overflow: visible;
           flex: 0 0 auto;
+          display: flex;
+          gap: 3px;
+          padding: 0;
         }
 
         .arcana-charge-bar__fill {
-          height: 100%;
-          width: 0;
-          background: linear-gradient(90deg, #2ecc71, #27ae60);
-          transition: width 200ms ease;
+          height: 12px;
+          width: 8px;
+          background: linear-gradient(180deg, #2ecc71, #27ae60);
+          transition: background 200ms ease;
+          border-radius: 2px;
         }
       }
 
@@ -282,18 +305,16 @@
       }
 
       .info-avatar {
-        /* Make a 2-column grid: [avatar | content],
-       then place the Arcana wrapper on a new row spanning both columns */
+        /* Single column layout without avatar */
         display: grid;
-        grid-template-columns: 60px 1fr;
-        /* avatar width, then flexible */
+        grid-template-columns: 1fr;
         grid-auto-rows: auto;
         column-gap: 10px;
         width: 100%;
-        align-items: center;
-        /* vertical align for the first row */
+        align-items: stretch;
 
         .avatar {
+          display: none;
           grid-column: 1;
           grid-row: 1;
           position: relative;
@@ -302,19 +323,33 @@
           height: 60px;
         }
 
-        /* Arcana strip + arcana charge bar sit on row 2 and span full width */
+        .board-arcana {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .new-arcana-selector {
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .new-arcana-selector__grid {
+          max-width: 200px;
+          height: auto !important;
+          flex-shrink: 1 !important;
+        }
+
         .arcana-select-wrapper {
           grid-column: 1 / -1;
-          /* span both columns */
-          grid-row: 2;
+          grid-row: 1;
 
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 4px;
 
           width: 100%;
           min-width: 0;
-          /* allow shrinking within the grid */
+          padding: 0;
         }
 
         .arcana-select {
@@ -709,6 +744,47 @@
           background: rgba(34, 34, 34, 0.7);
           overflow-y: scroll;
         }
+      }
+    }
+  }
+}
+
+// Mobile 360x640 and similar small screens
+@media (max-width: 640px) {
+  .quickplay-tactorius-board {
+    .opponent-dialogue-arcana {
+      max-width: 100%;
+      height: auto;
+      min-height: 200px;
+      padding: 0 5px;
+
+      .info-avatar {
+        .board-arcana {
+          .new-arcana-selector__grid {
+            max-width: 100% !important;
+            height: 140px !important;
+          }
+        }
+      }
+    }
+
+    .nav-history-buttons-player {
+      max-width: 100%;
+      height: auto;
+      padding: 0 5px;
+
+      .info-avatar {
+        .board-arcana {
+          .new-arcana-selector__grid {
+            max-width: 100% !important;
+            height: auto !important;
+          }
+        }
+      }
+
+      .history {
+        height: 150px;
+        padding: 5px;
       }
     }
   }

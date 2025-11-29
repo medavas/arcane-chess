@@ -229,8 +229,10 @@ export const modes: Record<string, GameModeType> = padModes({
         // arcana.modsENS,
         arcana.modsHEX,
         arcana.modsGLA,
-        // arcana.sumnRN,
-        // arcana.modsENS,
+        arcana.sumnRN,
+        // arcana.modsDIS,
+        arcana.modsHEX,
+        arcana.modsAET,
         // arcana.areaQ,
         // arcana.areaT,
         // arcana.gainDYA,
@@ -257,7 +259,8 @@ export const modes: Record<string, GameModeType> = padModes({
       ],
       setup: '4k3',
     },
-  }, test4: {
+  },
+  test4: {
     name: 'Release Test 4',
     white: {
       arcana: [

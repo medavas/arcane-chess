@@ -3,266 +3,225 @@ import { ArcanaSelector } from 'src/features/game/components/ArcanaSelector/Arca
 import Button from 'src/shared/components/Button/Button';
 import GlobalVolumeControl from 'src/shared/utils/audio/GlobalVolumeControl';
 import ChessClock from 'src/features/game/components/Clock/Clock';
-import { FACTIONS, GREEK_CAP } from 'src/shared/components/Skirmish/SkirmishModal';
-import { whiteArcaneConfig, blackArcaneConfig } from 'src/features/game/engine/arcaneDefs.mjs';
+
+import {
+  whiteArcaneConfig,
+  blackArcaneConfig,
+  whiteArcaneSpellBook,
+  blackArcaneSpellBook,
+} from 'src/features/game/engine/arcaneDefs.mjs';
 import arcanaJson from 'src/shared/data/arcana.json';
 
 const arcana: any = arcanaJson;
 
 interface PlayerPanelProps {
-    playerColor: string;
-    engineColor: string;
-    whiteFaction: string;
-    blackFaction: string;
-    arcaneConfig: any;
-    history: (string | string[])[];
-    sortedHistory: (string | string[])[][];
-    navigateHistory: (type: string, targetIndex?: number) => void;
-    thinking: boolean;
-    hoverArcane: string;
-    dialogue: string[];
-    futureSightAvailable: boolean;
-    dyadName: string;
-    dyadOwner: string | undefined;
-    trojanActive: boolean;
-    onSpellClick: (key: string) => void;
-    onHover: (arcane: string) => void;
-    isArcaneActive: (key: string, color?: string) => boolean;
-    onResign: () => void;
-    clockState?: {
-        ref: React.RefObject<ChessClock>;
-        type: string;
-        playerTurn: boolean;
-        turn: string;
-        time: number | null;
-        timePrime: number | null;
-        playerTimeout: () => void;
-    };
-    variantInfo?: string; // For MissionView variant explanation
-    avatar?: string;
-    showResign?: boolean;
-    volumeControl?: boolean;
+  playerColor: string;
+  engineColor: string;
+  whiteFaction: string;
+  blackFaction: string;
+  arcaneConfig: any;
+  history: (string | string[])[];
+  sortedHistory: (string | string[])[][];
+  navigateHistory: (type: string, targetIndex?: number) => void;
+  thinking: boolean;
+  hoverArcane: string;
+  dialogue: string[];
+  futureSightAvailable: boolean;
+  dyadName: string;
+  dyadOwner: string | undefined;
+  trojanActive: boolean;
+  onSpellClick: (key: string) => void;
+  onHover: (arcane: string) => void;
+  isArcaneActive: (key: string, color?: string) => boolean;
+  onResign: () => void;
+  clockState?: {
+    ref: React.RefObject<ChessClock>;
+    type: string;
+    playerTurn: boolean;
+    turn: string;
+    time: number | null;
+    timePrime: number | null;
+    playerTimeout: () => void;
+  };
+  variantInfo?: string; // For MissionView variant explanation
+  avatar?: string;
+  showResign?: boolean;
+  volumeControl?: boolean;
 }
 
 export const PlayerPanel: React.FC<PlayerPanelProps> = ({
-    playerColor,
-    engineColor,
-    whiteFaction,
-    blackFaction,
-    // arcaneConfig,
-    history,
-    sortedHistory,
-    navigateHistory,
-    thinking,
-    hoverArcane,
-    dialogue,
-    futureSightAvailable,
-    dyadName,
-    dyadOwner,
-    trojanActive,
-    onSpellClick,
-    onHover,
-    isArcaneActive,
-    onResign,
-    clockState,
-    variantInfo,
-    avatar,
-    showResign = true,
-    volumeControl = true
+  playerColor,
+  engineColor,
+  // arcaneConfig,
+  history,
+  sortedHistory,
+  navigateHistory,
+  thinking,
+  hoverArcane,
+  dialogue,
+  futureSightAvailable,
+  dyadName,
+  dyadOwner,
+  trojanActive,
+  onSpellClick,
+  onHover,
+  isArcaneActive,
+  onResign,
+  clockState,
+  variantInfo,
+  showResign = true,
+  volumeControl = true,
 }) => {
-    const mapFaction = (f: string) => (f === 'normal' ? 'tau' : f);
-
-    const playerAccent = playerColor
-        ? FACTIONS[
-            mapFaction(
-                playerColor === 'white'
-                    ? whiteFaction
-                    : blackFaction
-            ) as keyof typeof FACTIONS
-        ]?.color
-        : undefined;
-
-    return (
-        <div className="nav-history-buttons-player">
-            {volumeControl && (
-                <div className="global-volume-control">
-                    <GlobalVolumeControl />
-                </div>
-            )}
-            {showResign && (
-                <div className="buttons">
-                    <Button
-                        className="tertiary"
-                        onClick={onResign}
-                        color={playerColor === 'white' ? 'S' : 'B'} // Heuristic
-                        text="RESIGN"
-                        width={100}
-                        backgroundColorOverride="#222222"
-                    />
-                </div>
-            )}
-            <div className="nav">
-                <Button
-                    className="tertiary"
-                    onClick={() => navigateHistory('start')}
-                    color={playerColor === 'white' ? 'S' : 'B'}
-                    strong={true}
-                    variant="<<"
-                    width={100}
-                    fontSize={30}
-                    backgroundColorOverride="#222222"
-                />
-                <Button
-                    className="tertiary"
-                    onClick={() => navigateHistory('back')}
-                    color={playerColor === 'white' ? 'S' : 'B'}
-                    strong={true}
-                    variant="<"
-                    width={100}
-                    fontSize={30}
-                    backgroundColorOverride="#222222"
-                />
-                <Button
-                    className="tertiary"
-                    onClick={() => navigateHistory('forward')}
-                    color={playerColor === 'white' ? 'S' : 'B'}
-                    strong={true}
-                    variant=">"
-                    width={100}
-                    fontSize={30}
-                    backgroundColorOverride="#222222"
-                />
-                <Button
-                    className="tertiary"
-                    onClick={() => navigateHistory('end')}
-                    color={playerColor === 'white' ? 'S' : 'B'}
-                    strong={true}
-                    variant=">>"
-                    width={100}
-                    fontSize={30}
-                    backgroundColorOverride="#222222"
-                />
-            </div>
-            {clockState && (
-                <div className="timer">
-                    <ChessClock
-                        ref={clockState.ref}
-                        type={clockState.type}
-                        playerTurn={clockState.playerTurn}
-                        turn={clockState.turn}
-                        time={clockState.time}
-                        timePrime={clockState.timePrime}
-                        playerTimeout={clockState.playerTimeout}
-                    />
-                </div>
-            )}
-            <div id="history" className="history">
-                {sortedHistory.map((fullMove: any, fullMoveIndex: number) => {
-                    return (
-                        <p className="full-move" key={fullMoveIndex}>
-                            <span className="move-number">{fullMoveIndex + 1}.</span>
-                            <Button
-                                className="tertiary"
-                                text={fullMove[0]}
-                                color={playerColor === 'white' ? 'S' : 'B'}
-                                height={20}
-                                onClick={() => {
-                                    navigateHistory('jump', fullMoveIndex * 2 + 1);
-                                }}
-                                backgroundColorOverride="#00000000"
-                            />
-                            <Button
-                                className="tertiary"
-                                text={fullMove[1]}
-                                color={playerColor === 'white' ? 'S' : 'B'}
-                                height={20}
-                                onClick={() => {
-                                    navigateHistory('jump', fullMoveIndex * 2 + 2);
-                                }}
-                                backgroundColorOverride="#00000000"
-                            />
-                        </p>
-                    );
-                })}
-            </div>
-            <div id="dialogue" className="dialogue">
-                {hoverArcane !== '' ? (
-                    <div className="arcana-detail">
-                        <h3>{arcana[hoverArcane]?.name}</h3>
-                        <p>{arcana[hoverArcane]?.description}</p>
-                    </div>
-                ) : (
-                    <ul style={{ padding: '0' }}>
-                        {variantInfo && <li>{variantInfo}</li>}
-                        {dialogue.map((item, key) => {
-                            return <li key={key}>{item}</li>;
-                        })}
-                    </ul>
-                )}
-            </div>
-            <div className="info-avatar">
-                <div className="avatar">
-                    {avatar && (
-                        <img
-                            src={`/assets/avatars/${avatar}.webp`}
-                            style={{
-                                height: '60px',
-                                width: '60px',
-                                objectFit: 'contain',
-                            }}
-                            alt="Player Avatar"
-                        />
-                    )}
-                    {!avatar && (
-                        <div
-                            style={
-                                playerAccent
-                                    ? { borderColor: playerAccent, color: playerAccent }
-                                    : {}
-                            }
-                            title={`${playerColor === 'white'
-                                ? whiteFaction
-                                : blackFaction
-                                } faction`}
-                        >
-                            <span className="badge-glyph">
-                                {
-                                    GREEK_CAP[
-                                    (playerColor === 'white'
-                                        ? whiteFaction
-                                        : blackFaction) as keyof typeof GREEK_CAP
-                                    ]
-                                }
-                            </span>
-                        </div>
-                    )}
-                </div>
-                <div className="board-arcana">
-                    <ArcanaSelector
-                        color={playerColor as 'white' | 'black'}
-                        arcaneConfig={
-                            (playerColor === 'white'
-                                ? whiteArcaneConfig
-                                : blackArcaneConfig) as Record<
-                                    string,
-                                    number | string | undefined
-                                >
-                        }
-                        playerColor={playerColor}
-                        thinking={thinking}
-                        historyLength={history.length}
-                        futureSightAvailable={futureSightAvailable}
-                        hoverArcane={hoverArcane}
-                        engineColor={engineColor}
-                        dyadName={dyadName}
-                        dyadOwner={dyadOwner}
-                        trojanGambitExists={trojanActive}
-                        onSpellClick={onSpellClick}
-                        onHover={onHover}
-                        isArcaneActive={isArcaneActive}
-                    />
-                </div>
-            </div>
+  return (
+    <div className="nav-history-buttons-player">
+      {volumeControl && (
+        <div className="global-volume-control">
+          <GlobalVolumeControl />
         </div>
-    );
+      )}
+      {showResign && (
+        <div className="buttons">
+          <Button
+            className="tertiary"
+            onClick={onResign}
+            color={playerColor === 'white' ? 'S' : 'B'} // Heuristic
+            text="RESIGN"
+            width={100}
+            backgroundColorOverride="#222222"
+          />
+        </div>
+      )}
+      <div className="nav">
+        <Button
+          className="tertiary"
+          onClick={() => navigateHistory('start')}
+          color={playerColor === 'white' ? 'S' : 'B'}
+          strong={true}
+          variant="<<"
+          width={100}
+          fontSize={30}
+          backgroundColorOverride="#222222"
+        />
+        <Button
+          className="tertiary"
+          onClick={() => navigateHistory('back')}
+          color={playerColor === 'white' ? 'S' : 'B'}
+          strong={true}
+          variant="<"
+          width={100}
+          fontSize={30}
+          backgroundColorOverride="#222222"
+        />
+        <Button
+          className="tertiary"
+          onClick={() => navigateHistory('forward')}
+          color={playerColor === 'white' ? 'S' : 'B'}
+          strong={true}
+          variant=">"
+          width={100}
+          fontSize={30}
+          backgroundColorOverride="#222222"
+        />
+        <Button
+          className="tertiary"
+          onClick={() => navigateHistory('end')}
+          color={playerColor === 'white' ? 'S' : 'B'}
+          strong={true}
+          variant=">>"
+          width={100}
+          fontSize={30}
+          backgroundColorOverride="#222222"
+        />
+      </div>
+      {clockState && (
+        <div className="timer">
+          <ChessClock
+            ref={clockState.ref}
+            type={clockState.type}
+            playerTurn={clockState.playerTurn}
+            turn={clockState.turn}
+            time={clockState.time}
+            timePrime={clockState.timePrime}
+            playerTimeout={clockState.playerTimeout}
+          />
+        </div>
+      )}
+      <div id="history" className="history">
+        {sortedHistory.map((fullMove: any, fullMoveIndex: number) => {
+          return (
+            <p className="full-move" key={fullMoveIndex}>
+              <span className="move-number">{fullMoveIndex + 1}.</span>
+              <Button
+                className="tertiary"
+                text={fullMove[0]}
+                color={playerColor === 'white' ? 'S' : 'B'}
+                height={20}
+                onClick={() => {
+                  navigateHistory('jump', fullMoveIndex * 2 + 1);
+                }}
+                backgroundColorOverride="#00000000"
+              />
+              <Button
+                className="tertiary"
+                text={fullMove[1]}
+                color={playerColor === 'white' ? 'S' : 'B'}
+                height={20}
+                onClick={() => {
+                  navigateHistory('jump', fullMoveIndex * 2 + 2);
+                }}
+                backgroundColorOverride="#00000000"
+              />
+            </p>
+          );
+        })}
+      </div>
+      <div id="dialogue" className="dialogue">
+        {hoverArcane !== '' ? (
+          <div className="arcana-detail">
+            <h3>{arcana[hoverArcane]?.name}</h3>
+            <p>{arcana[hoverArcane]?.description}</p>
+          </div>
+        ) : (
+          <ul style={{ padding: '0' }}>
+            {variantInfo && <li>{variantInfo}</li>}
+            {dialogue.map((item, key) => {
+              return <li key={key}>{item}</li>;
+            })}
+          </ul>
+        )}
+      </div>
+      <div className="info-avatar">
+        <div className="board-arcana">
+          <ArcanaSelector
+            color={playerColor as 'white' | 'black'}
+            arcaneConfig={
+              (playerColor === 'white'
+                ? whiteArcaneConfig
+                : blackArcaneConfig) as Record<
+                string,
+                number | string | undefined
+              >
+            }
+            spellBook={
+              (playerColor === 'white'
+                ? whiteArcaneSpellBook
+                : blackArcaneSpellBook) as Record<string, number>
+            }
+            playerColor={playerColor}
+            thinking={thinking}
+            historyLength={history.length}
+            futureSightAvailable={futureSightAvailable}
+            hoverArcane={hoverArcane}
+            engineColor={engineColor}
+            dyadName={dyadName}
+            dyadOwner={dyadOwner}
+            trojanGambitExists={trojanActive}
+            onSpellClick={onSpellClick}
+            onHover={onHover}
+            isArcaneActive={isArcaneActive}
+          />
+        </div>
+      </div>
+    </div>
+  );
 };

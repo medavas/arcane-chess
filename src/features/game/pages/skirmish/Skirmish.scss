@@ -22,9 +22,11 @@
   justify-content: center;
   align-items: center;
   background-image: url('/assets/images/textures/random-grey-variations.png'),
-    radial-gradient(circle,
+    radial-gradient(
+      circle,
       rgba(221, 221, 221, 0.6) 0%,
-      rgba(17, 17, 17, 0.2) 80%);
+      rgba(17, 17, 17, 0.2) 80%
+    );
   background-position: center;
 
   .skirmish-view {
@@ -42,29 +44,43 @@
       justify-content: flex-start;
       align-items: stretch;
       flex: 1;
-      height: 480px;
+      height: auto;
       max-width: 400px;
       padding: 0 10px;
       overflow: hidden;
 
       .info-avatar {
         display: grid;
-        grid-template-columns: 60px 1fr;
+        grid-template-columns: 1fr;
         grid-auto-rows: auto;
         column-gap: 10px;
         width: 100%;
-        align-items: center;
+        align-items: stretch;
 
         .avatar {
+          display: none;
           position: relative;
           background: rgba(34, 34, 34, 0.7);
           min-width: 60px;
           height: 60px;
-          display: flex;
           align-items: center;
           justify-content: center;
           font-size: 48px;
           text-transform: uppercase;
+        }
+
+        .board-arcana {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .new-arcana-selector {
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .new-arcana-selector--opponent {
+          max-height: 80px;
         }
 
         .arcana-select-wrapper {
@@ -286,27 +302,38 @@
 
       .info-avatar {
         display: grid;
-        grid-template-columns: 60px 1fr;
+        grid-template-columns: 1fr;
         grid-auto-rows: auto;
         column-gap: 10px;
         width: 100%;
-        align-items: center;
+        align-items: stretch;
 
         .avatar {
+          display: none;
           position: relative;
           background: rgba(34, 34, 34, 0.7);
           min-width: 60px;
           height: 60px;
-          display: flex;
           align-items: center;
           justify-content: center;
           font-size: 48px;
           text-transform: uppercase;
         }
 
+        .board-arcana {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .new-arcana-selector {
+          width: 100%;
+          max-width: 100%;
+          max-height: 180px;
+        }
+
         .arcana-select-wrapper {
           grid-column: 1 / -1;
-          grid-row: 2;
+          grid-row: 1;
 
           display: flex;
           flex-direction: column;
@@ -413,6 +440,35 @@
           background: linear-gradient(90deg, #2ecc71, #27ae60);
           transition: width 200ms ease;
         }
+      }
+    }
+
+    .shared-spell-detail {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      padding: 15px 20px;
+      max-width: 500px;
+      width: 90%;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+      h3 {
+        color: #4af;
+        font-size: 16px;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+      }
+
+      p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 0;
       }
     }
   }
@@ -708,6 +764,45 @@
           background: rgba(34, 34, 34, 0.7);
           overflow-y: scroll;
         }
+      }
+    }
+  }
+}
+
+// Mobile 360x640 and similar small screens
+@media (max-width: 640px) {
+  .skirmish-tactorius-board {
+    .opponent-dialogue-arcana {
+      max-width: 100%;
+      height: auto;
+      min-height: 200px;
+      padding: 0 5px;
+
+      .info-avatar {
+        .board-arcana {
+          .new-arcana-selector {
+            max-height: 160px !important;
+          }
+        }
+      }
+    }
+
+    .nav-history-buttons-player {
+      max-width: 100%;
+      height: auto;
+      padding: 0 5px;
+
+      .info-avatar {
+        .board-arcana {
+          .new-arcana-selector {
+            max-height: 160px !important;
+          }
+        }
+      }
+
+      .history {
+        height: 150px;
+        padding: 5px;
       }
     }
   }

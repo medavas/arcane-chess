@@ -138,7 +138,9 @@ export function AddCaptureMove(move, consume = false, capturesOnly = false) {
     GameBoard.pieces[TOSQ(move)] === PIECES.wX ||
     GameBoard.pieces[TOSQ(move)] === PIECES.bX;
 
-  if (isTargetExile && !(has5thDimensionSword)
+  if (
+    isTargetExile &&
+    !has5thDimensionSword
     // && move & MFLAGSHFT) // TBD
   ) {
     return;
@@ -212,7 +214,7 @@ export function AddQuietMove(move, capturesOnly) {
     } else {
       GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply + 1]] =
         GameBoard.searchHistory[
-        GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
+          GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
         ];
     }
     GameBoard.moveListStart[GameBoard.ply + 1]++;
@@ -471,7 +473,7 @@ export const generatePowers = () => {
       mora: 0,
       gain: 0,
       area: 0,
-      tokn: 0
+      tokn: 0,
     };
 
     // todo: this function needs to be generated on click on at least swap so piece movements like captures or other edge cases don't overlap
@@ -511,7 +513,7 @@ export const generatePowers = () => {
       mora: 0,
       gain: 0,
       area: 0,
-      tokn: 0
+      tokn: 0,
     };
 
     _.forEach(blackArcaneConfig, (value, key) => {
@@ -558,7 +560,8 @@ export const getHerrings = (color) => {
       }
     });
   }
-  const arcane = color === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+  const arcane =
+    color === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
   if ((arcane[10] & 1) !== 0 || (arcane[10] & 2) !== 0) {
     return [];
   }
@@ -792,7 +795,7 @@ export function GenerateMoves(
           if (
             i === j ||
             GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][i]] ===
-            GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
+              GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
           ) {
             continue;
           }
@@ -1207,7 +1210,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.whiteArcane[3]
                 ) {
                   if (
@@ -1250,7 +1253,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.blackArcane[3]
                 ) {
                   if (
@@ -2396,7 +2399,10 @@ export function GenerateMoves(
         // H-pieces don't use standard PceDir if they have tokens (Hermit/Hemlock)
         // This ensures Hermit/Hemlock don't inherit the base Herring movement
         if (pce === PIECES.wH || pce === PIECES.bH) {
-          const arcane = GameBoard.side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
+          const arcane =
+            GameBoard.side === COLOURS.WHITE
+              ? GameBoard.whiteArcane
+              : GameBoard.blackArcane;
           if ((arcane[10] & 1) !== 0 || (arcane[10] & 2) !== 0) {
             dirVariants = 0;
             dirArray = [];
@@ -2547,13 +2553,13 @@ export function GenerateMoves(
         const wantS = sCanShift;
         const wantW = wCanShift;
 
-
         const hasHermit = (currentArcanaSide[10] & 1) !== 0;
         const hasHemlock = (currentArcanaSide[10] & 2) !== 0;
         const isNomad = hasHermit && hasHemlock;
         const isHermit = hasHermit && (pce === PIECES.wH || pce === PIECES.bH);
-        const isHemlock = hasHemlock && (pce === PIECES.wH || pce === PIECES.bH);
-        const isHUnit = (pce === PIECES.wH || pce === PIECES.bH);
+        const isHemlock =
+          hasHemlock && (pce === PIECES.wH || pce === PIECES.bH);
+        const isHUnit = pce === PIECES.wH || pce === PIECES.bH;
 
         const wantHermit = isHermit;
         const wantHemlock = isHemlock;
@@ -2704,7 +2710,7 @@ export function GenerateMoves(
                       targetSq,
                       PIECES.EMPTY,
                       PIECES.EMPTY,
-                      0  // NO SHIFT FLAG - this is natural movement
+                      0 // NO SHIFT FLAG - this is natural movement
                     ),
                     capturesOnly
                   );
@@ -2722,7 +2728,7 @@ export function GenerateMoves(
                     targetSq,
                     targetPiece,
                     PIECES.EMPTY,
-                    0  // NO SHIFT FLAG - this is natural movement
+                    0 // NO SHIFT FLAG - this is natural movement
                   ),
                   false,
                   capturesOnly
