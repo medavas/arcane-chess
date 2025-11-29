@@ -19,9 +19,10 @@
     overflow: hidden;
 
     .new-arcana-selector__item {
-      min-width: 56px;
-      min-height: 56px;
+      min-width: 48px;
+      min-height: 48px;
       flex-shrink: 0;
+      padding: 3px;
     }
 
     .new-arcana-selector__progress-bar {
@@ -42,8 +43,8 @@
   &__grid-container {
     display: flex;
     flex-direction: column;
-    width: 120px;
-    min-width: 120px;
+    width: 136px;
+    min-width: 136px;
     flex-shrink: 0;
   }
 
@@ -52,11 +53,13 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 4px;
-    padding: 2px;
+    padding: 2px 8px 2px 2px;
     overflow-y: auto;
     overflow-x: hidden;
-    max-height: 180px;
-    min-height: 180px;
+    max-height: 160px;
+    min-height: 160px;
+    width: 100%;
+    box-sizing: border-box;
 
     // Horizontal variant for opponent
     &--horizontal {
@@ -68,23 +71,23 @@
       max-height: none;
       padding: 4px;
       padding-bottom: 10px;
-      min-height: 64px;
+      min-height: 56px;
       width: 400px;
       min-width: 360px;
       max-width: 400px;
 
       .new-arcana-selector__item {
-        min-width: 60px;
-        width: 60px;
-        min-height: 60px;
-        height: 60px;
+        min-width: 50px;
+        width: 50px;
+        min-height: 50px;
+        height: 50px;
         flex-shrink: 0;
-        padding: 4px;
+        padding: 3px;
       }
 
       .new-arcana-selector__item-icon {
-        width: 46px;
-        height: 46px;
+        width: 38px;
+        height: 38px;
       }
     }
 
@@ -220,15 +223,15 @@
 
   &__item-count {
     position: absolute;
-    bottom: 6px;
-    left: 6px;
-    font-size: 11px;
+    bottom: 4px;
+    left: 4px;
+    font-size: 10px;
     font-weight: 700;
     color: #fff;
     background: rgba(0, 0, 0, 0.9);
-    padding: 3px 6px;
-    border-radius: 4px;
-    min-width: 24px;
+    padding: 2px 5px;
+    border-radius: 3px;
+    min-width: 20px;
     text-align: center;
     z-index: 1;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
@@ -318,6 +321,14 @@
     &__grid {
       gap: 4px;
       padding: 2px;
+      max-height: 120px;
+      min-height: 120px;
+    }
+
+    &--opponent {
+      .new-arcana-selector__grid--horizontal {
+        min-height: 70px;
+      }
     }
 
     &__item {
