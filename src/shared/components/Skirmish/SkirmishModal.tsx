@@ -24,7 +24,6 @@ import ArmySelect from 'src/features/game/components/ArmySelect/ArmySelect';
 
 import { startingSpellBook } from 'src/features/game/components/CharacterSelect/charactersModes';
 
-
 import arcanaJson from 'src/shared/data/arcana.json';
 import Select from 'src/shared/components/Select/Select';
 
@@ -63,6 +62,9 @@ interface ModalState {
   difficulty: string;
 
   hoverId: string;
+  activeTab: 'player' | 'engine';
+  showPlayerFactionPicker: boolean;
+  showEngineFactionPicker: boolean;
 }
 
 interface ArcanaDetail {
@@ -221,6 +223,9 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
       difficulty: LS.difficulty,
 
       hoverId: '',
+      activeTab: 'player',
+      showPlayerFactionPicker: false,
+      showEngineFactionPicker: false,
     };
   }
 
@@ -387,11 +392,13 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
     });
   };
 
-  handleHexHover = (id: FactionId | null) => {
-    this.setState({ hoverId: id ? `faction:${id}` : '' });
-  };
-  handleHexClick = (id: FactionId) => {
-    this.setFactionForRole('player', id);
+  handleFactionClick = (id: FactionId, role: 'player' | 'engine') => {
+    this.setFactionForRole(role, id);
+    if (role === 'player') {
+      this.setState({ showPlayerFactionPicker: false });
+    } else {
+      this.setState({ showEngineFactionPicker: false });
+    }
   };
 
   swapSides = () => {
@@ -534,314 +541,303 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
           ariaHideApp={false}
         >
           <div className="skirmish-modal">
+            {/* Header */}
             <div className="skirmish-header">
-              <Link className="home-button" to="/">
-                <img className="logo" src="/assets/logoall+.png" alt="" />
-              </Link>
-              <div className="description" aria-live="polite">
-                {hoverText}
-              </div>
-            </div>
-            <div className="buttons" role="group" aria-label="Controls">
-              <div className="engine-settings">
-                <div
-                  onMouseEnter={() => this.setState({ hoverId: 'engineDiff' })}
-                  onMouseLeave={() => this.setState({ hoverId: '' })}
-                >
-                  <Select
-                    title="Difficulty"
-                    type="number"
-                    width={240}
-                    height={40}
-                    defaultOption={'Novice'}
-                    options={['Novice', 'Intermediate', 'Advanced', 'Expert']}
-                    onChange={(val: string) => {
-                      if (
-                        val === 'Novice' ||
-                        val === 'Intermediate' ||
-                        val === 'Advanced' ||
-                        val === 'Expert'
-                      ) {
-                        this.setDifficulty(val);
-                      }
-                    }}
-                  />
-                </div>
-                <div
-                  onMouseEnter={() => this.setState({ hoverId: 'engineFact' })}
-                  onMouseLeave={() => this.setState({ hoverId: '' })}
-                >
-                  <Select
-                    title="Engine Faction"
-                    type="text"
-                    width={240}
-                    height={40}
-                    defaultOption={engineFactionLabel}
-                    options={engineFactionOptions}
-                    onChange={(val: string) =>
-                      this.setFactionForRole('engine', factionIdByName(val))
-                    }
-                  />
-                </div>
+              <div className="header-left">
                 <button
-                  type="button"
-                  className="randomize-btn"
-                  onClick={this.randomizeAll}
-                  onMouseEnter={() => this.setState({ hoverId: 'randomize' })}
-                  onMouseLeave={() => this.setState({ hoverId: '' })}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      this.randomizeAll();
-                    }
-                  }}
-                  aria-label="Randomize colors and factions"
+                  className="home-button"
+                  onClick={() => this.props.navigate('/')}
                 >
-                  <img src="/assets/icons/randomize.svg" alt="Randomize" />
+                  <img className="logo" src="/assets/logoall+.png" alt="Home" />
                 </button>
               </div>
-              <div
-                className="swap-sides"
-                onClick={this.swapSides}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    this.swapSides();
-                  }
-                }}
-                onMouseEnter={() => this.setState({ hoverId: 'swapSides' })}
-                onMouseLeave={() => this.setState({ hoverId: '' })}
-              >
-                SWAP SIDES
+
+              {/* Tab navigation for mobile */}
+              <div className="tab-nav">
+                <button
+                  className={`tab-button ${
+                    this.state.activeTab === 'player' ? 'active' : ''
+                  }`}
+                  onClick={() => this.setState({ activeTab: 'player' })}
+                >
+                  Player
+                </button>
+                <button
+                  className={`tab-button ${
+                    this.state.activeTab === 'engine' ? 'active' : ''
+                  }`}
+                  onClick={() => this.setState({ activeTab: 'engine' })}
+                >
+                  Engine
+                </button>
               </div>
             </div>
-            <div className="hex-setups">
-              <div
-                className="hex"
-                role="list"
-                aria-label="Choose Player Faction"
-              >
-                {HEX_ROWS.map((row, rowIdx) => (
-                  <div className="hex-row" key={`row-${rowIdx}`}>
-                    {row.map((id) => {
-                      const f = FACTIONS[id];
-                      const isLocked = !f.unlocked;
-                      const selectedAsPlayer =
-                        this.state.playerFactionId === id;
 
-                      return (
-                        <div
-                          key={id}
-                          role="listitem"
-                          className={[
-                            'hex-cell',
-                            selectedAsPlayer ? 'is-selected' : '',
-                            isLocked ? 'is-locked' : 'is-unlocked',
-                          ].join(' ')}
-                          onMouseEnter={() => this.handleHexHover(id)}
-                          onMouseLeave={() => this.handleHexHover(null)}
-                          onClick={() => !isLocked && this.handleHexClick(id)}
-                          aria-label={`${f.name}${isLocked ? ' (locked)' : ''}`}
-                          tabIndex={isLocked ? -1 : 0}
-                          onKeyDown={(e) => {
-                            if (
-                              !isLocked &&
-                              (e.key === 'Enter' || e.key === ' ')
-                            ) {
-                              e.preventDefault();
-                              this.handleHexClick(id);
-                            }
-                          }}
-                        >
+            {/* Hover panel */}
+            <div className="hover-panel">
+              {this.state.hoverId ? (
+                <>
+                  <div className="hover-title">
+                    {arcana[this.state.hoverId]?.name || 'Info'}
+                  </div>
+                  <div className="hover-description">{hoverText}</div>
+                </>
+              ) : (
+                <div className="hover-empty">
+                  Choose a faction or adjust engine settings.
+                </div>
+              )}
+            </div>
+
+            {/* Content container */}
+            <div className="content-container">
+              {/* Player Section */}
+              <div
+                className={`player-section ${
+                  this.state.activeTab === 'player' ? 'active' : ''
+                }`}
+              >
+                <div className="section-header">
+                  <h3>Your Setup</h3>
+                  <div className="color-indicator">
+                    {this.state.playerColor === 'white' ? '⚪' : '⚫'}{' '}
+                    {this.state.playerColor}
+                  </div>
+                </div>
+
+                <div
+                  className="faction-badge-clickable"
+                  style={
+                    playerAccent
+                      ? { borderColor: playerAccent, color: playerAccent }
+                      : {}
+                  }
+                  onClick={() =>
+                    this.setState((prev) => ({
+                      showPlayerFactionPicker: !prev.showPlayerFactionPicker,
+                      showEngineFactionPicker: false,
+                    }))
+                  }
+                >
+                  <span className="badge-glyph">{playerGreek || '–'}</span>
+                  <div className="faction-name-small">{playerFactionName}</div>
+                </div>
+
+                <div className="arcana-section">
+                  <ArcanaSelect
+                    spellBook={
+                      this.state.playerColor === 'white'
+                        ? this.state.whiteArcana
+                        : this.state.blackArcana
+                    }
+                    color={this.state.playerColor}
+                    isOpen={false}
+                    readOnly
+                    updateHover={(arcaneObject) => {
+                      this.setState({ hoverId: arcaneObject.id || '' });
+                    }}
+                  />
+                </div>
+
+                <div className="army-section">
+                  <ArmySelect
+                    army={
+                      this.state.playerColor === 'white'
+                        ? this.state.whiteSetup
+                        : this.state.blackSetup
+                    }
+                    faction={this.state.playerFactionId ?? undefined}
+                    isOpen={false}
+                    color={this.state.playerColor}
+                    readOnly
+                  />
+                </div>
+
+                {/* Player Faction Picker */}
+                {this.state.showPlayerFactionPicker && (
+                  <div className="faction-picker-section">
+                    <div className="faction-grid">
+                      {HEX_ROWS.flat().map((id) => {
+                        const f = FACTIONS[id];
+                        const isLocked = !f.unlocked;
+                        const isSelected = this.state.playerFactionId === id;
+
+                        return (
                           <div
-                            className="tile"
+                            key={id}
+                            className={[
+                              'faction-tile',
+                              isSelected ? 'is-selected' : '',
+                              isLocked ? 'is-locked' : 'is-unlocked',
+                            ].join(' ')}
+                            onClick={() =>
+                              !isLocked && this.handleFactionClick(id, 'player')
+                            }
+                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''}`}
+                            tabIndex={isLocked ? -1 : 0}
                             style={{ ['--accent' as any]: f.color }}
                           >
-                            <div className="img-wrap">
-                              <span className="faction-glyph large">
-                                {GREEK_CAP[id]}
-                              </span>
-                            </div>
-                            <span
-                              className="color-dot"
-                              style={{ background: f.color }}
-                              aria-hidden="true"
-                            />
+                            <span className="faction-glyph">{GREEK_CAP[id]}</span>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
-                ))}
+                )}
               </div>
-              <div className="setups">
-                {/* ENGINE */}
-                <div className="engine-setup">
-                  <div
-                    className="setup-row"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'stretch',
-                      gap: 6,
-                      ['--arcana-w' as any]: '360px',
+
+              {/* Engine Section */}
+              <div
+                className={`engine-section ${
+                  this.state.activeTab === 'engine' ? 'active' : ''
+                }`}
+              >
+                <div className="section-header">
+                  <h3>Engine Setup</h3>
+                  <div className="color-indicator">
+                    {this.state.engineColor === 'white' ? '⚪' : '⚫'}{' '}
+                    {this.state.engineColor}
+                  </div>
+                </div>
+
+                <div
+                  className="faction-badge-clickable"
+                  style={
+                    engineAccent
+                      ? { borderColor: engineAccent, color: engineAccent }
+                      : {}
+                  }
+                  onClick={() =>
+                    this.setState((prev) => ({
+                      showEngineFactionPicker: !prev.showEngineFactionPicker,
+                      showPlayerFactionPicker: false,
+                    }))
+                  }
+                >
+                  <span className="badge-glyph">{engineGreek || '–'}</span>
+                  <div className="faction-name-small">{engineFactionName}</div>
+                </div>
+
+                <div className="arcana-section">
+                  <ArcanaSelect
+                    spellBook={
+                      this.state.engineColor === 'white'
+                        ? this.state.whiteArcana
+                        : this.state.blackArcana
+                    }
+                    color={this.state.engineColor}
+                    isOpen={false}
+                    readOnly
+                    updateHover={(arcaneObject) => {
+                      this.setState({ hoverId: arcaneObject.id || '' });
                     }}
-                  >
-                    <div className="faction-img flex-fill" aria-live="polite">
-                      {/* background image/glyph block */}
-                      {engineImg ? (
-                        <>
-                          <span className="faction-glyph">{engineGreek}</span>
-                        </>
-                      ) : (
-                        <div className="img-placeholder-block" />
-                      )}
+                  />
+                </div>
 
-                      {/* NEW: visible faction badge */}
-                      <span
-                        className="faction-badge"
-                        style={
-                          engineAccent
-                            ? { borderColor: engineAccent, color: engineAccent }
-                            : {}
-                        }
-                        aria-label={
-                          this.state.engineFactionId
-                            ? `Engine faction: ${engineFactionName}`
-                            : 'Engine faction not selected'
-                        }
-                        title={
-                          this.state.engineFactionId
-                            ? `${engineFactionName}`
-                            : 'Select Engine Faction'
-                        }
-                      >
-                        <span className="badge-glyph">
-                          {engineGreek || '–'}
-                        </span>
-                      </span>
-                    </div>
+                <div className="army-section">
+                  <ArmySelect
+                    army={
+                      this.state.engineColor === 'white'
+                        ? this.state.whiteSetup
+                        : this.state.blackSetup
+                    }
+                    faction={this.state.engineFactionId ?? undefined}
+                    isOpen={false}
+                    color={this.state.engineColor}
+                    readOnly
+                  />
+                </div>
 
-                    <div
-                      className="arcana"
-                      style={{ flex: '0 1 var(--arcana-w)' }}
-                    >
-                      <ArcanaSelect
-                        spellBook={
-                          this.state.engineColor === 'white'
-                            ? this.state.whiteArcana
-                            : this.state.blackArcana
-                        }
-                        color={this.state.engineColor}
-                        isOpen={false}
-                        readOnly
-                        updateHover={(arcaneObject) => {
-                          this.setState({ hoverId: arcaneObject.id || '' });
-                        }}
-                      />
+                {/* Engine Faction Picker */}
+                {this.state.showEngineFactionPicker && (
+                  <div className="faction-picker-section">
+                    <div className="faction-grid">
+                      {HEX_ROWS.flat().map((id) => {
+                        const f = FACTIONS[id];
+                        const isLocked = !f.unlocked;
+                        const isSelected = this.state.engineFactionId === id;
+
+                        return (
+                          <div
+                            key={id}
+                            className={[
+                              'faction-tile',
+                              isSelected ? 'is-selected' : '',
+                              isLocked ? 'is-locked' : 'is-unlocked',
+                            ].join(' ')}
+                            onClick={() =>
+                              !isLocked && this.handleFactionClick(id, 'engine')
+                            }
+                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''}`}
+                            tabIndex={isLocked ? -1 : 0}
+                            style={{ ['--accent' as any]: f.color }}
+                          >
+                            <span className="faction-glyph">{GREEK_CAP[id]}</span>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
+                )}
+              </div>
 
-                  <div className="army" style={{ marginTop: 6 }}>
-                    <ArmySelect
-                      army={
-                        this.state.engineColor === 'white'
-                          ? this.state.whiteSetup
-                          : this.state.blackSetup
-                      }
-                      faction={this.state.engineFactionId ?? undefined}
-                      isOpen={false}
-                      color={this.state.engineColor}
-                      readOnly
+              {/* Settings Section - Third column on large screens */}
+              <div className="settings-section">
+                <div className="section-header">
+                  <h3>Settings</h3>
+                </div>
+
+                <div className="settings-content">
+                  <div
+                    onMouseEnter={() =>
+                      this.setState({ hoverId: 'engineDiff' })
+                    }
+                    onMouseLeave={() => this.setState({ hoverId: '' })}
+                  >
+                    <Select
+                      title="Difficulty"
+                      type="number"
+                      width={240}
+                      height={40}
+                      defaultOption={'Novice'}
+                      options={['Novice', 'Intermediate', 'Advanced', 'Expert']}
+                      onChange={(val: string) => {
+                        if (
+                          val === 'Novice' ||
+                          val === 'Intermediate' ||
+                          val === 'Advanced' ||
+                          val === 'Expert'
+                        ) {
+                          this.setDifficulty(val);
+                        }
+                      }}
                     />
                   </div>
                 </div>
 
-                {/* PLAYER */}
-                <div className="human-setup">
-                  <div
-                    className="setup-row"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'stretch',
-                      gap: 6,
-                      ['--arcana-w' as any]: '360px',
-                    }}
-                  >
-                    <div className="faction-img flex-fill" aria-live="polite">
-                      {playerImg ? (
-                        <>
-                          <span className="faction-glyph">{playerGreek}</span>
-                        </>
-                      ) : (
-                        <div className="img-placeholder-block" />
-                      )}
-
-                      {/* NEW: visible faction badge */}
-                      <span
-                        className="faction-badge"
-                        style={
-                          playerAccent
-                            ? { borderColor: playerAccent, color: playerAccent }
-                            : {}
-                        }
-                        aria-label={
-                          this.state.playerFactionId
-                            ? `Player faction: ${playerFactionName}`
-                            : 'Player faction not selected'
-                        }
-                        title={
-                          this.state.playerFactionId
-                            ? `${playerFactionName}`
-                            : 'Select Player Faction'
-                        }
-                      >
-                        <span className="badge-glyph">
-                          {playerGreek || '–'}
-                        </span>
-                      </span>
-                    </div>
-                    <div
-                      className="arcana"
-                      style={{ flex: '0 1 var(--arcana-w)' }}
-                    >
-                      <ArcanaSelect
-                        spellBook={
-                          this.state.playerColor === 'white'
-                            ? this.state.whiteArcana
-                            : this.state.blackArcana
-                        }
-                        color={this.state.playerColor}
-                        isOpen={false}
-                        readOnly
-                        updateHover={(arcaneObject) => {
-                          this.setState({ hoverId: arcaneObject.id || '' });
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="army" style={{ marginTop: 6 }}>
-                    <ArmySelect
-                      army={
-                        this.state.playerColor === 'white'
-                          ? this.state.whiteSetup
-                          : this.state.blackSetup
-                      }
-                      faction={this.state.playerFactionId ?? undefined}
-                      isOpen={false}
-                      color={this.state.playerColor}
-                      readOnly
-                    />
-                  </div>
-                </div>
-
-                {/* START button unchanged */}
-                <div style={{ marginTop: 10 }}>
+                {/* Action buttons in settings section on large screens */}
+                <div className="action-buttons-large">
                   <button
                     type="button"
-                    className="nav-item start-button"
+                    className="action-btn swap-btn"
+                    onClick={this.swapSides}
+                    onMouseEnter={() => this.setState({ hoverId: 'swapSides' })}
+                    onMouseLeave={() => this.setState({ hoverId: '' })}
+                  >
+                    <span>⇄</span> SWAP SIDES
+                  </button>
+                  <button
+                    type="button"
+                    className="action-btn randomize-btn"
+                    onClick={this.randomizeAll}
+                    onMouseEnter={() => this.setState({ hoverId: 'randomize' })}
+                    onMouseLeave={() => this.setState({ hoverId: '' })}
+                  >
+                    <img src="/assets/icons/randomize.svg" alt="" /> RANDOMIZE
+                  </button>
+                  <button
+                    type="button"
+                    className="action-btn start-btn"
                     onClick={this.start}
                     disabled={!canStart}
                     aria-disabled={!canStart}
@@ -850,6 +846,37 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                   </button>
                 </div>
               </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="action-buttons">
+              <button
+                type="button"
+                className="action-btn swap-btn"
+                onClick={this.swapSides}
+                onMouseEnter={() => this.setState({ hoverId: 'swapSides' })}
+                onMouseLeave={() => this.setState({ hoverId: '' })}
+              >
+                <span>⇄</span> SWAP SIDES
+              </button>
+              <button
+                type="button"
+                className="action-btn randomize-btn"
+                onClick={this.randomizeAll}
+                onMouseEnter={() => this.setState({ hoverId: 'randomize' })}
+                onMouseLeave={() => this.setState({ hoverId: '' })}
+              >
+                <img src="/assets/icons/randomize.svg" alt="" /> RANDOMIZE
+              </button>
+              <button
+                type="button"
+                className="action-btn start-btn"
+                onClick={this.start}
+                disabled={!canStart}
+                aria-disabled={!canStart}
+              >
+                START
+              </button>
             </div>
           </div>
         </Modal>
@@ -877,14 +904,13 @@ const skirmishModal = {
     marginRight: 'auto',
     transform: 'translate(-50%, -50%)',
     display: 'flex',
-    height: '100%',
+    maxHeight: '95vh',
+    maxWidth: '95vw',
     width: '100%',
-    background: '#111111',
+    background: 'transparent',
     border: 'none',
-    overflowY: 'scroll' as const,
-    overflowX: 'hidden' as const,
-    msOverflowStyle: 'none' as const,
-    scrollbarWidth: 'none' as const,
+    padding: 0,
+    overflow: 'hidden' as const,
   },
   overlay: { zIndex: 10, backgroundColor: '#111111CC' },
 };
