@@ -108,7 +108,7 @@ export default class ArmySelect extends React.Component<
           ))}
         </div>
 
-        {isOpen && (
+        {isOpen && !readOnly && (
           <div className="army-block" aria-disabled={readOnly || undefined}>
             {armies.map((armyCode, armyIndex) => (
               <div

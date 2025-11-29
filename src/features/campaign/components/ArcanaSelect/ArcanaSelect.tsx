@@ -75,25 +75,17 @@ export default class ArcanaSelect extends React.Component<
     const cursorInteractive =
       "url('/assets/images/cursors/pointer.svg') 12 4, pointer";
 
+    console.log('ArcanaSelect render - isOpen:', isOpen);
+
     return (
       <div className="arcane-select">
         <div className="spellBook">
           {spellBook.map((arcane, key) => (
             <div
               key={key}
-              className="arcane-wrapper"
-              style={
-                key === currentSpellBookSlot
-                  ? {
-                    display: 'inline-block',
-                    borderRadius: '50%',
-                    border: '2px solid white',
-                    width: '60px',
-                    height: '60px',
-                    overflow: 'hidden',
-                  }
-                  : {}
-              }
+              className={`arcane-wrapper ${
+                key === currentSpellBookSlot ? 'active' : ''
+              }`}
               onMouseEnter={() => {
                 updateHover?.(arcane);
                 this.setState({
@@ -114,11 +106,11 @@ export default class ArcanaSelect extends React.Component<
                 readOnly
                   ? undefined
                   : () => {
-                    handleToggle?.();
-                    this.setState({
-                      currentSpellBookSlot: key,
-                    });
-                  }
+                      handleToggle?.();
+                      this.setState({
+                        currentSpellBookSlot: key,
+                      });
+                    }
               }
               aria-disabled={readOnly || undefined}
             >
@@ -152,17 +144,17 @@ export default class ArcanaSelect extends React.Component<
                   readOnly
                     ? undefined
                     : () => {
-                      updateHover?.(arcaneObject);
-                      this.setState({ hoverId: key });
-                    }
+                        updateHover?.(arcaneObject);
+                        this.setState({ hoverId: key });
+                      }
                 }
                 onMouseLeave={
                   readOnly
                     ? undefined
                     : () => {
-                      updateHover?.({} as ArcanaDetail);
-                      this.setState({ hoverId: '' });
-                    }
+                        updateHover?.({} as ArcanaDetail);
+                        this.setState({ hoverId: '' });
+                      }
                 }
                 onClick={
                   readOnly ? undefined : () => this.updateSlot(arcaneObject)

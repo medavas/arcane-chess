@@ -24,7 +24,6 @@
     justify-content: space-between;
     align-items: center;
     padding-bottom: 12px;
-    border-bottom: 2px solid rgba(79, 72, 204, 0.3);
     flex-shrink: 0;
 
     .header-left {
@@ -78,23 +77,34 @@
     border: 1px solid rgba(79, 72, 204, 0.4);
     border-radius: 12px;
     padding: 16px;
-    min-height: 80px;
+    height: 80px;
+    max-height: 80px;
     display: flex;
     flex-direction: column;
     gap: 6px;
     flex-shrink: 0;
+    overflow: hidden;
 
     .hover-title {
       font-size: 16px;
       font-weight: 700;
       color: rgba(100, 200, 255, 0.95);
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .hover-description {
       font-size: 13px;
       line-height: 1.5;
       color: rgba(255, 255, 255, 0.85);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
 
     .hover-empty {
@@ -120,6 +130,7 @@
   .player-section,
   .engine-section,
   .settings-section {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -127,20 +138,31 @@
     border: 1px solid rgba(79, 72, 204, 0.3);
     border-radius: 12px;
     padding: 16px;
-    overflow-y: auto;
+    overflow-y: visible;
+    overflow-x: hidden;
     min-height: 0;
 
-    h3 {
-      font-size: 16px;
-      font-weight: 600;
-      margin: 0 0 8px 0;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
       flex-shrink: 0;
+
+      h3 {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
     }
 
     .arcana {
-      margin-top: 8px;
+      position: relative;
+      z-index: 100;
+      overflow: visible;
     }
 
     .army-section {
@@ -188,24 +210,59 @@
     }
   }
 
+  // Section header with inline button
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+
+    h3 {
+      margin: 0;
+    }
+
+    .color {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(79, 72, 204, 0.3);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 36px;
+
+      &:hover {
+        background: rgba(79, 72, 204, 0.2);
+        border-color: rgba(79, 72, 204, 0.5);
+      }
+
+      img {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        flex-shrink: 0;
+      }
+
+      .color-label {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 500;
+      }
+    }
+  }
+
   // Shared button styling
   .buttons-arcana {
     display: flex;
     flex-direction: column;
     gap: 10px;
-
-    .buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-
-      .color img {
-        width: 100%;
-        height: 60px;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-      }
-    }
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
   }
 }
 
@@ -282,7 +339,7 @@
 
     .quickplay-header {
       gap: 10px;
-      padding-bottom: 10px;
+      padding-bottom: 0;
 
       .header-left {
         flex-direction: column;
@@ -308,7 +365,8 @@
 
     .hover-panel {
       padding: 12px;
-      min-height: 60px;
+      height: 90px;
+      max-height: 90px;
       border-radius: 8px;
 
       .hover-title {

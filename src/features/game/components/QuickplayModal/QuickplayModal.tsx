@@ -382,7 +382,6 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                     this.props.navigate('/');
                   }}
                 />
-                <h2>Quick Play Setup</h2>
               </div>
               {/* Mobile Tab Navigation */}
               <div className="tab-nav">
@@ -437,71 +436,78 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                   this.state.activeTab === 'player' ? 'active' : ''
                 }`}
               >
-                <h3>Player</h3>
-                <div className="buttons-arcana">
-                  <div className="buttons">
-                    <div className="color">
-                      <img
-                        src={`/assets/images/user.svg`}
-                        style={{
-                          width: '100%',
-                          height: '60px',
-                          background:
-                            this.state.hoverId === 'playerSwapSides'
-                              ? '#4A90E2'
-                              : this.state.playerColor === 'white'
-                              ? '#AAAAAA'
-                              : '#333333',
-                          cursor:
-                            "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
-                        }}
-                        onClick={() =>
-                          this.setState(
-                            (prevState) => ({
-                              playerColor:
-                                prevState.playerColor === 'white'
-                                  ? 'black'
-                                  : 'white',
-                              engineColor:
-                                prevState.engineColor === 'white'
-                                  ? 'black'
-                                  : 'white',
-                              playerCharacterImgPath:
-                                prevState.engineCharacterImgPath,
-                              engineCharacterImgPath:
-                                prevState.playerCharacterImgPath,
-                            }),
-                            () => {
-                              if (this.props.updateConfig) {
-                                this.props.updateConfig(
-                                  'playerColor',
-                                  this.state.playerColor === 'white'
-                                    ? 'white'
-                                    : 'black'
-                                );
-                                this.props.updateConfig(
-                                  'engineColor',
-                                  this.state.playerColor === 'white'
-                                    ? 'black'
-                                    : 'white'
-                                );
-                              }
-                            }
-                          )
+                <div className="section-header">
+                  <h3>Player</h3>
+                  <div
+                    className="color"
+                    style={{
+                      background:
+                        this.state.hoverId === 'playerSwapSides'
+                          ? 'rgba(79, 72, 204, 0.3)'
+                          : 'rgba(0, 0, 0, 0.3)',
+                      cursor:
+                        "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
+                    }}
+                    onClick={() =>
+                      this.setState(
+                        (prevState) => ({
+                          playerColor:
+                            prevState.playerColor === 'white'
+                              ? 'black'
+                              : 'white',
+                          engineColor:
+                            prevState.engineColor === 'white'
+                              ? 'black'
+                              : 'white',
+                          playerCharacterImgPath:
+                            prevState.engineCharacterImgPath,
+                          engineCharacterImgPath:
+                            prevState.playerCharacterImgPath,
+                        }),
+                        () => {
+                          if (this.props.updateConfig) {
+                            this.props.updateConfig(
+                              'playerColor',
+                              this.state.playerColor === 'white'
+                                ? 'white'
+                                : 'black'
+                            );
+                            this.props.updateConfig(
+                              'engineColor',
+                              this.state.playerColor === 'white'
+                                ? 'black'
+                                : 'white'
+                            );
+                          }
                         }
-                        onMouseEnter={() => {
-                          this.setState({
-                            hoverId: 'playerSwapSides',
-                          });
-                        }}
-                        onMouseLeave={() => {
-                          this.setState({
-                            hoverId: '',
-                          });
-                        }}
-                      />
-                    </div>
+                      )
+                    }
+                    onMouseEnter={() => {
+                      this.setState({
+                        hoverId: 'playerSwapSides',
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      this.setState({
+                        hoverId: '',
+                      });
+                    }}
+                  >
+                    <img
+                      src={`/assets/images/user.svg`}
+                      style={{
+                        background:
+                          this.state.playerColor === 'white'
+                            ? '#AAAAAA'
+                            : '#333333',
+                      }}
+                    />
+                    <span className="color-label">
+                      {this.state.playerColor === 'white' ? 'White' : 'Black'}
+                    </span>
                   </div>
+                </div>
+                <div className="buttons-arcana">
                   <div className="arcana">
                     <ArcanaSelect
                       spellBook={
@@ -618,71 +624,78 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                   this.state.activeTab === 'engine' ? 'active' : ''
                 }`}
               >
-                <h3>Engine</h3>
-                <div className="buttons-arcana">
-                  <div className="buttons">
-                    <div className="color">
-                      <img
-                        src={`/assets/images/engine.svg`}
-                        style={{
-                          width: '100%',
-                          height: '60px',
-                          background:
-                            this.state.hoverId === 'engineSwapSides'
-                              ? '#4A90E2'
-                              : this.state.engineColor === 'white'
-                              ? '#AAAAAA'
-                              : '#333333',
-                          cursor:
-                            "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
-                        }}
-                        onClick={() =>
-                          this.setState(
-                            (prevState) => ({
-                              playerColor:
-                                prevState.playerColor === 'white'
-                                  ? 'black'
-                                  : 'white',
-                              engineColor:
-                                prevState.engineColor === 'white'
-                                  ? 'black'
-                                  : 'white',
-                              playerCharacterImgPath:
-                                prevState.engineCharacterImgPath,
-                              engineCharacterImgPath:
-                                prevState.playerCharacterImgPath,
-                            }),
-                            () => {
-                              if (this.props.updateConfig) {
-                                this.props.updateConfig(
-                                  'playerColor',
-                                  this.state.playerColor === 'white'
-                                    ? 'white'
-                                    : 'black'
-                                );
-                                this.props.updateConfig(
-                                  'engineColor',
-                                  this.state.playerColor === 'white'
-                                    ? 'black'
-                                    : 'white'
-                                );
-                              }
-                            }
-                          )
+                <div className="section-header">
+                  <h3>Engine</h3>
+                  <div
+                    className="color"
+                    style={{
+                      background:
+                        this.state.hoverId === 'engineSwapSides'
+                          ? 'rgba(79, 72, 204, 0.3)'
+                          : 'rgba(0, 0, 0, 0.3)',
+                      cursor:
+                        "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
+                    }}
+                    onClick={() =>
+                      this.setState(
+                        (prevState) => ({
+                          playerColor:
+                            prevState.playerColor === 'white'
+                              ? 'black'
+                              : 'white',
+                          engineColor:
+                            prevState.engineColor === 'white'
+                              ? 'black'
+                              : 'white',
+                          playerCharacterImgPath:
+                            prevState.engineCharacterImgPath,
+                          engineCharacterImgPath:
+                            prevState.playerCharacterImgPath,
+                        }),
+                        () => {
+                          if (this.props.updateConfig) {
+                            this.props.updateConfig(
+                              'playerColor',
+                              this.state.playerColor === 'white'
+                                ? 'white'
+                                : 'black'
+                            );
+                            this.props.updateConfig(
+                              'engineColor',
+                              this.state.playerColor === 'white'
+                                ? 'black'
+                                : 'white'
+                            );
+                          }
                         }
-                        onMouseEnter={() => {
-                          this.setState({
-                            hoverId: 'engineSwapSides',
-                          });
-                        }}
-                        onMouseLeave={() => {
-                          this.setState({
-                            hoverId: '',
-                          });
-                        }}
-                      />
-                    </div>
+                      )
+                    }
+                    onMouseEnter={() => {
+                      this.setState({
+                        hoverId: 'engineSwapSides',
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      this.setState({
+                        hoverId: '',
+                      });
+                    }}
+                  >
+                    <img
+                      src={`/assets/images/engine.svg`}
+                      style={{
+                        background:
+                          this.state.engineColor === 'white'
+                            ? '#AAAAAA'
+                            : '#333333',
+                      }}
+                    />
+                    <span className="color-label">
+                      {this.state.engineColor === 'white' ? 'White' : 'Black'}
+                    </span>
                   </div>
+                </div>
+                <div className="buttons-arcana">
                   <div className="arcana">
                     <ArcanaSelect
                       spellBook={
