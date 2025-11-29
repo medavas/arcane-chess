@@ -163,7 +163,10 @@
       position: relative;
       z-index: 100;
       overflow: visible;
-      
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
       &:has(.arcana-block) {
         position: absolute;
         top: 0;
@@ -175,6 +178,8 @@
 
     .army-section {
       margin-top: 8px;
+      position: relative;
+      z-index: 50;
     }
   }
 
