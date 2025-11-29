@@ -1,4 +1,11 @@
 {
+  "empty": {
+    "id": "empty",
+    "name": "",
+    "description": "No arcane selected here. Click to choose one.",
+    "type": "",
+    "imagePath": "/empty"
+  },
   "dyadA": {
     "id": "dyadA",
     "name": "Dyad",

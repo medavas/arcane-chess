@@ -11,11 +11,15 @@
     right: 0;
     bottom: 0;
     z-index: 200;
+
+    .spellBook {
+      padding: 0 16px;
+    }
   }
 
   .spellBook {
     display: grid;
-    grid-template-columns: repeat(6, 50px);
+    grid-template-columns: repeat(5, 50px);
     grid-auto-rows: 50px;
     gap: 2px;
     position: relative;
@@ -58,17 +62,42 @@
     overflow-y: auto;
     overflow-x: hidden;
     display: grid;
-    grid-template-columns: repeat(5, 55px);
-    gap: 8px;
+    grid-template-columns: repeat(5, 50px);
+    gap: 2px;
     justify-content: center;
     align-content: start;
     box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.9),
       inset 0 0 100px rgba(79, 72, 204, 0.1);
 
+    // Custom scrollbar styling
+    scrollbar-width: thin;
+    scrollbar-color: rgba(79, 72, 204, 0.6) transparent;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+      margin: 12px 0;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(79, 72, 204, 0.6);
+      border-radius: 4px;
+      border: 2px solid transparent;
+      background-clip: padding-box;
+
+      &:hover {
+        background: rgba(79, 72, 204, 0.8);
+        background-clip: padding-box;
+      }
+    }
+
     @media (max-width: 640px) {
-      grid-template-columns: repeat(4, 50px);
-      gap: 6px;
+      grid-template-columns: repeat(5, 50px);
+      gap: 2px;
       padding: 12px;
     }
 

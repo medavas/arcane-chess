@@ -159,7 +159,7 @@ const unpaddedCharacters = [
   },
 ];
 
-export const startingSpellBook = Array(6).fill(emptyArcane);
+export const startingSpellBook = Array(10).fill(emptyArcane);
 
 export const padSpellBook = (characters: Character[]) => {
   return characters.map((character) => ({
@@ -167,7 +167,7 @@ export const padSpellBook = (characters: Character[]) => {
     imagePath: `${path}${character.imagePath}`,
     spellBook: [
       ...character.spellBook,
-      ...Array(6 - character.spellBook.length).fill(arcana.empty),
+      ...Array(10 - character.spellBook.length).fill(arcana.empty),
     ],
   }));
 };
@@ -177,7 +177,7 @@ export const characters = padSpellBook(unpaddedCharacters);
 // MODES
 const padArcana = (arcana: ArcanaDetail[]) => {
   const paddedArcana = [...arcana];
-  while (paddedArcana.length < 6) {
+  while (paddedArcana.length < 10) {
     paddedArcana.push(emptyArcane);
   }
   return paddedArcana;

@@ -245,8 +245,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
   };
 
   trueRandomize = (type: 'same' | 'different') => {
-    const spellBookA = _.sampleSize(arcanaJson, 6) as ArcanaDetail[];
-    const spellBookB = _.sampleSize(arcanaJson, 6) as ArcanaDetail[];
+    const spellBookA = _.sampleSize(arcanaJson, 10) as ArcanaDetail[];
+    const spellBookB = _.sampleSize(arcanaJson, 10) as ArcanaDetail[];
 
     const configArcanaA = this.transformedSpellBook(spellBookA);
     const configArcanaB = this.transformedSpellBook(spellBookB);
@@ -352,7 +352,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       start: 'Rock and Roll!',
       trueRandDiff:
         'This one is truly random and unbalanced... but great for experimenting! Click if you dare.',
-      '': 'Click Start or choose a new position!',
+      '': 'To start, go to Settings > START',
     };
   };
 
