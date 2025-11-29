@@ -1,31 +1,39 @@
 .arcane-select {
   .spellBook {
     display: grid;
-    grid-template-columns: repeat(6, 60px);
+    grid-template-columns: repeat(6, 50px);
     grid-auto-rows: 1fr;
+    gap: 2px;
     .arcane-wrapper {
       display: inline-block;
       border-radius: 50%;
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       overflow: hidden;
     }
   }
   .arcana-block {
     z-index: 5;
-    background: black;
+    background: rgba(0, 0, 0, 0.95);
+    border: 1px solid rgba(79, 72, 204, 0.5);
+    border-radius: 8px;
     position: absolute;
     height: 140px;
     overflow-y: scroll;
     display: grid;
-    grid-template-columns: repeat(8, 45px);
-    grid-template-rows: repeat(9, 45px);
+    grid-template-columns: repeat(8, 40px);
+    grid-template-rows: repeat(9, 40px);
+    gap: 2px;
+    padding: 4px;
     .arcane {
-      height: 45px;
-      width: 45px;
+      height: 40px;
+      width: 40px;
+      border-radius: 4px;
+      transition: transform 0.1s ease;
     }
     .arcane:hover {
       cursor: pointer;
+      transform: scale(1.1);
     }
   }
   .hover-arcane > * {

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import Modal from 'react-modal';
 import _ from 'lodash';
 
@@ -16,15 +16,15 @@ import Select from 'src/shared/components/Select/Select';
 
 // import CharacterSelect from './CharacterSelect';
 import ArcanaSelect from 'src/features/campaign/components/ArcanaSelect/ArcanaSelect';
-import ArmySelect, { armies } from 'src/features/game/components/ArmySelect/ArmySelect';
+import ArmySelect, {
+  armies,
+} from 'src/features/game/components/ArmySelect/ArmySelect';
 
 import {
   startingSpellBook,
   modes,
   characters,
 } from 'src/features/game/components/CharacterSelect/charactersModes';
-
-
 
 import arcanaJson from 'src/shared/data/arcana.json';
 
@@ -66,6 +66,7 @@ interface ModalState {
   engineCharacterImgPath: string;
   characterDescription: string;
   selectedModeName: string;
+  activeTab: 'player' | 'engine' | 'settings';
 }
 
 interface ArcanaDetail {
@@ -142,6 +143,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       engineCharacterImgPath: '',
       characterDescription: '',
       selectedModeName: '',
+      activeTab: 'player' as 'player' | 'engine' | 'settings',
     };
   }
 
@@ -355,6 +357,12 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
   };
 
   render() {
+    const hoverContent = arcana[this.state.hoverId]?.description
+      ? arcana[this.state.hoverId]?.description
+      : this.state.characterDescription !== ''
+      ? this.state.characterDescription
+      : this.descriptions()[this.state.hoverId];
+
     return (
       <div className="container">
         <Modal
@@ -363,802 +371,603 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
           ariaHideApp={false}
         >
           <div className="quickplay-modal">
-            <>
-              <div className="player-options-text">
-                <div className="top">
-                  <Button
-                    className="tertiary"
-                    color="B"
-                    text="HOME"
-                    onClick={() => {
-                      this.props.navigate('/');
+            {/* Header */}
+            <div className="quickplay-header">
+              <div className="header-left">
+                <Button
+                  className="tertiary"
+                  color="B"
+                  text="HOME"
+                  onClick={() => {
+                    this.props.navigate('/');
+                  }}
+                />
+                <h2>Quick Play Setup</h2>
+              </div>
+              {/* Mobile Tab Navigation */}
+              <div className="tab-nav">
+                <button
+                  className={`tab-button ${
+                    this.state.activeTab === 'player' ? 'active' : ''
+                  }`}
+                  onClick={() => this.setState({ activeTab: 'player' })}
+                >
+                  Player
+                </button>
+                <button
+                  className={`tab-button ${
+                    this.state.activeTab === 'engine' ? 'active' : ''
+                  }`}
+                  onClick={() => this.setState({ activeTab: 'engine' })}
+                >
+                  Engine
+                </button>
+                <button
+                  className={`tab-button ${
+                    this.state.activeTab === 'settings' ? 'active' : ''
+                  }`}
+                  onClick={() => this.setState({ activeTab: 'settings' })}
+                >
+                  Settings
+                </button>
+              </div>
+            </div>
+
+            {/* Hover Panel - Always visible on desktop, contextual on mobile */}
+            <div className="hover-panel">
+              {arcana[this.state.hoverId]?.name || hoverContent ? (
+                <>
+                  <div className="hover-title">
+                    {arcana[this.state.hoverId]?.name || ''}
+                  </div>
+                  <div className="hover-description">{hoverContent}</div>
+                </>
+              ) : (
+                <div className="hover-empty">
+                  Hover over options to see details
+                </div>
+              )}
+            </div>
+
+            {/* Content Container with Tabs */}
+            <div className="content-container">
+              {/* Player Section */}
+              <div
+                className={`player-section ${
+                  this.state.activeTab === 'player' ? 'active' : ''
+                }`}
+              >
+                <h3>Player</h3>
+                <div className="buttons-arcana">
+                  <div className="buttons">
+                    <div className="color">
+                      <img
+                        src={`/assets/images/user.svg`}
+                        style={{
+                          width: '100%',
+                          height: '60px',
+                          background:
+                            this.state.hoverId === 'playerSwapSides'
+                              ? '#4A90E2'
+                              : this.state.playerColor === 'white'
+                              ? '#AAAAAA'
+                              : '#333333',
+                          cursor:
+                            "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
+                        }}
+                        onClick={() =>
+                          this.setState(
+                            (prevState) => ({
+                              playerColor:
+                                prevState.playerColor === 'white'
+                                  ? 'black'
+                                  : 'white',
+                              engineColor:
+                                prevState.engineColor === 'white'
+                                  ? 'black'
+                                  : 'white',
+                              playerCharacterImgPath:
+                                prevState.engineCharacterImgPath,
+                              engineCharacterImgPath:
+                                prevState.playerCharacterImgPath,
+                            }),
+                            () => {
+                              if (this.props.updateConfig) {
+                                this.props.updateConfig(
+                                  'playerColor',
+                                  this.state.playerColor === 'white'
+                                    ? 'white'
+                                    : 'black'
+                                );
+                                this.props.updateConfig(
+                                  'engineColor',
+                                  this.state.playerColor === 'white'
+                                    ? 'black'
+                                    : 'white'
+                                );
+                              }
+                            }
+                          )
+                        }
+                        onMouseEnter={() => {
+                          this.setState({
+                            hoverId: 'playerSwapSides',
+                          });
+                        }}
+                        onMouseLeave={() => {
+                          this.setState({
+                            hoverId: '',
+                          });
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="arcana">
+                    <ArcanaSelect
+                      spellBook={
+                        this.state.playerColor === 'white'
+                          ? this.state.whiteArcana
+                          : this.state.blackArcana
+                      }
+                      isOpen={
+                        this.state.showArcanaSelect === this.state.playerColor
+                      }
+                      handleToggle={() => {
+                        this.setState({
+                          showArcanaSelect:
+                            this.state.playerColor ===
+                            this.state.showArcanaSelect
+                              ? ''
+                              : this.state.playerColor,
+                          showCharacterSelect: '',
+                          showArmySelect: '',
+                        });
+                      }}
+                      color={this.state.playerColor}
+                      updateSpellBook={(spellBook) => {
+                        const configArcana =
+                          this.transformedSpellBook(spellBook);
+                        if (this.props.updateConfig)
+                          this.props.updateConfig(
+                            `${
+                              this.state.playerColor === 'white' ? 'w' : 'b'
+                            }Arcana`,
+                            configArcana
+                          );
+                        if (this.state.playerColor === 'white') {
+                          this.setState({
+                            whiteArcana: spellBook,
+                            playerCharacterImgPath: '',
+                          });
+                        }
+                        if (this.state.playerColor === 'black') {
+                          this.setState({
+                            blackArcana: spellBook,
+                            playerCharacterImgPath: '',
+                          });
+                        }
+                      }}
+                      updateHover={(arcaneObject) => {
+                        this.setState({
+                          hoverId: arcaneObject.id || '',
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="army-section">
+                  <ArmySelect
+                    army={
+                      this.state.playerColor === 'white'
+                        ? this.state.whiteSetup
+                        : this.state.blackSetup
+                    }
+                    isOpen={
+                      this.state.showArmySelect === this.state.playerColor
+                    }
+                    handleToggle={() => {
+                      this.setState({
+                        showArmySelect:
+                          this.state.playerColor === this.state.showArmySelect
+                            ? ''
+                            : this.state.playerColor,
+                        showCharacterSelect: '',
+                        showArcanaSelect: '',
+                      });
+                    }}
+                    color={this.state.playerColor}
+                    faction="tau"
+                    updateArmy={(army) => {
+                      if (this.props.updateConfig) {
+                        this.props.updateConfig(
+                          `${this.state.playerColor}Setup`,
+                          army
+                        );
+                        if (this.state.playerColor === 'white') {
+                          this.setState({
+                            whiteSetup: army,
+                            playerCharacterImgPath: '',
+                          });
+                        }
+                        if (this.state.playerColor === 'black') {
+                          this.setState({
+                            blackSetup: army,
+                            playerCharacterImgPath: '',
+                          });
+                        }
+                      }
+                    }}
+                    updateHover={(id) => {
+                      if (id !== '') {
+                        this.setState({
+                          hoverId: 'playerArmy',
+                        });
+                      } else {
+                        this.setState({
+                          hoverId: '',
+                        });
+                      }
                     }}
                   />
-                  <div className="hover-text">
-                    <p>{arcana[this.state.hoverId]?.name || ''}</p>
+                </div>
+              </div>
+
+              {/* Engine Section */}
+              <div
+                className={`engine-section ${
+                  this.state.activeTab === 'engine' ? 'active' : ''
+                }`}
+              >
+                <h3>Engine</h3>
+                <div className="buttons-arcana">
+                  <div className="buttons">
+                    <div className="color">
+                      <img
+                        src={`/assets/images/engine.svg`}
+                        style={{
+                          width: '100%',
+                          height: '60px',
+                          background:
+                            this.state.hoverId === 'engineSwapSides'
+                              ? '#4A90E2'
+                              : this.state.engineColor === 'white'
+                              ? '#AAAAAA'
+                              : '#333333',
+                          cursor:
+                            "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
+                        }}
+                        onClick={() =>
+                          this.setState(
+                            (prevState) => ({
+                              playerColor:
+                                prevState.playerColor === 'white'
+                                  ? 'black'
+                                  : 'white',
+                              engineColor:
+                                prevState.engineColor === 'white'
+                                  ? 'black'
+                                  : 'white',
+                              playerCharacterImgPath:
+                                prevState.engineCharacterImgPath,
+                              engineCharacterImgPath:
+                                prevState.playerCharacterImgPath,
+                            }),
+                            () => {
+                              if (this.props.updateConfig) {
+                                this.props.updateConfig(
+                                  'playerColor',
+                                  this.state.playerColor === 'white'
+                                    ? 'white'
+                                    : 'black'
+                                );
+                                this.props.updateConfig(
+                                  'engineColor',
+                                  this.state.playerColor === 'white'
+                                    ? 'black'
+                                    : 'white'
+                                );
+                              }
+                            }
+                          )
+                        }
+                        onMouseEnter={() => {
+                          this.setState({
+                            hoverId: 'engineSwapSides',
+                          });
+                        }}
+                        onMouseLeave={() => {
+                          this.setState({
+                            hoverId: '',
+                          });
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="arcana">
+                    <ArcanaSelect
+                      spellBook={
+                        this.state.engineColor === 'white'
+                          ? this.state.whiteArcana
+                          : this.state.blackArcana
+                      }
+                      isOpen={
+                        this.state.showArcanaSelect === this.state.engineColor
+                      }
+                      handleToggle={() => {
+                        this.setState({
+                          showArcanaSelect:
+                            this.state.engineColor ===
+                            this.state.showArcanaSelect
+                              ? ''
+                              : this.state.engineColor,
+                          showCharacterSelect: '',
+                          showArmySelect: '',
+                        });
+                      }}
+                      color={this.state.engineColor}
+                      updateSpellBook={(spellBook) => {
+                        const configArcana =
+                          this.transformedSpellBook(spellBook);
+                        if (this.props.updateConfig)
+                          this.props.updateConfig(
+                            `${
+                              this.state.engineColor === 'white' ? 'w' : 'b'
+                            }Arcana`,
+                            configArcana
+                          );
+                        if (this.state.engineColor === 'white') {
+                          this.setState({
+                            whiteArcana: spellBook,
+                            engineCharacterImgPath: '',
+                          });
+                        }
+                        if (this.state.engineColor === 'black') {
+                          this.setState({
+                            blackArcana: spellBook,
+                            engineCharacterImgPath: '',
+                          });
+                        }
+                      }}
+                      updateHover={(arcaneObject) => {
+                        this.setState({
+                          hoverId: arcaneObject.id || '',
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="army-section">
+                  <ArmySelect
+                    army={
+                      this.state.engineColor === 'white'
+                        ? this.state.whiteSetup
+                        : this.state.blackSetup
+                    }
+                    isOpen={
+                      this.state.showArmySelect === this.state.engineColor
+                    }
+                    handleToggle={() => {
+                      this.setState({
+                        showArmySelect:
+                          this.state.engineColor === this.state.showArmySelect
+                            ? ''
+                            : this.state.engineColor,
+                        showCharacterSelect: '',
+                        showArcanaSelect: '',
+                      });
+                    }}
+                    color={this.state.engineColor}
+                    faction="tau"
+                    updateArmy={(army) => {
+                      if (this.props.updateConfig) {
+                        this.props.updateConfig(
+                          `${this.state.engineColor}Setup`,
+                          army
+                        );
+                        if (this.state.engineColor === 'white') {
+                          this.setState({
+                            whiteSetup: army,
+                            engineCharacterImgPath: '',
+                          });
+                        }
+                        if (this.state.engineColor === 'black') {
+                          this.setState({
+                            blackSetup: army,
+                            engineCharacterImgPath: '',
+                          });
+                        }
+                      }
+                    }}
+                    updateHover={(id) => {
+                      if (id !== '') {
+                        this.setState({
+                          hoverId: 'engineArmy',
+                        });
+                      } else {
+                        this.setState({
+                          hoverId: '',
+                        });
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Settings Section */}
+              <div
+                className={
+                  this.state.activeTab === 'settings'
+                    ? 'settings-section active'
+                    : 'settings-section'
+                }
+              >
+                <h3>Game Settings</h3>
+                <div className="settings-content">
+                  <div
+                    className="quickplay-select"
+                    onMouseEnter={() => this.toggleHover('difficulty')}
+                    onMouseLeave={() => this.toggleHover('')}
+                  >
+                    <Select
+                      title="Difficulty"
+                      type="string"
+                      width={260}
+                      height={40}
+                      options={['Novice', 'Intermediate', 'Advanced', 'Expert']}
+                      defaultOption={
+                        this.state.difficulty.charAt(0).toUpperCase() +
+                        this.state.difficulty.slice(1)
+                      }
+                      onChange={(val) => {
+                        if (this.props.updateConfig)
+                          this.props.updateConfig(
+                            'difficulty',
+                            val.toLowerCase()
+                          );
+                        this.setState({ difficulty: val.toLowerCase() });
+                        if (val === 'Novice') {
+                          if (this.props.updateConfig) {
+                            this.props.updateConfig('thinkingTime', 2);
+                            this.props.updateConfig('engineDepth', 1);
+                          }
+                          this.setState((prevState) => ({
+                            config: {
+                              ...prevState.config,
+                              thinkingTime: 2,
+                              engineDepth: 1,
+                            },
+                          }));
+                        }
+                        if (val === 'Intermediate') {
+                          this.props.updateConfig!('thinkingTime', 4);
+                          this.props.updateConfig!('engineDepth', 3);
+                          this.setState((prevState) => ({
+                            config: {
+                              ...prevState.config,
+                              thinkingTime: 4,
+                              engineDepth: 3,
+                            },
+                          }));
+                        }
+                        if (val === 'Advanced') {
+                          this.props.updateConfig!('thinkingTime', 6);
+                          this.props.updateConfig!('engineDepth', 5);
+                          this.setState((prevState) => ({
+                            config: {
+                              ...prevState.config,
+                              thinkingTime: 6,
+                              engineDepth: 5,
+                            },
+                          }));
+                        }
+                        if (val === 'Expert') {
+                          this.props.updateConfig!('thinkingTime', 8);
+                          this.props.updateConfig!('engineDepth', 7);
+                          this.setState((prevState) => ({
+                            config: {
+                              ...prevState.config,
+                              thinkingTime: 8,
+                              engineDepth: 7,
+                            },
+                          }));
+                        }
+                      }}
+                    />
+                  </div>
+                  <div className="engine-strength">
                     <p>
-                      {arcana[this.state.hoverId]?.description
-                        ? arcana[this.state.hoverId]?.description
-                        : this.state.characterDescription !== ''
-                          ? this.state.characterDescription
-                          : this.descriptions()[this.state.hoverId]}
+                      ENGINE DEPTH: {this.state.config.engineDepth} half move(s)
+                    </p>
+                    <p>
+                      ENGINE THINK TIME: {this.state.config.thinkingTime}{' '}
+                      second(s)
                     </p>
                   </div>
-                </div>
-                <div className="sides">
-                  <div className="engine">
-                    <div className="buttons-arcana">
-                      <div className="buttons">
-                        <div className="color">
-                          <img
-                            src={`/assets/images/engine.svg`}
-                            style={{
-                              width: '180px',
-                              height: '60px',
-                              background:
-                                this.state.hoverId === 'engineSwapSides'
-                                  ? '#4A90E2'
-                                  : this.state.engineColor === 'white'
-                                    ? '#AAAAAA'
-                                    : '#333333',
-                              cursor:
-                                "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
-                            }}
-                            onClick={() =>
-                              this.setState(
-                                (prevState) => ({
-                                  playerColor:
-                                    prevState.playerColor === 'white'
-                                      ? 'black'
-                                      : 'white',
-                                  engineColor:
-                                    prevState.engineColor === 'white'
-                                      ? 'black'
-                                      : 'white',
-                                  playerCharacterImgPath:
-                                    prevState.engineCharacterImgPath,
-                                  engineCharacterImgPath:
-                                    prevState.playerCharacterImgPath,
-                                }),
-                                () => {
-                                  if (this.props.updateConfig) {
-                                    this.props.updateConfig(
-                                      'playerColor',
-                                      this.state.playerColor === 'white'
-                                        ? 'white'
-                                        : 'black'
-                                    );
-                                    this.props.updateConfig(
-                                      'engineColor',
-                                      this.state.playerColor === 'white'
-                                        ? 'black'
-                                        : 'white'
-                                    );
-                                  }
-                                }
-                              )
-                            }
-                            onMouseEnter={() => {
-                              this.setState({
-                                hoverId: 'engineSwapSides',
-                              });
-                            }}
-                            onMouseLeave={() => {
-                              this.setState({
-                                hoverId: '',
-                              });
-                            }}
-                          />
-                        </div>
-                        {/* <div className="character-select-container">
-                          <img
-                            src={`${
-                              this.state.engineCharacterImgPath ||
-                              '/assets/characters/other'
-                            }.svg`}
-                            style={{
-                              width: '180px',
-                              height: '60px',
-                              background:
-                                this.state.hoverId === 'engineCharacter'
-                                  ? '#4A90E2'
-                                  : '#808080',
-                              cursor:
-                                "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
-                            }}
-                            onClick={() => {
-                              this.setState({
-                                showCharacterSelect:
-                                  this.state.engineColor ===
-                                  this.state.showCharacterSelect
-                                    ? ''
-                                    : this.state.engineColor,
-                                showArcanaSelect: '',
-                                showArmySelect: '',
-                              });
-                            }}
-                            onMouseEnter={() => {
-                              this.setState({
-                                hoverId: 'engineCharacter',
-                              });
-                            }}
-                            onMouseLeave={() => {
-                              this.setState({
-                                hoverId: '',
-                              });
-                            }}
-                          />
-                          {this.state.showCharacterSelect ? (
-                            <CharacterSelect
-                              color={this.state.engineColor}
-                              isOpen={this.state.showCharacterSelect}
-                              sendCharacterSelect={(character) => {
-                                const configArcana = this.transformedSpellBook(
-                                  character.spellBook
-                                );
-                                if (this.props.updateConfig)
-                                  this.props.updateConfig(
-                                    `${
-                                      this.state.engineColor === 'white'
-                                        ? 'w'
-                                        : 'b'
-                                    }Arcana`,
-                                    configArcana
-                                  );
-                                if (this.state.engineColor === 'white') {
-                                  this.setState({
-                                    whiteArcana: character.spellBook,
-                                    whiteSetup: character.setup,
-                                    engineCharacterImgPath: character.imagePath,
-                                  });
-                                }
-                                if (this.state.engineColor === 'black') {
-                                  this.setState({
-                                    blackArcana: character.spellBook,
-                                    blackSetup: character.setup.toLowerCase(),
-                                    engineCharacterImgPath: character.imagePath,
-                                  });
-                                }
-                              }}
-                              handleToggle={() => {
-                                this.setState({
-                                  showCharacterSelect:
-                                    this.state.engineColor ===
-                                    this.state.showCharacterSelect
-                                      ? ''
-                                      : this.state.engineColor,
-                                  showArcanaSelect: '',
-                                  showArmySelect: '',
-                                });
-                              }}
-                              updateHover={(description: string) => {
-                                this.setState({
-                                  characterDescription: description,
-                                });
-                              }}
-                            />
-                          ) : null}
-                        </div> */}
-                      </div>
-                      <div className="arcana">
-                        <ArcanaSelect
-                          spellBook={
-                            this.state.engineColor === 'white'
-                              ? this.state.whiteArcana
-                              : this.state.blackArcana
-                          }
-                          isOpen={
-                            this.state.showArcanaSelect ===
-                            this.state.engineColor
-                          }
-                          handleToggle={() => {
-                            this.setState({
-                              showArcanaSelect:
-                                this.state.engineColor ===
-                                  this.state.showArcanaSelect
-                                  ? ''
-                                  : this.state.engineColor,
-                              showCharacterSelect: '',
-                              showArmySelect: '',
-                            });
-                          }}
-                          color={this.state.engineColor}
-                          updateSpellBook={(spellBook) => {
-                            const configArcana =
-                              this.transformedSpellBook(spellBook);
-                            if (this.props.updateConfig)
-                              this.props.updateConfig(
-                                `${this.state.engineColor === 'white' ? 'w' : 'b'
-                                }Arcana`,
-                                configArcana
-                              );
-                            if (this.state.engineColor === 'white') {
-                              this.setState({
-                                whiteArcana: spellBook,
-                                engineCharacterImgPath: '',
-                              });
-                            }
-                            if (this.state.engineColor === 'black') {
-                              this.setState({
-                                blackArcana: spellBook,
-                                engineCharacterImgPath: '',
-                              });
-                            }
-                          }}
-                          updateHover={(arcaneObject) => {
-                            this.setState({
-                              hoverId: arcaneObject.id || '',
-                            });
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div className="army-section">
-                      <ArmySelect
-                        army={
-                          this.state.engineColor === 'white'
-                            ? this.state.whiteSetup
-                            : this.state.blackSetup
-                        }
-                        isOpen={
-                          this.state.showArmySelect === this.state.engineColor
-                        }
-                        handleToggle={() => {
+                  <div
+                    className="quickplay-select"
+                    onMouseEnter={() => this.toggleHover('gameMode')}
+                    onMouseLeave={() => this.toggleHover('')}
+                  >
+                    <Select
+                      title="Game Mode"
+                      type="string"
+                      width={260}
+                      height={40}
+                      options={[
+                        ...Object.values(modes).map((mode) => mode.name),
+                      ]}
+                      defaultOption={this.state.selectedModeName}
+                      onChange={(val) => {
+                        const selectedMode = Object.values(modes).find(
+                          (mode) => mode.name === val
+                        );
+                        if (selectedMode && this.props.updateConfig) {
+                          const whiteConfigArcana = this.transformedSpellBook(
+                            selectedMode.white.arcana
+                          );
+                          const blackConfigArcana = this.transformedSpellBook(
+                            selectedMode.black.arcana
+                          );
+                          this.props.updateConfig(
+                            'whiteSetup',
+                            selectedMode.white.setup
+                          );
+                          this.props.updateConfig(
+                            'blackSetup',
+                            selectedMode.black.setup
+                          );
+                          this.props.updateConfig('wArcana', whiteConfigArcana);
+                          this.props.updateConfig('bArcana', blackConfigArcana);
                           this.setState({
-                            showArmySelect:
-                              this.state.engineColor ===
-                                this.state.showArmySelect
-                                ? ''
-                                : this.state.engineColor,
-                            showCharacterSelect: '',
-                            showArcanaSelect: '',
+                            whiteArcana: selectedMode.white.arcana,
+                            whiteSetup: selectedMode.white.setup,
+                            blackArcana: selectedMode.black.arcana,
+                            blackSetup: selectedMode.black.setup,
+                            engineCharacterImgPath: '',
+                            playerCharacterImgPath: '',
+                            selectedModeName: val,
                           });
-                        }}
-                        color={this.state.engineColor}
-                        faction="tau"
-                        updateArmy={(army) => {
-                          if (this.props.updateConfig) {
-                            this.props.updateConfig(
-                              `${this.state.engineColor}Setup`,
-                              army
-                            );
-                            if (this.state.engineColor === 'white') {
-                              this.setState({
-                                whiteSetup: army,
-                                engineCharacterImgPath: '',
-                              });
-                            }
-                            if (this.state.engineColor === 'black') {
-                              this.setState({
-                                blackSetup: army,
-                                engineCharacterImgPath: '',
-                              });
-                            }
-                          }
-                        }}
-                        updateHover={(id) => {
-                          if (id !== '') {
-                            this.setState({
-                              hoverId: 'engineArmy',
-                            });
-                          } else {
-                            this.setState({
-                              hoverId: '',
-                            });
-                          }
-                        }}
-                      />
-                    </div>
+                        }
+                      }}
+                    />
                   </div>
-                  <div className="player">
-                    <div className="buttons-arcana">
-                      <div className="buttons">
-                        <div className="color">
-                          <img
-                            src={`/assets/images/user.svg`}
-                            style={{
-                              width: '180px',
-                              height: '60px',
-                              background:
-                                this.state.hoverId === 'playerSwapSides'
-                                  ? '#4A90E2'
-                                  : this.state.playerColor === 'white'
-                                    ? '#AAAAAA'
-                                    : '#333333',
-                              cursor:
-                                "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
-                            }}
-                            onClick={() =>
-                              this.setState(
-                                (prevState) => ({
-                                  playerColor:
-                                    prevState.playerColor === 'white'
-                                      ? 'black'
-                                      : 'white',
-                                  engineColor:
-                                    prevState.engineColor === 'white'
-                                      ? 'black'
-                                      : 'white',
-                                  playerCharacterImgPath:
-                                    prevState.engineCharacterImgPath,
-                                  engineCharacterImgPath:
-                                    prevState.playerCharacterImgPath,
-                                }),
-                                () => {
-                                  if (this.props.updateConfig) {
-                                    this.props.updateConfig(
-                                      'playerColor',
-                                      this.state.playerColor === 'white'
-                                        ? 'white'
-                                        : 'black'
-                                    );
-                                    this.props.updateConfig(
-                                      'engineColor',
-                                      this.state.playerColor === 'white'
-                                        ? 'black'
-                                        : 'white'
-                                    );
-                                  }
-                                }
-                              )
-                            }
-                            onMouseEnter={() => {
-                              this.setState({
-                                hoverId: 'playerSwapSides',
-                              });
-                            }}
-                            onMouseLeave={() => {
-                              this.setState({
-                                hoverId: '',
-                              });
-                            }}
-                          />
-                        </div>
-                        {/* <div className="character-select-container">
-                          <div className="character">
-                            <img
-                              src={`${
-                                this.state.playerCharacterImgPath ||
-                                '/assets/characters/other'
-                              }.svg`}
-                              style={{
-                                width: '180px',
-                                height: '60px',
-                                background:
-                                  this.state.hoverId === 'playerCharacter'
-                                    ? '#4A90E2'
-                                    : '#808080',
-                                cursor:
-                                  "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
-                              }}
-                              onClick={() => {
-                                this.setState({
-                                  showCharacterSelect:
-                                    this.state.playerColor ===
-                                    this.state.showCharacterSelect
-                                      ? ''
-                                      : this.state.playerColor,
-                                  showArcanaSelect: '',
-                                  showArmySelect: '',
-                                });
-                              }}
-                              onMouseEnter={() => {
-                                this.setState({
-                                  hoverId: 'playerCharacter',
-                                });
-                              }}
-                              onMouseLeave={() => {
-                                this.setState({
-                                  hoverId: '',
-                                });
-                              }}
-                            />
-                          </div>
-                          {this.state.showCharacterSelect ? (
-                            <CharacterSelect
-                              color={this.state.playerColor}
-                              isOpen={this.state.showCharacterSelect}
-                              sendCharacterSelect={(character) => {
-                                const configArcana = this.transformedSpellBook(
-                                  character.spellBook
-                                );
-                                if (this.props.updateConfig)
-                                  this.props.updateConfig(
-                                    `${
-                                      this.state.playerColor === 'white'
-                                        ? 'w'
-                                        : 'b'
-                                    }Arcana`,
-                                    configArcana
-                                  );
-                                if (this.state.playerColor === 'white') {
-                                  this.setState({
-                                    whiteArcana: character.spellBook,
-                                    whiteSetup: character.setup,
-                                    playerCharacterImgPath: character.imagePath,
-                                  });
-                                }
-                                if (this.state.playerColor === 'black') {
-                                  this.setState({
-                                    blackArcana: character.spellBook,
-                                    blackSetup: character.setup.toLowerCase(),
-                                    playerCharacterImgPath: character.imagePath,
-                                  });
-                                }
-                              }}
-                              handleToggle={() => {
-                                this.setState({
-                                  showCharacterSelect:
-                                    this.state.playerColor ===
-                                    this.state.showCharacterSelect
-                                      ? ''
-                                      : this.state.playerColor,
-                                  showArcanaSelect: '',
-                                  showArmySelect: '',
-                                });
-                              }}
-                              updateHover={(description: string) => {
-                                this.setState({
-                                  characterDescription: description,
-                                });
-                              }}
-                            />
-                          ) : null}
-                        </div> */}
-                      </div>
-                      <div className="arcana">
-                        <ArcanaSelect
-                          spellBook={
-                            this.state.playerColor === 'white'
-                              ? this.state.whiteArcana
-                              : this.state.blackArcana
-                          }
-                          isOpen={
-                            this.state.showArcanaSelect ===
-                            this.state.playerColor
-                          }
-                          handleToggle={() => {
-                            this.setState({
-                              showArcanaSelect:
-                                this.state.playerColor ===
-                                  this.state.showArcanaSelect
-                                  ? ''
-                                  : this.state.playerColor,
-                              showCharacterSelect: '',
-                              showArmySelect: '',
-                            });
-                          }}
-                          color={this.state.playerColor}
-                          updateSpellBook={(spellBook) => {
-                            const configArcana =
-                              this.transformedSpellBook(spellBook);
-                            if (this.props.updateConfig)
-                              this.props.updateConfig(
-                                `${this.state.playerColor === 'white' ? 'w' : 'b'
-                                }Arcana`,
-                                configArcana
-                              );
-                            if (this.state.playerColor === 'white') {
-                              this.setState({
-                                whiteArcana: spellBook,
-                                playerCharacterImgPath: '',
-                              });
-                            }
-                            if (this.state.playerColor === 'black') {
-                              this.setState({
-                                blackArcana: spellBook,
-                                playerCharacterImgPath: '',
-                              });
-                            }
-                          }}
-                          updateHover={(arcaneObject) => {
-                            this.setState({
-                              hoverId: arcaneObject.id || '',
-                            });
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div className="army-section">
-                      <ArmySelect
-                        army={
-                          this.state.playerColor === 'white'
-                            ? this.state.whiteSetup
-                            : this.state.blackSetup
-                        }
-                        isOpen={
-                          this.state.showArmySelect === this.state.playerColor
-                        }
-                        handleToggle={() => {
-                          this.setState({
-                            showArmySelect:
-                              this.state.playerColor ===
-                                this.state.showArmySelect
-                                ? ''
-                                : this.state.playerColor,
-                            showCharacterSelect: '',
-                            showArcanaSelect: '',
-                          });
-                        }}
-                        color={this.state.playerColor}
-                        faction="tau"
-                        updateArmy={(army) => {
-                          if (this.props.updateConfig) {
-                            this.props.updateConfig(
-                              `${this.state.playerColor}Setup`,
-                              army
-                            );
-                            if (this.state.playerColor === 'white') {
-                              this.setState({
-                                whiteSetup: army,
-                                playerCharacterImgPath: '',
-                              });
-                            }
-                            if (this.state.playerColor === 'black') {
-                              this.setState({
-                                blackSetup: army,
-                                playerCharacterImgPath: '',
-                              });
-                            }
-                          }
-                        }}
-                        updateHover={(id: string) => {
-                          if (id !== '') {
-                            this.setState({
-                              hoverId: 'playerArmy',
-                            });
-                          } else {
-                            this.setState({
-                              hoverId: '',
-                            });
-                          }
-                        }}
-                      />
-                    </div>
+                  <div
+                    className="quickplay-select"
+                    onMouseEnter={() => this.toggleHover('gameModeRand')}
+                    onMouseLeave={() => this.toggleHover('')}
+                  >
+                    <Button
+                      text="New Position"
+                      className="tertiary"
+                      color="B"
+                      width={260}
+                      height={40}
+                      onClick={() => {
+                        this.randomGameMode();
+                      }}
+                      backgroundColorOverride="linear-gradient(135deg, #00c6ff, #0072ff)"
+                    />
+                  </div>
+                  <div
+                    className="quickplay-select"
+                    onMouseEnter={() => this.toggleHover('start')}
+                    onMouseLeave={() => this.toggleHover('')}
+                  >
+                    <Button
+                      text="START"
+                      className="primary"
+                      color="B"
+                      width={260}
+                      height={60}
+                      styles={{ marginTop: '8px' }}
+                      onClick={() => {
+                        this.props.handleClose();
+                      }}
+                    />
                   </div>
                 </div>
               </div>
-            </>
-            <div className="settings-go">
-              <div
-                className="quickplay-select"
-                onMouseEnter={() => this.toggleHover('difficulty')}
-                onMouseLeave={() => this.toggleHover('')}
-              >
-                <Select
-                  title="Difficulty"
-                  type="number"
-                  width={260}
-                  height={40}
-                  defaultOption={'Novice'}
-                  options={['Novice', 'Intermediate', 'Advanced', 'Expert']}
-                  onChange={(val) => {
-                    if (!this.props.updateConfig) return;
-                    if (val === 'Novice') {
-                      this.props.updateConfig('thinkingTime', 2);
-                      this.props.updateConfig('engineDepth', 1);
-                      this.setState((prevState) => {
-                        return {
-                          config: {
-                            ...prevState.config,
-                            thinkingTime: 2,
-                            engineDepth: 1,
-                          },
-                        };
-                      });
-                    }
-                    if (val === 'Intermediate') {
-                      this.props.updateConfig('thinkingTime', 4);
-                      this.props.updateConfig('engineDepth', 3);
-                      this.setState((prevState) => {
-                        return {
-                          config: {
-                            ...prevState.config,
-                            thinkingTime: 4,
-                            engineDepth: 3,
-                          },
-                        };
-                      });
-                    }
-                    if (val === 'Advanced') {
-                      this.props.updateConfig('thinkingTime', 6);
-                      this.props.updateConfig('engineDepth', 5);
-                      this.setState((prevState) => {
-                        return {
-                          config: {
-                            ...prevState.config,
-                            thinkingTime: 6,
-                            engineDepth: 5,
-                          },
-                        };
-                      });
-                    }
-                    if (val === 'Expert') {
-                      this.props.updateConfig('thinkingTime', 8);
-                      this.props.updateConfig('engineDepth', 7);
-                      this.setState((prevState) => {
-                        return {
-                          config: {
-                            ...prevState.config,
-                            thinkingTime: 8,
-                            engineDepth: 7,
-                          },
-                        };
-                      });
-                    }
-                  }}
-                />
-                <div className="engine-strength">
-                  <p>
-                    ENGINE DEPTH: {this.state.config.engineDepth} half move(s)
-                  </p>
-                  <p>
-                    ENGINE THINK TIME: {this.state.config.thinkingTime}{' '}
-                    second(s)
-                  </p>
-                </div>
-              </div>
-              {/* <div
-                className="quickplay-select"
-                onMouseEnter={() => this.toggleHover('promotion')}
-                onMouseLeave={() => this.toggleHover('')}
-              >
-                <Select
-                  title="Promotion"
-                  type="string"
-                  width={260}
-                  height={40}
-                  options={[
-                    'Select',
-                    'N',
-                    'Z',
-                    'U',
-                    'B',
-                    'R',
-                    'Q',
-                    'T',
-                    'M',
-                    'W',
-                    'S',
-                  ]}
-                  onChange={(val) => {
-                    if (this.props.updateConfig)
-                      this.props.updateConfig('placingPromotion', val);
-                  }}
-                />
-              </div> */}
-              <div
-                className="quickplay-select"
-                onMouseEnter={() => this.toggleHover('gameMode')}
-                onMouseLeave={() => this.toggleHover('')}
-              >
-                <Select
-                  title="Game Mode"
-                  type="string"
-                  width={260}
-                  height={40}
-                  options={[
-                    // 'Game Mode',
-                    ...Object.values(modes).map((mode) => mode.name),
-                  ]}
-                  defaultOption={this.state.selectedModeName}
-                  onChange={(val) => {
-                    const selectedMode = Object.values(modes).find(
-                      (mode) => mode.name === val
-                    );
-                    if (selectedMode && this.props.updateConfig) {
-                      const whiteConfigArcana = this.transformedSpellBook(
-                        selectedMode.white.arcana
-                      );
-                      const blackConfigArcana = this.transformedSpellBook(
-                        selectedMode.black.arcana
-                      );
-                      this.props.updateConfig(
-                        'whiteSetup',
-                        selectedMode.white.setup
-                      );
-                      this.props.updateConfig(
-                        'blackSetup',
-                        selectedMode.black.setup
-                      );
-                      this.props.updateConfig('wArcana', whiteConfigArcana);
-                      this.props.updateConfig('bArcana', blackConfigArcana);
-                      this.setState({
-                        whiteArcana: selectedMode.white.arcana,
-                        whiteSetup: selectedMode.white.setup,
-                        blackArcana: selectedMode.black.arcana,
-                        blackSetup: selectedMode.black.setup,
-                        engineCharacterImgPath: '',
-                        playerCharacterImgPath: '',
-                        selectedModeName: val,
-                      });
-                    }
-                  }}
-                />
-              </div>
-              {/* <div
-                className="quickplay-select"
-                onMouseEnter={() => this.toggleHover('tempRandSame')}
-                onMouseLeave={() => this.toggleHover('')}
-              >
-                <Button
-                  text="Template Randomize Match"
-                  className="tertiary"
-                  color="B"
-                  width={260}
-                  height={40}
-                  styles={{ marginTop: '20px' }}
-                  onClick={() => {
-                    this.randomizeTemplates('same');
-                  }}
-                />
-              </div> */}
-              {/* <div
-                className="quickplay-select"
-                onMouseEnter={() => this.toggleHover('tempRandDiff')}
-                onMouseLeave={() => this.toggleHover('')}
-              >
-                <Button
-                  text="Template Randomize Mismatch"
-                  className="tertiary"
-                  color="B"
-                  width={260}
-                  height={40}
-                  onClick={() => {
-                    this.randomizeTemplates('different');
-                  }}
-                />
-              </div> */}
-              <div
-                className="quickplay-select"
-                onMouseEnter={() => this.toggleHover('gameModeRand')}
-                onMouseLeave={() => this.toggleHover('')}
-              >
-                <Button
-                  text="New Position"
-                  className="tertiary"
-                  color="B"
-                  width={260}
-                  height={40}
-                  onClick={() => {
-                    this.randomGameMode();
-                  }}
-                  backgroundColorOverride="linear-gradient(135deg, #00c6ff, #0072ff)"
-                />
-              </div>
-              {/* <div
-                className="quickplay-select"
-                onMouseEnter={() => this.toggleHover('trueRandDiff')}
-                onMouseLeave={() => this.toggleHover('')}
-              >
-                <Button
-                  text="True Randomize Mismatch"
-                  className="tertiary"
-                  color="B"
-                  width={260}
-                  height={40}
-                  onClick={() => {
-                    this.trueRandomize('different');
-                  }}
-                />
-              </div> */}
-              <div
-                className="quickplay-select"
-                onMouseEnter={() => this.toggleHover('start')}
-                onMouseLeave={() => this.toggleHover('')}
-              >
-                <Button
-                  text="START"
-                  className="primary"
-                  color="B"
-                  width={260}
-                  height={60}
-                  styles={{ marginTop: '20px' }}
-                  onClick={() => {
-                    this.props.handleClose();
-                  }}
-                />
-              </div>
+              {/* Close content-container */}
             </div>
           </div>
         </Modal>
@@ -1189,17 +998,18 @@ const quickPlayModal = {
     marginRight: 'auto',
     transform: 'translate(-50%, -50%)',
     display: 'flex',
-    height: '100%',
-    width: '100%',
-    background: '#1111111',
+    height: '90vh',
+    maxHeight: '900px',
+    width: '90vw',
+    maxWidth: '1400px',
+    background: 'transparent',
     border: 'none',
-    overflowY: 'scroll' as const,
-    overflowX: 'hidden' as const,
-    msOverflowStyle: 'none' as const,
-    scrollbarWidth: 'none' as const,
+    padding: '0',
+    overflow: 'hidden',
   },
   overlay: {
     zIndex: 10,
-    backgroundColor: '#111111CC',
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    backdropFilter: 'blur(8px)',
   },
 };
