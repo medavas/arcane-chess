@@ -159,16 +159,13 @@ const unpaddedCharacters = [
   },
 ];
 
-export const startingSpellBook = Array(10).fill(emptyArcane);
+export const startingSpellBook = Array(6).fill(emptyArcane);
 
 export const padSpellBook = (characters: Character[]) => {
   return characters.map((character) => ({
     ...character,
     imagePath: `${path}${character.imagePath}`,
-    spellBook: [
-      ...character.spellBook,
-      ...Array(10 - character.spellBook.length).fill(arcana.empty),
-    ],
+    spellBook: character.spellBook.slice(0, 6),
   }));
 };
 
@@ -176,11 +173,7 @@ export const characters = padSpellBook(unpaddedCharacters);
 
 // MODES
 const padArcana = (arcana: ArcanaDetail[]) => {
-  const paddedArcana = [...arcana];
-  while (paddedArcana.length < 10) {
-    paddedArcana.push(emptyArcane);
-  }
-  return paddedArcana;
+  return arcana.slice(0, 6);
 };
 
 const padModes = (modes: Record<string, GameModeType>) => {
@@ -257,7 +250,7 @@ export const modes: Record<string, GameModeType> = padModes({
         arcana.toknHEM,
         arcana.toknHER,
       ],
-      setup: 'RSBQKWNR',
+      setup: 'rsbqkwnr',
     },
   },
   test4: {

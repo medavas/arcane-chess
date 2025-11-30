@@ -244,8 +244,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
   };
 
   trueRandomize = (type: 'same' | 'different') => {
-    const spellBookA = _.sampleSize(arcanaJson, 10) as ArcanaDetail[];
-    const spellBookB = _.sampleSize(arcanaJson, 10) as ArcanaDetail[];
+    const spellBookA = _.sampleSize(arcanaJson, 6) as ArcanaDetail[];
+    const spellBookB = _.sampleSize(arcanaJson, 6) as ArcanaDetail[];
 
     const configArcanaA = this.transformedSpellBook(spellBookA);
     const configArcanaB = this.transformedSpellBook(spellBookB);
@@ -381,8 +381,23 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                 >
                   <img className="logo" src="/assets/logoall+.png" alt="Home" />
                 </button>
+                {/* Hover Panel - inline with home button on medium screens */}
+                <div className="hover-panel">
+                  {arcana[this.state.hoverId]?.name || hoverContent ? (
+                    <>
+                      <div className="hover-title">
+                        {arcana[this.state.hoverId]?.name || ''}
+                      </div>
+                      <div className="hover-description">{hoverContent}</div>
+                    </>
+                  ) : (
+                    <div className="hover-empty">
+                      Hover over options to see details
+                    </div>
+                  )}
+                </div>
               </div>
-              {/* Mobile Tab Navigation */}
+              {/* Tab Navigation */}
               <div className="tab-nav">
                 <button
                   className={`tab-button ${
@@ -411,8 +426,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
               </div>
             </div>
 
-            {/* Hover Panel - Always visible on desktop, contextual on mobile */}
-            <div className="hover-panel">
+            {/* Mobile Hover Panel - conditional, between header and content */}
+            <div className="hover-panel mobile-hover">
               {arcana[this.state.hoverId]?.name || hoverContent ? (
                 <>
                   <div className="hover-title">
@@ -551,6 +566,16 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                     }}
                   />
                 </div>
+                {/* Mobile Start Button */}
+                <button
+                  type="button"
+                  className="mobile-start-button"
+                  onClick={() => this.props.handleClose()}
+                  onMouseEnter={() => this.setState({ hoverId: 'start' })}
+                  onMouseLeave={() => this.setState({ hoverId: '' })}
+                >
+                  ▶ START
+                </button>
               </div>
 
               {/* Engine Section */}
@@ -675,6 +700,16 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                     }}
                   />
                 </div>
+                {/* Mobile Start Button */}
+                <button
+                  type="button"
+                  className="mobile-start-button"
+                  onClick={() => this.props.handleClose()}
+                  onMouseEnter={() => this.setState({ hoverId: 'start' })}
+                  onMouseLeave={() => this.setState({ hoverId: '' })}
+                >
+                  ▶ START
+                </button>
               </div>
 
               {/* Settings Section */}
@@ -839,14 +874,22 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                       onClick={() => {
                         this.setState((prevState) => ({
                           playerColor:
-                            prevState.playerColor === 'white' ? 'black' : 'white',
+                            prevState.playerColor === 'white'
+                              ? 'black'
+                              : 'white',
                           engineColor:
-                            prevState.engineColor === 'white' ? 'black' : 'white',
-                          playerCharacterImgPath: prevState.engineCharacterImgPath,
-                          engineCharacterImgPath: prevState.playerCharacterImgPath,
+                            prevState.engineColor === 'white'
+                              ? 'black'
+                              : 'white',
+                          playerCharacterImgPath:
+                            prevState.engineCharacterImgPath,
+                          engineCharacterImgPath:
+                            prevState.playerCharacterImgPath,
                         }));
                       }}
-                      onMouseEnter={() => this.setState({ hoverId: 'swapSides' })}
+                      onMouseEnter={() =>
+                        this.setState({ hoverId: 'swapSides' })
+                      }
                       onMouseLeave={() => this.setState({ hoverId: '' })}
                     >
                       <span>⇄</span> SWAP SIDES
@@ -855,7 +898,9 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                       type="button"
                       className="action-btn randomize-btn"
                       onClick={() => this.randomGameMode()}
-                      onMouseEnter={() => this.setState({ hoverId: 'randomize' })}
+                      onMouseEnter={() =>
+                        this.setState({ hoverId: 'randomize' })
+                      }
                       onMouseLeave={() => this.setState({ hoverId: '' })}
                     >
                       <span>🎲</span> RANDOMIZE
