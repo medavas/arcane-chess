@@ -40,7 +40,7 @@
 
   .expand-controls {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start; // Left align
     margin-bottom: 12px;
   }
 
@@ -54,7 +54,21 @@
       align-items: center;
       gap: 16px;
       flex-shrink: 0;
-      background: rgba(0, 0, 0, 0.3);
+      // Match PieceList item style
+      color: #eee;
+      margin: 0;
+      padding: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .thumb {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+      }
     }
 
     .content {
@@ -98,19 +112,27 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    align-items: center; // Center the button
+    align-items: flex-start; // Left align
+
+    // Match PieceList family container style
+    padding: 16px;
+    margin-bottom: 8px; // Reduced from 20px as spellBook has gap
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 
     .arcane-section-list {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 0; // Remove gap as items have padding/borders now
       width: 100%; // Ensure list takes full width
       margin-top: 4px;
     }
   }
 
   .arcane-section.is-open:hover {
-    background-color: #222;
+    background-color: rgba(255, 255, 255, 0.08); // Slightly lighter on hover
     transition: background-color 0.2s ease;
     cursor:
       url('/assets/images/cursors/pointer.svg') 12 4,
@@ -118,6 +140,7 @@
   }
 
   .arcane-section.is-open {
-    background-color: transparent;
+    // Keep the background when open, don't make it transparent
+    // background-color: transparent; 
   }
 }

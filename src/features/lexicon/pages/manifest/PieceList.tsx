@@ -74,11 +74,11 @@ const pieceList: PieceItem[] = [
 
   // Token
   {
-    name: 'Token',
+    name: 'Herring, Hermit, Hemlock, Nomad',
     description:
-      'Special units including Herring, Hermit, Hemlock, and Nomad. There are 4 variants with unique properties, often summoned by other effects or having distinct movement patterns.',
+      'Must be captured if it is attacked. Holding a token arcane changes behavior. Hermit casts a square condition aura. Hemlock acts as a super Knight. Both combine to form a Nomad.',
     imagePath: '/assets/images/pieces/tactorius/normal/wH',
-    family: 'Token',
+    family: 'Spellcasters',
   },
 
   // Royalty
@@ -120,7 +120,7 @@ const pieceList: PieceItem[] = [
 ];
 
 export default function PieceList() {
-  const families = ['Infantry', 'Equus', 'Sliders', 'Ghost', 'Token', 'Royalty'];
+  const families = ['Infantry', 'Equus', 'Sliders', 'Ghost', 'Spellcasters', 'Royalty'];
 
   return (
     <div className="piece-list">

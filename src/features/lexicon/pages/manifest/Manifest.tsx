@@ -185,7 +185,7 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
             />
           </div>
 
-          <div className="content">
+          <div className="manifest-content">
             {this.state.currentTab === 'mission' ? (
               <div id="mission" className="mission">
                 {/* Mission content */}
