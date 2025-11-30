@@ -27,20 +27,6 @@ interface ArcanaListState {
   expandedSections: Record<string, boolean>;
 }
 
-const SECTION_GRADIENTS: Record<string, string> = {
-  sumn: 'linear-gradient(135deg, #6a3093, #2c3e50)', // deeper violet → slate
-  dyad: 'linear-gradient(135deg, #134e5e, #71b280)', // dark teal → soft green
-  shft: 'linear-gradient(135deg, #c79081, #dfa579)', // warm bronze → amber
-  offr: 'linear-gradient(135deg, #b31217, #240b36)', // wine red → midnight violet
-  swap: 'linear-gradient(135deg, #485563, #29323c)', // steel gray → charcoal
-  mods: 'linear-gradient(135deg, #b24592, #f15f79)', // muted magenta → rose
-  mori: 'linear-gradient(135deg, #1d976c, #093028)', // moss → slate
-  mora: 'linear-gradient(135deg, #0f2027, #2c5364)', // deep teal → steel blue
-  area: 'linear-gradient(135deg, #536976, #292e49)', // smoky steel → indigo
-  gain: 'linear-gradient(135deg, #3a7d44, #2c5f2d)', // forest → olive
-  tokn: 'linear-gradient(135deg, #d4af37, #aa8c2e)', // gold → darker gold
-};
-
 const sectionPrefixes = [
   'sumn',
   'dyad',
@@ -54,9 +40,6 @@ const sectionPrefixes = [
   'gain',
   'tokn',
 ];
-
-// Add: a dedicated gradient for the global toggle so it has color but isn't a type color
-const TOGGLE_GRADIENT = 'linear-gradient(135deg, #3b8d99, #6b6b83)'; // teal → slate
 
 export default class ArcanaList extends React.Component<
   ArcanaListProps,
@@ -102,9 +85,8 @@ export default class ArcanaList extends React.Component<
         <div className="title-row">
           <div className="name">{arcaneItem.name}</div>
           <div
-            className={`type pill pill-${
-              arcaneItem.type?.toLowerCase?.() || 'unknown'
-            }`}
+            className={`type pill pill-${arcaneItem.type?.toLowerCase?.() || 'unknown'
+              }`}
           >
             {arcaneItem.type}
           </div>
@@ -160,7 +142,6 @@ export default class ArcanaList extends React.Component<
             width={400}
             height={40}
             disabled={false}
-            backgroundColorOverride={TOGGLE_GRADIENT}
           />
         </div>
 
@@ -191,9 +172,6 @@ export default class ArcanaList extends React.Component<
                   width={400}
                   height={40}
                   disabled={false}
-                  backgroundColorOverride={
-                    SECTION_GRADIENTS[prefix] ?? '#55555588'
-                  }
                 />
                 {expanded && (
                   <div className="arcane-section-list">

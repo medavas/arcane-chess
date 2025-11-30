@@ -136,7 +136,6 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
                 width={160}
                 height={50}
                 disabled={false}
-                backgroundColorOverride="#11111188"
               />
             </Link>
             <Button
@@ -147,7 +146,6 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
               width={160}
               height={50}
               disabled={false}
-              backgroundColorOverride="#11111188"
             />
             <Button
               text="PIECES"
@@ -157,7 +155,6 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
               width={160}
               height={50}
               disabled={false}
-              backgroundColorOverride="#11111188"
             />
             <Button
               text="ARCANA"
@@ -167,7 +164,6 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
               width={160}
               height={50}
               disabled={false}
-              backgroundColorOverride="#11111188"
             />
             <Button
               text="TOS"
@@ -177,7 +173,6 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
               width={160}
               height={50}
               disabled={false}
-              backgroundColorOverride="#11111188"
             />
             <Button
               text="PRIVACY"
@@ -187,7 +182,6 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
               width={160}
               height={50}
               disabled={false}
-              backgroundColorOverride="#11111188"
             />
           </div>
 
@@ -314,7 +308,6 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
                         width={200}
                         height={50}
                         disabled={false}
-                        backgroundColorOverride="#11111188"
                       />
                     </a>
                   </div>
@@ -331,7 +324,6 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
                         width={200}
                         height={50}
                         disabled={false}
-                        backgroundColorOverride="#11111188"
                       />
                     </a>
                   </div>
@@ -348,7 +340,6 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
                         width={200}
                         height={50}
                         disabled={false}
-                        backgroundColorOverride="#11111188"
                       />
                     </a>
                   </div>
@@ -365,7 +356,6 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
                         width={200}
                         height={50}
                         disabled={false}
-                        backgroundColorOverride="#11111188"
                       />
                     </a>
                   </div>
@@ -382,7 +372,6 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
                         width={200}
                         height={50}
                         disabled={false}
-                        backgroundColorOverride="#11111188"
                       />
                     </a>
                   </div>

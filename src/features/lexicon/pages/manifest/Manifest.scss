@@ -1,3 +1,6 @@
+@import 'src/shared/styles/main.scss';
+@import 'src/shared/styles/_variables.scss';
+
 .manifest {
   width: 100vw;
   height: 100vh;
@@ -7,25 +10,27 @@
   position: relative;
   overflow: hidden;
 
-  background-image: radial-gradient(
-    circle,
-    rgba(221, 221, 221, 0.6) 0%,
-    rgba(17, 17, 17, 0.2) 80%
-  );
+  background:
+    url('/assets/images/textures/random-grey-variations.png') center / 250px repeat,
+    radial-gradient(circle, rgba(52, 120, 220, 0.6) 0%, rgba(17, 17, 17, 0.2) 80%) center / cover no-repeat;
 
   .manifest-curtain {
     position: fixed;
     width: 100vw;
     height: 100vh;
-    // background: #000000cc;
+    pointer-events: none;
   }
+
   .nav {
     position: fixed;
     display: flex;
     z-index: 2;
     top: 0;
     justify-content: center;
+    padding: 10px;
+    gap: 8px;
   }
+
   .container {
     display: flex;
     flex-direction: column;
@@ -38,35 +43,95 @@
     overflow-x: hidden;
     z-index: 1;
     box-sizing: border-box;
+    scrollbar-gutter: stable;
+
     .content {
-      width: 600px;
-      padding: 80px 0 60px 0;
-      > * {
-        margin: 0 0 40px 0;
+      width: 100%;
+      max-width: 1200px;
+      padding: 40px 40px 60px 40px;
+
+      // Glassmorphism container for the content area
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(68, 170, 255, 0.3);
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      margin-top: 80px; // Space for fixed nav
+      margin-bottom: 40px;
+
+      >* {
+        margin-bottom: 20px;
       }
+
+      h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #e6e6e6;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+        padding-bottom: 6px;
+        margin-bottom: 16px;
+        margin-top: 0;
+        max-width: 800px;
+      }
+
+      h5 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #fff;
+        margin-top: 20px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        max-width: 800px;
+      }
+
+      p,
       li {
-        margin: 10px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.9);
+        max-width: 800px;
       }
-      p {
-        margin: 10px;
+
+      ul,
+      ol {
+        padding-left: 24px;
+        max-width: 800px;
       }
+
+      li {
+        margin: 6px 0;
+      }
+
+      a {
+        color: $B_MENU; // Use variable or a nice blue
+        text-decoration: none;
+        transition: color 0.2s;
+
+        &:hover {
+          color: lighten($B_MENU, 15%);
+          text-decoration: underline;
+        }
+      }
+
       .links {
-        display: grid;
+        display: flex;
+        flex-wrap: wrap;
         justify-content: center;
-        grid-template-columns: repeat(3, 200px);
-        grid-template-rows: repeat(2, 50px);
-        grid-gap: 10px;
-        margin-top: 80px;
+        gap: 12px;
+        margin-top: 40px;
+
+        .link {
+          // Ensure buttons inside links behave well
+        }
       }
     }
   }
+
   .manifest-image-full {
-    position: absolute;
-    height: 100vh;
-    width: 100vw;
-    object-fit: cover;
-    z-index: -10;
-    filter: blur(4px);
+    display: none;
   }
 }
 
@@ -75,18 +140,19 @@
     .nav {
       position: relative;
       flex-direction: column;
+      top: auto;
+      margin-bottom: 20px;
     }
+
     .container {
       .content {
-        width: 360px;
+        width: 100%;
+        margin-top: 0;
+        border: none;
+        background: transparent;
+        backdrop-filter: none;
+        box-shadow: none;
         padding: 20px;
-        .links {
-          display: grid;
-          justify-content: center;
-          grid-template-columns: repeat(2, 200px);
-          grid-template-rows: repeat(3, 50px);
-          grid-gap: 10px;
-        }
       }
     }
   }

@@ -1,4 +1,5 @@
-﻿@import '../../../../shared/styles/variables.scss';
+﻿@import 'src/shared/styles/main.scss';
+@import 'src/shared/styles/_variables.scss';
 
 .outer-leaderboard {
   width: 100vw;
@@ -11,7 +12,11 @@
   overflow-y: auto;
   overflow-x: hidden;
 
-  background: linear-gradient(to bottom, $V_MENU 0%, black 100%);
+  background-image: url('/assets/images/textures/random-grey-variations.png'),
+    radial-gradient(circle,
+      rgba(52, 120, 220, 0.6) 0%,
+      rgba(17, 17, 17, 0.2) 80%);
+  background-position: center;
 
   .nav {
     position: fixed;
@@ -20,77 +25,98 @@
     justify-content: center;
     align-items: center;
     z-index: 2;
+    padding: 10px;
+    gap: 12px;
+
+    // Glassmorphism for nav bar if desired, or keep it clean
+    // background: rgba(0, 0, 0, 0.2);
+    // backdrop-filter: blur(4px);
+    // width: 100%;
   }
 
   .leaderboard-image {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: -1;
-    height: 100vh;
+    display: none; // Hide old image
   }
 
   .leaderboard-curtain {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    background: #000000cc;
+    display: none; // Hide old curtain
   }
 
   .leaderboard {
     display: flex;
     flex-direction: column;
-    // justify-content: center;
     align-items: center;
-    // height: 100vh;
-    overflow-y: scroll;
-    width: 100%;
-    margin: 0 auto;
-    padding: 60px 0;
+    width: 800px;
+    max-width: 95vw;
+    margin: 80px auto 40px; // Space for fixed nav
+    padding: 20px;
     z-index: 1;
     box-sizing: border-box;
+    gap: 8px;
+
+    // Glassmorphism container for the list
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(68, 170, 255, 0.3);
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
 
   .user-score {
     display: flex;
-    justify-content: center;
+    justify-content: space-between; // Better spacing
     align-items: center;
-    height: 100%;
-    width: 60%;
-    background-color: #11111188;
-    z-index: 1;
+    width: 100%;
+    padding: 12px 20px;
+    box-sizing: border-box;
+
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .standing-int {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: $B_MENU; // Highlight rank
+      width: 40px;
+      text-align: center;
+    }
 
     .username {
-      width: 200px;
-      padding: 12px;
-      box-sizing: border-box;
+      flex: 1;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+      padding: 0 20px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .points {
       text-align: right;
       display: flex;
       justify-content: flex-end;
-      padding: 12px;
-      width: 400px;
-      box-sizing: border-box;
+      align-items: center;
+      gap: 2px;
+      font-family: monospace; // For alignment
+      font-size: 1.2rem;
+      color: #e6e6e6;
 
       .digit-box {
-        display: flex;
-        width: 16px;
-        flex-grow: 0;
-        flex-shrink: 0;
-        justify-content: flex-end;
+        display: inline-block;
+        // width: 12px; // Fixed width for digits if needed
+        text-align: center;
       }
     }
   }
 
   .leaderboard-image-full {
-    position: absolute;
-    height: 100vh;
-    width: 100vw;
-    object-fit: cover;
-    z-index: -10;
-    filter: blur(4px) brightness(40%);
+    display: none;
   }
 }

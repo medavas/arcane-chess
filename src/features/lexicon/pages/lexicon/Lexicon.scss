@@ -6,6 +6,10 @@
   padding: 0;
   overflow: hidden;
 
+  background:
+    url('/assets/images/textures/random-grey-variations.png') center / 250px repeat,
+    radial-gradient(circle, rgba(52, 120, 220, 0.6) 0%, rgba(17, 17, 17, 0.2) 80%) center / cover no-repeat;
+
   .lexicon-view {
     height: 100%;
     display: flex;
@@ -40,7 +44,13 @@
         max-width: 400px;
         overflow: scroll;
         overflow-x: hidden;
-        background: #11111188;
+
+        // Glassmorphism
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(68, 170, 255, 0.3);
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       }
 
       .lexicon-nav-arrows {
@@ -51,7 +61,13 @@
         display: flex;
         flex-direction: column;
         height: 190px;
-        background: #11111188;
+
+        // Glassmorphism
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(68, 170, 255, 0.3);
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       }
     }
 
@@ -95,11 +111,17 @@
         flex-shrink: 1;
         display: flex;
         justify-content: center;
-        background: #11111188;
         overflow-y: scroll;
         height: auto;
         box-sizing: border-box;
         padding: 20px;
+
+        // Glassmorphism
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(68, 170, 255, 0.3);
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
         .time-text {
           font-size: 72px;
@@ -122,9 +144,15 @@
 
         .avatar {
           position: relative;
-          background: #11111188;
           width: 60px;
           height: 60px;
+
+          // Glassmorphism
+          background: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(68, 170, 255, 0.3);
+          border-radius: 6px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .arcana-select {
@@ -137,7 +165,13 @@
           overflow-x: auto;
           overflow-y: hidden;
           white-space: nowrap;
-          background: #11111188;
+
+          // Glassmorphism
+          background: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(68, 170, 255, 0.3);
+          border-radius: 6px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
           .arcane {
             height: 45px;
@@ -192,7 +226,13 @@
           height: auto;
           max-width: none;
           overflow-y: auto;
-          background: #11111188;
+
+          // Glassmorphism
+          background: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(68, 170, 255, 0.3);
+          border-radius: 6px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .lexicon-nav-arrows {
@@ -227,8 +267,14 @@
           flex: 1;
           height: auto;
           padding: 20px;
-          background-color: #11111188;
           overflow-y: auto;
+
+          // Glassmorphism
+          background: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(68, 170, 255, 0.3);
+          border-radius: 6px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
           .time-text {
             font-size: 72px;
@@ -311,7 +357,13 @@
           height: auto;
           max-height: 200px;
           overflow-y: auto;
-          background: #11111188;
+
+          // Glassmorphism
+          background: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(68, 170, 255, 0.3);
+          border-radius: 6px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .lexicon-nav-arrows {
@@ -325,7 +377,13 @@
           flex-direction: column;
           height: 390px;
           width: 100%;
-          background: #11111188;
+
+          // Glassmorphism
+          background: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(68, 170, 255, 0.3);
+          border-radius: 6px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .global-volume-control {

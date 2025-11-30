@@ -1,91 +1,123 @@
 .arcane-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 12px;
+  width: 100%;
 
   .types-header {
-    color: #ccc;
+    color: #e6e6e6;
+    margin-bottom: 12px;
+
+    span {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    hr {
+      border: 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      margin: 12px 0;
+    }
 
     ul {
       margin: 0;
-      padding-left: 14px;
+      padding-left: 20px;
+      list-style-type: disc;
 
       li {
-        margin: 2px 0;
+        margin: 6px 0;
+        line-height: 1.4;
+        color: rgba(255, 255, 255, 0.8);
+
+        strong {
+          color: #fff;
+        }
       }
     }
+  }
+
+  .expand-controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
   }
 
   .spellBook {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
 
     .arcane-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 6px 0;
-
-      .thumb {
-        width: 40px;
-        height: 40px;
-        object-fit: cover;
-        border-radius: 4px;
-        flex-shrink: 0;
-      }
-
-      .content {
-        display: flex;
-        flex-direction: column;
-        padding: 10px;
-
-        .title-row {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          margin: 0;
-
-          .name {
-            color: #eee;
-          }
-
-          .type {
-            text-transform: capitalize;
-            opacity: 0.7;
-          }
-        }
-
-        .description {
-          color: #aaa;
-          margin: 0;
-        }
-      }
+      gap: 16px;
+      flex-shrink: 0;
+      background: rgba(0, 0, 0, 0.3);
     }
 
-    .arcane-section {
+    .content {
       display: flex;
       flex-direction: column;
       gap: 4px;
+      flex: 1;
 
-      .arcane-section-list {
+      .title-row {
         display: flex;
-        flex-direction: column;
-        gap: 4px;
-        margin-left: 8px;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+
+        .name {
+          color: #fff;
+          font-weight: 600;
+          font-size: 1rem;
+        }
+
+        .type {
+          text-transform: capitalize;
+          font-size: 0.75rem;
+          padding: 2px 6px;
+          border-radius: 4px;
+          background: rgba(255, 255, 255, 0.15);
+          color: rgba(255, 255, 255, 0.9);
+        }
+      }
+
+      .description {
+        color: rgba(255, 255, 255, 0.7);
+        margin: 0;
+        font-size: 0.9rem;
+        line-height: 1.4;
       }
     }
+  }
 
-    .arcane-section.is-open:hover {
-      background-color: #222;
-      transition: background-color 0.2s ease;
-      cursor:
-        url('/assets/images/cursors/pointer.svg') 12 4,
-        pointer;
-    }
+  .arcane-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center; // Center the button
 
-    .arcane-section.is-open {
-      background-color: transparent;
+    .arcane-section-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 100%; // Ensure list takes full width
+      margin-top: 4px;
     }
+  }
+
+  .arcane-section.is-open:hover {
+    background-color: #222;
+    transition: background-color 0.2s ease;
+    cursor:
+      url('/assets/images/cursors/pointer.svg') 12 4,
+      pointer;
+  }
+
+  .arcane-section.is-open {
+    background-color: transparent;
   }
 }

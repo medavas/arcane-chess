@@ -442,17 +442,6 @@ class UnwrappedLexicon extends React.Component<Props, State> {
           style={{
             height: '100vh',
             width: '100vw',
-            background:
-              this.state.theme === 'black'
-                ? '#000000cc'
-                : `radial-gradient(
-          circle,
-          rgba(52, 120, 220, 0.8) 0%,  
-          rgba(0, 0, 0, 1) 80%    
-        )`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
           }}
         >
           <div className="lexicon-view">
@@ -749,7 +738,7 @@ class UnwrappedLexicon extends React.Component<Props, State> {
           </div>
         </div>
         {/* <div className="lexicon-curtain"></div> */}
-      </div>
+      </div >
     );
   }
 }

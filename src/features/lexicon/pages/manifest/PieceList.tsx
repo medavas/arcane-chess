@@ -16,13 +16,6 @@ const pieceList: PieceItem[] = [
     imagePath: '/assets/images/pieces/tactorius/normal/wP',
     family: 'Infantry',
   },
-  {
-    name: 'Herring',
-    description:
-      'Moves in a hex-like pattern like the site logo (2 squares to either side or 2 squares to the front/back and 1 to the right/left). Must be captured if attacked. Cunning and elusive, forcing opponents into traps.',
-    imagePath: '/assets/images/pieces/tactorius/normal/wH',
-    family: 'Infantry',
-  },
 
   // Equus
   {
@@ -79,6 +72,15 @@ const pieceList: PieceItem[] = [
     family: 'Ghost',
   },
 
+  // Token
+  {
+    name: 'Token',
+    description:
+      'Special units including Herring, Hermit, Hemlock, and Nomad. There are 4 variants with unique properties, often summoned by other effects or having distinct movement patterns.',
+    imagePath: '/assets/images/pieces/tactorius/normal/wH',
+    family: 'Token',
+  },
+
   // Royalty
   {
     name: 'Mystic',
@@ -118,7 +120,7 @@ const pieceList: PieceItem[] = [
 ];
 
 export default function PieceList() {
-  const families = ['Infantry', 'Equus', 'Sliders', 'Ghost', 'Royalty'];
+  const families = ['Infantry', 'Equus', 'Sliders', 'Ghost', 'Token', 'Royalty'];
 
   return (
     <div className="piece-list">

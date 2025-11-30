@@ -65,7 +65,6 @@ export class UnwrappedLeaderBoard extends React.Component<
               text="BACK"
               className="tertiary"
               color="S"
-              backgroundColorOverride="#11111188"
               width={200}
             />
           </Link>
@@ -88,7 +87,7 @@ export class UnwrappedLeaderBoard extends React.Component<
                 '12',
               ]}
               onChange={(val) => this.getLeaderboard(val)}
-              // onChange={() => null}
+            // onChange={() => null}
             />
           </div>
         </div>
