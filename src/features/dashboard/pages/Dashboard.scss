@@ -78,9 +78,12 @@ body {
       .logo {
         width: 80px;
         height: 80px;
-        border-radius: 10px;
+        border-radius: 6px;
         padding: 10px;
-        background: $nav-bg;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(68, 170, 255, 0.3);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       }
       .avatar {
         width: 80px;
@@ -88,7 +91,10 @@ body {
         border-radius: 9999px;
         margin-right: 0;
         padding: 10px;
-        background: $nav-bg;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(68, 170, 255, 0.3);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       }
     }
 
@@ -101,10 +107,12 @@ body {
       gap: 12px;
       width: 200px;
       margin: 0 0 0 auto;
-      padding: 10px;
-      border: 1px solid #333;
+      padding: 14px 16px;
+      border: 1px solid rgba(68, 170, 255, 0.3);
       border-radius: 6px;
-      background: $nav-bg;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
       .xp-left {
         display: grid;
@@ -113,6 +121,10 @@ body {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          font-size: 1rem;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 0.95);
+          letter-spacing: 0.5px;
         }
         .xp-stats {
           display: grid;
@@ -158,35 +170,6 @@ body {
         display: flex;
         flex-direction: column;
         gap: 8px;
-
-        .nav-item {
-          user-select: none;
-          text-align: center;
-          width: 100%;
-          padding: 10px 14px;
-          border: 1px solid $nav-border;
-          border-radius: 6px;
-          background: $nav-bg;
-          transition:
-            background 0.15s,
-            border-color 0.15s,
-            box-shadow 0.15s;
-          color: #e6e6e6;
-          cursor:
-            url('/assets/images/cursors/pointer.svg') 12 4,
-            pointer;
-          text-decoration: none;
-        }
-        .nav-item:hover,
-        .nav-item:focus-visible {
-          background: $nav-bg-hover;
-          border-color: #555;
-          box-shadow: 0 0 0 2px rgba(90, 179, 255, 0.15) inset;
-          outline: none;
-        }
-        .nav-item:active {
-          transform: translateY(1px);
-        }
       }
 
       .desc-rail {
@@ -194,54 +177,27 @@ body {
         width: 75vw;
         max-width: calc(100vw - 20px);
         min-height: 72px;
-        padding: 12px 12px;
-        border: 1px solid #333;
+        padding: 14px 16px;
+        border: 1px solid rgba(68, 170, 255, 0.3);
         border-radius: 6px;
-        background: $nav-bg;
-        font-size: 0.92rem;
-        opacity: 0.95;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.9);
         white-space: normal;
         overflow: hidden;
       }
     }
 
-    .nav-left {
+    .nav-grid {
       position: relative;
       z-index: 1;
       grid-area: mainnav;
       display: flex;
       flex-direction: column;
       gap: 8px;
-
-      > .nav-item {
-        user-select: none;
-        text-align: center;
-        padding: 0;
-        border: 1px solid $nav-border;
-        border-radius: 6px;
-        background: $nav-bg;
-        transition:
-          background 0.15s,
-          border-color 0.15s,
-          box-shadow 0.15s;
-        color: #e6e6e6;
-      }
-      > .link-wrap {
-        text-decoration: none;
-      }
-      > .nav-item:hover,
-      > .nav-item:focus-within {
-        background: $nav-bg-hover;
-        border-color: #555;
-        box-shadow: 0 0 0 2px rgba(90, 179, 255, 0.15) inset;
-        outline: none;
-        cursor:
-          url('/assets/images/cursors/pointer.svg') 12 4,
-          pointer;
-      }
-      > .nav-item:active {
-        transform: translateY(1px);
-      }
 
       .nav-btn {
         display: block;
@@ -263,64 +219,25 @@ body {
         height: auto;
       }
 
+      .nav-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
       .nav-link {
         text-decoration: none;
       }
-      .nav-link:hover .nav-btn,
-      .nav-link:focus-within .nav-btn,
-      .nav-item.has-sub:hover .nav-btn,
-      .nav-item.has-sub:focus-within .nav-btn {
+      .nav-link:hover .nav-btn:not(:disabled),
+      .nav-link:focus-within .nav-btn:not(:disabled) {
         background: $nav-bg-hover;
         border-color: $nav-border;
         box-shadow: 0 0 0 2px rgba(90, 179, 255, 0.15) inset;
         outline: none;
       }
 
-      > .nav-item.has-sub {
-        padding: 0;
-        border: none;
-        position: relative;
-        background: transparent;
-
-        .sub-menu {
-          display: none;
-          position: static;
-          box-sizing: border-box;
-          width: 100%;
-          padding: 6px 0;
-          margin-top: 6px;
-          border-radius: 0;
-          background: transparent;
-        }
-        .sub-menu > a {
-          display: block;
-          user-select: none;
-          text-align: center;
-          padding: 8px;
-          border-radius: 6px;
-          background: $nav-bg;
-          color: #e6e6e6;
-          border: 1px solid $nav-border;
-          text-decoration: none;
-          transition:
-            background 0.15s,
-            box-shadow 0.15s;
-          cursor:
-            url('/assets/images/cursors/pointer.svg') 12 4,
-            pointer;
-        }
-        .sub-menu > a + a {
-          margin-top: 6px;
-        }
-        .sub-menu > a:hover,
-        .sub-menu > a:focus-visible {
-          background: $nav-bg-hover;
-          box-shadow: 0 0 0 2px rgba(90, 179, 255, 0.15) inset;
-          outline: none;
-        }
-        &.open .sub-menu {
-          display: block;
-        }
+      .nav-link.disabled .nav-btn {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
     }
 
@@ -352,13 +269,12 @@ body {
 
   .news-item {
     position: relative;
-    border: 1px solid $nav-border;
-    border-radius: 8px;
-    background: rgba($nav-bg, 0.65);
+    border: 1px solid rgba(68, 170, 255, 0.3);
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
     padding: 18px 20px;
-    box-shadow:
-      0 2px 6px rgba(0, 0, 0, 0.25),
-      0 0 0 2px rgba(255, 255, 255, 0.04) inset;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     transition:
       transform 0.15s ease,
       box-shadow 0.15s ease,
@@ -486,7 +402,7 @@ body {
         }
       }
 
-      .nav-left {
+      .nav-grid {
         grid-area: mainnav;
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -494,58 +410,6 @@ body {
         gap: 8px;
         align-items: center;
         min-width: 0;
-
-        > .nav-item {
-          padding: 0;
-        }
-
-        > .nav-item.has-sub {
-          padding: 0;
-          border: none;
-          position: relative;
-
-          .sub-menu {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            margin-top: 6px;
-            box-sizing: border-box;
-            min-width: 100%;
-            max-width: min(360px, calc(100vw - 20px));
-            padding: 8px;
-            border: 0;
-            border-radius: 0;
-            background: transparent;
-            z-index: 1000;
-          }
-          .sub-menu > a {
-            padding: 8px;
-            border-radius: 6px;
-            background: $nav-bg;
-            color: #e6e6e6;
-            text-decoration: none;
-            transition:
-              background 0.15s,
-              box-shadow 0.15s;
-            cursor:
-              url('/assets/images/cursors/pointer.svg') 12 4,
-              pointer;
-          }
-          .sub-menu > a + a {
-            margin-top: 6px;
-          }
-          .sub-menu > a:hover,
-          .sub-menu > a:focus-visible {
-            background: $nav-bg-hover;
-            box-shadow: 0 0 0 2px rgba(90, 179, 255, 0.15) inset;
-            outline: none;
-          }
-        }
-
-        > .nav-item.has-sub:nth-child(3n) .sub-menu {
-          left: auto;
-          right: 0;
-        }
       }
 
       .hover-image {

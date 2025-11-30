@@ -7,6 +7,7 @@ import './Dashboard.scss';
 
 import { audioManager } from 'src/shared/utils/audio/AudioManager';
 import GlobalVolumeControl from 'src/shared/utils/audio/GlobalVolumeControl';
+import Button from 'src/shared/components/Button/Button';
 
 type DashboardProps = {
   auth: { user: { username: string } };
@@ -14,7 +15,6 @@ type DashboardProps = {
   logoutUser: () => void;
 };
 type DashboardState = {
-  openSubKey: string | null;
   hoverKey: string;
   settingsOpen: boolean;
   fadeIn: boolean;
@@ -23,31 +23,20 @@ type DashboardState = {
 
 /** Each key gets:
  *  - description: what to show in the desc rail
- *  - imageKey: which image to use for the hover art (parents for subs)
+ *  - imageKey: which image to use for the hover art
  */
 const NAV_META: Record<string, { description: string; imageKey: string }> = {
-  // Primary
   campaign1: {
     description: 'Collect arcana. Defeat bosses. Climb ranks.',
     imageKey: 'campaign1',
-  },
-  lexicon: {
-    description: 'Reference rules, tactics, and lore.',
-    imageKey: 'lexicon',
   },
   leaderboard2: {
     description: 'Global rankings and ladders.',
     imageKey: 'leaderboard2',
   },
-  // Arena (parent + subs share the ARENA image)
-  arena: {
-    description: 'Battle modes vs the engine.',
-    imageKey: 'quickplay',
-  },
-  quickplay: {
-    description:
-      'Master the arcana and challenge the engine with custom battles.',
-    imageKey: 'quickplay',
+  lexicon: {
+    description: 'Reference rules, tactics, and lore.',
+    imageKey: 'lexicon',
   },
   gauntlet: {
     description: 'Draft an army. Survive waves. Coming soon.',
@@ -61,29 +50,19 @@ const NAV_META: Record<string, { description: string; imageKey: string }> = {
     description: 'Quickplay from a shared arcana pool. Coming soon.',
     imageKey: 'arena',
   },
-  // Forum (parent uses forum image; no visible subs yet)
+  quickplay: {
+    description:
+      'Master the arcana and challenge the engine with custom battles.',
+    imageKey: 'quickplay',
+  },
   forum: {
     description: 'Community news and discussions. Coming soon.',
     imageKey: 'forum',
   },
-  // Manifest (parent + subs share the MANIFEST image)
   manifest2: {
     description: 'Pieces, spells, and site info.',
     imageKey: 'manifest2',
   },
-  about: {
-    description: 'About, mission, terms.',
-    imageKey: 'manifest2',
-  },
-  pieces: {
-    description: 'View all classic and new units.',
-    imageKey: 'manifest2',
-  },
-  arcana: {
-    description: 'Spell Chess details.',
-    imageKey: 'manifest2',
-  },
-  // Right rail
   settings: {
     description: 'Profile, preferences, UI.',
     imageKey: 'settings',
@@ -102,14 +81,11 @@ export class UnwrappedDashboard extends React.Component<
   constructor(props: DashboardProps) {
     super(props);
     this.state = {
-      openSubKey: null,
       hoverKey: '',
       settingsOpen: false,
       fadeIn: false,
       fadeOut: false,
     };
-    this.toggleSub = this.toggleSub.bind(this);
-    this.handleGlobalClick = this.handleGlobalClick.bind(this);
     this.rootRef = React.createRef();
   }
 
@@ -117,34 +93,12 @@ export class UnwrappedDashboard extends React.Component<
     setTimeout(() => {
       this.setState({ fadeIn: true });
     }, 50);
-
-    document.addEventListener('mousedown', this.handleGlobalClick);
-    document.addEventListener('keydown', this.handleEscape);
-  }
-  componentWillUnmount() {
-    document.removeEventListener('mousedown', this.handleGlobalClick);
-    document.removeEventListener('keydown', this.handleEscape);
-  }
-
-  handleGlobalClick(e: MouseEvent) {
-    if (!this.rootRef.current) return;
-    if (!this.rootRef.current.contains(e.target as Node)) {
-      this.setState({ openSubKey: null });
-    }
-  }
-  handleEscape = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') this.setState({ openSubKey: null });
-  };
-  toggleSub(key: string) {
-    this.setState((prev) => ({
-      openSubKey: prev.openSubKey === key ? null : key,
-    }));
   }
 
   setHover = (key: string) => this.setState({ hoverKey: key });
 
   render() {
-    const { openSubKey, hoverKey } = this.state;
+    const { hoverKey } = this.state;
     // const imageKey = (hoverKey && NAV_META[hoverKey]?.imageKey) || 'campaign1'; // default fallback
     const desc = (hoverKey && NAV_META[hoverKey]?.description) || '';
 
@@ -164,8 +118,9 @@ export class UnwrappedDashboard extends React.Component<
 
     return (
       <div
-        className={`dashboard ${this.state.fadeIn ? 'fade-in' : ''} ${this.state.fadeOut ? 'fade-out' : ''
-          }`}
+        className={`dashboard ${this.state.fadeIn ? 'fade-in' : ''} ${
+          this.state.fadeOut ? 'fade-out' : ''
+        }`}
         ref={this.rootRef}
       >
         <div className={`fade-overlay ${this.state.fadeOut ? 'active' : ''}`} />
@@ -201,29 +156,29 @@ export class UnwrappedDashboard extends React.Component<
 
           <div className="nav-right">
             <div className="right-actions">
-              {/* <Link
-                className="nav-item"
-                to="/settings"
-                onMouseEnter={() => this.setHover('settings')}
-                onFocus={() => this.setHover('settings')}
-              > */}
-              <div
-                className="nav-item"
+              <Button
+                text="SETTINGS"
+                className="tertiary"
+                color="B"
+                height={50}
+                width="100%"
+                disabled={false}
                 onClick={() => {
                   this.setState({
                     settingsOpen: this.state.settingsOpen ? false : true,
                   });
                 }}
                 onMouseEnter={() => this.setHover('settings')}
-                onFocus={() => this.setHover('settings')}
-              >
-                SETTINGS
-              </div>
+                backgroundColorOverride="#11111188"
+              />
               {this.state.settingsOpen && <GlobalVolumeControl />}
-              <div
-                className="nav-item"
-                onMouseEnter={() => this.setHover('logout')}
-                onFocus={() => this.setHover('logout')}
+              <Button
+                text="LOGOUT"
+                className="tertiary"
+                color="R"
+                height={50}
+                width="100%"
+                disabled={false}
                 onClick={() => {
                   audioManager.playSFX('impact');
                   this.setState({ fadeOut: true });
@@ -232,30 +187,30 @@ export class UnwrappedDashboard extends React.Component<
                     this.props.navigate('/login');
                   }, 300);
                 }}
-              >
-                LOGOUT
-              </div>
+                onMouseEnter={() => this.setHover('logout')}
+                backgroundColorOverride="#11111188"
+              />
             </div>
             <div className="desc-rail" aria-live="polite">
               {desc}
             </div>
           </div>
-          <div
-            className="nav-left"
-            onClick={() => this.setState({ openSubKey: null })}
-          >
+          <div className="nav-grid">
             <Link
               className="nav-link"
               to="/campaign"
               onMouseEnter={() => this.setHover('campaign1')}
               onFocus={() => this.setHover('campaign1')}
             >
-              <button
-                className="nav-btn"
-                aria-expanded={openSubKey === 'CAMPAIGN'}
-              >
-                CAMPAIGN
-              </button>
+              <Button
+                text="CAMPAIGN"
+                className="tertiary"
+                color="B"
+                height={50}
+                width="100%"
+                disabled={false}
+                backgroundColorOverride="#11111188"
+              />
             </Link>
 
             <Link
@@ -264,12 +219,15 @@ export class UnwrappedDashboard extends React.Component<
               onMouseEnter={() => this.setHover('leaderboard2')}
               onFocus={() => this.setHover('leaderboard2')}
             >
-              <button
-                className="nav-btn"
-                aria-expanded={openSubKey === 'RANKINGS'}
-              >
-                RANKINGS
-              </button>
+              <Button
+                text="RANKINGS"
+                className="tertiary"
+                color="V"
+                height={50}
+                width="100%"
+                disabled={false}
+                backgroundColorOverride="#11111188"
+              />
             </Link>
 
             <Link
@@ -278,138 +236,115 @@ export class UnwrappedDashboard extends React.Component<
               onMouseEnter={() => this.setHover('lexicon')}
               onFocus={() => this.setHover('lexicon')}
             >
-              <button
-                className="nav-btn"
-                aria-expanded={openSubKey === 'LEXICON'}
-              >
-                LEXICON
-              </button>
+              <Button
+                text="LEXICON"
+                className="tertiary"
+                color="G"
+                height={50}
+                width="100%"
+                disabled={false}
+                backgroundColorOverride="#11111188"
+              />
             </Link>
-            <div
-              className={`nav-item has-sub ${openSubKey === 'ARENA' ? 'open' : ''
-                }`}
-              onMouseEnter={() => this.setHover('arena')}
+
+            {/* <div
+              className="nav-link"
+              onMouseEnter={() => this.setHover('gauntlet')}
+              onFocus={() => this.setHover('gauntlet')}
             >
-              <button
-                className="nav-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  this.toggleSub('ARENA');
-                }}
-                aria-expanded={openSubKey === 'ARENA'}
-                aria-controls="submenu-arena"
-              >
-                ARENA
-              </button>
-              <div
-                id="submenu-arena"
-                className="sub-menu"
-                role="region"
-                aria-label="Arena submenu"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Link
-                  to="/skirmish"
-                  onMouseEnter={() => this.setHover('skirmish')}
-                  onFocus={() => this.setHover('skirmish')}
-                >
-                  SKIRMISH
-                </Link>
-                <Link
-                  to="/quickplay"
-                  onMouseEnter={() => this.setHover('quickplay')}
-                  onFocus={() => this.setHover('quickplay')}
-                >
-                  QUICKPLAY
-                </Link>
-                <Link
-                  // to="/gauntlet"
-                  to="#"
-                  onClick={(e) => e.preventDefault()}
-                  onMouseEnter={() => this.setHover('gauntlet')}
-                  onFocus={() => this.setHover('gauntlet')}
-                >
-                  GAUNTLET
-                </Link>
-                <Link
-                  // to="/melee"
-                  to="#"
-                  onClick={(e) => e.preventDefault()}
-                  onMouseEnter={() => this.setHover('melee')}
-                  onFocus={() => this.setHover('melee')}
-                >
-                  MELEE
-                </Link>
-              </div>
-            </div>
-            <div
-              className={`nav-item has-sub ${openSubKey === 'FORUM' ? 'open' : ''
-                }`}
+              <Button
+                text="GAUNTLET"
+                className="tertiary"
+                color="Y"
+                height={50}
+                width="100%"
+                disabled={true}
+                backgroundColorOverride="#11111188"
+              />
+            </div> */}
+
+            <Link
+              className="nav-link"
+              to="/skirmish"
+              onMouseEnter={() => this.setHover('skirmish')}
+              onFocus={() => this.setHover('skirmish')}
+            >
+              <Button
+                text="SKIRMISH"
+                className="tertiary"
+                color="R"
+                height={50}
+                width="100%"
+                disabled={false}
+                backgroundColorOverride="#11111188"
+              />
+            </Link>
+
+            {/* <div
+              className="nav-link"
+              onMouseEnter={() => this.setHover('melee')}
+              onFocus={() => this.setHover('melee')}
+            >
+              <Button
+                text="MELEE"
+                className="tertiary"
+                color="O"
+                height={50}
+                width="100%"
+                disabled={true}
+                backgroundColorOverride="#11111188"
+              />
+            </div> */}
+
+            <Link
+              className="nav-link"
+              to="/quickplay"
+              onMouseEnter={() => this.setHover('quickplay')}
+              onFocus={() => this.setHover('quickplay')}
+            >
+              <Button
+                text="QUICKPLAY"
+                className="tertiary"
+                color="B"
+                height={50}
+                width="100%"
+                disabled={false}
+                backgroundColorOverride="#11111188"
+              />
+            </Link>
+
+            {/* <div
+              className="nav-link"
               onMouseEnter={() => this.setHover('forum')}
               onFocus={() => this.setHover('forum')}
             >
-              <button
-                className="nav-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  this.toggleSub('FORUM');
-                }}
-                aria-expanded={openSubKey === 'FORUM'}
-              >
-                FORUM
-              </button>
-              <div
-                id="submenu-forum"
-                className="sub-menu"
-                role="region"
-                onClick={(e) => e.stopPropagation()}
-              ></div>
-            </div>
-            <div
-              className={`nav-item has-sub ${openSubKey === 'MANIFEST' ? 'open' : ''
-                }`}
+              <Button
+                text="FORUM"
+                className="tertiary"
+                color="G"
+                height={50}
+                width="100%"
+                disabled={true}
+                backgroundColorOverride="#11111188"
+              />
+            </div> */}
+
+            <Link
+              className="nav-link"
+              to="/manifest"
               onMouseEnter={() => this.setHover('manifest2')}
               onFocus={() => this.setHover('manifest2')}
             >
-              <button
-                className="nav-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  this.toggleSub('MANIFEST');
-                }}
-                aria-expanded={openSubKey === 'MANIFEST'}
-              >
-                MANIFEST
-              </button>
-              <div
-                id="submenu-manifest"
-                className="sub-menu"
-                role="region"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Link
-                  to="/manifest?tab=about"
-                  onMouseEnter={() => this.setHover('about')}
-                  onFocus={() => this.setHover('about')}
-                >
-                  ABOUT
-                </Link>
-                <Link
-                  to="/manifest?tab=pieces"
-                  onMouseEnter={() => this.setHover('pieces')}
-                  onFocus={() => this.setHover('pieces')}
-                >
-                  PIECES
-                </Link>
-                <Link
-                  to="/manifest?tab=arcana"
-                  onMouseEnter={() => this.setHover('arcana')}
-                  onFocus={() => this.setHover('arcana')}
-                >
-                  ARCANA
-                </Link>
-              </div>
-            </div>
+              <Button
+                text="MANIFEST"
+                className="tertiary"
+                color="O"
+                height={50}
+                width="100%"
+                disabled={false}
+                backgroundColorOverride="#11111188"
+              />
+            </Link>
           </div>
           {/* {imageKey && (
             <img
@@ -431,13 +366,16 @@ export class UnwrappedDashboard extends React.Component<
               </h4>
               <ul>
                 <li>
-                  Football season is here, so I've added a few "touchdown" related arcana.
+                  Football season is here, so I've added a few "touchdown"
+                  related arcana.
                 </li>
                 <li>
-                  Divine Reckoning - when one of your Pawns reach the back rank, it promotes automatically to a Valkyrie with Iron Reach.
+                  Divine Reckoning - when one of your Pawns reach the back rank,
+                  it promotes automatically to a Valkyrie with Iron Reach.
                 </li>
                 <li>
-                  Reckoning Variants (gain) - when one of your minor pieces reach the back rank, you get a reward.
+                  Reckoning Variants (gain) - when one of your minor pieces
+                  reach the back rank, you get a reward.
                 </li>
               </ul>
             </div>
@@ -479,8 +417,9 @@ export class UnwrappedDashboard extends React.Component<
               <ul>
                 <li>
                   Quality of life improvements – Board now highlights potential
-                  moves that will use a shift arcana. Arcana charge bar - countdown
-                  visual to next arcana unlock. Arcana badge visuals updated.
+                  moves that will use a shift arcana. Arcana charge bar -
+                  countdown visual to next arcana unlock. Arcana badge visuals
+                  updated.
                 </li>
                 <li>
                   Eclipse – Move through units and across the edge of the board.
@@ -537,9 +476,10 @@ export class UnwrappedDashboard extends React.Component<
                   summon.
                 </li>
                 <li>
-                  Arcana Charge: unlockable time slots. Arcana in your spellBook unlock
-                  incrementally after a certain number of turns automatically.
-                  Less overwhelming and promotes resource management.
+                  Arcana Charge: unlockable time slots. Arcana in your spellBook
+                  unlock incrementally after a certain number of turns
+                  automatically. Less overwhelming and promotes resource
+                  management.
                 </li>
                 <li>
                   New default rule: No spell required - now on by default, any

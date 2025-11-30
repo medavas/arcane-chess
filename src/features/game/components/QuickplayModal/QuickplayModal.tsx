@@ -351,7 +351,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       start: 'Rock and Roll!',
       trueRandDiff:
         'This one is truly random and unbalanced... but great for experimenting! Click if you dare.',
-      '': 'To start, go to Settings > START',
+      '': 'To customize your game, hit randomize, or start',
     };
   };
 

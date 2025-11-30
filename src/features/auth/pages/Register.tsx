@@ -154,7 +154,6 @@ const UnwrappedRegister = () => {
                 width={80}
                 height={30}
                 fontSize={12}
-                backgroundColorOverride="#111111"
                 onClick={() => handleEnterClick('/login')}
               />
               <Button
@@ -164,16 +163,14 @@ const UnwrappedRegister = () => {
                 width={80}
                 height={30}
                 fontSize={12}
-                backgroundColorOverride="#111111"
                 onClick={() => handleEnterClick('/intro')}
               />
             </div>
             <Button
-              className="primary"
               text={'REGISTER'}
               color={'S'}
               width={140}
-              // onClick={() => {}}
+              height={40}
               disabled={false}
               submit={true}
               styles={{ margin: '2px' }}

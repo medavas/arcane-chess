@@ -32,9 +32,8 @@ $hover_colors: (
   .primary-#{$color} {
     background: $color_var;
     border: $color_var 1px solid;
-    border-radius: 5px;
+    border-radius: 6px;
     transition:
-      border-radius 0.2s ease-in,
       border 0.2s ease-in,
       background 0.2s ease-in;
   }
@@ -42,9 +41,8 @@ $hover_colors: (
     cursor: pointer;
     background: $hover_var;
     border: $hover_var 2px solid;
-    border-radius: 15px;
+    border-radius: 6px;
     transition:
-      border-radius 0.2s ease-in,
       border 0.2s ease-in,
       background 0.2s ease-in;
   }
@@ -59,10 +57,9 @@ $hover_colors: (
 
   .secondary-#{$color} {
     background: #444444;
-    border-radius: 5px;
+    border-radius: 6px;
     border: $color_var 1px solid;
     transition:
-      border-radius 0.2s ease-in,
       border 0.2s ease-in,
       background 0.2s ease-in;
   }
@@ -70,9 +67,8 @@ $hover_colors: (
     cursor: pointer;
     background: #555555;
     border: $hover_var 2px solid;
-    border-radius: 15px;
+    border-radius: 6px;
     transition:
-      border-radius 0.2s ease-in,
       border 0.2s ease-in,
       background 0.2s ease-in;
   }

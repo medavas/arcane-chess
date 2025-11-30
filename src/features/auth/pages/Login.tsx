@@ -135,8 +135,9 @@ const UnwrappedLogin: React.FC = () => {
 
   return (
     <div
-      className={`login-page ${fadeIn ? 'fade-in' : ''} ${fadeOut ? 'fade-out' : ''
-        }`}
+      className={`login-page ${fadeIn ? 'fade-in' : ''} ${
+        fadeOut ? 'fade-out' : ''
+      }`}
     >
       <div className={`fade-overlay ${fadeOut ? 'active' : ''}`} />
       <Hero />
@@ -176,19 +177,19 @@ const UnwrappedLogin: React.FC = () => {
             <div className="top-buttons">
               {/* <div style={{ height: '44px' }}></div> */}
               <Button
-                className="primary"
                 text={'AS GUEST'}
                 color={'O'}
                 width={140}
+                height={40}
                 onClick={(e) => onSubmitLogin(e, true)}
                 styles={{ margin: '2px' }}
-                backgroundColorOverride="linear-gradient(135deg, #ff9f1c, #ff2e63)"
+                backgroundColorOverride="linear-gradient(135deg, rgba(255, 159, 28, 0.3), rgba(255, 46, 99, 0.3))"
               />
               <Button
-                className="primary"
                 text={'LOGIN'}
                 color={'S'}
                 width={140}
+                height={40}
                 onClick={(e) => {
                   return onSubmitLogin(e, false);
                 }}
@@ -205,7 +206,6 @@ const UnwrappedLogin: React.FC = () => {
               width={80}
               height={30}
               fontSize={12}
-              backgroundColorOverride="#111111"
               onClick={() => handleEnterClick('/register')}
             />
             {/* <Link to="/">
@@ -226,7 +226,6 @@ const UnwrappedLogin: React.FC = () => {
               width={80}
               height={30}
               fontSize={12}
-              backgroundColorOverride="#111111"
               onClick={() => handleEnterClick('/intro')}
             />
           </div>

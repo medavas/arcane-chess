@@ -38,6 +38,7 @@ const SECTION_GRADIENTS: Record<string, string> = {
   mora: 'linear-gradient(135deg, #0f2027, #2c5364)', // deep teal → steel blue
   area: 'linear-gradient(135deg, #536976, #292e49)', // smoky steel → indigo
   gain: 'linear-gradient(135deg, #3a7d44, #2c5f2d)', // forest → olive
+  tokn: 'linear-gradient(135deg, #d4af37, #aa8c2e)', // gold → darker gold
 };
 
 const sectionPrefixes = [
@@ -51,6 +52,7 @@ const sectionPrefixes = [
   'mora',
   'area',
   'gain',
+  'tokn',
 ];
 
 // Add: a dedicated gradient for the global toggle so it has color but isn't a type color
@@ -100,8 +102,9 @@ export default class ArcanaList extends React.Component<
         <div className="title-row">
           <div className="name">{arcaneItem.name}</div>
           <div
-            className={`type pill pill-${arcaneItem.type?.toLowerCase?.() || 'unknown'
-              }`}
+            className={`type pill pill-${
+              arcaneItem.type?.toLowerCase?.() || 'unknown'
+            }`}
           >
             {arcaneItem.type}
           </div>

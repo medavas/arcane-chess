@@ -6,6 +6,7 @@ interface ButtonProps {
   height?: number | string;
   width?: number | string;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onMouseEnter?: () => void;
   text?: string | string[];
   disabled?: boolean;
   strong?: boolean;
@@ -26,7 +27,13 @@ const Button: React.FC<ButtonProps> = ({
   variant = '',
   ...props
 }: ButtonProps) => {
-  const { className = '', color, onClick, strong } = props;
+  const {
+    className = 'tertiary',
+    color,
+    onClick,
+    onMouseEnter,
+    strong,
+  } = props;
 
   return (
     <button
@@ -43,6 +50,7 @@ const Button: React.FC<ButtonProps> = ({
         position: 'relative', // Needed for arrow positioning
       }}
       onClick={disabled ? undefined : onClick}
+      onMouseEnter={onMouseEnter}
       disabled={disabled}
       type={submit ? 'submit' : 'button'}
     >

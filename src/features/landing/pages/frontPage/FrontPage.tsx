@@ -123,7 +123,6 @@ class UnwrappedFrontPage extends React.Component<
             <div className="enter-buttons">
               <Button
                 text="ENTER THE SITE"
-                className="primary"
                 color="V"
                 height={80}
                 width={400}
@@ -134,7 +133,7 @@ class UnwrappedFrontPage extends React.Component<
                 }}
                 fontSize={24}
                 strong={true}
-                backgroundColorOverride="linear-gradient(135deg, #ff512f, #8e2de2)"
+                backgroundColorOverride="linear-gradient(135deg, rgba(255, 81, 47, 0.4), rgba(142, 45, 226, 0.4))"
                 onClick={() => this.handleEnterClick()}
               />
             </div>
@@ -157,7 +156,6 @@ class UnwrappedFrontPage extends React.Component<
                   <Link to="/manifest?tab=pieces">
                     <Button
                       text="LEARN MORE: PIECES"
-                      className="primary"
                       color="B"
                       height={60}
                       width={300}
@@ -165,7 +163,7 @@ class UnwrappedFrontPage extends React.Component<
                       styles={{ color: 'white', fontStyle: 'italic' }}
                       fontSize={16}
                       strong={true}
-                      backgroundColorOverride="linear-gradient(135deg, #00c6ff, #001f4d)"
+                      backgroundColorOverride="linear-gradient(135deg, rgba(0, 198, 255, 0.3), rgba(0, 31, 77, 0.3))"
                     />
                   </Link>
                 </div>
@@ -173,7 +171,6 @@ class UnwrappedFrontPage extends React.Component<
                   <Link to="/manifest?tab=arcana">
                     <Button
                       text="LEARN MORE: ARCANA"
-                      className="primary"
                       color="G"
                       height={60}
                       width={300}
@@ -181,7 +178,7 @@ class UnwrappedFrontPage extends React.Component<
                       styles={{ color: 'white', fontStyle: 'italic' }}
                       fontSize={16}
                       strong={true}
-                      backgroundColorOverride="linear-gradient(135deg, #00b09b, #006400)"
+                      backgroundColorOverride="linear-gradient(135deg, rgba(0, 176, 155, 0.3), rgba(0, 100, 0, 0.3))"
                     />
                   </Link>
                 </div>
@@ -206,7 +203,6 @@ class UnwrappedFrontPage extends React.Component<
             <div className="enter-buttons">
               <Button
                 text="ENTER THE SITE"
-                className="primary"
                 color="V"
                 height={80}
                 width={400}
@@ -217,7 +213,7 @@ class UnwrappedFrontPage extends React.Component<
                 }}
                 fontSize={24}
                 strong={true}
-                backgroundColorOverride="linear-gradient(135deg, #ff512f, #8e2de2)"
+                backgroundColorOverride="linear-gradient(135deg, rgba(255, 81, 47, 0.4), rgba(142, 45, 226, 0.4))"
                 onClick={() => this.handleEnterClick()}
               />
             </div>
