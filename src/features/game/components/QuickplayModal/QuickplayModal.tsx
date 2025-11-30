@@ -11,7 +11,6 @@ import './QuickplayModal.scss';
 import 'src/features/game/board/styles/chessground.scss';
 import 'src/features/game/board/styles/normal.scss';
 
-import Button from 'src/shared/components/Button/Button';
 import Select from 'src/shared/components/Select/Select';
 
 // import CharacterSelect from './CharacterSelect';
@@ -437,74 +436,10 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                 }`}
               >
                 <div className="section-header">
-                  <h3>Player</h3>
-                  <div
-                    className="color"
-                    style={{
-                      background:
-                        this.state.hoverId === 'playerSwapSides'
-                          ? 'rgba(79, 72, 204, 0.3)'
-                          : 'rgba(0, 0, 0, 0.3)',
-                      cursor:
-                        "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
-                    }}
-                    onClick={() =>
-                      this.setState(
-                        (prevState) => ({
-                          playerColor:
-                            prevState.playerColor === 'white'
-                              ? 'black'
-                              : 'white',
-                          engineColor:
-                            prevState.engineColor === 'white'
-                              ? 'black'
-                              : 'white',
-                          playerCharacterImgPath:
-                            prevState.engineCharacterImgPath,
-                          engineCharacterImgPath:
-                            prevState.playerCharacterImgPath,
-                        }),
-                        () => {
-                          if (this.props.updateConfig) {
-                            this.props.updateConfig(
-                              'playerColor',
-                              this.state.playerColor === 'white'
-                                ? 'white'
-                                : 'black'
-                            );
-                            this.props.updateConfig(
-                              'engineColor',
-                              this.state.playerColor === 'white'
-                                ? 'black'
-                                : 'white'
-                            );
-                          }
-                        }
-                      )
-                    }
-                    onMouseEnter={() => {
-                      this.setState({
-                        hoverId: 'playerSwapSides',
-                      });
-                    }}
-                    onMouseLeave={() => {
-                      this.setState({
-                        hoverId: '',
-                      });
-                    }}
-                  >
-                    <img
-                      src={`/assets/images/user.svg`}
-                      style={{
-                        background:
-                          this.state.playerColor === 'white'
-                            ? '#AAAAAA'
-                            : '#333333',
-                      }}
-                    />
-                    <span className="color-label">
-                      {this.state.playerColor === 'white' ? 'White' : 'Black'}
-                    </span>
+                  <h3>Your Setup</h3>
+                  <div className="color-indicator">
+                    {this.state.playerColor === 'white' ? '⚪' : '⚫'}{' '}
+                    {this.state.playerColor}
                   </div>
                 </div>
                 <div className="buttons-arcana">
@@ -625,74 +560,10 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                 }`}
               >
                 <div className="section-header">
-                  <h3>Engine</h3>
-                  <div
-                    className="color"
-                    style={{
-                      background:
-                        this.state.hoverId === 'engineSwapSides'
-                          ? 'rgba(79, 72, 204, 0.3)'
-                          : 'rgba(0, 0, 0, 0.3)',
-                      cursor:
-                        "url('/assets/images/cursors/pointer.svg') 12 4, pointer",
-                    }}
-                    onClick={() =>
-                      this.setState(
-                        (prevState) => ({
-                          playerColor:
-                            prevState.playerColor === 'white'
-                              ? 'black'
-                              : 'white',
-                          engineColor:
-                            prevState.engineColor === 'white'
-                              ? 'black'
-                              : 'white',
-                          playerCharacterImgPath:
-                            prevState.engineCharacterImgPath,
-                          engineCharacterImgPath:
-                            prevState.playerCharacterImgPath,
-                        }),
-                        () => {
-                          if (this.props.updateConfig) {
-                            this.props.updateConfig(
-                              'playerColor',
-                              this.state.playerColor === 'white'
-                                ? 'white'
-                                : 'black'
-                            );
-                            this.props.updateConfig(
-                              'engineColor',
-                              this.state.playerColor === 'white'
-                                ? 'black'
-                                : 'white'
-                            );
-                          }
-                        }
-                      )
-                    }
-                    onMouseEnter={() => {
-                      this.setState({
-                        hoverId: 'engineSwapSides',
-                      });
-                    }}
-                    onMouseLeave={() => {
-                      this.setState({
-                        hoverId: '',
-                      });
-                    }}
-                  >
-                    <img
-                      src={`/assets/images/engine.svg`}
-                      style={{
-                        background:
-                          this.state.engineColor === 'white'
-                            ? '#AAAAAA'
-                            : '#333333',
-                      }}
-                    />
-                    <span className="color-label">
-                      {this.state.engineColor === 'white' ? 'White' : 'Black'}
-                    </span>
+                  <h3>Engine Setup</h3>
+                  <div className="color-indicator">
+                    {this.state.engineColor === 'white' ? '⚪' : '⚫'}{' '}
+                    {this.state.engineColor}
                   </div>
                 </div>
                 <div className="buttons-arcana">
@@ -826,7 +697,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                     </p>
                   </div>
 
-                  {/* 2x2 Grid: Game Mode, New Position, Difficulty, START */}
+                  {/* Single row: Game Mode and Difficulty */}
                   <div className="settings-row">
                     <div
                       className="quickplay-select"
@@ -834,7 +705,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                       onMouseLeave={() => this.toggleHover('')}
                     >
                       <Select
-                        // title="Game Mode"
+                        title="Game Mode"
                         type="string"
                         width="100%"
                         height={40}
@@ -884,31 +755,11 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                     </div>
                     <div
                       className="quickplay-select"
-                      onMouseEnter={() => this.toggleHover('gameModeRand')}
-                      onMouseLeave={() => this.toggleHover('')}
-                    >
-                      <Button
-                        text="New Position"
-                        className="tertiary"
-                        color="B"
-                        width="100%"
-                        height={40}
-                        onClick={() => {
-                          this.randomGameMode();
-                        }}
-                        backgroundColorOverride="linear-gradient(135deg, #00c6ff, #0072ff)"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="settings-row settings-row-buttons">
-                    <div
-                      className="quickplay-select"
                       onMouseEnter={() => this.toggleHover('difficulty')}
                       onMouseLeave={() => this.toggleHover('')}
                     >
                       <Select
-                        // title="Difficulty"
+                        title="Difficulty"
                         type="string"
                         width="100%"
                         height={40}
@@ -978,22 +829,46 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                         }}
                       />
                     </div>
-                    <div
-                      className="quickplay-select"
-                      onMouseEnter={() => this.toggleHover('start')}
-                      onMouseLeave={() => this.toggleHover('')}
+                  </div>
+
+                  {/* Action buttons like in Skirmish */}
+                  <div className="action-buttons">
+                    <button
+                      type="button"
+                      className="action-btn swap-btn"
+                      onClick={() => {
+                        this.setState((prevState) => ({
+                          playerColor:
+                            prevState.playerColor === 'white' ? 'black' : 'white',
+                          engineColor:
+                            prevState.engineColor === 'white' ? 'black' : 'white',
+                          playerCharacterImgPath: prevState.engineCharacterImgPath,
+                          engineCharacterImgPath: prevState.playerCharacterImgPath,
+                        }));
+                      }}
+                      onMouseEnter={() => this.setState({ hoverId: 'swapSides' })}
+                      onMouseLeave={() => this.setState({ hoverId: '' })}
                     >
-                      <Button
-                        text="START"
-                        className="primary"
-                        color="B"
-                        width="100%"
-                        height={40}
-                        onClick={() => {
-                          this.props.handleClose();
-                        }}
-                      />
-                    </div>
+                      <span>⇄</span> SWAP SIDES
+                    </button>
+                    <button
+                      type="button"
+                      className="action-btn randomize-btn"
+                      onClick={() => this.randomGameMode()}
+                      onMouseEnter={() => this.setState({ hoverId: 'randomize' })}
+                      onMouseLeave={() => this.setState({ hoverId: '' })}
+                    >
+                      <span>🎲</span> RANDOMIZE
+                    </button>
+                    <button
+                      type="button"
+                      className="action-btn start-btn"
+                      onClick={() => this.props.handleClose()}
+                      onMouseEnter={() => this.setState({ hoverId: 'start' })}
+                      onMouseLeave={() => this.setState({ hoverId: '' })}
+                    >
+                      ▶ START
+                    </button>
                   </div>
                 </div>
               </div>

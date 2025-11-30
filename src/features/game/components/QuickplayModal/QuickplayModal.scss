@@ -12,270 +12,155 @@
     rgba(15, 15, 40, 0.95),
     rgba(20, 10, 30, 0.95)
   );
-    border: 2px solid rgba(79, 72, 204, 0.4);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+  border: 2px solid rgba(79, 72, 204, 0.4);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+
+  // Header with tabs
+  .quickplay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    flex-shrink: 0;
+
+    .header-left {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+
+      .home-button {
+        background: transparent;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          transform: scale(1.1);
+          filter: brightness(1.2);
+        }
+
+        .logo {
+          width: 48px;
+          height: 48px;
+          display: block;
+        }
+      }
+    }
+
+    h2 {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+      text-shadow: 0 2px 8px rgba(79, 72, 204, 0.6);
+    }
+
+    // Tab navigation (hidden on desktop, shown on mobile)
+    .tab-nav {
+      display: none;
+      gap: 8px;
+
+      .tab-button {
+        padding: 8px 16px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(79, 72, 204, 0.3);
+        border-radius: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: rgba(79, 72, 204, 0.2);
+          border-color: rgba(79, 72, 204, 0.5);
+        }
+
+        &.active {
+          background: rgba(79, 72, 204, 0.4);
+          border-color: rgba(79, 72, 204, 0.8);
+          color: rgba(255, 255, 255, 0.95);
+          box-shadow: 0 0 12px rgba(79, 72, 204, 0.4);
+        }
+      }
+    }
+  }
+
+  // Hover panel - always visible at top
+  .hover-panel {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(79, 72, 204, 0.4);
+    border-radius: 12px;
+    padding: 16px;
+    height: 80px;
+    max-height: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-shrink: 0;
     overflow: hidden;
 
-    // Header with tabs
-    .quickplay-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 12px;
-      flex-shrink: 0;
-
-      .header-left {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-
-        .home-button {
-          background: transparent;
-          border: none;
-          padding: 0;
-          cursor: pointer;
-          transition: all 0.2s ease;
-
-          &:hover {
-            transform: scale(1.1);
-            filter: brightness(1.2);
-          }
-
-          .logo {
-            width: 48px;
-            height: 48px;
-            display: block;
-          }
-        }
-      }
-
-      h2 {
-        color: rgba(255, 255, 255, 0.95);
-        font-size: 24px;
-        font-weight: 700;
-        margin: 0;
-        text-shadow: 0 2px 8px rgba(79, 72, 204, 0.6);
-      }
-
-      // Tab navigation (hidden on desktop, shown on mobile)
-      .tab-nav {
-        display: none;
-        gap: 8px;
-
-        .tab-button {
-          padding: 8px 16px;
-          background: rgba(0, 0, 0, 0.3);
-          border: 1px solid rgba(79, 72, 204, 0.3);
-          border-radius: 8px;
-          color: rgba(255, 255, 255, 0.7);
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s ease;
-
-          &:hover {
-            background: rgba(79, 72, 204, 0.2);
-            border-color: rgba(79, 72, 204, 0.5);
-          }
-
-          &.active {
-            background: rgba(79, 72, 204, 0.4);
-            border-color: rgba(79, 72, 204, 0.8);
-            color: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 0 12px rgba(79, 72, 204, 0.4);
-          }
-        }
-      }
-    }
-
-    // Hover panel - always visible at top
-    .hover-panel {
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(79, 72, 204, 0.4);
-      border-radius: 12px;
-      padding: 16px;
-      height: 80px;
-      max-height: 80px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex-shrink: 0;
-      overflow: hidden;
-
-      .hover-title {
-        font-size: 16px;
-        font-weight: 700;
-        color: rgba(100, 200, 255, 0.95);
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .hover-description {
-        font-size: 13px;
-        line-height: 1.5;
-        color: rgba(255, 255, 255, 0.85);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        -webkit-box-orient: vertical;
-      }
-
-      .hover-empty {
-        font-size: 13px;
-        color: rgba(255, 255, 255, 0.5);
-        font-style: italic;
-        text-align: center;
-        margin: auto;
-      }
-    }
-
-    // Content container - holds all sections
-    .content-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 16px;
-      flex: 1;
-      min-height: 0;
-      overflow: hidden;
-    }
-
-    // Shared section styles
-    .player-section,
-    .engine-section,
-    .settings-section {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(79, 72, 204, 0.3);
-      border-radius: 12px;
-      padding: 16px;
-      overflow-y: hidden;
-      overflow-x: hidden;
-      min-height: 0;
-
-      .section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        // margin-bottom: 8px;
-        flex-shrink: 0;
-
-        h3 {
-          font-size: 16px;
-          font-weight: 600;
-          margin: 0;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-      }
-
-      .arcana {
-        position: relative;
-        z-index: 100;
-        overflow: visible;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-
-        &:has(.arcana-block) {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-        }
-      }
-
-      .army-section {
-        margin-top: 8px;
-        position: relative;
-        z-index: 50;
-      }
-    }
-
-    .player-section h3 {
+    .hover-title {
+      font-size: 16px;
+      font-weight: 700;
       color: rgba(100, 200, 255, 0.95);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
-    .engine-section h3 {
-      color: rgba(255, 100, 100, 0.95);
+    .hover-description {
+      font-size: 13px;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.85);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
 
-    .settings-section {
-      h3 {
-        color: rgba(150, 255, 150, 0.95);
-      }
-
-      .settings-content {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        overflow-y: auto;
-        overflow-x: hidden;
-        flex: 1;
-        min-height: 0;
-        padding-right: 4px;
-
-        &::-webkit-scrollbar {
-          width: 6px;
-        }
-
-        &::-webkit-scrollbar-track {
-          background: rgba(0, 0, 0, 0.2);
-          border-radius: 3px;
-        }
-
-        &::-webkit-scrollbar-thumb {
-          background: rgba(79, 72, 204, 0.5);
-          border-radius: 3px;
-
-          &:hover {
-            background: rgba(79, 72, 204, 0.7);
-          }
-        }
-
-        .settings-row {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 12px;
-          width: 100%;
-          flex-shrink: 0;
-        }
-
-        .quickplay-select {
-          width: 100%;
-          flex-shrink: 0;
-        }
-
-        .engine-strength {
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-          padding: 12px;
-          background: rgba(0, 0, 0, 0.3);
-          border: 1px solid rgba(79, 72, 204, 0.2);
-          border-radius: 8px;
-          font-size: 12px;
-          color: rgba(255, 255, 255, 0.8);
-          flex-shrink: 0;
-
-          p {
-            margin: 0;
-          }
-        }
-      }
+    .hover-empty {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+      font-style: italic;
+      text-align: center;
+      margin: auto;
     }
+  }
 
-    // Section header with inline button
+  // Content container - holds all sections
+  .content-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  // Shared section styles
+  .player-section,
+  .engine-section,
+  .settings-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(79, 72, 204, 0.3);
+    border-radius: 12px;
+    padding: 16px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    min-height: 0;
+
     .section-header {
       display: flex;
       align-items: center;
@@ -285,40 +170,217 @@
       flex-shrink: 0;
 
       h3 {
+        font-size: 16px;
+        font-weight: 600;
         margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
       }
 
-      .color {
+      .color-indicator {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 6px 12px;
+        gap: 6px;
+        padding: 4px 12px;
         background: rgba(0, 0, 0, 0.3);
         border: 1px solid rgba(79, 72, 204, 0.3);
         border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        min-height: 36px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 500;
+        text-transform: capitalize;
+      }
+    }
+
+    .arcana {
+      position: relative;
+      z-index: 100;
+      overflow: visible;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      &:has(.arcana-block) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+    }
+
+    .army-section {
+      margin-top: 8px;
+      position: relative;
+      z-index: 50;
+    }
+  }
+
+  .player-section h3 {
+    color: rgba(100, 200, 255, 0.95);
+  }
+
+  .engine-section h3 {
+    color: rgba(255, 100, 100, 0.95);
+  }
+
+  .settings-section {
+    h3 {
+      color: rgba(150, 255, 150, 0.95);
+    }
+
+    .settings-content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      flex: 1;
+      min-height: 0;
+      padding-right: 4px;
+
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: rgba(79, 72, 204, 0.5);
+        border-radius: 3px;
 
         &:hover {
-          background: rgba(79, 72, 204, 0.2);
-          border-color: rgba(79, 72, 204, 0.5);
+          background: rgba(79, 72, 204, 0.7);
         }
+      }
 
-        img {
-          width: 28px;
-          height: 28px;
-          border-radius: 6px;
-          flex-shrink: 0;
+      .settings-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        width: 100%;
+        flex-shrink: 0;
+      }
+
+      .quickplay-select {
+        width: 100%;
+        flex-shrink: 0;
+      }
+
+      .engine-strength {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(79, 72, 204, 0.2);
+        border-radius: 8px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.8);
+        flex-shrink: 0;
+
+        p {
+          margin: 0;
         }
+      }
 
-        .color-label {
-          font-size: 12px;
-          color: rgba(255, 255, 255, 0.85);
-          font-weight: 500;
+      // Action buttons for large screens
+      .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: auto;
+
+        .action-btn {
+          width: 100%;
+          padding: 14px 20px;
+          background: rgba(79, 72, 204, 0.3);
+          border: 1px solid rgba(79, 72, 204, 0.5);
+          border-radius: 10px;
+          color: rgba(255, 255, 255, 0.95);
+          font-size: 15px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+
+          &:hover {
+            background: rgba(79, 72, 204, 0.5);
+            border-color: rgba(79, 72, 204, 0.8);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 72, 204, 0.4);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+
+          &.start-btn {
+            background: rgba(79, 72, 204, 0.6);
+            border-color: rgba(79, 72, 204, 0.8);
+
+            &:hover {
+              background: rgba(79, 72, 204, 0.8);
+              box-shadow: 0 4px 16px rgba(79, 72, 204, 0.6);
+            }
+          }
         }
       }
     }
+  }
+
+  // Section header with inline button
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    // margin-bottom: 8px;
+    flex-shrink: 0;
+
+    h3 {
+      margin: 0;
+    }
+
+    .color {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(79, 72, 204, 0.3);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-height: 36px;
+
+      &:hover {
+        background: rgba(79, 72, 204, 0.2);
+        border-color: rgba(79, 72, 204, 0.5);
+      }
+
+      img {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        flex-shrink: 0;
+      }
+
+      .color-label {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 500;
+      }
+    }
+  }
 
   // Shared button styling
   .buttons-arcana {
@@ -364,7 +426,6 @@
       box-shadow: none;
     }
   }
-
 }
 
 // Laptop: slightly smaller
@@ -374,266 +435,309 @@
     gap: 12px;
 
     .quickplay-header h2 {
-        font-size: 22px;
-      }
+      font-size: 22px;
+    }
 
-      .hover-panel {
-        padding: 14px;
-        min-height: 70px;
-      }
+    .hover-panel {
+      padding: 14px;
+      min-height: 70px;
+    }
 
-      .content-container {
-        gap: 12px;
-      }
+    .content-container {
+      gap: 12px;
+    }
 
-      .player-section,
-      .engine-section,
-      .settings-section {
-        padding: 14px;
-        gap: 10px;
+    .player-section,
+    .engine-section,
+    .settings-section {
+      padding: 14px;
+      gap: 10px;
 
-        h3 {
-          font-size: 15px;
-        }
+      h3 {
+        font-size: 15px;
       }
     }
   }
+}
 
-  // Tablet: Show 2 columns (Player | Engine), scroll for settings
-  @media (max-width: 1024px) {
-    .quickplay-modal {
-      .quickplay-header {
-        .tab-nav {
-          display: none;
-        }
-      }
-
-      .content-container {
-        grid-template-columns: 1fr 1fr;
-        overflow-y: auto;
-        position: relative;
-      }
-
-      .player-section,
-      .engine-section {
-        display: flex;
-        overflow-y: visible;
-      }
-
-      .settings-section {
+// Tablet: Show 2 columns (Player | Engine), scroll for settings and action buttons
+@media (max-width: 1024px) {
+  .quickplay-modal {
+    .quickplay-header {
+      .tab-nav {
         display: none;
       }
-
-      .action-buttons {
-        grid-column: 1 / -1;
-        display: flex;
-        margin-top: 16px;
-      }
     }
-  }
 
-  // Tablet 768px: 2 columns with vertical scroll and 5x2 spell grid
-  @media (max-width: 768px) {
-    .quickplay-modal {
-      .quickplay-header {
-        .tab-nav {
-          display: none;
-        }
-      }
-
-      .content-container {
-        grid-template-columns: 1fr 1fr;
-        overflow-y: auto;
-      }
-
-      .player-section,
-      .engine-section {
-        display: flex;
-        overflow-y: visible;
-      }
-
-      .settings-section {
-        display: none;
-      }
-
-      .action-buttons {
-        grid-column: 1 / -1;
-        display: flex;
-        margin-top: 16px;
-      }
-
-      // Make spell grid 5 columns x 2 rows
-      .player-section,
-      .engine-section {
-        .arcana {
-          .spellBook {
-            grid-template-columns: repeat(5, 1fr) !important;
-            grid-auto-rows: 1fr;
-            width: 100%;
-            height: auto;
-          }
-        }
-      }
-
-      // Also apply to 1024px breakpoint
+    .content-container {
+      grid-template-columns: 1fr 1fr;
+      overflow-y: auto;
+      position: relative;
     }
-  }
 
-  // Apply 5x2 grid to 1024px breakpoint as well
-  @media (max-width: 1024px) {
-    .quickplay-modal {
-      .player-section,
-      .engine-section {
-        .arcana {
-          .spellBook {
-            grid-template-columns: repeat(5, 1fr) !important;
-            grid-auto-rows: 1fr;
-            width: 100%;
-            height: auto;
+    .player-section,
+    .engine-section {
+      display: flex;
+      overflow-y: visible;
+    }
+
+    .settings-section {
+      display: none;
+    }
+
+    // Action buttons at bottom for tablet - show as 2-column grid
+    .action-buttons {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+
+      .action-btn {
+        padding: 14px 20px;
+        background: rgba(79, 72, 204, 0.3);
+        border: 1px solid rgba(79, 72, 204, 0.5);
+        border-radius: 10px;
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 15px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        &:hover {
+          background: rgba(79, 72, 204, 0.5);
+          border-color: rgba(79, 72, 204, 0.8);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(79, 72, 204, 0.4);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+
+        &.start-btn {
+          grid-column: 1 / -1;
+          background: rgba(79, 72, 204, 0.6);
+          border-color: rgba(79, 72, 204, 0.8);
+
+          &:hover {
+            background: rgba(79, 72, 204, 0.8);
+            box-shadow: 0 4px 16px rgba(79, 72, 204, 0.6);
           }
         }
       }
     }
   }
+}
 
-  // Mobile: Tab navigation and single column
-  @media (max-width: 640px) {
-    .quickplay-modal {
+// Tablet 768px: 2 columns with vertical scroll and 5x2 spell grid
+@media (max-width: 768px) {
+  .quickplay-modal {
+    .quickplay-header {
+      .tab-nav {
+        display: none;
+      }
+    }
+
+    .content-container {
+      grid-template-columns: 1fr 1fr;
+      overflow-y: auto;
+    }
+
+    .player-section,
+    .engine-section {
+      display: flex;
+      overflow-y: visible;
+    }
+
+    .settings-section {
+      display: none;
+    }
+
+    .action-buttons {
+      grid-column: 1 / -1;
+      display: flex;
+      margin-top: 16px;
+    }
+
+    // Make spell grid 5 columns x 2 rows
+    .player-section,
+    .engine-section {
+      .arcana {
+        .spellBook {
+          grid-template-columns: repeat(5, 1fr) !important;
+          grid-auto-rows: 1fr;
+          width: 100%;
+          height: auto;
+        }
+      }
+    }
+
+    // Also apply to 1024px breakpoint
+  }
+}
+
+// Apply 5x2 grid to 1024px breakpoint as well
+@media (max-width: 1024px) {
+  .quickplay-modal {
+    .player-section,
+    .engine-section {
+      .arcana {
+        .spellBook {
+          grid-template-columns: repeat(5, 1fr) !important;
+          grid-auto-rows: 1fr;
+          width: 100%;
+          height: auto;
+        }
+      }
+    }
+  }
+}
+
+// Mobile: Tab navigation and single column
+@media (max-width: 640px) {
+  .quickplay-modal {
+    gap: 8px;
+    padding: 10px;
+    border-radius: 12px;
+
+    .quickplay-header {
+      flex-direction: column;
+      align-items: stretch;
       gap: 8px;
-      padding: 10px;
-      border-radius: 12px;
+      padding-bottom: 0;
 
-      .quickplay-header {
+      .tab-nav {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+
+        .tab-button {
+          flex: 1;
+          padding: 6px 4px;
+          font-size: 11px;
+        }
+      }
+
+      .header-left {
         flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-        padding-bottom: 0;
-
-        .tab-nav {
-          display: flex;
-          justify-content: center;
-          width: 100%;
-
-          .tab-button {
-            flex: 1;
-            padding: 6px 4px;
-            font-size: 11px;
-          }
-        }
-
-        .header-left {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 6px;
-          width: 100%;
-        }
-
-        h2 {
-          font-size: 16px;
-        }
-
-        .tab-nav {
-          width: 100%;
-
-          .tab-button {
-            flex: 1;
-            padding: 8px 6px;
-            font-size: 12px;
-          }
-        }
+        align-items: flex-start;
+        gap: 6px;
+        width: 100%;
       }
 
-      .content-container {
-        grid-template-columns: 1fr;
+      h2 {
+        font-size: 16px;
       }
 
-      .player-section,
-      .engine-section,
-      .settings-section {
-        display: none;
+      .tab-nav {
+        width: 100%;
 
-        &.active {
-          display: flex;
+        .tab-button {
+          flex: 1;
+          padding: 8px 6px;
+          font-size: 12px;
         }
       }
+    }
 
-      .action-buttons {
-        grid-column: 1;
+    .content-container {
+      grid-template-columns: 1fr;
+    }
+
+    .player-section,
+    .engine-section,
+    .settings-section {
+      display: none;
+
+      &.active {
+        display: flex;
+      }
+    }
+
+    .action-buttons {
+      grid-column: 1;
+    }
+
+    .hover-panel {
+      padding: 10px;
+      height: 70px;
+      max-height: 70px;
+      border-radius: 8px;
+
+      .hover-title {
+        font-size: 13px;
       }
 
-      .hover-panel {
-        padding: 10px;
-        height: 70px;
-        max-height: 70px;
-        border-radius: 8px;
-
-        .hover-title {
-          font-size: 13px;
-        }
-
-        .hover-description {
-          font-size: 11px;
-          line-height: 1.3;
-        }
-
-        .hover-empty {
-          font-size: 11px;
-        }
+      .hover-description {
+        font-size: 11px;
+        line-height: 1.3;
       }
 
-      .player-section,
-      .engine-section,
-      .settings-section {
-        padding: 10px;
-        gap: 8px;
-        border-radius: 8px;
+      .hover-empty {
+        font-size: 11px;
+      }
+    }
 
-        h3 {
-          font-size: 13px;
-          margin-bottom: 4px;
-        }
+    .player-section,
+    .engine-section,
+    .settings-section {
+      padding: 10px;
+      gap: 8px;
+      border-radius: 8px;
 
-        .buttons-arcana {
+      h3 {
+        font-size: 13px;
+        margin-bottom: 4px;
+      }
+
+      .buttons-arcana {
+        gap: 6px;
+
+        .buttons {
           gap: 6px;
 
-          .buttons {
-            gap: 6px;
-
-            .color img {
-              height: 50px;
-            }
-          }
-        }
-      }
-
-      .settings-section {
-        .settings-content {
-          gap: 8px;
-          padding-right: 0;
-          overflow-y: visible;
-
-          .settings-row {
-            grid-template-columns: 1fr;
-            gap: 6px;
-
-            &.settings-row-buttons {
-              button {
-                height: 48px !important;
-                min-height: 48px;
-              }
-            }
-          }
-
-          .quickplay-select {
-            flex-shrink: 0;
-          }
-
-          .engine-strength {
-            padding: 8px;
-            font-size: 10px;
-            flex-shrink: 0;
+          .color img {
+            height: 50px;
           }
         }
       }
     }
+
+    .settings-section {
+      .settings-content {
+        gap: 8px;
+        padding-right: 0;
+        overflow-y: visible;
+
+        .settings-row {
+          grid-template-columns: 1fr;
+          gap: 6px;
+
+          &.settings-row-buttons {
+            button {
+              height: 48px !important;
+              min-height: 48px;
+            }
+          }
+        }
+
+        .quickplay-select {
+          flex-shrink: 0;
+        }
+
+        .engine-strength {
+          padding: 8px;
+          font-size: 10px;
+          flex-shrink: 0;
+        }
+      }
+    }
   }
+}
