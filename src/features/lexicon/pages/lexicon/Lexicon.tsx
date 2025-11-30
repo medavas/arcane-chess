@@ -152,15 +152,15 @@ interface State {
   gameOverType: string;
   arcaneHover: string;
   wArcana:
-    | {
-        [key: string]: number | string;
-      }
-    | undefined;
+  | {
+    [key: string]: number | string;
+  }
+  | undefined;
   bArcana:
-    | {
-        [key: string]: number | string;
-      }
-    | undefined;
+  | {
+    [key: string]: number | string;
+  }
+  | undefined;
   lastMove: string[];
   hideCompletedPage: boolean;
   viewOnly: boolean;
@@ -447,7 +447,7 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                 ? '#000000cc'
                 : `radial-gradient(
           circle,
-          rgba(52, 170, 72, 0.8) 0%,  
+          rgba(52, 120, 220, 0.8) 0%,  
           rgba(0, 0, 0, 1) 80%    
         )`,
             backgroundSize: 'cover',
@@ -457,7 +457,7 @@ class UnwrappedLexicon extends React.Component<Props, State> {
         >
           <div className="lexicon-view">
             <div className="opponent-arcana-volume">
-              <div className="info-avatar">
+              <div className="lesson-list">
                 <Link to="/" style={{ width: '160px' }}>
                   <Button
                     text="BACK"
@@ -641,6 +641,24 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                   </div>
                 )}
               </div>
+              <div className="lexicon-nav-arrows">
+                <Button
+                  className="tertiary"
+                  onClick={() => {
+                    this.stepBackward();
+                  }}
+                  disabled={
+                    this.state.moveNumber === 0 && this.state.currPanel === 1
+                      ? true
+                      : false
+                  }
+                  color="S"
+                  strong={true}
+                  variant="<"
+                  width={190}
+                  fontSize={36}
+                />
+              </div>
               <div className="global-volume-control">
                 <GlobalVolumeControl />
               </div>
@@ -701,24 +719,7 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                   ].panelText || ''}
                 </div>
               </div>
-              <div className="lexicon-buttons">
-                <Button
-                  className="tertiary"
-                  onClick={() => {
-                    this.stepBackward();
-                  }}
-                  disabled={
-                    this.state.moveNumber === 0 && this.state.currPanel === 1
-                      ? true
-                      : false
-                  }
-                  color="S"
-                  strong={true}
-                  variant="<"
-                  width={190}
-                  fontSize={36}
-                  // backgroundColorOverride="#3f48cc88"
-                />
+              <div className="lexicon-nav-arrows">
                 <Button
                   className="tertiary"
                   onClick={() => {
@@ -729,7 +730,6 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                   variant=">"
                   width={190}
                   fontSize={36}
-                  // backgroundColorOverride="#3f48cc88"
                 />
               </div>
               <div className="info-avatar">

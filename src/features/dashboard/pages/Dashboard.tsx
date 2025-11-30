@@ -366,8 +366,8 @@ export class UnwrappedDashboard extends React.Component<
               </h4>
               <ul>
                 <li>
-                  Football season is here, so I've added a few "touchdown"
-                  related arcana.
+                  Football season is here, so I&apos;ve added a few
+                  &quot;touchdown&quot; related arcana.
                 </li>
                 <li>
                   Divine Reckoning - when one of your Pawns reach the back rank,

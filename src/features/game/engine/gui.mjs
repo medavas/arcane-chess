@@ -512,9 +512,7 @@ export function startSearch(thinkingTime, depth, engineColor) {
         const { bestMove, bestScore } = SearchPosition();
 
         text = [...returnDialogueTypes(bestScore)];
-        text.push(
-          `${engineColor} used bulletproof. No captures, checks, or promotions for 3 turns!`
-        );
+        text.push(`${engineColor} used Bulletproof - No captures for 3 turns!`);
 
         MakeMove(bestMove, 'commit');
         CheckAndSet();

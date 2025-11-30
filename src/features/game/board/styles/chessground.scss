@@ -78,7 +78,6 @@
     left top;
 }
 
-.lexicon-board,
 .forest-board,
 .owls-board,
 .tree-board,
@@ -102,6 +101,8 @@
     left top;
 }
 
+.lexicon-board,
+.tactorius-default-board,
 .town-board,
 .skeleton-battle-board,
 .desert-board,
@@ -177,13 +178,13 @@
     left top;
 }
 
-.tactorius-default-board {
-  background-image: url('/assets/images/board/tactoriusGray.svg');
-  background-repeat: repeat, no-repeat;
-  background-position:
-    center,
-    left top;
-}
+// .tactorius-default-board {
+//   background-image: url('/assets/images/board/tactoriusGray.svg');
+//   background-repeat: repeat, no-repeat;
+//   background-position:
+//     center,
+//     left top;
+// }
 
 .tiger-egypt-board,
 .spectre-haven-room-board,
@@ -355,7 +356,6 @@ cg-board square.royaltyN {
       rgba(0, 130, 130, 0) 100%);
 }
 
-
 cg-board square.royaltyF {
   background: radial-gradient(ellipse at center,
       rgba(255, 255, 255, 1) 0%,
@@ -437,7 +437,6 @@ cg-board square.move-dest.royaltyN {
   pointer-events: auto;
 }
 
-
 cg-board square.move-dest.royaltyF {
   background: radial-gradient(ellipse at center,
       rgba(255, 255, 255, 1) 0%,
@@ -505,12 +504,9 @@ cg-board square.oc.move-dest.royaltyN {
       rgba(0, 200, 200, 0.6) 25%,
       rgba(0, 150, 150, 0) 89%,
       rgba(0, 130, 130, 0) 100%),
-    radial-gradient(transparent 0%,
-      transparent 80%,
-      rgba(0, 255, 255, 0.5) 22%);
+    radial-gradient(transparent 0%, transparent 80%, rgba(0, 255, 255, 0.5) 22%);
   pointer-events: auto;
 }
-
 
 cg-board square.oc.move-dest.royaltyF {
   background: radial-gradient(ellipse at center,
@@ -704,7 +700,6 @@ cg-board square.oc.move-dest.royaltyN.shift {
   pointer-events: auto;
 }
 
-
 /* RoyaltyF shift with outlined ring cutout (red) */
 .cg-wrap square.move-dest.royaltyF.shift,
 cg-board square.move-dest.royaltyF.shift {
@@ -842,7 +837,6 @@ cg-board square.oc.move-dest.royaltyN.shift:hover {
       rgba(0, 150, 150, 0) 89%,
       rgba(0, 130, 130, 0) 100%);
 }
-
 
 .cg-wrap square.move-dest.royaltyF.shift:hover,
 cg-board square.move-dest.royaltyF.shift:hover {

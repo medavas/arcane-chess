@@ -4,7 +4,6 @@ import _ from 'lodash';
 
 import { withRouter } from 'src/shared/hooks/withRouter/withRouter';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import { getLocalStorage } from 'src/shared/utils/handleLocalStorage';
 
@@ -496,21 +495,6 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
     const canStart = Boolean(
       this.state.engineFactionId && this.state.playerFactionId
     );
-
-    const engineFactionOptions = Object.values(FACTIONS)
-      .filter((f) => f.unlocked)
-      .map((f) => cap(f.name));
-    const factionIdByName = (name: string): FactionId =>
-      name.toLowerCase() as FactionId;
-
-    const engineFactionLabel = this.state.engineFactionId
-      ? cap(FACTIONS[this.state.engineFactionId].name)
-      : 'Select Engine Faction';
-
-    const engineImg =
-      this.state.engineFactionId && FACTIONS[this.state.engineFactionId].image;
-    const playerImg =
-      this.state.playerFactionId && FACTIONS[this.state.playerFactionId].image;
 
     const engineGreek = this.state.engineFactionId
       ? GREEK_CAP[this.state.engineFactionId]

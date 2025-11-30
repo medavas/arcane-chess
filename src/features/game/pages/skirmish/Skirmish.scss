@@ -22,11 +22,9 @@
   justify-content: center;
   align-items: center;
   background-image: url('/assets/images/textures/random-grey-variations.png'),
-    radial-gradient(
-      circle,
-      rgba(221, 221, 221, 0.6) 0%,
-      rgba(17, 17, 17, 0.2) 80%
-    );
+    radial-gradient(circle,
+      rgba(52, 120, 220, 0.6) 0%,
+      rgba(17, 17, 17, 0.2) 80%);
   background-position: center;
 
   .skirmish-view {

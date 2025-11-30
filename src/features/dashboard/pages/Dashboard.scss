@@ -6,6 +6,7 @@ html {
   scrollbar-gutter: stable;
   overflow-x: hidden;
 }
+
 body {
   overflow-x: hidden;
   margin: 0;
@@ -21,7 +22,10 @@ body {
   overflow-x: hidden;
   font-size: 0.9rem;
 
-  background: linear-gradient(to bottom, $B_MENU 0%, black 100%);
+  background-image:
+    radial-gradient(circle,
+      rgba(52, 120, 220, 0.6) 0%,
+      rgba(17, 17, 17, 0.2) 80%);
 
   // Optional: add smoother feel
   background-attachment: fixed;
@@ -29,6 +33,7 @@ body {
 
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
+
   .fade-overlay {
     position: fixed;
     top: 0;
@@ -41,6 +46,7 @@ body {
     transition: opacity 0.3s ease-in-out;
     z-index: 9999;
   }
+
   .fade-overlay.active {
     opacity: 1;
   }
@@ -75,6 +81,7 @@ body {
       .home-button {
         display: inline-flex;
       }
+
       .logo {
         width: 80px;
         height: 80px;
@@ -85,6 +92,7 @@ body {
         border: 1px solid rgba(68, 170, 255, 0.3);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
       }
+
       .avatar {
         width: 80px;
         height: 80px;
@@ -117,6 +125,7 @@ body {
       .xp-left {
         display: grid;
         gap: 8px;
+
         .xp-user {
           overflow: hidden;
           text-overflow: ellipsis;
@@ -126,27 +135,32 @@ body {
           color: rgba(255, 255, 255, 0.95);
           letter-spacing: 0.5px;
         }
+
         .xp-stats {
           display: grid;
           grid-template-columns: 1fr auto;
           align-items: center;
           gap: 8px;
         }
+
         .xp-level {
           justify-self: end;
           opacity: 0.9;
         }
+
         .xp-bar {
           height: 10px;
           background: #1f1f1f;
           border-radius: 6px;
           overflow: hidden;
         }
+
         .xp-fill {
           height: 100%;
           background: $B_MENU;
         }
       }
+
       .avatar-inline {
         position: relative;
         z-index: 1;
@@ -227,6 +241,7 @@ body {
       .nav-link {
         text-decoration: none;
       }
+
       .nav-link:hover .nav-btn:not(:disabled),
       .nav-link:focus-within .nav-btn:not(:disabled) {
         background: $nav-bg-hover;
@@ -289,6 +304,7 @@ body {
       color: #fff;
       border-bottom: 1px solid rgba(255, 255, 255, 0.15);
       padding-bottom: 4px;
+
       h6 {
         font-weight: 400;
       }
@@ -312,9 +328,7 @@ body {
     .dashboard-header {
       min-height: auto;
       grid-template-columns:
-        auto
-        minmax(380px, 1.45fr)
-        minmax(240px, 1fr);
+        auto minmax(380px, 1.45fr) minmax(240px, 1fr);
       grid-template-rows: auto auto;
       grid-template-areas:
         'logo mainnav xp'
@@ -333,6 +347,7 @@ body {
           margin-right: 0;
         }
       }
+
       .header-icons .avatar {
         display: none;
       }
@@ -353,15 +368,18 @@ body {
         .xp-left {
           flex: 1 1 auto;
           min-width: 0;
+
           .xp-user {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
           }
+
           .xp-bar {
             width: 100%;
           }
         }
+
         .avatar-inline {
           grid-area: xp;
           justify-self: end;
@@ -395,6 +413,7 @@ body {
           flex-direction: row;
           gap: 8px;
         }
+
         .desc-rail {
           width: 100%;
           min-height: 80px;
@@ -433,6 +452,7 @@ body {
       margin: 12px 10px 48px;
       width: calc(100% - 360px);
     }
+
     .news-title {
       font-size: 1.8rem;
       letter-spacing: 1.5px;

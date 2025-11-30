@@ -5,18 +5,21 @@
   height: 100%;
   padding: 0;
   overflow: hidden;
+
   .lexicon-view {
     height: 100%;
     display: flex;
     flex: 1;
     justify-content: center;
     align-items: center;
+
     .manifest-curtain {
       position: fixed;
       width: 100vw;
       height: 100vh;
       background: #000000cc;
     }
+
     .opponent-arcana-volume {
       display: flex;
       gap: 10px;
@@ -28,7 +31,8 @@
       max-width: 400px;
       padding: 0 10px;
       overflow: hidden;
-      .info-avatar {
+
+      .lesson-list {
         display: flex;
         flex-direction: column;
         flex: 1;
@@ -38,6 +42,11 @@
         overflow-x: hidden;
         background: #11111188;
       }
+
+      .lexicon-nav-arrows {
+        display: none; // Hidden on desktop
+      }
+
       .arcana {
         display: flex;
         flex-direction: column;
@@ -45,12 +54,14 @@
         background: #11111188;
       }
     }
+
     .time-board-time {
       height: calc(100% - 15%);
       max-height: 960px;
       min-height: 480px;
       aspect-ratio: 1;
       position: relative;
+
       .board-view {
         position: absolute;
         top: 0;
@@ -62,6 +73,7 @@
         align-items: center;
       }
     }
+
     .lexicon-clock-buttons {
       display: flex;
       gap: 10px;
@@ -72,9 +84,11 @@
       max-width: 400px;
       padding: 0 10px;
       overflow: hidden;
+
       .global-volume-control {
         display: none;
       }
+
       .lexicon-text {
         display: flex;
         flex-grow: 1;
@@ -86,24 +100,33 @@
         height: auto;
         box-sizing: border-box;
         padding: 20px;
+
         .time-text {
           font-size: 72px;
         }
       }
+
+      .lexicon-nav-arrows {
+        display: none; // Hidden on desktop
+      }
+
       .lexicon-buttons {
         display: flex;
         justify-content: center;
         height: 40px;
       }
+
       .info-avatar {
         display: flex;
         width: 100%;
+
         .avatar {
           position: relative;
           background: #11111188;
           width: 60px;
           height: 60px;
         }
+
         .arcana-select {
           display: flex;
           justify-content: center;
@@ -115,10 +138,12 @@
           overflow-y: hidden;
           white-space: nowrap;
           background: #11111188;
+
           .arcane {
             height: 45px;
             width: 45px;
             flex-shrink: 0;
+
             &:hover {
               cursor: pointer;
             }
@@ -129,7 +154,8 @@
   }
 }
 
-@media (max-width: 1024px) {
+// Medium screens (769px - 1023px): lesson-list + textbox side by side, board below
+@media (min-width: 769px) and (max-width: 1023px) {
   .tactorius-board {
     width: 100%;
     height: 100vh;
@@ -137,32 +163,92 @@
     justify-content: flex-start;
     align-items: flex-start;
     overflow: auto;
+
     .lexicon-view {
       width: 100%;
       height: 100%;
       display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
       overflow-x: hidden;
+      gap: 10px;
+      padding: 10px;
+
+      // Left side: lesson-list with back arrow
       .opponent-arcana-volume {
         display: flex;
-        gap: 10px;
         flex-direction: column;
-        align-items: center;
+        gap: 10px;
+        align-items: stretch;
         flex-shrink: 0;
-        min-height: 200px;
-        padding: 0 10px 0 10px;
-        width: 380px;
-        .info-avatar {
-          display: flex;
-          width: 380px;
+        width: calc(50% - 5px);
+        max-width: 400px;
+        height: 400px;
+
+        .lesson-list {
+          flex: 1;
+          height: auto;
+          max-width: none;
+          overflow-y: auto;
+          background: #11111188;
         }
+
+        .lexicon-nav-arrows {
+          display: flex;
+          justify-content: center;
+          height: 60px;
+        }
+
         .global-volume-control {
           display: none;
         }
       }
+
+      // Right side: textbox with forward arrow
+      .lexicon-clock-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: calc(50% - 5px);
+        max-width: 400px;
+        height: 400px;
+        padding: 0;
+
+        .global-volume-control {
+          display: flex;
+        }
+
+        .lexicon-text {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex: 1;
+          height: auto;
+          padding: 20px;
+          background-color: #11111188;
+          overflow-y: auto;
+
+          .time-text {
+            font-size: 72px;
+          }
+        }
+
+        .lexicon-nav-arrows {
+          display: flex;
+          justify-content: center;
+          height: 60px;
+        }
+
+        .info-avatar {
+          display: none;
+        }
+      }
+
+      // Board below both containers
       .time-board-time {
+        width: 100%;
         max-width: 400px;
         min-height: 400px;
         max-height: 400px;
@@ -170,10 +256,10 @@
         position: relative;
         display: flex;
         justify-content: center;
+
         .board-view {
           min-width: 400px;
           max-width: 400px;
-          min-width: 400px;
           max-height: 400px;
           position: absolute;
           top: 0;
@@ -185,67 +271,11 @@
           align-items: center;
         }
       }
-      .lexicon-clock-buttons {
-        display: flex;
-        gap: 10px;
-        flex-direction: column-reverse;
-        min-height: 480px;
-        padding: 0 10px 0 10px;
-        .global-volume-control {
-          display: flex;
-        }
-        .lexicon-text {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 400px;
-          padding: 20px;
-          background-color: #11111188;
-          .time-text {
-            font-size: 72px;
-          }
-        }
-        .lexicon-buttons {
-          display: flex;
-        }
-        .info-avatar {
-          position: relative;
-          display: flex;
-          align-self: center;
-          width: 360px;
-
-          .info {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: #11111188;
-            .name {
-              text-align: right;
-            }
-            .arcana-select {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              height: 100%;
-              .arcane:hover {
-                cursor: pointer;
-              }
-            }
-            // .player-time {
-            //   width: 140px;
-            //   .time-text {
-            //     width: 10
-            //   }
-            // }
-          }
-        }
-      }
     }
   }
 }
 
+// Mobile screens (≤768px): lesson-list → board → textbox (hide nav arrows)
 @media (max-width: 768px) {
   .tactorius-board {
     width: 100%;
@@ -255,6 +285,7 @@
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+
     .lexicon-view {
       width: 100%;
       height: 100%;
@@ -263,28 +294,45 @@
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
+
       .opponent-arcana-volume {
         display: flex;
         gap: 10px;
         flex-direction: column;
         justify-content: center;
         margin: 10px;
-        .info-avatar {
+        width: 100%;
+        max-width: 380px;
+
+        .lesson-list {
           display: flex;
-          width: 380px;
-          height: 480px;
-          // justify-content: center;
-          align-items: center;
-          margin: 10px;
+          flex-direction: column;
+          width: 100%;
+          height: auto;
+          max-height: 200px;
+          overflow-y: auto;
+          background: #11111188;
         }
+
+        .lexicon-nav-arrows {
+          display: flex;
+          justify-content: center;
+          height: 60px;
+        }
+
         .arcana {
           display: flex;
           flex-direction: column;
           height: 390px;
-          width: 380px;
+          width: 100%;
           background: #11111188;
         }
+
+        .global-volume-control {
+          display: none;
+        }
       }
+
       .time-board-time {
         max-width: 360px;
         min-height: 360px;
@@ -293,10 +341,10 @@
         position: relative;
         display: flex;
         justify-content: center;
+
         .board-view {
           min-width: 360px;
           max-width: 360px;
-          min-width: 360px;
           max-height: 360px;
           position: absolute;
           top: 0;
@@ -308,55 +356,9 @@
           align-items: center;
         }
       }
+
       .lexicon-clock-buttons {
-        display: flex;
-        flex-direction: column-reverse;
-        width: 380px;
-        height: 480px;
-        justify-content: center;
-        align-items: center;
-        margin: 10px;
-        .lexicon-text {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 380px;
-          height: 400px;
-          padding: 20px;
-          background-color: #11111188;
-          .time-text {
-            font-size: 72px;
-          }
-        }
-        .lexicon-buttons {
-          display: flex;
-          justify-content: center;
-          width: 380px;
-          height: 40px;
-        }
-        .info-avatar {
-          display: flex;
-          margin-top: 10px;
-          width: 380px;
-          height: 80px;
-          .avatar {
-            max-width: 60px;
-            height: 60px;
-            background: #11111188;
-          }
-          .info {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-            margin-left: 10px;
-            background: #11111188;
-            .name {
-              text-align: right;
-            }
-          }
-        }
+        display: none; // Hide textbox on mobile
       }
     }
   }
