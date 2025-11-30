@@ -22,14 +22,11 @@ body {
   overflow-x: hidden;
   font-size: 0.9rem;
 
-  background-image:
+  background-image: url('/assets/images/textures/random-grey-variations.png'),
     radial-gradient(circle,
       rgba(52, 120, 220, 0.6) 0%,
       rgba(17, 17, 17, 0.2) 80%);
-
-  // Optional: add smoother feel
-  background-attachment: fixed;
-  background-size: cover;
+  background-position: center;
 
   opacity: 0;
   transition: opacity 0.3s ease-in-out;

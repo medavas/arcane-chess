@@ -19,6 +19,8 @@ import TactoriusModal from 'src/shared/components/Modal/Modal';
 import PromotionModal from 'src/features/game/components/PromotionModal/PromotionModal';
 import QuickplayModal from 'src/features/game/components/QuickplayModal/QuickplayModal';
 
+import arcaneJson from 'src/shared/data/arcana.json';
+
 import arcaneChess from 'src/features/game/engine/arcaneChess.mjs';
 import { GameBoard, InCheck } from 'src/features/game/engine/board.mjs';
 import { PrSq } from 'src/features/game/engine/io.mjs';
@@ -42,10 +44,24 @@ import { PromotionHandler } from 'src/features/game/utils/PromotionHandler';
 import { OpponentPanel } from 'src/features/game/components/GamePanels/OpponentPanel';
 import { PlayerPanel } from 'src/features/game/components/GamePanels/PlayerPanel';
 
+const arcana: ArcanaMap = arcaneJson as ArcanaMap;
+
 const pieces: PieceRoyaltyTypes = PIECES;
 
 interface PieceRoyaltyTypes {
   [key: string]: number;
+}
+
+interface ArcanaDetail {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  imagePath: string;
+}
+
+interface ArcanaMap {
+  [key: string]: ArcanaDetail;
 }
 
 interface State {
@@ -385,10 +401,10 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
         [this.state.nodeId]:
           Math.abs(
             100000 -
-              Math.abs(
-                GameBoard.material[this.state.playerColor === 'white' ? 0 : 1] -
-                  GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
-              )
+            Math.abs(
+              GameBoard.material[this.state.playerColor === 'white' ? 0 : 1] -
+              GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
+            )
           ) *
           (timeLeft || 1) *
           LS.config.multiplier,
@@ -427,14 +443,19 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
     this.historyHandler.handleKeyDown(event);
   }
 
-  componentDidUpdate() {
-    const dialogueDiv = document.getElementById('dialogue');
-    const historyDiv = document.getElementById('history');
-    if (dialogueDiv) {
-      dialogueDiv.scrollTop = dialogueDiv.scrollHeight;
+  componentDidUpdate(_prevProps: Props, prevState: State) {
+    // Only update scroll positions when dialogue or history actually changes
+    if (prevState.dialogue !== this.state.dialogue) {
+      const dialogueDiv = document.getElementById('dialogue');
+      if (dialogueDiv) {
+        dialogueDiv.scrollTop = dialogueDiv.scrollHeight;
+      }
     }
-    if (historyDiv) {
-      historyDiv.scrollTop = historyDiv.scrollHeight;
+    if (prevState.history !== this.state.history) {
+      const historyDiv = document.getElementById('history');
+      if (historyDiv) {
+        historyDiv.scrollTop = historyDiv.scrollHeight;
+      }
     }
   }
 
@@ -508,56 +529,58 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
             backgroundRepeat: 'no-repeat',
           }}
         >
-          <QuickplayModal
-            isOpen={this.state.quickPlayModalOpen}
-            handleClose={() => {
-              this.setState({ quickPlayModalOpen: false }, () => {
-                this.arcaneChess().init();
-                this.arcaneChess().startGame(
-                  this.state.fen,
-                  this.state.wArcana,
-                  this.state.bArcana,
-                  this.state.royalties,
-                  this.state.preset
-                );
-                this.setState(
-                  {
-                    turn: GameBoard.side === 0 ? 'white' : 'black',
-                    wArcana: {
-                      ...whiteArcaneConfig,
+          {this.state.quickPlayModalOpen && (
+
+            <QuickplayModal
+              isOpen={this.state.quickPlayModalOpen}
+              handleClose={() => {
+                this.setState({ quickPlayModalOpen: false }, () => {
+                  this.arcaneChess().init();
+                  this.arcaneChess().startGame(
+                    this.state.fen,
+                    this.state.wArcana,
+                    this.state.bArcana,
+                    this.state.royalties,
+                    this.state.preset
+                  );
+                  this.setState(
+                    {
+                      turn: GameBoard.side === 0 ? 'white' : 'black',
+                      wArcana: {
+                        ...whiteArcaneConfig,
+                      },
+                      bArcana: {
+                        ...blackArcaneConfig,
+                      },
                     },
-                    bArcana: {
-                      ...blackArcaneConfig,
-                    },
-                  },
-                  () => {
-                    if (this.state.engineColor === this.state.turn) {
-                      this.engineGo();
+                    () => {
+                      if (this.state.engineColor === this.state.turn) {
+                        this.engineGo();
+                      }
                     }
-                  }
-                );
-              });
-            }}
-            updateConfig={(
-              property: string,
-              value: number | string | { [key: string]: number }
-            ) => {
-              if (property === 'placingPromotion') {
-                if (value === 'select') {
-                  value = 0;
-                } else {
-                  value =
-                    pieces[
-                      `${
-                        this.state.playerColor === 'white' ? 'w' : 'b'
+                  );
+                });
+              }}
+              updateConfig={(
+                property: string,
+                value: number | string | { [key: string]: number }
+              ) => {
+                if (property === 'placingPromotion') {
+                  if (value === 'select') {
+                    value = 0;
+                  } else {
+                    value =
+                      pieces[
+                      `${this.state.playerColor === 'white' ? 'w' : 'b'
                       }${value}`
-                    ];
+                      ];
+                  }
                 }
-              }
-              this.updateQuickPlayState(property, value);
-            }}
-            type="quickPlay"
-          />
+                this.updateQuickPlayState(property, value);
+              }}
+              type="quickPlay"
+            />
+          )}
           <TactoriusModal
             isOpen={this.state.gameOver}
             handleClose={() => this.analyzeGame()}
@@ -565,7 +588,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
             score={LS.nodeScores[this.state.nodeId]}
             type={
               this.state.gameOverType.split(' ')[1] === 'mates' &&
-              this.state.playerColor === this.state.gameOverType.split(' ')[0]
+                this.state.playerColor === this.state.gameOverType.split(' ')[0]
                 ? 'victory-qp'
                 : 'defeat-qp'
             }
@@ -620,7 +643,6 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
             <div className="time-board-time">
               <div className="board-view tactorius-default-board">
                 <BoardUX
-                  forwardedRef={this.chessgroundRef}
                   game={this.arcaneChess()}
                   gameState={{
                     fen: this.state.fen,
@@ -679,6 +701,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                   }
                   width="100%"
                   height="100%"
+                  forwardedRef={this.chessgroundRef}
                 />
               </div>
             </div>
@@ -724,6 +747,13 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
               }}
             />
           </div>
+          {/* Shared hover text box for spell details */}
+          {this.state.hoverArcane && (
+            <div className="shared-spell-detail">
+              <h3>{arcana[this.state.hoverArcane]?.name}</h3>
+              <p>{arcana[this.state.hoverArcane]?.description}</p>
+            </div>
+          )}
         </div>
       </div>
     );

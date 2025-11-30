@@ -57,10 +57,6 @@ export class UnwrappedCampaign extends React.Component<
     return (
       <div
         className="campaign"
-        style={{
-          // background: `url(assets/dashboard/chapters.webp) no-repeat center center fixed`,
-          backgroundSize: 'cover',
-        }}
       >
         <div className="back">
           <Link to="/">
