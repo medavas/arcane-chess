@@ -192,7 +192,7 @@
     border: 1px solid rgba(79, 72, 204, 0.3);
     border-radius: 12px;
     padding: 16px;
-    overflow-y: hidden;
+    overflow-y: auto;
     overflow-x: hidden;
     min-height: 0;
 
@@ -257,6 +257,15 @@
 
   .engine-section h3 {
     color: rgba(255, 100, 100, 0.95);
+  }
+
+  // Quickplay-specific arcana styling
+  @media (min-width: 1024px) {
+    .arcane-select .spellBook {
+      grid-template-columns: repeat(2, 70px);
+      grid-template-rows: repeat(3, 70px);
+      gap: 6px;
+    }
   }
 
   .settings-section {

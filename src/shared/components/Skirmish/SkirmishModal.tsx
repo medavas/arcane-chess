@@ -912,6 +912,7 @@ const skirmishModal = {
     marginRight: 'auto',
     transform: 'translate(-50%, -50%)',
     display: 'flex',
+    height: '95vh',
     maxHeight: '95vh',
     maxWidth: '95vw',
     width: '100%',
