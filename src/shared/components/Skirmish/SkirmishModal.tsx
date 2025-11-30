@@ -673,11 +673,15 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                             onClick={() =>
                               !isLocked && this.handleFactionClick(id, 'player')
                             }
-                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''}`}
+                            aria-label={`${f.name}${
+                              isLocked ? ' (locked)' : ''
+                            }`}
                             tabIndex={isLocked ? -1 : 0}
                             style={{ ['--accent' as any]: f.color }}
                           >
-                            <span className="faction-glyph">{GREEK_CAP[id]}</span>
+                            <span className="faction-glyph">
+                              {GREEK_CAP[id]}
+                            </span>
                           </div>
                         );
                       })}
@@ -768,11 +772,15 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                             onClick={() =>
                               !isLocked && this.handleFactionClick(id, 'engine')
                             }
-                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''}`}
+                            aria-label={`${f.name}${
+                              isLocked ? ' (locked)' : ''
+                            }`}
                             tabIndex={isLocked ? -1 : 0}
                             style={{ ['--accent' as any]: f.color }}
                           >
-                            <span className="faction-glyph">{GREEK_CAP[id]}</span>
+                            <span className="faction-glyph">
+                              {GREEK_CAP[id]}
+                            </span>
                           </div>
                         );
                       })}
