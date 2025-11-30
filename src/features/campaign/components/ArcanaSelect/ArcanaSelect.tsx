@@ -132,6 +132,13 @@ export default class ArcanaSelect extends React.Component<
 
         {isOpen && (
           <div className="arcana-block" aria-disabled={readOnly || undefined}>
+            <button
+              className="arcana-block-close"
+              onClick={handleToggle}
+              aria-label="Close"
+            >
+              ✕
+            </button>
             {_.map(arcana, (arcaneObject: ArcanaDetail, key: string) => (
               <img
                 key={key}
