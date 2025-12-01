@@ -247,12 +247,13 @@
 
     .spellBook {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(3, 50px);
       gap: 8px;
       padding: 4px;
       overflow-y: auto;
       padding-right: 4px;
       flex: 1;
+      justify-content: center;
 
       &::-webkit-scrollbar {
         width: 4px;
@@ -281,11 +282,12 @@
   }
 
   .arcane-select .spellBook {
-    grid-template-columns: repeat(6, minmax(40px, 50px));
+    grid-template-columns: repeat(3, 50px);
     grid-auto-rows: 50px;
-    gap: 4px;
+    gap: 8px;
     width: 100%;
     max-width: 100%;
+    justify-content: center;
   }
 }
 
@@ -662,12 +664,11 @@
     z-index: 1000;
 
     .faction-grid {
-      gap: 4px;
-      justify-content: flex-start;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      justify-content: center;
+      overflow-x: visible;
 
       &::-webkit-scrollbar {
         display: none;
