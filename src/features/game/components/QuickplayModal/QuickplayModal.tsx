@@ -342,16 +342,9 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       difficulty: "Choose the engine's difficulty.",
       gameMode: 'Choose a tutorial, or balanced scenario, or themed battle.',
       gameModeRand: 'Click to roll a new game mode.',
-      tempRandSame:
-        'The human and engine get a random, matching army and spellBook of spells from the existing template themes.',
-      tempRandDiff:
-        'The human and engine get a random, different army and spellBook of spells from the existing template themes.',
-      trueRandSame:
-        'The human and engine get a truly random, matching army and spellBook of spells from all options available.',
-      start: 'Rock and Roll!',
-      trueRandDiff:
-        'This one is truly random and unbalanced... but great for experimenting! Click if you dare.',
-      '': 'To customize your game, hit randomize, or start',
+      swapSides: 'Swap the player and engine colors.',
+      randomize: 'Get a random Game Mode.',
+      '': 'Hover over options to see details',
     };
   };
 
@@ -359,8 +352,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
     const hoverContent = arcana[this.state.hoverId]?.description
       ? arcana[this.state.hoverId]?.description
       : this.state.characterDescription !== ''
-      ? this.state.characterDescription
-      : this.descriptions()[this.state.hoverId];
+        ? this.state.characterDescription
+        : this.descriptions()[this.state.hoverId];
 
     return (
       <div className="container">
@@ -383,16 +376,16 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                 </button>
                 {/* Hover Panel - inline with home button on medium screens */}
                 <div className="hover-panel">
-                  {arcana[this.state.hoverId]?.name || hoverContent ? (
+                  {this.state.hoverId ? (
                     <>
                       <div className="hover-title">
-                        {arcana[this.state.hoverId]?.name || ''}
+                        {arcana[this.state.hoverId]?.name || 'Info'}
                       </div>
                       <div className="hover-description">{hoverContent}</div>
                     </>
                   ) : (
                     <div className="hover-empty">
-                      Hover over options to see details
+                      Hover over options to see details.
                     </div>
                   )}
                 </div>
@@ -400,25 +393,22 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
               {/* Tab Navigation */}
               <div className="tab-nav">
                 <button
-                  className={`tab-button ${
-                    this.state.activeTab === 'player' ? 'active' : ''
-                  }`}
+                  className={`tab-button ${this.state.activeTab === 'player' ? 'active' : ''
+                    }`}
                   onClick={() => this.setState({ activeTab: 'player' })}
                 >
                   Player
                 </button>
                 <button
-                  className={`tab-button ${
-                    this.state.activeTab === 'engine' ? 'active' : ''
-                  }`}
+                  className={`tab-button ${this.state.activeTab === 'engine' ? 'active' : ''
+                    }`}
                   onClick={() => this.setState({ activeTab: 'engine' })}
                 >
                   Engine
                 </button>
                 <button
-                  className={`tab-button ${
-                    this.state.activeTab === 'settings' ? 'active' : ''
-                  }`}
+                  className={`tab-button ${this.state.activeTab === 'settings' ? 'active' : ''
+                    }`}
                   onClick={() => this.setState({ activeTab: 'settings' })}
                 >
                   Settings
@@ -446,9 +436,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
             <div className="content-container">
               {/* Player Section */}
               <div
-                className={`player-section ${
-                  this.state.activeTab === 'player' ? 'active' : ''
-                }`}
+                className={`player-section ${this.state.activeTab === 'player' ? 'active' : ''
+                  }`}
               >
                 <div className="section-header">
                   <h3>Your Setup</h3>
@@ -472,7 +461,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                         this.setState({
                           showArcanaSelect:
                             this.state.playerColor ===
-                            this.state.showArcanaSelect
+                              this.state.showArcanaSelect
                               ? ''
                               : this.state.playerColor,
                           showCharacterSelect: '',
@@ -485,8 +474,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                           this.transformedSpellBook(spellBook);
                         if (this.props.updateConfig)
                           this.props.updateConfig(
-                            `${
-                              this.state.playerColor === 'white' ? 'w' : 'b'
+                            `${this.state.playerColor === 'white' ? 'w' : 'b'
                             }Arcana`,
                             configArcana
                           );
@@ -580,9 +568,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
 
               {/* Engine Section */}
               <div
-                className={`engine-section ${
-                  this.state.activeTab === 'engine' ? 'active' : ''
-                }`}
+                className={`engine-section ${this.state.activeTab === 'engine' ? 'active' : ''
+                  }`}
               >
                 <div className="section-header">
                   <h3>Engine Setup</h3>
@@ -606,7 +593,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                         this.setState({
                           showArcanaSelect:
                             this.state.engineColor ===
-                            this.state.showArcanaSelect
+                              this.state.showArcanaSelect
                               ? ''
                               : this.state.engineColor,
                           showCharacterSelect: '',
@@ -619,8 +606,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                           this.transformedSpellBook(spellBook);
                         if (this.props.updateConfig)
                           this.props.updateConfig(
-                            `${
-                              this.state.engineColor === 'white' ? 'w' : 'b'
+                            `${this.state.engineColor === 'white' ? 'w' : 'b'
                             }Arcana`,
                             configArcana
                           );
