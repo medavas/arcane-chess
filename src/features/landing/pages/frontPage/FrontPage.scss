@@ -13,6 +13,7 @@
   // fading
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
+
   .fade-overlay {
     position: fixed;
     top: 0;
@@ -25,6 +26,7 @@
     transition: opacity 0.3s ease-in-out;
     z-index: 9999;
   }
+
   .fade-overlay.active {
     opacity: 1;
   }
@@ -37,36 +39,61 @@
     align-items: center;
     z-index: 20;
     position: relative;
+
     .inner-header {
       display: flex;
+
       .logo {
         width: 80px;
         height: 80px;
         margin: 30px 0 30px 0;
         padding: 10px;
+        filter: drop-shadow(0 0 8px rgba(68, 170, 255, 0.5));
       }
+
       .inner-header-a {
         display: flex;
         flex-direction: column;
         justify-content: center;
         width: 400px;
+
         p {
           font-size: 12px;
         }
+
         .tactorius {
           display: flex;
+          align-items: baseline;
+          gap: 2px;
+
           .tact {
-            color: #7f7f7f;
             font-size: 40px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #5588cc 0%, #3355aa 50%, #1a1a2a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 15px rgba(68, 102, 170, 0.2);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
           }
+
           .orius {
-            color: $S_MENU;
             font-size: 40px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #44aaff 0%, #3377cc 50%, #1a1a2a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(68, 170, 255, 0.4);
+            filter: drop-shadow(0 2px 8px rgba(68, 170, 255, 0.6));
           }
         }
       }
     }
   }
+
   .header::before {
     content: '';
     position: absolute;
@@ -81,6 +108,7 @@
     z-index: -1;
     pointer-events: none;
   }
+
   .front-page {
     position: relative;
     display: flex;
@@ -88,6 +116,7 @@
     align-items: center;
     width: 100%;
     overflow-y: hidden;
+
     .divider {
       width: 100%;
       background: linear-gradient(to right, $S_MENU 0%, #333333 100%);
@@ -96,6 +125,7 @@
       margin: 0;
       border: none;
     }
+
     .row-a {
       position: relative;
       z-index: 1;
@@ -107,32 +137,40 @@
       background: transparent;
       overflow-y: hidden;
       overflow-x: hidden;
+
       .intro-box {
         width: 90vw;
-        border: 4px solid $S_MENU;
+        border: 2px solid rgba(68, 170, 255, 0.4);
         border-top-left-radius: 40px;
         border-bottom-right-radius: 40px;
         margin: 20px 0 20px 0;
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+
         img.image {
           display: flex;
           border-top-left-radius: 40px;
         }
+
         .intro {
           display: flex;
           flex-direction: column;
           padding: 30px 40px 30px 40px;
           border-top-left-radius: 40px;
           border-bottom-right-radius: 40px;
-          > * {
+
+          >* {
             margin: 10px 0 10px 0;
           }
+
           .learn-more {
             display: flex;
             justify-content: center;
           }
         }
       }
+
       .enter-buttons {
         display: flex;
         justify-content: center;
@@ -143,6 +181,7 @@
       }
     }
   }
+
   .front-page-footer {
     width: 100%;
     height: 400px;
@@ -158,41 +197,66 @@
     height: 100%;
     flex-direction: column;
     overflow-x: hidden;
+
     .header {
       height: 120px;
       width: 100%;
+
       .inner-header {
         width: 680px;
+
         .inner-header-a {
           display: flex;
           width: 400px;
+
           p {
             font-size: 16px;
             margin: 0 0 10px 0;
           }
+
           .tactorius {
             display: flex;
+            align-items: baseline;
+            gap: 3px;
             margin: 0;
             padding: 0;
+
             .tact {
-              color: #7f7f7f;
               font-size: 56px;
+              font-weight: 800;
+              letter-spacing: 2px;
+              background: linear-gradient(135deg, #5588cc 0%, #3355aa 50%, #1a1a2a 100%);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              background-clip: text;
+              text-shadow: 0 0 20px rgba(68, 102, 170, 0.25);
+              filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.7));
             }
+
             .orius {
-              // color: $Y_MENU;
-              color: $S_MENU;
               font-size: 56px;
+              font-weight: 800;
+              letter-spacing: 2px;
+              background: linear-gradient(135deg, #44aaff 0%, #3377cc 50%, #1a1a2a 100%);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              background-clip: text;
+              text-shadow: 0 0 25px rgba(68, 170, 255, 0.5);
+              filter: drop-shadow(0 3px 10px rgba(68, 170, 255, 0.7));
             }
           }
         }
+
         .logo {
           width: 100px;
           height: 100px;
           margin: 30px 0 30px 10px;
           padding: 10px;
+          filter: drop-shadow(0 0 8px rgba(68, 170, 255, 0.5));
         }
       }
     }
+
     .front-page {
       position: relative;
       display: flex;
@@ -200,6 +264,7 @@
       align-items: center;
       width: 100%;
       overflow-y: hidden;
+
       .divider {
         width: 100%;
         background: linear-gradient(to right, $S_MENU 0%, #333333 100%);
@@ -208,6 +273,7 @@
         margin: 0;
         border: none;
       }
+
       .row-a {
         position: relative;
         z-index: 1;
@@ -219,18 +285,23 @@
         padding: 20px 0;
         background: transparent;
         overflow-y: hidden;
+
         .intro-box {
           width: 680px;
-          border: 4px solid $S_MENU;
+          border: 2px solid rgba(68, 170, 255, 0.4);
           border-top-left-radius: 40px;
           border-bottom-right-radius: 40px;
           margin: 20px 0 20px 0;
-          background: rgba(0, 0, 0, 0.8);
+          background: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(8px);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+
           img.image {
             display: flex;
-            width: 664px;
+            width: 672px;
             border-top-left-radius: 40px;
           }
+
           .intro {
             display: flex;
             flex-direction: column;
@@ -238,11 +309,13 @@
 
             border-top-left-radius: 40px;
             border-bottom-right-radius: 40px;
-            > * {
+
+            >* {
               margin: 10px 0 10px 0;
             }
           }
         }
+
         .enter-buttons {
           display: flex;
           align-items: center;

@@ -48,12 +48,14 @@
 
   .view {
     height: 340px;
-    background-color: #111111;
+    background: rgba(17, 17, 17, 0.4);
+    backdrop-filter: blur(8px);
     display: grid;
     grid-template-columns: 100px 468px;
     grid-template-rows: 100px 240px;
-    border: 4px solid $S_MENU;
-    border-radius: 10px;
+    border: 2px solid rgba(68, 170, 255, 0.4);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
 
     .login-info {
       display: flex;
@@ -67,6 +69,7 @@
       height: 80px;
       width: 80px;
       margin: 10px;
+      filter: drop-shadow(0 0 8px rgba(68, 170, 255, 0.5));
     }
 
     .inputs {
@@ -128,7 +131,7 @@
   width: 300px;
   border-radius: 5px;
   margin: 20px;
-  border: #34aa48 2px solid;
+  border: 2px solid rgba(68, 170, 255, 0.4);
   /* border-image: linear-gradient(rgb(63, 72, 204), rgb(127, 127, 127)) 1; */
   /* border-width: 15px; */
   /* border-style: solid; */
@@ -147,7 +150,9 @@
   text-align: center;
   border-radius: 5px;
   color: white;
-  background: #555555;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(68, 170, 255, 0.3);
+  transition: all 0.2s ease;
 }
 
 .login-buttons .buttons .back {
@@ -157,7 +162,8 @@
 
 .login-buttons button:hover {
   cursor: pointer;
-  background: #aaaaaa;
+  background: rgba(68, 170, 255, 0.2);
+  border-color: rgba(68, 170, 255, 0.5);
 }
 
 .login-button,
