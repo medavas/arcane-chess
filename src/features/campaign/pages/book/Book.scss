@@ -48,18 +48,18 @@
   &.desktop-mode {
     width: 1280px;
     height: 100%;
-    max-height: 580px;
+    min-height: 580px;
     display: grid;
     justify-content: center;
     grid-template-columns: 1280px;
-    grid-template-rows: 1fr 480px;
-    overflow: hidden;
+    grid-template-rows: auto 480px;
+    overflow-y: auto;
+    overflow-x: hidden;
 
     .hud {
       display: flex;
       width: 100%;
-      min-height: 100%;
-      max-height: 580px;
+      min-height: 100px;
       background: rgba($B_DARK, 0.6);
       border-bottom: 2px solid rgba($B_LGHT, 0.3);
 
@@ -965,7 +965,8 @@
     padding: 0;
     margin: 0 auto;
     gap: 0;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
 
     .mobile-header {
       display: flex;
@@ -1187,10 +1188,11 @@
         align-items: center;
         justify-content: center;
         background: rgba(0, 0, 0, 0.4);
+        overflow: hidden;
 
         .tactorius-board {
-          max-width: 80%;
-          max-height: 80%;
+          max-width: 95%;
+          max-height: 95%;
           width: auto;
           height: auto;
           aspect-ratio: 1;
