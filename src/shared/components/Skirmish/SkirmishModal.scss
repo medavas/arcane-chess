@@ -252,6 +252,7 @@
       padding: 4px;
       overflow-y: auto;
       padding-right: 4px;
+      flex: 1;
 
       &::-webkit-scrollbar {
         width: 4px;
@@ -281,7 +282,7 @@
 
   .arcane-select .spellBook {
     grid-template-columns: repeat(6, minmax(40px, 50px));
-    grid-template-rows: 50px;
+    grid-auto-rows: 50px;
     gap: 4px;
     width: 100%;
     max-width: 100%;
