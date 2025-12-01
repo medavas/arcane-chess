@@ -5,7 +5,10 @@ import _ from 'lodash';
 import { withRouter } from 'src/shared/hooks/withRouter/withRouter';
 import { connect } from 'react-redux';
 
-import { setLocalStorage, getLocalStorage } from 'src/shared/utils/handleLocalStorage';
+import {
+  setLocalStorage,
+  getLocalStorage,
+} from 'src/shared/utils/handleLocalStorage';
 
 import 'src/features/game/board/styles/chessground.scss';
 import 'src/features/game/board/styles/normal.scss';
@@ -196,15 +199,15 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
         {char}
       </span>
     ));
-    return (
-      <div className="container">
-        {this.props.type === 'armory' ? (
-          <Modal
-            style={armoryModal}
-            isOpen={this.props.isOpen}
-            ariaHideApp={false}
-          >
-            {/* <div className="cg-wrap armory-board">
+
+    if (this.props.type === 'armory') {
+      return (
+        <Modal
+          style={armoryModal}
+          isOpen={this.props.isOpen}
+          ariaHideApp={false}
+        >
+          {/* <div className="cg-wrap armory-board">
               <Chessground
                 // fen={this.state.fenHistory[this.state.fenHistory.length - 1]}
                 // check={this.tactorius.inCheck().isAttacked}
@@ -292,332 +295,352 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                 }}
               />
             </div> */}
-          </Modal>
-        ) : this.props.type === 'victory' ? (
-          <Modal
-            style={endgameModal}
-            isOpen={this.props.isOpen}
-            ariaHideApp={false}
-          >
-            <div className="endgame">
-              {/* <img className="endgame-image" src="/assets/victory2.webp" /> */}
-              <div className="endgame-content">
-                <strong className="endgame-text">
-                  <i>
-                    Victory... {this.props.score ? '+' : ''}{' '}
-                    {this.props.score?.toLocaleString()}
-                  </i>
-                </strong>
-                <div className="buttons">
+        </Modal>
+      );
+    }
+
+    if (this.props.type === 'victory') {
+      return (
+        <Modal
+          style={endgameModal}
+          isOpen={this.props.isOpen}
+          ariaHideApp={false}
+        >
+          <div className="endgame">
+            {/* <img className="endgame-image" src="/assets/victory2.webp" /> */}
+            <div className="endgame-content">
+              <strong className="endgame-text">
+                <i>
+                  Victory... {this.props.score ? '+' : ''}{' '}
+                  {this.props.score?.toLocaleString()}
+                </i>
+              </strong>
+              <div className="buttons">
+                <button
+                  type="button"
+                  className="endgame-btn primary-btn"
+                  onClick={() => {
+                    this.props.navigate('/chapter');
+                  }}
+                >
+                  CONTINUE
+                </button>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      );
+    }
+
+    if (this.props.type === 'defeat') {
+      return (
+        <Modal
+          style={endgameModal}
+          isOpen={this.props.isOpen}
+          ariaHideApp={false}
+        >
+          <div className="endgame">
+            {/* <img className="endgame-image" src="/assets/defeat2.webp" /> */}
+            <div className="endgame-content">
+              <strong>
+                <i>Defeat...</i>
+              </strong>
+              <div className="buttons">
+                <div className="left-buttons">
                   <button
                     type="button"
-                    className="endgame-btn primary-btn"
+                    className="endgame-btn secondary-btn"
                     onClick={() => {
                       this.props.navigate('/chapter');
                     }}
                   >
-                    CONTINUE
+                    TO CHAPTER
                   </button>
-                </div>
-              </div>
-            </div>
-          </Modal>
-        ) : this.props.type === 'defeat' ? (
-          <Modal
-            style={endgameModal}
-            isOpen={this.props.isOpen}
-            ariaHideApp={false}
-          >
-            <div className="endgame">
-              {/* <img className="endgame-image" src="/assets/defeat2.webp" /> */}
-              <div className="endgame-content">
-                <strong>
-                  <i>Defeat...</i>
-                </strong>
-                <div className="buttons">
-                  <div className="left-buttons">
-                    <button
-                      type="button"
-                      className="endgame-btn secondary-btn"
-                      onClick={() => {
-                        this.props.navigate('/chapter');
-                      }}
-                    >
-                      TO CHAPTER
-                    </button>
-                    <button
-                      type="button"
-                      className="endgame-btn secondary-btn"
-                      onClick={() => {
-                        this.props.handleClose();
-                      }}
-                    >
-                      ANALYZE
-                    </button>
-                  </div>
                   <button
                     type="button"
-                    className="endgame-btn primary-btn"
+                    className="endgame-btn secondary-btn"
                     onClick={() => {
-                      location.reload();
+                      this.props.handleClose();
                     }}
                   >
-                    RETRY
+                    ANALYZE
                   </button>
                 </div>
+                <button
+                  type="button"
+                  className="endgame-btn primary-btn"
+                  onClick={() => {
+                    location.reload();
+                  }}
+                >
+                  RETRY
+                </button>
               </div>
             </div>
-          </Modal>
-        ) : this.props.type === 'chapterEnd' ? (
-          <Modal
-            style={chapterEndModal}
-            isOpen={this.props.isOpen}
-            ariaHideApp={false}
+          </div>
+        </Modal>
+      );
+    }
+
+    if (this.props.type === 'chapterEnd') {
+      return (
+        <Modal
+          style={chapterEndModal}
+          isOpen={this.props.isOpen}
+          ariaHideApp={false}
+        >
+          <div
+            className="chapter-end"
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '100%',
+              maxHeight: '100%',
+              // background:
+              //   'url(/assets/chapterend.webp) no-repeat center center',
+              backgroundSize: 'cover',
+            }}
           >
-            <div
-              className="chapter-end"
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-                maxHeight: '100%',
-                // background:
-                //   'url(/assets/chapterend.webp) no-repeat center center',
-                backgroundSize: 'cover',
-              }}
-            >
-              <div className="chapter-end-text" style={{ padding: '20px' }}>
-                <div className="chapter-end-text-top">
-                  <h1>BOOK END</h1>
-                  <div className="chapter-end-points">
-                    <h1 className="digit-box">{digits}</h1>
-                  </div>
+            <div className="chapter-end-text" style={{ padding: '20px' }}>
+              <div className="chapter-end-text-top">
+                <h1>BOOK END</h1>
+                <div className="chapter-end-points">
+                  <h1 className="digit-box">{digits}</h1>
                 </div>
-                <div className="chapter-end-buttons">
-                  <div className="unlocked-arcana">
-                    ARCANA UNLOCKED:
-                    <div>
-                      {_.map(
-                        unlockableArcana[this.state.chapterNum],
-                        (_name: string, key: number) => {
-                          return (
-                            <img
-                              key={key}
-                              className={`arcane ${this.state.hoverArcane === `${key}`
-                                ? 'focus'
-                                : ''
-                                }`}
-                              src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
-                              onMouseEnter={() => this.toggleHover(`${key}`)}
-                              onMouseLeave={() => this.toggleHover('')}
-                            />
-                          );
-                        }
-                      )}
-                    </div>
-                    <span>
-                      <b>
-                        {arcana[this.state.hoverArcane.split('-')[0]]?.name}
-                      </b>
-                    </span>
-                    {arcana[this.state.hoverArcane.split('-')[0]]?.description}
+              </div>
+              <div className="chapter-end-buttons">
+                <div className="unlocked-arcana">
+                  ARCANA UNLOCKED:
+                  <div>
+                    {_.map(
+                      unlockableArcana[this.state.chapterNum],
+                      (_name: string, key: number) => {
+                        return (
+                          <img
+                            key={key}
+                            className={`arcane ${
+                              this.state.hoverArcane === `${key}` ? 'focus' : ''
+                            }`}
+                            src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
+                            onMouseEnter={() => this.toggleHover(`${key}`)}
+                            onMouseLeave={() => this.toggleHover('')}
+                          />
+                        );
+                      }
+                    )}
                   </div>
-                  <Button
-                    text="CONTINUE"
-                    className="primary"
-                    color="S"
-                    width={200}
-                    height={60}
-                    onClick={() => {
-                      setLocalStorage({
-                        ...getLocalStorage(this.props.auth.user.username),
-                        chapter: 0,
-                        config: {},
-                        nodeScores: {},
-                        spellBook: {},
-                        nodeId: '',
-                        chapterEnd: false,
-                      });
-                      this.props.navigate('/campaign');
-                    }}
-                  />
+                  <span>
+                    <b>{arcana[this.state.hoverArcane.split('-')[0]]?.name}</b>
+                  </span>
+                  {arcana[this.state.hoverArcane.split('-')[0]]?.description}
                 </div>
+                <Button
+                  text="CONTINUE"
+                  className="primary"
+                  color="S"
+                  width={200}
+                  height={60}
+                  onClick={() => {
+                    setLocalStorage({
+                      ...getLocalStorage(this.props.auth.user.username),
+                      chapter: 0,
+                      config: {},
+                      nodeScores: {},
+                      spellBook: {},
+                      nodeId: '',
+                      chapterEnd: false,
+                    });
+                    this.props.navigate('/campaign');
+                  }}
+                />
               </div>
             </div>
-          </Modal>
-        ) : this.props.type === 'quickPlay' ? (
-          <Modal
-            style={quickPlayModal}
-            isOpen={this.props.isOpen}
-            ariaHideApp={false}
-          >
-            <div className="quickplay">
-              <div className="top-buttons">
-                <Button className="tertiary" color="S" text="BACK" />
-              </div>
-              <div className="player-options-text">
-                <div className="sides">
-                  <div className="player">
-                    <div className="buttons-arcana">
-                      <div className="buttons">
-                        <div className="color">
-                          <img
-                            src={`/assets/images/blueuser.svg`}
-                            style={{
-                              width: '180px',
-                              height: '60px',
-                              background: '#4A90E2',
-                            }}
-                          />
-                        </div>
-                        <div className="character">
-                          <img
-                            src={`/assets/characters/viking-head.svg`}
-                            style={{
-                              width: '180px',
-                              height: '60px',
-                              background: '#4A90E2',
-                            }}
-                            onClick={() => {
-                              this.setState({
-                                showCharacterPicker: this.state
-                                  .showCharacterPicker
-                                  ? false
-                                  : true,
-                              });
-                            }}
-                          />
-                          {/* {this.state.showCharacterPicker ? (
+          </div>
+        </Modal>
+      );
+    }
+
+    if (this.props.type === 'quickPlay') {
+      return (
+        <Modal
+          style={quickPlayModal}
+          isOpen={this.props.isOpen}
+          ariaHideApp={false}
+        >
+          <div className="quickplay">
+            <div className="top-buttons">
+              <Button className="tertiary" color="S" text="BACK" />
+            </div>
+            <div className="player-options-text">
+              <div className="sides">
+                <div className="player">
+                  <div className="buttons-arcana">
+                    <div className="buttons">
+                      <div className="color">
+                        <img
+                          src={`/assets/images/blueuser.svg`}
+                          style={{
+                            width: '180px',
+                            height: '60px',
+                            background: '#4A90E2',
+                          }}
+                        />
+                      </div>
+                      <div className="character">
+                        <img
+                          src={`/assets/characters/viking-head.svg`}
+                          style={{
+                            width: '180px',
+                            height: '60px',
+                            background: '#4A90E2',
+                          }}
+                          onClick={() => {
+                            this.setState({
+                              showCharacterPicker: this.state
+                                .showCharacterPicker
+                                ? false
+                                : true,
+                            });
+                          }}
+                        />
+                        {/* {this.state.showCharacterPicker ? (
                             <CharacterSelect />
                           ) : null} */}
-                        </div>
                       </div>
-                      <div className="arcana"></div>
                     </div>
-                    <div className="army-section">{/* <ArmySelect /> */}</div>
+                    <div className="arcana"></div>
                   </div>
-                  <div className="engine">
-                    <div className="buttons-arcana">
-                      <div className="buttons">
-                        <div className="color"></div>
-                        <div className="character"></div>
-                      </div>
-                      <div className="arcana"></div>
-                    </div>
-                    <div className="army"></div>
-                  </div>
+                  <div className="army-section">{/* <ArmySelect /> */}</div>
                 </div>
-                <div className="hover-text">{/* hover text */}</div>
-              </div>
-              <div className="settings-go">
-                {/* difficulty */}
-                {/* promotion */}
-                {/* randomize template */}
-                {/* randomize */}
-              </div>
-            </div>
-          </Modal>
-        ) : this.props.type === 'victory-qp' ? (
-          <Modal
-            style={endgameModal}
-            isOpen={this.props.isOpen}
-            ariaHideApp={false}
-          >
-            <div className="endgame">
-              {/* <img className="endgame-image" src="/assets/victory2.webp" /> */}
-              <div className="endgame-content">
-                <strong className="endgame-text">
-                  <i>
-                    Victory... {this.props.score ? '+' : ''}{' '}
-                    {this.props.score?.toLocaleString()}
-                  </i>
-                </strong>
-                <div className="buttons">
-                  <div className="left-buttons">
-                    <button
-                      type="button"
-                      className="endgame-btn secondary-btn"
-                      onClick={() => {
-                        this.props.navigate('/');
-                      }}
-                    >
-                      HOME
-                    </button>
-                    <button
-                      type="button"
-                      className="endgame-btn secondary-btn"
-                      onClick={() => {
-                        this.props.handleClose();
-                      }}
-                    >
-                      ANALYZE
-                    </button>
+                <div className="engine">
+                  <div className="buttons-arcana">
+                    <div className="buttons">
+                      <div className="color"></div>
+                      <div className="character"></div>
+                    </div>
+                    <div className="arcana"></div>
                   </div>
+                  <div className="army"></div>
+                </div>
+              </div>
+              <div className="hover-text">{/* hover text */}</div>
+            </div>
+            <div className="settings-go">
+              {/* difficulty */}
+              {/* promotion */}
+              {/* randomize template */}
+              {/* randomize */}
+            </div>
+          </div>
+        </Modal>
+      );
+    }
+
+    if (this.props.type === 'victory-qp') {
+      return (
+        <Modal
+          style={endgameModal}
+          isOpen={this.props.isOpen}
+          ariaHideApp={false}
+        >
+          <div className="endgame">
+            {/* <img className="endgame-image" src="/assets/victory2.webp" /> */}
+            <div className="endgame-content">
+              <strong className="endgame-text">
+                <i>
+                  Victory... {this.props.score ? '+' : ''}{' '}
+                  {this.props.score?.toLocaleString()}
+                </i>
+              </strong>
+              <div className="buttons">
+                <div className="left-buttons">
                   <button
                     type="button"
-                    className="endgame-btn primary-btn"
+                    className="endgame-btn secondary-btn"
                     onClick={() => {
-                      location.reload();
+                      this.props.navigate('/');
                     }}
                   >
-                    RETRY
+                    HOME
                   </button>
-                </div>
-              </div>
-            </div>
-          </Modal>
-        ) : this.props.type === 'defeat-qp' ? (
-          <Modal
-            style={endgameModal}
-            isOpen={this.props.isOpen}
-            ariaHideApp={false}
-          >
-            <div className="endgame">
-              {/* <img className="endgame-image" src="/assets/defeat2.webp" /> */}
-              <div className="endgame-content">
-                <strong>
-                  <i>Defeat...</i>
-                </strong>
-                <div className="buttons">
-                  <div className="left-buttons">
-                    <button
-                      type="button"
-                      className="endgame-btn secondary-btn"
-                      onClick={() => {
-                        this.props.navigate('/');
-                      }}
-                    >
-                      HOME
-                    </button>
-                    <button
-                      type="button"
-                      className="endgame-btn secondary-btn"
-                      onClick={() => {
-                        this.props.handleClose();
-                      }}
-                    >
-                      ANALYZE
-                    </button>
-                  </div>
                   <button
                     type="button"
-                    className="endgame-btn primary-btn"
+                    className="endgame-btn secondary-btn"
                     onClick={() => {
-                      location.reload();
+                      this.props.handleClose();
                     }}
                   >
-                    RETRY
+                    ANALYZE
                   </button>
                 </div>
+                <button
+                  type="button"
+                  className="endgame-btn primary-btn"
+                  onClick={() => {
+                    location.reload();
+                  }}
+                >
+                  RETRY
+                </button>
               </div>
             </div>
-          </Modal>
-        ) : (
-          <div>other modal</div>
-        )}
-      </div>
-    );
+          </div>
+        </Modal>
+      );
+    }
+
+    if (this.props.type === 'defeat-qp') {
+      return (
+        <Modal
+          style={endgameModal}
+          isOpen={this.props.isOpen}
+          ariaHideApp={false}
+        >
+          <div className="endgame">
+            {/* <img className="endgame-image" src="/assets/defeat2.webp" /> */}
+            <div className="endgame-content">
+              <strong>
+                <i>Defeat...</i>
+              </strong>
+              <div className="buttons">
+                <div className="left-buttons">
+                  <button
+                    type="button"
+                    className="endgame-btn secondary-btn"
+                    onClick={() => {
+                      this.props.navigate('/');
+                    }}
+                  >
+                    HOME
+                  </button>
+                  <button
+                    type="button"
+                    className="endgame-btn secondary-btn"
+                    onClick={() => {
+                      this.props.handleClose();
+                    }}
+                  >
+                    ANALYZE
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  className="endgame-btn primary-btn"
+                  onClick={() => {
+                    location.reload();
+                  }}
+                >
+                  RETRY
+                </button>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      );
+    }
+
+    return <div>other modal</div>;
   }
 }
 

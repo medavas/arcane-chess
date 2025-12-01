@@ -389,87 +389,397 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
       </span>
     ));
     const isMission = this.state.selectedSwatch.split('-')[0] === 'mission';
-    return (
-      <>
-        {LS.chapter === 0 ? (
-          <div
-            className="completed-node"
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100vw',
-              height: '100vh',
-              // background:
-              //   this.state.theme === 'black'
-              //     ? ''
-              //     : `url(/assets/pages/${this.state.theme}.webp)`,
-              background:
-                this.state.theme === 'black'
-                  ? '#000000cc'
-                  : `radial-gradient(
+
+    if (LS.chapter === 0) {
+      return (
+        <div
+          className="completed-node"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100vw',
+            height: '100vh',
+            background:
+              this.state.theme === 'black'
+                ? '#000000cc'
+                : `radial-gradient(
           circle,
          rgba(221, 221, 221, 0.6) 0%,
           rgba(0, 0, 0, 1) 80%    
         )`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }}
-          >
-            <Link to="/campaign">
-              <Button
-                text="BACK TO CAMPAIGN"
-                className="primary"
-                color="B"
-                height={200}
-                width={400}
-              />
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }}
+        >
+          <Link to="/campaign">
+            <Button
+              text="BACK TO CAMPAIGN"
+              className="primary"
+              color="B"
+              height={200}
+              width={400}
+            />
+          </Link>
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <TactoriusModal isOpen={this.state.armoryOpen} type="armory" />
+        <TactoriusModal isOpen={this.state.endChapterOpen} type="chapterEnd" />
+        <div className="book">
+          {/* Mobile Header with Logo, Arcana Preview, and Score */}
+          <div className="mobile-header">
+            <Link to="/campaign" style={{ textDecoration: 'none' }}>
+              <div className="hex-home-icon">
+                <img src="/assets/logo.svg" alt="Home" />
+              </div>
             </Link>
+            <div className="header-arcana-preview">
+              <GlobalVolumeControl />
+            </div>
+            <div className="mobile-score">
+              <span className="multiplier">x{this.state.multiplier}</span>
+              <span className="points">{digits}</span>
+            </div>
           </div>
-        ) : (
-          <>
-            <TactoriusModal
-              isOpen={this.state.armoryOpen}
-              type="armory"
-            />
-            <TactoriusModal
-              isOpen={this.state.endChapterOpen}
-              type="chapterEnd"
-            />
-            <div className="book">
-              {/* Mobile Header with Logo, Arcana Preview, and Score */}
-              <div className="mobile-header">
-                <Link to="/campaign" style={{ textDecoration: 'none' }}>
-                  <div className="hex-home-icon">
-                    <img src="/assets/logo.svg" alt="Home" />
-                  </div>
-                </Link>
-                <div className="header-arcana-preview">
-                  {Object.keys(LS.arcana || {}).length > 0 ? (
-                    _.map(LS.arcana, (value, key: string) => (
-                      <div key={key} className="arcane-preview-item">
-                        <img
-                          src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
-                          alt={arcana[key].name}
-                          onClick={() => this.toggleHover(key)}
-                        />
-                        {arcana[key].type !== 'inherent' && (
-                          <div className="badge">{value}</div>
-                        )}
-                      </div>
-                    ))
-                  ) : (
-                    <span className="empty-preview">No arcana</span>
-                  )}
+
+          {/* Chapter Dropdown Selector */}
+          <div className="chapter-dropdown">
+            <div
+              className="chapter-selected"
+              onClick={this.toggleChapterDropdown}
+            >
+              <span className="chapter-title">
+                {this.state.selectedSwatch
+                  ? this.state.book[this.state.selectedSwatch]?.title
+                  : 'Select a Chapter'}
+              </span>
+              <span
+                className={`chapter-icon ${
+                  this.state.chapterDropdownOpen ? 'open' : ''
+                }`}
+              >
+                ▼
+              </span>
+            </div>
+            <div
+              className={`chapter-list ${
+                this.state.chapterDropdownOpen ? 'open' : ''
+              }`}
+            >
+              {_.filter(this.state.book, (node) => {
+                const currLS = getLocalStorage(this.props.auth.user.username);
+                if (this.state.allNodesUnlocked) return true;
+                if (
+                  (_.includes(node.id, 'mission') ||
+                    _.includes(node.id, 'temple')) &&
+                  currLS.nodeScores[node.id]
+                )
+                  return false;
+                if (
+                  !_.includes(node.id, 'lesson') &&
+                  currLS.nodeScores &&
+                  currLS.nodeScores[node.id]
+                )
+                  return false;
+                if (
+                  node.prereq &&
+                  !_.includes(Object.keys(currLS.nodeScores), node.prereq)
+                )
+                  return false;
+                return true;
+              }).map((node, i) => (
+                <div
+                  key={i}
+                  className={`chapter-item ${
+                    _.includes(Object.keys(LS.nodeScores), node.id)
+                      ? 'completed'
+                      : ''
+                  } ${this.state.selectedSwatch === node.id ? 'selected' : ''}`}
+                  onClick={() => {
+                    const currLS = getLocalStorage(
+                      this.props.auth.user.username
+                    );
+                    this.setState(
+                      {
+                        selectedSwatch: node.id,
+                        bookTheme: node.bookTheme,
+                        theme: node.theme,
+                        config: currLS.config,
+                        chapterDropdownOpen: false,
+                      },
+                      () => {
+                        const missionArcanaDelta =
+                          this.booksMap[`book${LS.chapter}`]?.[
+                            this.state.selectedSwatch
+                          ]?.panels['panel-1'].whiteArcane;
+                        const arcanaToStore = Object.keys(
+                          missionArcanaDelta || {}
+                        ).length
+                          ? {}
+                          : currLS.arcana;
+                        const diffMults: Record<string, number> = {
+                          novice: 80,
+                          intermediate: 95,
+                          advanced: 110,
+                          expert: 125,
+                        };
+                        const updatedConfig = { ...LS.config };
+                        let updatedArcana = arcanaToStore;
+                        if (_.includes(node.id, 'temple')) {
+                          updatedArcana = {};
+                          this.updateMultiplier(diffMults[LS.difficulty], true);
+                        }
+                        if (Object.keys(missionArcanaDelta || {}).length) {
+                          this.updateMultiplier(diffMults[LS.difficulty], true);
+                        }
+                        setLocalStorage({
+                          auth: currLS.auth,
+                          chapter: currLS.chapter,
+                          config: updatedConfig,
+                          arcana: updatedArcana,
+                          nodeScores: currLS.nodeScores,
+                          spellBook: currLS.spellBook,
+                          nodeId: node.id,
+                          chapterEnd: currLS.chapterEnd,
+                          difficulty: currLS.difficulty,
+                        });
+                      }
+                    );
+                  }}
+                >
+                  {node.title}
                 </div>
-                <div className="mobile-score">
-                  <span className="multiplier">x{this.state.multiplier}</span>
-                  <span className="points">{digits}</span>
+              ))}
+            </div>
+          </div>
+
+          <div className="hud">
+            <div className="left">
+              <div style={{ display: 'flex' }}>
+                <Link to="/campaign">
+                  <Button
+                    text="BACK"
+                    className="tertiary"
+                    color="B"
+                    width={200}
+                    height={35}
+                    disabled={false}
+                  />
+                </Link>
+                <Button
+                  text="UNLOCK CHAPTERS"
+                  className="tertiary"
+                  color="B"
+                  width={200}
+                  height={35}
+                  disabled={false}
+                  onClick={() => this.toggleAllNodesUnlocked()}
+                />
+              </div>
+              <div className="arcana-helper">
+                {_.map(LS.arcana, (_value, key: string) => {
+                  return (
+                    <div
+                      key={key}
+                      style={{
+                        position: 'relative',
+                        display: 'inline-block',
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: 'absolute',
+                        }}
+                      >
+                        {arcana[key].type === 'inherent'
+                          ? 'INH'
+                          : LS.arcana[key]}
+                      </div>
+                      <img
+                        key={key}
+                        className={`arcane ${
+                          this.state.hoverArcane === key ? 'focus' : ''
+                        }`}
+                        src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
+                        style={{
+                          height: '50px',
+                          width: '50px',
+                          cursor:
+                            'url(/assets/images/cursors/pointer.svg) 12 4, pointer',
+                        }}
+                        onClick={() => {
+                          this.handleArcanaClick(key);
+                        }}
+                        onMouseEnter={() => this.toggleHover(`${key}`)}
+                        onMouseLeave={() => this.toggleHover('')}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="center">
+              {/* Click on a chapter to view its details. If the chapter is a
+                  mission, you can click or hover on arcana badges for
+                  additional information or to add them to your spellBook. Use
+                  the Story button to switch between chess and story details,
+                  and click the Start button to begin the chapter. */}
+              <GlobalVolumeControl />
+            </div>
+            <div className="right">
+              <div className="buttons">
+                {/* <div className="toggle-tab">
+                      <Button
+                        text={
+                          this.state.selectedTab === 'chess' ? 'STORY' : 'CHESS'
+                        }
+                        className="tertiary"
+                        color="S"
+                        width={200}
+                        backgroundColorOverride={'#33333388'}
+                        onClick={this.toggleTab}
+                      />
+                    </div> */}
+                <Link to={`/${this.state.selectedSwatch.split('-')[0]}`}>
+                  <Button
+                    text="START"
+                    className="primary"
+                    color="B"
+                    width={200}
+                    disabled={this.state.selectedSwatch === ''}
+                    styles={{ color: 'white', borderRadius: 0 }}
+                  />
+                </Link>
+              </div>
+              <div className="score">
+                <span className="multiplier">x{this.state.multiplier}</span>
+                <div className="points">
+                  <span className="digit-box">{digits}</span>
                 </div>
               </div>
+            </div>
+          </div>
+          <div className="content">
+            {/* Chess Board */}
+            <div className="chess-tab" key={this.state.bookTheme}>
+              <div
+                className={`cg-wrap board-view tactorius-board ${this.state.theme}-board`}
+              >
+                <Chessground
+                  forwardedRef={this.chessgroundRef}
+                  fen={this.getFen()}
+                  coordinates={false}
+                  resizable={true}
+                  wFaction={'normal'}
+                  bFaction={'normal'}
+                  width={'100%'}
+                  height={'100%'}
+                  animation={{
+                    enabled: true,
+                    duration: 1,
+                  }}
+                  orientation={
+                    this.state.playerColor === 'black' &&
+                    this.state.selectedSwatch.split('-')[0] === 'mission'
+                      ? 'black'
+                      : 'white'
+                  }
+                  viewOnly={true}
+                  events={{}}
+                />
+              </div>
+            </div>
 
-              {/* Chapter Dropdown Selector */}
+            {/* Mobile-only sections (visible on mobile, hidden on tablet/desktop) */}
+            <div className="opponent-arcana-section mobile-only">
+              <div className="arcana-selector-label">Opponent Arcana</div>
+              {this.state.selectedSwatch &&
+                isMission &&
+                this.state.playerColor === 'white' && (
+                  <ArcanaSelect
+                    auth={this.props.auth}
+                    isPlayerArcana={false}
+                    engineArcana={{
+                      ...this.booksMap[`book${LS.chapter}`]?.[
+                        this.state.selectedSwatch
+                      ]?.panels['panel-1'].blackArcane,
+                    }}
+                    isMission={isMission}
+                    updateBookMultiplier={(value) =>
+                      this.updateMultiplier(value)
+                    }
+                    onToggleHover={(arcane: string) => this.toggleHover(arcane)}
+                  />
+                )}
+              {this.state.selectedSwatch &&
+                isMission &&
+                this.state.playerColor === 'black' && (
+                  <ArcanaSelect
+                    auth={this.props.auth}
+                    isPlayerArcana={false}
+                    engineArcana={{
+                      ...this.booksMap[`book${LS.chapter}`]?.[
+                        this.state.selectedSwatch
+                      ]?.panels['panel-1'].blackArcane,
+                    }}
+                    isMission={isMission}
+                    updateBookMultiplier={(value) =>
+                      this.updateMultiplier(value)
+                    }
+                    onToggleHover={(arcane: string) => this.toggleHover(arcane)}
+                  />
+                )}
+            </div>
+
+            <div className="mobile-arcana-section mobile-only">
+              <div className="arcana-selector-label">Your Arcana</div>
+              <div className="time-display">{this.getTimeDisplay()}</div>
+              {this.state.selectedSwatch &&
+                isMission &&
+                this.state.playerColor === 'white' && (
+                  <ArcanaSelect
+                    auth={this.props.auth}
+                    isPlayerArcana
+                    isMission={isMission}
+                    updateBookMultiplier={(value) =>
+                      this.updateMultiplier(value)
+                    }
+                    missionArcana={{
+                      ...this.booksMap[`book${LS.chapter}`]?.[
+                        this.state.selectedSwatch
+                      ]?.panels['panel-1'].whiteArcane,
+                    }}
+                    onToggleHover={(arcane: string) => this.toggleHover(arcane)}
+                  />
+                )}
+              {this.state.selectedSwatch &&
+                isMission &&
+                this.state.playerColor === 'black' && (
+                  <ArcanaSelect
+                    auth={this.props.auth}
+                    isPlayerArcana
+                    isMission={isMission}
+                    updateBookMultiplier={(value) =>
+                      this.updateMultiplier(value)
+                    }
+                    missionArcana={{
+                      ...this.booksMap[`book${LS.chapter}`]?.[
+                        this.state.selectedSwatch
+                      ]?.panels['panel-1'].whiteArcane,
+                    }}
+                    onToggleHover={(arcane: string) => this.toggleHover(arcane)}
+                  />
+                )}
+            </div>
+
+            {/* Right Panel - Info Stack */}
+            <div className="right-panel">
+              {/* Chapter Dropdown inside right panel (tablet/desktop only) */}
               <div className="chapter-dropdown">
                 <div
                   className="chapter-selected"
@@ -590,7 +900,79 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                 </div>
               </div>
 
-              {/* Player Arcana Section */}
+              {/* 1. Opponent Arcana */}
+              <div className="opponent-arcana-section">
+                <div className="arcana-selector-label">Opponent Arcana</div>
+                {this.state.selectedSwatch &&
+                  isMission &&
+                  this.state.playerColor === 'white' && (
+                    <ArcanaSelect
+                      auth={this.props.auth}
+                      isPlayerArcana={false}
+                      engineArcana={{
+                        ...this.booksMap[`book${LS.chapter}`]?.[
+                          this.state.selectedSwatch
+                        ]?.panels['panel-1'].blackArcane,
+                      }}
+                      isMission={isMission}
+                      updateBookMultiplier={(value) =>
+                        this.updateMultiplier(value)
+                      }
+                      onToggleHover={(arcane: string) =>
+                        this.toggleHover(arcane)
+                      }
+                    />
+                  )}
+                {this.state.selectedSwatch &&
+                  isMission &&
+                  this.state.playerColor === 'black' && (
+                    <ArcanaSelect
+                      auth={this.props.auth}
+                      isPlayerArcana={false}
+                      engineArcana={{
+                        ...this.booksMap[`book${LS.chapter}`]?.[
+                          this.state.selectedSwatch
+                        ]?.panels['panel-1'].blackArcane,
+                      }}
+                      isMission={isMission}
+                      updateBookMultiplier={(value) =>
+                        this.updateMultiplier(value)
+                      }
+                      onToggleHover={(arcane: string) =>
+                        this.toggleHover(arcane)
+                      }
+                    />
+                  )}
+              </div>
+
+              {/* 2. Chapter Description */}
+              <div className="chapter-description">
+                {this.state.selectedSwatch && this.state.hoverArcane !== '' ? (
+                  <>
+                    <div className="node-title">
+                      {arcana[this.state.hoverArcane].name}
+                    </div>
+                    <div className="node-description">
+                      <p>{arcana[this.state.hoverArcane].description}</p>
+                    </div>
+                  </>
+                ) : this.state.selectedSwatch ? (
+                  <>
+                    <div className="node-title">
+                      {this.state.book[this.state.selectedSwatch].title}
+                    </div>
+                    <div className="node-description">
+                      {this.state.book[this.state.selectedSwatch].nodeText
+                        .split('\n\n')
+                        .map((p: string, i: number) => (
+                          <p key={i}>{p}</p>
+                        ))}
+                    </div>
+                  </>
+                ) : null}
+              </div>
+
+              {/* 3. Player Arcana */}
               <div className="mobile-arcana-section">
                 <div className="arcana-selector-label">Your Arcana</div>
                 <div className="time-display">{this.getTimeDisplay()}</div>
@@ -636,586 +1018,12 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                   )}
               </div>
 
-              <div className="hud">
-                <div className="left">
-                  <div style={{ display: 'flex' }}>
-                    <Link to="/campaign">
-                      <Button
-                        text="BACK"
-                        className="tertiary"
-                        color="B"
-                        width={200}
-                        height={35}
-                        disabled={false}
-                      />
-                    </Link>
-                    <Button
-                      text="UNLOCK CHAPTERS"
-                      className="tertiary"
-                      color="B"
-                      width={200}
-                      height={35}
-                      disabled={false}
-                      onClick={() => this.toggleAllNodesUnlocked()}
-                    />
-                  </div>
-                  <div className="arcana-helper">
-                    {_.map(LS.arcana, (_value, key: string) => {
-                      return (
-                        <div
-                          key={key}
-                          style={{
-                            position: 'relative',
-                            display: 'inline-block',
-                          }}
-                        >
-                          <div
-                            style={{
-                              position: 'absolute',
-                            }}
-                          >
-                            {arcana[key].type === 'inherent'
-                              ? 'INH'
-                              : LS.arcana[key]}
-                          </div>
-                          <img
-                            key={key}
-                            className={`arcane ${
-                              this.state.hoverArcane === key ? 'focus' : ''
-                            }`}
-                            src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
-                            style={{
-                              height: '50px',
-                              width: '50px',
-                              cursor:
-                                'url(/assets/images/cursors/pointer.svg) 12 4, pointer',
-                            }}
-                            onClick={() => {
-                              this.handleArcanaClick(key);
-                            }}
-                            onMouseEnter={() => this.toggleHover(`${key}`)}
-                            onMouseLeave={() => this.toggleHover('')}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-                <div className="center">
-                  {/* Click on a chapter to view its details. If the chapter is a
-                  mission, you can click or hover on arcana badges for
-                  additional information or to add them to your spellBook. Use
-                  the Story button to switch between chess and story details,
-                  and click the Start button to begin the chapter. */}
-                  <GlobalVolumeControl />
-                </div>
-                <div className="right">
-                  <div className="buttons">
-                    {/* <div className="toggle-tab">
-                      <Button
-                        text={
-                          this.state.selectedTab === 'chess' ? 'STORY' : 'CHESS'
-                        }
-                        className="tertiary"
-                        color="S"
-                        width={200}
-                        backgroundColorOverride={'#33333388'}
-                        onClick={this.toggleTab}
-                      />
-                    </div> */}
-                    <Link to={`/${this.state.selectedSwatch.split('-')[0]}`}>
-                      <Button
-                        text="START"
-                        className="primary"
-                        color="B"
-                        width={200}
-                        disabled={this.state.selectedSwatch === ''}
-                        styles={{ color: 'white', borderRadius: 0 }}
-                      />
-                    </Link>
-                  </div>
-                  <div className="score">
-                    <span className="multiplier">x{this.state.multiplier}</span>
-                    <div className="points">
-                      <span className="digit-box">{digits}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="content">
-                <div className="nodes">
-                  {_.filter(this.state.book, (node) => {
-                    const currLS = getLocalStorage(
-                      this.props.auth.user.username
-                    );
-                    if (this.state.allNodesUnlocked) {
-                      return true;
-                    }
-                    if (
-                      (_.includes(node.id, 'mission') ||
-                        _.includes(node.id, 'temple')) &&
-                      currLS.nodeScores[node.id]
-                    ) {
-                      return false;
-                    }
-                    if (
-                      !_.includes(node.id, 'lesson') &&
-                      currLS.nodeScores &&
-                      currLS.nodeScores[node.id]
-                    ) {
-                      return false;
-                    }
-                    if (
-                      node.prereq &&
-                      !_.includes(Object.keys(currLS.nodeScores), node.prereq)
-                    ) {
-                      return false;
-                    }
-                    return true;
-                  }).map((node, i) => {
-                    return (
-                      <Button
-                        text={node.title}
-                        color="B"
-                        width={'100%'}
-                        height={60}
-                        disabled={false}
-                        key={i}
-                        className={`select-node tertiary`}
-                        onClick={() => {
-                          const currLS = getLocalStorage(
-                            this.props.auth.user.username
-                          );
-                          this.setState(
-                            {
-                              selectedSwatch: node.id,
-                              bookTheme: node.bookTheme,
-                              theme: node.theme,
-                              config: currLS.config,
-                            },
-                            () => {
-                              const missionArcanaDelta =
-                                this.booksMap[`book${LS.chapter}`]?.[
-                                  this.state.selectedSwatch
-                                ]?.panels['panel-1'].whiteArcane;
-                              const arcanaToStore = Object.keys(
-                                missionArcanaDelta || {}
-                              ).length
-                                ? {}
-                                : currLS.arcana;
-                              const diffMults: Record<string, number> = {
-                                novice: 80,
-                                intermediate: 95,
-                                advanced: 110,
-                                expert: 125,
-                              };
-                              const updatedConfig = { ...LS.config };
-                              let updatedArcana = arcanaToStore;
-                              if (_.includes(node.id, 'temple')) {
-                                updatedArcana = {};
-                                this.updateMultiplier(
-                                  diffMults[LS.difficulty],
-                                  true
-                                );
-                                this.setState({});
-                              }
-                              if (
-                                Object.keys(missionArcanaDelta || {}).length
-                              ) {
-                                this.updateMultiplier(
-                                  diffMults[LS.difficulty],
-                                  true
-                                );
-                              }
-                              setLocalStorage({
-                                auth: currLS.auth,
-                                chapter: currLS.chapter,
-                                config: updatedConfig,
-                                arcana: updatedArcana,
-                                nodeScores: currLS.nodeScores,
-                                spellBook: currLS.spellBook,
-                                nodeId: node.id,
-                                chapterEnd: currLS.chapterEnd,
-                                difficulty: currLS.difficulty,
-                              });
-                            }
-                          );
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-                {this.state.selectedTab === 'story' ? (
-                  <div
-                    key={this.state.bookTheme}
-                    className="description-spellBook story-column"
-                    style={
-                      {
-                        //   display: 'flex',
-                        // width: '880px',
-                        //   height: '480px',
-                        //   background:
-                        //     this.state.bookTheme === 'black'
-                        //       ? ''
-                        //       : `url(/assets/pages/${this.state.bookTheme}.webp)`,
-                        //   backgroundSize: 'cover',
-                        //   backgroundPosition: 'center',
-                        //   backgroundRepeat: 'no-repeat',
-                      }
-                    }
-                  >
-                    <div className="story-text">
-                      {this.state.selectedSwatch !== '' ? (
-                        <div className="node">
-                          <b className="node-title">
-                            {
-                              this.state.book[this.state.selectedSwatch]
-                                .storyTitle
-                            }
-                          </b>
-                          <div className="node-description">
-                            {this.state.book[
-                              this.state.selectedSwatch
-                            ].storyText
-                              .split('\n\n')
-                              .map((p: string, i: number) => (
-                                <p className="description-paragraph" key={i}>
-                                  {p}
-                                </p>
-                              ))}
-                          </div>
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                ) : this.state.selectedTab === 'chess' ? (
-                  <div
-                    className="chess-tab"
-                    key={this.state.bookTheme}
-                    style={
-                      {
-                        // width: '880px',
-                        // background:
-                        //   this.state.bookTheme === 'black'
-                        //     ? ''
-                        //     : `url(/assets/pages/${this.state.bookTheme}.webp)`,
-                        // backgroundSize: 'cover',
-                        // backgroundPosition: 'center',
-                        // backgroundRepeat: 'no-repeat',
-                      }
-                    }
-                  >
-                    <div
-                      className={`cg-wrap board-view tactorius-board ${this.state.theme}-board`}
-                    >
-                      <Chessground
-                        // fen={this.state.fenHistory[this.state.fenHistory.length - 1]}
-                        // check={this.tactorius.inCheck().isAttacked}
-                        // viewOnly={this.isCheckmate()}
-                        forwardedRef={this.chessgroundRef}
-                        fen={this.getFen()}
-                        coordinates={false}
-                        // notation={true}
-                        // onChange={(move) => {
-                        //   console.log('hello', move);
-                        // }}
-                        resizable={true}
-                        wFaction={'normal'}
-                        bFaction={'normal'}
-                        // wRoyalty={this.state.wRoyalty}
-                        // bRoyalty={this.state.bRoyalty}
-                        // wVisible={this.state.wVisCount === 0}
-                        // bVisible={this.state.bVisCount === 0}
-                        // width={520}
-                        // height={520}
-                        width={'100%'}
-                        height={'100%'}
-                        // inline styling for aspect ratio? OR interpolating in this case based on the page type, use a global state string?
-                        // don't, just go by the page type
-                        // width={360}
-                        // height={360}
-                        animation={{
-                          enabled: true,
-                          duration: 1,
-                        }}
-                        // highlight={{
-                        //   lastMove: true,
-                        //   check: true,
-                        // }}
-                        orientation={
-                          this.state.playerColor === 'black' &&
-                          this.state.selectedSwatch.split('-')[0] === 'mission'
-                            ? 'black'
-                            : 'white'
-                        }
-                        // disableContextMenu={false}
-                        // turnColor={GameBoard.side === 0 ? 'white' : 'black'}
-                        // movable={{
-                        //   free: false,
-                        // }}
-                        viewOnly={true}
-                        events={{
-                          change: () => {
-                            // if (this.state.)
-                            // this.setState({
-                            //   fen:
-                            // })
-                            // this.arcaneChess().engineReply();
-                            // this.setState({})
-                            // console.log(cg.FEN);
-                            // send moves to redux store, then to server (db), then to opponent
-                          },
-                          // move: (orig, dest, capturedPiece) => {
-                          //   const parsed = this.arcaneChess().makeUserMove(orig, dest);
-                          //   console.log(generatePowers());
-                          //   if (!PrMove(parsed)) {
-                          //     console.log('invalid move');
-                          //     debugger; // eslint-disable-line
-                          //   }
-                          //   this.setState((prevState) => ({
-                          //     history: [...prevState.history, PrMove(parsed)],
-                          //     fenHistory: [
-                          //       ...prevState.fenHistory,
-                          //       outputFenOfCurrentPosition(),
-                          //     ],
-                          //   }));
-                          //   this.engineGo();
-                          // },
-                          // select: (key) => {
-                          //   ParseFen(this.state.fen);
-                          //   AddPiece(prettyToSquare(key), PIECES.wN);
-                          //   this.setState({
-                          //     fen: outputFenOfCurrentPosition(),
-                          //     fenHistory: [outputFenOfCurrentPosition()],
-                          //   });
-                          // },
-                        }}
-                      />
-                    </div>
-                  </div>
-                ) : null}
-                <div
-                  className="description-spellBook"
-                  // style={{ zIndex: 100 }}
-                >
-                  <div className="description">
-                    {this.state.selectedSwatch !== '' ? (
-                      <div className="node">
-                        {this.state.hoverArcane !== '' ? (
-                          <>
-                            <b className="node-title">
-                              {arcana[this.state.hoverArcane].name}
-                            </b>
-                            <div className="node-description">
-                              <p className="description-paragraph">
-                                {arcana[this.state.hoverArcane].description}
-                              </p>
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <b className="node-title">
-                              {this.state.book[this.state.selectedSwatch].title}
-                            </b>
-                            <div className="node-description">
-                              {this.state.book[
-                                this.state.selectedSwatch
-                              ].nodeText
-                                .split('\n\n')
-                                .map((p: string, i: number) => (
-                                  <p className="description-paragraph" key={i}>
-                                    {p}
-                                    {this.state.book[this.state.selectedSwatch]
-                                      .boss && (
-                                      <span style={{ color: 'red' }}>
-                                        This is a boss level. Completing this
-                                        mission will reset your progress in this
-                                        chapter.
-                                      </span>
-                                    )}
-                                  </p>
-                                ))}
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    ) : null}
-                  </div>
-                  <div className="spellBook">
-                    <div className="time-arcana time-arcana-white">
-                      <h2 className="time">{this.getTimeDisplay()}</h2>
-                      <div
-                        style={{
-                          height: '240px',
-                          width: '200px',
-                        }}
-                      >
-                        {this.state.selectedSwatch === '' ? null : this.state
-                            .playerColor === 'white' ? (
-                          <ArcanaSelect
-                            auth={this.props.auth}
-                            isPlayerArcana
-                            isMission={isMission}
-                            updateBookMultiplier={(value) =>
-                              this.updateMultiplier(value)
-                            }
-                            missionArcana={{
-                              ...this.booksMap[`book${LS.chapter}`]?.[
-                                this.state.selectedSwatch
-                              ]?.panels['panel-1'].whiteArcane,
-                            }}
-                            onToggleHover={(arcane: string) => {
-                              this.toggleHover(arcane);
-                            }}
-                          />
-                        ) : (
-                          <ArcanaSelect
-                            auth={this.props.auth}
-                            isPlayerArcana={false}
-                            engineArcana={{
-                              ...this.booksMap[`book${LS.chapter}`]?.[
-                                this.state.selectedSwatch
-                              ]?.panels['panel-1'].blackArcane,
-                            }}
-                            isMission={isMission}
-                            updateBookMultiplier={(value) =>
-                              this.updateMultiplier(value)
-                            }
-                            onToggleHover={(arcane: string) => {
-                              this.toggleHover(arcane);
-                            }}
-                          />
-                        )}
-                      </div>
-                    </div>
-                    <div className="time-arcana time-arcana-black">
-                      <h2 className="time">{this.getTimeDisplay()}</h2>
-                      <div
-                        style={{
-                          height: '240px',
-                          width: '200px',
-                        }}
-                      >
-                        {this.state.selectedSwatch === '' ? null : this.state
-                            .playerColor === 'black' ? (
-                          <ArcanaSelect
-                            auth={this.props.auth}
-                            isPlayerArcana
-                            isMission={isMission}
-                            updateBookMultiplier={(value) =>
-                              this.updateMultiplier(value)
-                            }
-                            missionArcana={{
-                              ...this.booksMap[`book${LS.chapter}`]?.[
-                                this.state.selectedSwatch
-                              ]?.panels['panel-1'].whiteArcane,
-                            }}
-                            onToggleHover={(arcane: string) => {
-                              this.toggleHover(arcane);
-                            }}
-                          />
-                        ) : (
-                          <ArcanaSelect
-                            auth={this.props.auth}
-                            isPlayerArcana={false}
-                            engineArcana={{
-                              ...this.booksMap[`book${LS.chapter}`]?.[
-                                this.state.selectedSwatch
-                              ]?.panels['panel-1'].blackArcane,
-                            }}
-                            isMission={isMission}
-                            updateBookMultiplier={(value) =>
-                              this.updateMultiplier(value)
-                            }
-                            onToggleHover={(arcane: string) => {
-                              this.toggleHover(arcane);
-                            }}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Opponent Arcana Section for Mobile */}
-                <div className="opponent-arcana-section">
-                  <div className="arcana-selector-label">Opponent Arcana</div>
-                  <div className="time-display">{this.getTimeDisplay()}</div>
-                  {this.state.selectedSwatch &&
-                    isMission &&
-                    this.state.playerColor === 'white' && (
-                      <ArcanaSelect
-                        auth={this.props.auth}
-                        isPlayerArcana={false}
-                        engineArcana={{
-                          ...this.booksMap[`book${LS.chapter}`]?.[
-                            this.state.selectedSwatch
-                          ]?.panels['panel-1'].blackArcane,
-                        }}
-                        isMission={isMission}
-                        updateBookMultiplier={(value) =>
-                          this.updateMultiplier(value)
-                        }
-                        onToggleHover={(arcane: string) =>
-                          this.toggleHover(arcane)
-                        }
-                      />
-                    )}
-                  {this.state.selectedSwatch &&
-                    isMission &&
-                    this.state.playerColor === 'black' && (
-                      <ArcanaSelect
-                        auth={this.props.auth}
-                        isPlayerArcana={false}
-                        engineArcana={{
-                          ...this.booksMap[`book${LS.chapter}`]?.[
-                            this.state.selectedSwatch
-                          ]?.panels['panel-1'].blackArcane,
-                        }}
-                        isMission={isMission}
-                        updateBookMultiplier={(value) =>
-                          this.updateMultiplier(value)
-                        }
-                        onToggleHover={(arcane: string) =>
-                          this.toggleHover(arcane)
-                        }
-                      />
-                    )}
-                </div>
-
-                {/* Mobile Description (Optional) */}
-                {this.state.selectedSwatch && this.state.hoverArcane !== '' && (
-                  <div className="mobile-description">
-                    <div className="node-title">
-                      {arcana[this.state.hoverArcane].name}
-                    </div>
-                    <div className="node-description">
-                      {arcana[this.state.hoverArcane].description}
-                    </div>
-                  </div>
-                )}
-                {this.state.selectedSwatch && this.state.hoverArcane === '' && (
-                  <div className="mobile-description">
-                    <div className="node-title">
-                      {this.state.book[this.state.selectedSwatch].title}
-                    </div>
-                    <div className="node-description">
-                      {this.state.book[this.state.selectedSwatch].nodeText
-                        .split('\n\n')
-                        .map((p: string, i: number) => (
-                          <p key={i}>{p}</p>
-                        ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Mobile Start Button (Sticky at bottom) */}
-              <div className="mobile-start-button">
+              {/* Start Button inside right panel (tablet/desktop only) */}
+              <div className="start-button-section">
                 <Link to={`/${this.state.selectedSwatch.split('-')[0]}`}>
                   <Button
                     text="START CHAPTER"
-                    className="primary"
+                    className="primary start-btn"
                     color="B"
                     width={200}
                     disabled={this.state.selectedSwatch === ''}
@@ -1223,8 +1031,21 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                 </Link>
               </div>
             </div>
-          </>
-        )}
+          </div>
+
+          {/* Mobile Start Button (Sticky at bottom) */}
+          <div className="mobile-start-button">
+            <Link to={`/${this.state.selectedSwatch.split('-')[0]}`}>
+              <Button
+                text="START CHAPTER"
+                className="primary"
+                color="B"
+                width={200}
+                disabled={this.state.selectedSwatch === ''}
+              />
+            </Link>
+          </div>
+        </div>
       </>
     );
   }

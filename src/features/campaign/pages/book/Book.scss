@@ -37,6 +37,13 @@
   background-repeat: no-repeat;
   animation: fadeIn 0.3s ease;
   overflow-x: hidden;
+  box-sizing: border-box;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
   &.desktop-mode {
     width: 1280px;
@@ -429,13 +436,26 @@
     }
   }
 
-  // Hide mobile components by default - they will be shown in media queries
+  // Hide mobile components by default (will be shown in mobile media query)
   .mobile-header,
-  .chapter-dropdown,
   .mobile-arcana-section,
   .mobile-start-button,
   .mobile-description {
     display: none;
+  }
+
+  // Hide top-level chapter dropdown by default (will be shown only on mobile)
+  > .chapter-dropdown {
+    display: none;
+  }
+}
+
+// Hide top-level chapter dropdown for screens 768px and above (tablet and desktop)
+@media (min-width: 768px) {
+  .book {
+    > .chapter-dropdown {
+      display: none !important;
+    }
   }
 }
 
@@ -453,1121 +473,304 @@
       rgba($B_DARK, 0.3) 0%,
       rgba(0, 0, 0, 1) 80%
     );
-    height: auto;
-    min-height: 100vh;
+    height: 100vh;
     width: 100vw;
     max-width: 100vw;
     padding: 0;
     margin: 0;
-    overflow-x: hidden;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: 0;
 
     .mobile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 15px;
+      background: rgba(0, 0, 0, 0.85);
+      border-bottom: 1px solid rgba($B_LGHT, 0.15);
+      z-index: 100;
+      width: 100%;
+      flex-shrink: 0;
+      .hex-home-icon {
+        width: 60px;
+        height: 60px;
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-        padding: 20px;
-        background: rgba(0, 0, 0, 0.85);
-        border-bottom: 1px solid rgba($B_LGHT, 0.15);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        width: 100%;
+        transition: all 0.3s ease;
+        cursor: pointer;
 
-        .hex-home-icon {
+        &:hover {
+          transform: scale(1.05);
+          opacity: 0.8;
+        }
+
+        svg,
+        img {
           width: 60px;
           height: 60px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          transition: all 0.3s ease;
-          cursor: pointer;
-
-          &:hover {
-            transform: scale(1.05);
-            opacity: 0.8;
-          }
-
-          svg,
-          img {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-          }
-        }
-
-        .header-arcana-preview {
-          display: flex;
-          gap: 8px;
-          align-items: center;
-          flex: 1;
-          justify-content: center;
-          padding: 0 15px;
-
-          .arcane-preview-item {
-            position: relative;
-            width: 40px;
-            height: 40px;
-
-            img {
-              width: 100%;
-              height: 100%;
-              border-radius: 3px;
-              border: 1px solid rgba($B_LGHT, 0.3);
-              transition: all 0.2s ease;
-              cursor: pointer;
-
-              &:hover {
-                transform: scale(1.1);
-                border-color: $B_LGHT;
-              }
-            }
-
-            .badge {
-              position: absolute;
-              top: -4px;
-              right: -4px;
-              background: $B_FACT;
-              color: white;
-              border-radius: 50%;
-              width: 18px;
-              height: 18px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-size: 0.65rem;
-              font-weight: bold;
-              border: 1px solid white;
-            }
-          }
-
-          .empty-preview {
-            color: rgba($B_LGHT, 0.4);
-            font-size: 0.9rem;
-            font-style: italic;
-          }
-        }
-
-        .mobile-score {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          background: rgba(0, 0, 0, 0.5);
-          padding: 10px 20px;
-          border-radius: 20px;
-          border: 1px solid rgba($B_LGHT, 0.15);
-
-          .multiplier {
-            color: $B_LGHT;
-            font-weight: bold;
-            font-size: 1.3rem;
-          }
-
-          .points {
-            color: white;
-            font-weight: bold;
-            font-size: 1.3rem;
-          }
+          object-fit: contain;
         }
       }
 
-      .chapter-dropdown {
+      .header-arcana-preview {
         display: flex;
-        flex-direction: column;
-        position: relative;
-        z-index: 90;
+        gap: 8px;
+        align-items: center;
+        flex: 1;
+        justify-content: center;
+        padding: 0 15px;
 
-        .chapter-selected {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 20px 25px;
-          background: rgba(0, 0, 0, 0.7);
-          border-bottom: 1px solid rgba($B_LGHT, 0.15);
-          cursor: pointer;
-          transition: all 0.2s ease;
+        .arcane-preview-item {
+          position: relative;
+          width: 40px;
+          height: 40px;
 
-          &:hover {
-            background: rgba($B_DARK, 0.3);
-          }
-
-          .chapter-title {
-            color: $B_LGHT;
-            font-weight: bold;
-            font-size: 1.3rem;
-            flex: 1;
-          }
-
-          .chapter-icon {
-            color: $B_LGHT;
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-
-            &.open {
-              transform: rotate(180deg);
-            }
-          }
-        }
-
-        .chapter-list {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          background: rgba(0, 0, 0, 0.95);
-          max-height: 50vh;
-          overflow-y: auto;
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
-          border-left: 1px solid rgba($B_LGHT, 0.15);
-          border-right: 1px solid rgba($B_LGHT, 0.15);
-          border-bottom: 1px solid rgba($B_LGHT, 0.15);
-          display: none;
-
-          &.open {
-            display: block;
-          }
-
-          .chapter-item {
-            padding: 18px 25px;
-            border-bottom: 1px solid rgba($B_LGHT, 0.05);
-            cursor: pointer;
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 3px;
+            border: 1px solid rgba($B_LGHT, 0.3);
             transition: all 0.2s ease;
-            background: transparent;
+            cursor: pointer;
 
             &:hover {
-              background: rgba($B_LGHT, 0.05);
-              border-left: 3px solid rgba($B_LGHT, 0.5);
-            }
-
-            &.completed {
-              opacity: 0.5;
-              background: rgba(0, 0, 0, 0.3);
-            }
-
-            &.selected {
-              background: rgba($B_DARK, 0.4);
-              border-left: 3px solid $B_LGHT;
-            }
-          }
-        }
-      }
-
-      .content {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto auto auto;
-        gap: 0;
-
-        .mobile-arcana-section {
-          display: flex;
-          flex-direction: column;
-          padding: 20px;
-          background: rgba(0, 0, 0, 0.6);
-          border-bottom: 1px solid rgba($B_LGHT, 0.1);
-          grid-column: 1;
-          grid-row: 1;
-
-          .arcana-preview {
-            display: flex;
-            gap: 10px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 4px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            min-height: 70px;
-            align-items: center;
-
-            .arcane-preview-item {
-              position: relative;
-              width: 60px;
-              height: 60px;
-
-              img {
-                width: 100%;
-                height: 100%;
-                border-radius: 4px;
-                border: 2px solid rgba($B_LGHT, 0.3);
-                transition: all 0.2s ease;
-
-                &:hover {
-                  transform: scale(1.1);
-                  border-color: $B_LGHT;
-                }
-              }
-
-              .badge {
-                position: absolute;
-                top: -5px;
-                right: -5px;
-                background: $B_FACT;
-                color: white;
-                border-radius: 50%;
-                width: 20px;
-                height: 20px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 0.7rem;
-                font-weight: bold;
-                border: 2px solid white;
-              }
-            }
-
-            .empty-preview {
-              color: rgba($B_LGHT, 0.5);
-              font-style: italic;
+              transform: scale(1.1);
+              border-color: $B_LGHT;
             }
           }
 
-          .arcana-selector-label {
-            color: $B_LGHT;
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-          }
-
-          .time-display {
-            color: $B_LGHT;
-            font-weight: bold;
-            text-align: center;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-          }
-        }
-
-        .chess-tab {
-          padding: 20px;
-          grid-column: 2;
-          grid-row: 1 / 3;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          .tactorius-board {
-            max-width: 500px;
-            width: 100%;
-            height: auto;
-            aspect-ratio: 1;
-            overflow: hidden;
-
-            .tactorius {
-              width: 100%;
-              height: 100%;
-            }
-          }
-        }
-
-        .opponent-arcana-section {
-          display: flex;
-          flex-direction: column;
-          padding: 20px;
-          background: rgba(0, 0, 0, 0.6);
-          border-top: 1px solid rgba($B_LGHT, 0.1);
-          grid-column: 1;
-          grid-row: 2;
-
-          .arcana-selector-label {
-            color: $B_LGHT;
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-          }
-
-          .time-display {
-            color: $B_LGHT;
-            font-weight: bold;
-            text-align: center;
-            padding: 10px;
-            background: rgba($B_BACK, 0.4);
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-          }
-        }
-
-        .mobile-description {
-          display: flex;
-          flex-direction: column;
-          padding: 20px;
-          background: rgba(0, 0, 0, 0.7);
-          border-top: 1px solid rgba($B_LGHT, 0.1);
-          grid-column: 1 / 3;
-          grid-row: 3;
-
-          .node-title {
-            color: $B_LGHT;
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-            text-align: center;
-          }
-
-          .node-description {
-            color: rgba(white, 0.9);
-            line-height: 1.6;
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 10px;
-            background: rgba($B_BACK, 0.3);
-            border-radius: 4px;
-
-            &::-webkit-scrollbar {
-              width: 6px;
-            }
-
-            &::-webkit-scrollbar-thumb {
-              background: rgba($B_LGHT, 0.5);
-              border-radius: 3px;
-            }
-          }
-        }
-      }
-
-      .mobile-start-button {
-        position: sticky;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 20px;
-        background: rgba(0, 0, 0, 0.9);
-        border-top: 1px solid rgba($B_LGHT, 0.15);
-        z-index: 80;
-        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
-
-        a {
-          display: block;
-          width: 100%;
-
-          button {
-            width: 100% !important;
-            height: 70px !important;
-            font-size: 1.4rem !important;
-            font-weight: bold !important;
-            box-shadow: 0 4px 12px rgba($B_FACT, 0.4);
-            transition: all 0.3s ease;
-
-            &:hover:not(:disabled) {
-              transform: translateY(-2px);
-              box-shadow: 0 6px 16px rgba($B_FACT, 0.6);
-            }
-
-            &:disabled {
-              opacity: 0.4;
-              cursor: not-allowed;
-            }
-          }
-        }
-      }
-
-      // Hide old desktop components
-      .hud {
-        display: none !important;
-      }
-
-      .nodes {
-        display: none !important;
-      }
-
-      .description-spellBook {
-        display: none !important;
-      }
-
-    // Show mobile components
-    .mobile-header,
-    .chapter-dropdown,
-    .mobile-arcana-section,
-    .mobile-start-button,
-    .mobile-description {
-      display: flex !important;
-    }
-  }
-}
-
-// Desktop / Large screens (1025px+)
-@media (min-width: 1025px) {
-  body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-  }
-
-  .book {
-    background: radial-gradient(
-      circle,
-      rgba($B_DARK, 0.3) 0%,
-      rgba(0, 0, 0, 1) 80%
-    );
-    width: 100%;
-    max-width: 1200px;
-    max-height: none;
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    margin: 0 auto;
-    gap: 0;
-
-    .mobile-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 30px;
-        background: rgba(0, 0, 0, 0.85);
-        border-bottom: 1px solid rgba($B_LGHT, 0.15);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        width: 100%;
-
-        .hex-home-icon {
-          width: 60px;
-          height: 60px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          transition: all 0.3s ease;
-          cursor: pointer;
-
-          &:hover {
-            transform: scale(1.05);
-            opacity: 0.8;
-          }
-
-          svg,
-          img {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-          }
-        }
-
-        .header-arcana-preview {
-          display: flex;
-          gap: 10px;
-          align-items: center;
-          flex: 1;
-          justify-content: center;
-          padding: 0 20px;
-
-          .arcane-preview-item {
-            position: relative;
-            width: 45px;
-            height: 45px;
-
-            img {
-              width: 100%;
-              height: 100%;
-              border-radius: 4px;
-              border: 1px solid rgba($B_LGHT, 0.3);
-              transition: all 0.2s ease;
-              cursor: pointer;
-
-              &:hover {
-                transform: scale(1.1);
-                border-color: $B_LGHT;
-              }
-            }
-
-            .badge {
-              position: absolute;
-              top: -5px;
-              right: -5px;
-              background: $B_FACT;
-              color: white;
-              border-radius: 50%;
-              width: 20px;
-              height: 20px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-size: 0.7rem;
-              font-weight: bold;
-              border: 1px solid white;
-            }
-          }
-
-          .empty-preview {
-            color: rgba($B_LGHT, 0.4);
-            font-size: 1rem;
-            font-style: italic;
-          }
-        }
-
-        .mobile-score {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          background: rgba(0, 0, 0, 0.5);
-          padding: 12px 25px;
-          border-radius: 20px;
-          border: 1px solid rgba($B_LGHT, 0.15);
-
-          .multiplier {
-            color: $B_LGHT;
-            font-weight: bold;
-            font-size: 1.4rem;
-          }
-
-          .points {
+          .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: $B_FACT;
             color: white;
-            font-weight: bold;
-            font-size: 1.4rem;
-          }
-        }
-      }
-
-      .chapter-dropdown {
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        z-index: 90;
-
-        .chapter-selected {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 20px 30px;
-          background: rgba(0, 0, 0, 0.7);
-          border-bottom: 1px solid rgba($B_LGHT, 0.15);
-          cursor: pointer;
-          transition: all 0.2s ease;
-
-          &:hover {
-            background: rgba($B_DARK, 0.3);
-          }
-
-          .chapter-title {
-            color: $B_LGHT;
-            font-weight: bold;
-            font-size: 1.4rem;
-            flex: 1;
-          }
-
-          .chapter-icon {
-            color: $B_LGHT;
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
-
-            &.open {
-              transform: rotate(180deg);
-            }
-          }
-        }
-
-        .chapter-list {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          background: rgba(0, 0, 0, 0.95);
-          max-height: 50vh;
-          overflow-y: auto;
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
-          border-left: 1px solid rgba($B_LGHT, 0.15);
-          border-right: 1px solid rgba($B_LGHT, 0.15);
-          border-bottom: 1px solid rgba($B_LGHT, 0.15);
-          display: none;
-
-          &.open {
-            display: block;
-          }
-
-          .chapter-item {
-            padding: 18px 30px;
-            border-bottom: 1px solid rgba($B_LGHT, 0.05);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: transparent;
-
-            &:hover {
-              background: rgba($B_LGHT, 0.05);
-              border-left: 3px solid rgba($B_LGHT, 0.5);
-            }
-
-            &.completed {
-              opacity: 0.5;
-              background: rgba(0, 0, 0, 0.3);
-            }
-
-            &.selected {
-              background: rgba($B_DARK, 0.4);
-              border-left: 3px solid $B_LGHT;
-            }
-          }
-        }
-      }
-
-      .content {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto auto;
-        gap: 0;
-
-        .mobile-arcana-section {
-          display: flex;
-          flex-direction: column;
-          padding: 25px;
-          background: rgba(0, 0, 0, 0.6);
-          border-bottom: 1px solid rgba($B_LGHT, 0.1);
-          grid-column: 1;
-          grid-row: 1;
-
-          .arcana-preview {
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
             display: flex;
-            gap: 12px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 4px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            min-height: 80px;
             align-items: center;
-
-            .arcane-preview-item {
-              position: relative;
-              width: 65px;
-              height: 65px;
-
-              img {
-                width: 100%;
-                height: 100%;
-                border-radius: 4px;
-                border: 2px solid rgba($B_LGHT, 0.3);
-                transition: all 0.2s ease;
-
-                &:hover {
-                  transform: scale(1.1);
-                  border-color: $B_LGHT;
-                }
-              }
-
-              .badge {
-                position: absolute;
-                top: -5px;
-                right: -5px;
-                background: $B_FACT;
-                color: white;
-                border-radius: 50%;
-                width: 22px;
-                height: 22px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 0.75rem;
-                font-weight: bold;
-                border: 2px solid white;
-              }
-            }
-
-            .empty-preview {
-              color: rgba($B_LGHT, 0.5);
-              font-style: italic;
-            }
-          }
-
-          .arcana-selector-label {
-            color: $B_LGHT;
+            justify-content: center;
+            font-size: 0.65rem;
             font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-          }
-
-          .time-display {
-            color: $B_LGHT;
-            font-weight: bold;
-            text-align: center;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
+            border: 1px solid white;
           }
         }
 
-        .chess-tab {
-          padding: 25px;
-          grid-column: 2;
-          grid-row: 1 / 3;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          .tactorius-board {
-            max-width: 550px;
-            width: 100%;
-            height: auto;
-            aspect-ratio: 1;
-            overflow: hidden;
-
-            .tactorius {
-              width: 100%;
-              height: 100%;
-            }
-          }
-        }
-
-        .opponent-arcana-section {
-          display: flex;
-          flex-direction: column;
-          padding: 25px;
-          background: rgba(0, 0, 0, 0.6);
-          border-top: 1px solid rgba($B_LGHT, 0.1);
-          grid-column: 1;
-          grid-row: 2;
-
-          .arcana-selector-label {
-            color: $B_LGHT;
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-          }
-
-          .time-display {
-            color: $B_LGHT;
-            font-weight: bold;
-            text-align: center;
-            padding: 12px;
-            background: rgba($B_BACK, 0.4);
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 1.2rem;
-          }
-        }
-
-        .mobile-description {
-          display: flex;
-          flex-direction: column;
-          padding: 25px;
-          background: rgba(0, 0, 0, 0.7);
-          border-top: 1px solid rgba($B_LGHT, 0.1);
-          grid-column: 1 / 3;
-          grid-row: 3;
-
-          .node-title {
-            color: $B_LGHT;
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 1.3rem;
-            text-align: center;
-          }
-
-          .node-description {
-            color: rgba(white, 0.9);
-            line-height: 1.6;
-            max-height: 250px;
-            overflow-y: auto;
-            padding: 15px;
-            background: rgba($B_BACK, 0.3);
-            border-radius: 4px;
-
-            &::-webkit-scrollbar {
-              width: 6px;
-            }
-
-            &::-webkit-scrollbar-thumb {
-              background: rgba($B_LGHT, 0.5);
-              border-radius: 3px;
-            }
-          }
+        .empty-preview {
+          color: rgba($B_LGHT, 0.4);
+          font-size: 0.9rem;
+          font-style: italic;
         }
       }
 
-      .mobile-start-button {
-        position: sticky;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 25px;
-        background: rgba(0, 0, 0, 0.9);
-        border-top: 1px solid rgba($B_LGHT, 0.15);
-        z-index: 80;
-        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
-
-        a {
-          display: block;
-          width: 100%;
-
-          button {
-            width: 100% !important;
-            height: 70px !important;
-            font-size: 1.5rem !important;
-            font-weight: bold !important;
-            box-shadow: 0 4px 12px rgba($B_FACT, 0.4);
-            transition: all 0.3s ease;
-
-            &:hover:not(:disabled) {
-              transform: translateY(-2px);
-              box-shadow: 0 6px 16px rgba($B_FACT, 0.6);
-            }
-
-            &:disabled {
-              opacity: 0.4;
-              cursor: not-allowed;
-            }
-          }
-        }
-      }
-
-      // Hide old desktop components
-    .hud {
-      display: none !important;
-    }
-
-    .nodes {
-      display: none !important;
-    }
-
-    .description-spellBook {
-      display: none !important;
-    }
-
-    // Show mobile components
-    .mobile-header,
-    .chapter-dropdown,
-    .mobile-arcana-section,
-    .mobile-start-button,
-    .mobile-description {
-      display: flex !important;
-    }
-  }
-}
-
-// Mobile screens - Completely restructured layout
-@media (max-width: 768px) {
-  // Ensure no body margins interfere
-  body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-  }
-
-  .book {
-    width: 100vw;
-    max-width: 100vw;
-    height: auto;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    margin: 0;
-    gap: 0;
-    background: radial-gradient(
-      circle,
-      rgba($B_DARK, 0.3) 0%,
-      rgba(0, 0, 0, 1) 80%
-    );
-
-    // 1. Compact Header with Logo, Arcana Preview, and Score
-    .mobile-header {
+      .mobile-score {
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        gap: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 10px 20px;
+        border-radius: 20px;
+        border: 1px solid rgba($B_LGHT, 0.15);
+
+        .multiplier {
+          color: $B_LGHT;
+          font-weight: bold;
+          font-size: 1.3rem;
+        }
+
+        .points {
+          color: white;
+          font-weight: bold;
+          font-size: 1.3rem;
+        }
+      }
+    }
+
+    // Hide top-level chapter dropdown (direct child of .book)
+    > .chapter-dropdown {
+      display: none !important;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      grid-template-rows: 1fr;
+      gap: 0;
+      flex: 1;
+      overflow: hidden;
+
+      // Hide mobile-only sections on tablet/desktop
+      .mobile-only {
+        display: none !important;
+      }
+
+      // Show chapter-dropdown inside right-panel on tablet/desktop
+      .right-panel .chapter-dropdown {
+        display: flex !important;
+      }
+
+      .chess-tab {
         padding: 15px;
-        background: rgba(0, 0, 0, 0.85);
-        border-bottom: 1px solid rgba($B_LGHT, 0.15);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.4);
 
-        .hex-home-icon {
-          width: 50px;
-          height: 50px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          transition: all 0.3s ease;
-          cursor: pointer;
+        .tactorius-board {
+          max-width: 80%;
+          max-height: 80%;
+          width: auto;
+          height: auto;
+          aspect-ratio: 1;
+          overflow: hidden;
 
-          &:hover {
-            transform: scale(1.05);
-            opacity: 0.8;
-          }
-
-          svg,
-          img {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-          }
-        }
-
-        .header-arcana-preview {
-          display: flex;
-          gap: 6px;
-          align-items: center;
-          flex: 1;
-          justify-content: center;
-          padding: 0 10px;
-
-          .arcane-preview-item {
-            position: relative;
-            width: 35px;
-            height: 35px;
-
-            img {
-              width: 100%;
-              height: 100%;
-              border-radius: 3px;
-              border: 1px solid rgba($B_LGHT, 0.3);
-              transition: all 0.2s ease;
-              cursor: pointer;
-
-              &:hover {
-                transform: scale(1.1);
-                border-color: $B_LGHT;
-              }
-            }
-
-            .badge {
-              position: absolute;
-              top: -4px;
-              right: -4px;
-              background: $B_FACT;
-              color: white;
-              border-radius: 50%;
-              width: 16px;
-              height: 16px;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-size: 0.6rem;
-              font-weight: bold;
-              border: 1px solid white;
-            }
-          }
-
-          .empty-preview {
-            color: rgba($B_LGHT, 0.4);
-            font-size: 0.8rem;
-            font-style: italic;
-          }
-        }
-
-        .mobile-score {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          background: rgba(0, 0, 0, 0.5);
-          padding: 6px 12px;
-          border-radius: 15px;
-          border: 1px solid rgba($B_LGHT, 0.15);
-
-          .multiplier {
-            color: $B_LGHT;
-            font-weight: bold;
-            font-size: 1rem;
-          }
-
-          .points {
-            color: white;
-            font-weight: bold;
-            font-size: 1rem;
+          .tactorius {
+            width: 100%;
+            height: 100%;
           }
         }
       }
 
-      // 2. Chapter Dropdown Selector
-      .chapter-dropdown {
+      .right-panel {
         display: flex;
         flex-direction: column;
-        position: relative;
-        z-index: 90;
+        overflow-y: auto;
+        background: rgba(0, 0, 0, 0.5);
+        border-left: 1px solid rgba($B_LGHT, 0.1);
 
-        .chapter-selected {
+        .chapter-dropdown {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 15px 20px;
-          background: rgba(0, 0, 0, 0.7);
-          border-bottom: 1px solid rgba($B_LGHT, 0.15);
-          cursor: pointer;
-          transition: all 0.2s ease;
+          flex-direction: column;
+          position: relative;
+          z-index: 90;
+          flex-shrink: 0;
+          border-bottom: 1px solid rgba($B_LGHT, 0.1);
 
-          &:hover {
-            background: rgba($B_DARK, 0.3);
+          .chapter-selected {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+              background: rgba($B_DARK, 0.3);
+            }
+
+            .chapter-title {
+              color: $B_LGHT;
+              font-weight: bold;
+              font-size: 1.2rem;
+              flex: 1;
+            }
+
+            .chapter-icon {
+              color: $B_LGHT;
+              font-size: 1rem;
+              transition: transform 0.3s ease;
+
+              &.open {
+                transform: rotate(180deg);
+              }
+            }
           }
 
-          .chapter-title {
-            color: $B_LGHT;
-            font-weight: bold;
-            font-size: 1.1rem;
-            flex: 1;
-          }
-
-          .chapter-icon {
-            color: $B_LGHT;
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
+          .chapter-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            max-height: 50vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba($B_LGHT, 0.15);
+            display: none;
+            z-index: 100;
 
             &.open {
-              transform: rotate(180deg);
+              display: block;
+            }
+
+            .chapter-item {
+              padding: 15px 20px;
+              border-bottom: 1px solid rgba($B_LGHT, 0.05);
+              cursor: pointer;
+              transition: all 0.2s ease;
+              background: transparent;
+
+              &:hover {
+                background: rgba($B_LGHT, 0.05);
+                border-left: 3px solid rgba($B_LGHT, 0.5);
+              }
+
+              &.completed {
+                opacity: 0.5;
+                background: rgba(0, 0, 0, 0.3);
+              }
+
+              &.selected {
+                background: rgba($B_DARK, 0.4);
+                border-left: 3px solid $B_LGHT;
+              }
             }
           }
         }
 
-        .chapter-list {
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          background: rgba(0, 0, 0, 0.95);
-          max-height: 60vh;
-          overflow-y: auto;
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
-          border-left: 1px solid rgba($B_LGHT, 0.15);
-          border-right: 1px solid rgba($B_LGHT, 0.15);
-          border-bottom: 1px solid rgba($B_LGHT, 0.15);
-          display: none;
+        .start-button-section {
+          flex-shrink: 0;
+          padding: 15px;
+          background: rgba(0, 0, 0, 0.7);
+          border-top: 1px solid rgba($B_LGHT, 0.1);
+          display: flex;
+          justify-content: center;
+          margin-top: auto;
 
-          &.open {
+          a {
             display: block;
-          }
+            width: 100%;
 
-          .chapter-item {
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba($B_LGHT, 0.05);
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: transparent;
+            button {
+              width: 100% !important;
+              padding: 12px 20px !important;
+              font-size: 1.1rem !important;
+              font-weight: bold !important;
+              cursor: pointer;
+              transition: all 0.2s ease;
+              box-shadow: 0 4px 12px rgba($B_FACT, 0.4);
 
-            &:hover {
-              background: rgba($B_LGHT, 0.05);
-              border-left: 3px solid rgba($B_LGHT, 0.5);
-            }
+              &:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba($B_FACT, 0.6);
+              }
 
-            &.completed {
-              opacity: 0.5;
-              background: rgba(0, 0, 0, 0.3);
-            }
-
-            &.selected {
-              background: rgba($B_DARK, 0.4);
-              border-left: 3px solid $B_LGHT;
+              &:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+              }
             }
           }
         }
       }
 
-      // 3. Player Arcana Section (with preview at top)
-      .mobile-arcana-section {
+      .opponent-arcana-section {
         display: flex;
         flex-direction: column;
         padding: 15px;
         background: rgba(0, 0, 0, 0.6);
         border-bottom: 1px solid rgba($B_LGHT, 0.1);
+        flex-shrink: 0;
 
         .arcana-preview {
           display: flex;
-          gap: 8px;
-          padding: 10px;
+          gap: 10px;
+          padding: 15px;
           background: rgba(0, 0, 0, 0.4);
           border-radius: 4px;
           margin-bottom: 15px;
@@ -1578,8 +781,8 @@
 
           .arcane-preview-item {
             position: relative;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
 
             img {
               width: 100%;
@@ -1621,6 +824,629 @@
         .arcana-selector-label {
           color: $B_LGHT;
           font-weight: bold;
+          margin-bottom: 8px;
+          font-size: 1rem;
+        }
+
+        .time-display {
+          color: $B_LGHT;
+          font-weight: bold;
+          text-align: center;
+          padding: 8px;
+          background: rgba(0, 0, 0, 0.4);
+          border-radius: 4px;
+          margin-bottom: 8px;
+          font-size: 1rem;
+        }
+      }
+
+      .mobile-arcana-section {
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.6);
+        border-bottom: 1px solid rgba($B_LGHT, 0.1);
+        flex-shrink: 0;
+
+        .arcana-selector-label {
+          color: $B_LGHT;
+          font-weight: bold;
+          margin-bottom: 8px;
+          font-size: 1rem;
+        }
+
+        .time-display {
+          color: $B_LGHT;
+          font-weight: bold;
+          text-align: center;
+          padding: 8px;
+          background: rgba(0, 0, 0, 0.4);
+          border-radius: 4px;
+          margin-bottom: 8px;
+          font-size: 1rem;
+        }
+      }
+
+      .chapter-description {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.7);
+        border-bottom: 1px solid rgba($B_LGHT, 0.1);
+        overflow-y: auto;
+        min-height: 200px;
+        min-height: 200px;
+
+        .node-title {
+          color: $B_LGHT;
+          font-weight: bold;
+          margin-bottom: 8px;
+          font-size: 1.1rem;
+        }
+
+        .node-description {
+          color: rgba(white, 0.9);
+          line-height: 1.5;
+          font-size: 0.95rem;
+
+          p {
+            margin-bottom: 10px;
+          }
+        }
+      }
+    }
+
+    .mobile-start-button {
+      flex-shrink: 0;
+      padding: 8px 15px;
+      background: rgba(0, 0, 0, 0.9);
+      border-top: 1px solid rgba($B_LGHT, 0.15);
+
+      a {
+        display: block;
+        width: 100%;
+
+        button {
+          width: 100% !important;
+          height: 50px !important;
+          font-size: 1.2rem !important;
+          font-weight: bold !important;
+          box-shadow: 0 4px 12px rgba($B_FACT, 0.4);
+          transition: all 0.3s ease;
+
+          &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba($B_FACT, 0.6);
+          }
+
+          &:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+
+    // Hide old desktop components
+    .hud {
+      display: none !important;
+    }
+
+    .nodes {
+      display: none !important;
+    }
+
+    .description-spellBook {
+      display: none !important;
+    }
+  }
+}
+
+// Desktop / Large screens (1025px+)
+@media (min-width: 1025px) {
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  .book {
+    background: radial-gradient(
+      circle,
+      rgba($B_DARK, 0.3) 0%,
+      rgba(0, 0, 0, 1) 80%
+    );
+    width: 100%;
+    max-width: 1400px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0 auto;
+    gap: 0;
+    overflow: hidden;
+
+    .mobile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      flex-shrink: 0;
+      background: rgba(0, 0, 0, 0.85);
+      border-bottom: 1px solid rgba($B_LGHT, 0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      width: 100%;
+
+      .hex-home-icon {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+
+        &:hover {
+          transform: scale(1.05);
+          opacity: 0.8;
+        }
+
+        svg,
+        img {
+          width: 60px;
+          height: 60px;
+          object-fit: contain;
+        }
+      }
+
+      .header-arcana-preview {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex: 1;
+        justify-content: center;
+        padding: 0 20px;
+
+        .arcane-preview-item {
+          position: relative;
+          width: 45px;
+          height: 45px;
+
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            border: 1px solid rgba($B_LGHT, 0.3);
+            transition: all 0.2s ease;
+            cursor: pointer;
+
+            &:hover {
+              transform: scale(1.1);
+              border-color: $B_LGHT;
+            }
+          }
+
+          .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: $B_FACT;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border: 1px solid white;
+          }
+        }
+
+        .empty-preview {
+          color: rgba($B_LGHT, 0.4);
+          font-size: 1rem;
+          font-style: italic;
+        }
+      }
+
+      .mobile-score {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 12px 25px;
+        border-radius: 20px;
+        border: 1px solid rgba($B_LGHT, 0.15);
+
+        .multiplier {
+          color: $B_LGHT;
+          font-weight: bold;
+          font-size: 1.4rem;
+        }
+
+        .points {
+          color: white;
+          font-weight: bold;
+          font-size: 1.4rem;
+        }
+      }
+    }
+
+    .chapter-dropdown {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 90;
+
+      .chapter-selected {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 30px;
+        background: rgba(0, 0, 0, 0.7);
+        border-bottom: 1px solid rgba($B_LGHT, 0.15);
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: rgba($B_DARK, 0.3);
+        }
+
+        .chapter-title {
+          color: $B_LGHT;
+          font-weight: bold;
+          font-size: 1.4rem;
+          flex: 1;
+        }
+
+        .chapter-icon {
+          color: $B_LGHT;
+          font-size: 1.2rem;
+          transition: transform 0.3s ease;
+
+          &.open {
+            transform: rotate(180deg);
+          }
+        }
+      }
+
+      .chapter-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.95);
+        max-height: 50vh;
+        overflow-y: auto;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+        border-left: 1px solid rgba($B_LGHT, 0.15);
+        border-right: 1px solid rgba($B_LGHT, 0.15);
+        border-bottom: 1px solid rgba($B_LGHT, 0.15);
+        display: none;
+
+        &.open {
+          display: block;
+        }
+
+        .chapter-item {
+          padding: 18px 30px;
+          border-bottom: 1px solid rgba($B_LGHT, 0.05);
+          cursor: pointer;
+          transition: all 0.2s ease;
+          background: transparent;
+
+          &:hover {
+            background: rgba($B_LGHT, 0.05);
+            border-left: 3px solid rgba($B_LGHT, 0.5);
+          }
+
+          &.completed {
+            opacity: 0.5;
+            background: rgba(0, 0, 0, 0.3);
+          }
+
+          &.selected {
+            background: rgba($B_DARK, 0.4);
+            border-left: 3px solid $B_LGHT;
+          }
+        }
+      }
+    }
+
+    // Hide top-level chapter dropdown (direct child of .book)
+    > .chapter-dropdown {
+      display: none !important;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      grid-template-rows: 1fr;
+      gap: 0;
+      flex: 1;
+      overflow: hidden;
+
+      // Hide mobile-only sections on tablet/desktop
+      .mobile-only {
+        display: none !important;
+      }
+
+      // Show chapter-dropdown inside right-panel on tablet/desktop
+      .right-panel .chapter-dropdown {
+        display: flex !important;
+      }
+
+      .chess-tab {
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.4);
+
+        .tactorius-board {
+          max-width: 80%;
+          max-height: 80%;
+          width: auto;
+          height: auto;
+          aspect-ratio: 1;
+          overflow: hidden;
+
+          .tactorius {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+
+      .right-panel {
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        background: rgba(0, 0, 0, 0.5);
+        border-left: 1px solid rgba($B_LGHT, 0.1);
+
+        .chapter-dropdown {
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          z-index: 90;
+          flex-shrink: 0;
+          border-bottom: 1px solid rgba($B_LGHT, 0.1);
+
+          .chapter-selected {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.7);
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+              background: rgba($B_DARK, 0.3);
+            }
+
+            .chapter-title {
+              color: $B_LGHT;
+              font-weight: bold;
+              font-size: 1.3rem;
+              flex: 1;
+            }
+
+            .chapter-icon {
+              color: $B_LGHT;
+              font-size: 1.1rem;
+              transition: transform 0.3s ease;
+
+              &.open {
+                transform: rotate(180deg);
+              }
+            }
+          }
+
+          .chapter-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            max-height: 50vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba($B_LGHT, 0.15);
+            display: none;
+            z-index: 100;
+
+            &.open {
+              display: block;
+            }
+
+            .chapter-item {
+              padding: 18px 25px;
+              border-bottom: 1px solid rgba($B_LGHT, 0.05);
+              cursor: pointer;
+              transition: all 0.2s ease;
+              background: transparent;
+
+              &:hover {
+                background: rgba($B_LGHT, 0.05);
+                border-left: 3px solid rgba($B_LGHT, 0.5);
+              }
+
+              &.completed {
+                opacity: 0.5;
+                background: rgba(0, 0, 0, 0.3);
+              }
+
+              &.selected {
+                background: rgba($B_DARK, 0.4);
+                border-left: 3px solid $B_LGHT;
+              }
+            }
+          }
+        }
+
+        .start-button-section {
+          flex-shrink: 0;
+          padding: 20px;
+          background: rgba(0, 0, 0, 0.7);
+          border-top: 1px solid rgba($B_LGHT, 0.1);
+          display: flex;
+          justify-content: center;
+          margin-top: auto;
+
+          a {
+            display: block;
+            width: 100%;
+
+            button {
+              width: 100% !important;
+              padding: 14px 24px !important;
+              font-size: 1.2rem !important;
+              font-weight: bold !important;
+              cursor: pointer;
+              transition: all 0.2s ease;
+              box-shadow: 0 4px 12px rgba($B_FACT, 0.4);
+
+              &:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba($B_FACT, 0.6);
+              }
+
+              &:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+              }
+            }
+          }
+        }
+      }
+
+      .opponent-arcana-section {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.6);
+        border-bottom: 1px solid rgba($B_LGHT, 0.1);
+        flex-shrink: 0;
+
+        .arcana-selector-label {
+          color: $B_LGHT;
+          font-weight: bold;
+          margin-bottom: 10px;
+          font-size: 1.1rem;
+        }
+
+        .time-display {
+          color: $B_LGHT;
+          font-weight: bold;
+          text-align: center;
+          padding: 10px;
+          background: rgba($B_BACK, 0.4);
+          border-radius: 4px;
+          margin-bottom: 10px;
+          font-size: 1.1rem;
+        }
+      }
+
+      .chapter-description {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        border-bottom: 1px solid rgba($B_LGHT, 0.1);
+        overflow-y: auto;
+        min-height: 200px;
+        min-height: 200px;
+
+        .node-title {
+          color: $B_LGHT;
+          font-weight: bold;
+          margin-bottom: 10px;
+          font-size: 1.2rem;
+        }
+
+        .node-description {
+          color: rgba(white, 0.9);
+          line-height: 1.6;
+          font-size: 1rem;
+
+          p {
+            margin-bottom: 12px;
+          }
+        }
+      }
+
+      .mobile-arcana-section {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.6);
+        flex-shrink: 0;
+
+        .arcana-preview {
+          display: flex;
+          gap: 12px;
+          padding: 15px;
+          background: rgba(0, 0, 0, 0.4);
+          border-radius: 4px;
+          margin-bottom: 15px;
+          flex-wrap: wrap;
+          justify-content: center;
+          min-height: 80px;
+          align-items: center;
+
+          .arcane-preview-item {
+            position: relative;
+            width: 65px;
+            height: 65px;
+
+            img {
+              width: 100%;
+              height: 100%;
+              border-radius: 4px;
+              border: 2px solid rgba($B_LGHT, 0.3);
+              transition: all 0.2s ease;
+
+              &:hover {
+                transform: scale(1.1);
+                border-color: $B_LGHT;
+              }
+            }
+
+            .badge {
+              position: absolute;
+              top: -5px;
+              right: -5px;
+              background: $B_FACT;
+              color: white;
+              border-radius: 50%;
+              width: 22px;
+              height: 22px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 0.75rem;
+              font-weight: bold;
+              border: 2px solid white;
+            }
+          }
+
+          .empty-preview {
+            color: rgba($B_LGHT, 0.5);
+            font-style: italic;
+          }
+        }
+
+        .arcana-selector-label {
+          color: $B_LGHT;
+          font-weight: bold;
           margin-bottom: 10px;
           font-size: 1.1rem;
         }
@@ -1636,210 +1462,603 @@
           font-size: 1.1rem;
         }
       }
+    }
 
-      // Hide desktop HUD on mobile
-      .hud {
-        display: none !important;
+    .mobile-start-button {
+      flex-shrink: 0;
+      padding: 10px 20px;
+      background: rgba(0, 0, 0, 0.9);
+      border-top: 1px solid rgba($B_LGHT, 0.15);
+      z-index: 80;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
 
-        .left {
-          width: 100%;
-          height: auto;
+      a {
+        display: block;
+        width: 100%;
 
-          > div {
-            flex-direction: column;
-            gap: 10px;
+        button {
+          width: 100% !important;
+          height: 55px !important;
+          font-size: 1.3rem !important;
+          font-weight: bold !important;
+          box-shadow: 0 4px 12px rgba($B_FACT, 0.4);
+          transition: all 0.3s ease;
+
+          &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba($B_FACT, 0.6);
           }
+
+          &:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+
+    // Hide old desktop components
+    .hud {
+      display: none !important;
+    }
+
+    .nodes {
+      display: none !important;
+    }
+
+    .description-spellBook {
+      display: none !important;
+    }
+  }
+}
+
+// Mobile screens - Completely restructured layout
+@media (max-width: 767px) {
+  // Ensure no body/html margins interfere
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    min-height: 100vh;
+    height: auto;
+  }
+
+  body {
+    overflow-y: auto;
+  }
+
+  .book {
+    width: 100vw;
+    max-width: 100vw;
+    min-height: 100vh;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    gap: 0;
+    background: radial-gradient(
+      circle,
+      rgba($B_DARK, 0.3) 0%,
+      rgba(0, 0, 0, 1) 80%
+    );
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    // 1. Compact Header with Logo, Arcana Preview, and Score
+    .mobile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 8px;
+      background: rgba(0, 0, 0, 0.85);
+      border-bottom: 1px solid rgba($B_LGHT, 0.15);
+      flex-shrink: 0;
+      z-index: 100;
+      width: 100%;
+      box-sizing: border-box;
+
+      .hex-home-icon {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+
+        &:hover {
+          transform: scale(1.05);
+          opacity: 0.8;
+        }
+
+        svg,
+        img {
+          width: 50px;
+          height: 50px;
+          object-fit: contain;
+        }
+      }
+
+      .header-arcana-preview {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        flex: 1;
+        justify-content: center;
+        padding: 0 10px;
+
+        .arcane-preview-item {
+          position: relative;
+          width: 35px;
+          height: 35px;
+
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 3px;
+            border: 1px solid rgba($B_LGHT, 0.3);
+            transition: all 0.2s ease;
+            cursor: pointer;
+
+            &:hover {
+              transform: scale(1.1);
+              border-color: $B_LGHT;
+            }
+          }
+
+          .badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: $B_FACT;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+            border: 1px solid white;
+          }
+        }
+
+        .empty-preview {
+          color: rgba($B_LGHT, 0.4);
+          font-size: 0.8rem;
+          font-style: italic;
+        }
+      }
+
+      .mobile-score {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(0, 0, 0, 0.5);
+        padding: 6px 12px;
+        border-radius: 15px;
+        border: 1px solid rgba($B_LGHT, 0.15);
+
+        .multiplier {
+          color: $B_LGHT;
+          font-weight: bold;
+          font-size: 1rem;
+        }
+
+        .points {
+          color: white;
+          font-weight: bold;
+          font-size: 1rem;
+        }
+      }
+    }
+
+    // 2. Chapter Dropdown Selector (top-level, only visible on mobile)
+    > .chapter-dropdown {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 90;
+
+      .chapter-selected {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background: rgba(0, 0, 0, 0.7);
+        border-bottom: 1px solid rgba($B_LGHT, 0.15);
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: rgba($B_DARK, 0.3);
+        }
+
+        .chapter-title {
+          color: $B_LGHT;
+          font-weight: bold;
+          font-size: 1.1rem;
+          flex: 1;
+        }
+
+        .chapter-icon {
+          color: $B_LGHT;
+          font-size: 1.2rem;
+          transition: transform 0.3s ease;
+
+          &.open {
+            transform: rotate(180deg);
+          }
+        }
+      }
+
+      .chapter-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.95);
+        max-height: 60vh;
+        overflow-y: auto;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+        border-left: 1px solid rgba($B_LGHT, 0.15);
+        border-right: 1px solid rgba($B_LGHT, 0.15);
+        border-bottom: 1px solid rgba($B_LGHT, 0.15);
+        display: none;
+
+        &.open {
+          display: block;
+        }
+
+        .chapter-item {
+          padding: 15px 20px;
+          border-bottom: 1px solid rgba($B_LGHT, 0.1);
+          cursor: pointer;
+          transition: all 0.2s ease;
+          background: transparent;
+          color: white;
+          font-size: 1rem;
+          font-weight: 500;
+
+          &:hover {
+            background: rgba($B_LGHT, 0.1);
+            border-left: 3px solid $B_LGHT;
+            color: $B_LGHT;
+          }
+
+          &.completed {
+            opacity: 0.6;
+            background: rgba(0, 0, 0, 0.4);
+            color: rgba(white, 0.7);
+            font-style: italic;
+          }
+
+          &.selected {
+            background: rgba($B_DARK, 0.5);
+            border-left: 3px solid $B_LGHT;
+            color: $B_LGHT;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    // 3. Player Arcana Section (with preview at top)
+    .mobile-arcana-section {
+      display: flex;
+      flex-direction: column;
+      padding: 3px;
+      background: rgba(0, 0, 0, 0.6);
+      border-bottom: 1px solid rgba($B_LGHT, 0.1);
+      box-sizing: border-box;
+      flex-shrink: 0;
+
+      .arcana-preview {
+        display: flex;
+        gap: 5px;
+        padding: 5px;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 4px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+        min-height: 50px;
+        align-items: center;
+
+        .arcane-preview-item {
+          position: relative;
+          width: 50px;
+          height: 50px;
+
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+            border: 2px solid rgba($B_LGHT, 0.3);
+            transition: all 0.2s ease;
+
+            &:hover {
+              transform: scale(1.1);
+              border-color: $B_LGHT;
+            }
+          }
+
+          .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: $B_FACT;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border: 2px solid white;
+          }
+        }
+
+        .empty-preview {
+          color: rgba($B_LGHT, 0.5);
+          font-style: italic;
+        }
+      }
+
+      .arcana-selector-label {
+        color: $B_LGHT;
+        font-weight: bold;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+      }
+
+      .time-display {
+        color: $B_LGHT;
+        font-weight: bold;
+        text-align: center;
+        padding: 3px;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 4px;
+        margin-bottom: 3px;
+        font-size: 0.85rem;
+      }
+    }
+
+    // Hide desktop HUD on mobile
+    .hud {
+      display: none !important;
+
+      .left {
+        width: 100%;
+        height: auto;
+
+        > div {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        a,
+        button {
+          width: 100% !important;
+        }
+
+        .arcana-helper {
+          width: 100%;
+          justify-content: center;
+          padding: 10px;
+          background: rgba($B_BACK, 0.4);
+          border-radius: 4px;
+        }
+      }
+
+      .center {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .right {
+        width: 100%;
+
+        .buttons {
+          width: 100%;
+          justify-content: center;
 
           a,
           button {
             width: 100% !important;
           }
-
-          .arcana-helper {
-            width: 100%;
-            justify-content: center;
-            padding: 10px;
-            background: rgba($B_BACK, 0.4);
-            border-radius: 4px;
-          }
         }
 
-        .center {
-          width: 100%;
-          justify-content: center;
-        }
-
-        .right {
-          width: 100%;
-
-          .buttons {
-            width: 100%;
-            justify-content: center;
-
-            a,
-            button {
-              width: 100% !important;
-            }
-          }
-
-          .score {
-            width: 100%;
-            padding: 15px;
-            border-radius: 4px;
-
-            .multiplier {
-              font-size: 1.2rem;
-            }
-
-            .points {
-              width: auto;
-              flex: 1;
-              justify-content: center;
-            }
-          }
-        }
-      }
-
-      .content {
-        display: flex;
-        flex-direction: column;
-        gap: 0;
-        height: auto;
-
-        // Hide desktop nodes list on mobile
-        .nodes {
-          display: none;
-        }
-
-        // 4. Chess Board
-        .chess-tab {
+        .score {
           width: 100%;
           padding: 15px;
-          background: rgba(0, 0, 0, 0.4);
+          border-radius: 4px;
 
-          .tactorius-board {
-            width: 100%;
-            max-width: 100%;
-            height: auto;
-            aspect-ratio: 1;
-            margin: 0 auto;
-            box-shadow: 0 4px 12px rgba($B_LGHT, 0.3);
-            border-radius: 4px;
-            overflow: hidden;
-
-            .tactorius {
-              width: 100%;
-              height: 100%;
-            }
-          }
-        }
-
-        // 5. Opponent Arcana Section
-        .opponent-arcana-section {
-          display: flex;
-          flex-direction: column;
-          padding: 15px;
-          background: rgba(0, 0, 0, 0.6);
-          border-top: 1px solid rgba($B_LGHT, 0.1);
-
-          .arcana-selector-label {
-            color: $B_LGHT;
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-          }
-
-          .time-display {
-            color: $B_LGHT;
-            font-weight: bold;
-            text-align: center;
-            padding: 10px;
-            background: rgba($B_BACK, 0.4);
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-          }
-        }
-
-        // Hide desktop description panel
-        .description-spellBook {
-          display: none;
-        }
-
-        // Description panel for mobile (optional - can be shown in modal)
-        .mobile-description {
-          display: flex;
-          flex-direction: column;
-          padding: 15px;
-          background: rgba(0, 0, 0, 0.7);
-          border-top: 1px solid rgba($B_LGHT, 0.1);
-
-          .node-title {
-            color: $B_LGHT;
-            font-weight: bold;
-            margin-bottom: 10px;
+          .multiplier {
             font-size: 1.2rem;
-            text-align: center;
           }
 
-          .node-description {
-            color: rgba(white, 0.9);
-            line-height: 1.6;
-            max-height: 200px;
-            overflow-y: auto;
-            padding: 10px;
-            background: rgba($B_BACK, 0.3);
-            border-radius: 4px;
-
-            &::-webkit-scrollbar {
-              width: 6px;
-            }
-
-            &::-webkit-scrollbar-thumb {
-              background: rgba($B_LGHT, 0.5);
-              border-radius: 3px;
-            }
-          }
-        }
-      }
-
-      // 6. Start Button (Sticky at bottom)
-      .mobile-start-button {
-        position: sticky;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 15px;
-        background: rgba(0, 0, 0, 0.9);
-        border-top: 1px solid rgba($B_LGHT, 0.15);
-        z-index: 80;
-        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
-
-        a {
-          display: block;
-          width: 100%;
-
-          button {
-            width: 100% !important;
-            height: 60px !important;
-            font-size: 1.3rem !important;
-            font-weight: bold !important;
-            box-shadow: 0 4px 12px rgba($B_FACT, 0.4);
-            transition: all 0.3s ease;
-
-            &:hover:not(:disabled) {
-              transform: translateY(-2px);
-              box-shadow: 0 6px 16px rgba($B_FACT, 0.6);
-            }
-
-            &:disabled {
-              opacity: 0.4;
-              cursor: not-allowed;
-            }
+          .points {
+            width: auto;
+            flex: 1;
+            justify-content: center;
           }
         }
       }
     }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      flex: 0 0 auto;
+      overflow: visible;
+
+      // Show mobile-only sections on mobile
+      .mobile-only {
+        display: flex !important;
+      }
+
+      // Hide old desktop sections on mobile
+      .nodes,
+      .description-spellBook,
+      .right-panel {
+        display: none !important;
+      }
+
+      // Explicitly hide right-panel's chapter-dropdown on mobile (it's inside right-panel which is hidden)
+      .right-panel .chapter-dropdown {
+        display: none !important;
+      }
+
+      // 4. Chess Board
+      .chess-tab {
+        width: 100%;
+        padding: 5px;
+        background: rgba(0, 0, 0, 0.4);
+        box-sizing: border-box;
+        flex-shrink: 1;
+
+        .tactorius-board {
+          width: 100%;
+          max-width: 70vw;
+          height: auto;
+          aspect-ratio: 1;
+          margin: 0 auto;
+          box-shadow: 0 4px 12px rgba($B_LGHT, 0.3);
+          border-radius: 4px;
+          overflow: hidden;
+
+          .tactorius {
+            width: 100%;
+            height: 100%;
+          }
+        }
+      }
+
+      // 5. Opponent Arcana Section
+      .opponent-arcana-section {
+        display: flex;
+        flex-direction: column;
+        padding: 3px;
+        background: rgba(0, 0, 0, 0.6);
+        border-top: 1px solid rgba($B_LGHT, 0.1);
+        box-sizing: border-box;
+        flex-shrink: 0;
+
+        .arcana-selector-label {
+          color: $B_LGHT;
+          font-weight: bold;
+          margin-bottom: 5px;
+          font-size: 0.9rem;
+        }
+
+        .time-display {
+          color: $B_LGHT;
+          font-weight: bold;
+          text-align: center;
+          padding: 10px;
+          background: rgba($B_BACK, 0.4);
+          border-radius: 4px;
+          margin-bottom: 10px;
+          font-size: 1.1rem;
+        }
+      }
+
+      // Hide desktop description panel
+      .description-spellBook {
+        display: none;
+      }
+
+      // Description panel for mobile (optional - can be shown in modal)
+      .mobile-description {
+        display: flex;
+        flex-direction: column;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        border-top: 1px solid rgba($B_LGHT, 0.1);
+        box-sizing: border-box;
+
+        .node-title {
+          color: $B_LGHT;
+          font-weight: bold;
+          margin-bottom: 10px;
+          font-size: 1.2rem;
+          text-align: center;
+        }
+
+        .node-description {
+          color: rgba(white, 0.9);
+          line-height: 1.6;
+          max-height: 200px;
+          overflow-y: auto;
+          padding: 10px;
+          background: rgba($B_BACK, 0.3);
+          border-radius: 4px;
+
+          &::-webkit-scrollbar {
+            width: 6px;
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background: rgba($B_LGHT, 0.5);
+            border-radius: 3px;
+          }
+        }
+      }
+    }
+
+    // 6. Start Button (at bottom of flow)
+    .mobile-start-button {
+      display: flex !important;
+      flex-shrink: 0;
+      padding: 10px 15px;
+      background: rgba(0, 0, 0, 0.95);
+      border-top: 2px solid rgba($B_LGHT, 0.3);
+      box-sizing: border-box;
+      margin-bottom: 40px;
+      margin-top: 10px;
+      width: 100%;
+      justify-content: center;
+
+      a {
+        display: block;
+        width: 100%;
+        max-width: 400px;
+
+        button {
+          width: 100% !important;
+          height: 45px !important;
+          font-size: 1rem !important;
+          font-weight: bold !important;
+          box-shadow: 0 4px 12px rgba($B_FACT, 0.4);
+          transition: all 0.3s ease;
+
+          &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba($B_FACT, 0.6);
+          }
+
+          &:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+  }
 
   // Ensure touch targets are large enough
   button,
