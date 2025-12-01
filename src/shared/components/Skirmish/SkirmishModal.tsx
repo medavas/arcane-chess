@@ -533,22 +533,28 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                     className="home-button"
                     onClick={() => this.props.navigate('/')}
                   >
-                    <img className="logo" src="/assets/logoall+.png" alt="Home" />
+                    <img
+                      className="logo"
+                      src="/assets/logoall+.png"
+                      alt="Home"
+                    />
                   </button>
                 </div>
 
                 {/* Tab navigation for mobile */}
                 <div className="tab-nav">
                   <button
-                    className={`tab-button ${this.state.activeTab === 'player' ? 'active' : ''
-                      }`}
+                    className={`tab-button ${
+                      this.state.activeTab === 'player' ? 'active' : ''
+                    }`}
                     onClick={() => this.setState({ activeTab: 'player' })}
                   >
                     Player
                   </button>
                   <button
-                    className={`tab-button ${this.state.activeTab === 'engine' ? 'active' : ''
-                      }`}
+                    className={`tab-button ${
+                      this.state.activeTab === 'engine' ? 'active' : ''
+                    }`}
                     onClick={() => this.setState({ activeTab: 'engine' })}
                   >
                     Engine
@@ -577,8 +583,9 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
             <div className="content-container">
               {/* Player Section */}
               <div
-                className={`player-section ${this.state.activeTab === 'player' ? 'active' : ''
-                  }`}
+                className={`player-section ${
+                  this.state.activeTab === 'player' ? 'active' : ''
+                }`}
               >
                 <div className="section-header">
                   <h3>Your Setup</h3>
@@ -656,8 +663,9 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                             onClick={() =>
                               !isLocked && this.handleFactionClick(id, 'player')
                             }
-                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''
-                              }`}
+                            aria-label={`${f.name}${
+                              isLocked ? ' (locked)' : ''
+                            }`}
                             tabIndex={isLocked ? -1 : 0}
                             style={{ ['--accent' as any]: f.color }}
                           >
@@ -674,8 +682,9 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
 
               {/* Engine Section */}
               <div
-                className={`engine-section ${this.state.activeTab === 'engine' ? 'active' : ''
-                  }`}
+                className={`engine-section ${
+                  this.state.activeTab === 'engine' ? 'active' : ''
+                }`}
               >
                 <div className="section-header">
                   <h3>Engine Setup</h3>
@@ -753,8 +762,9 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                             onClick={() =>
                               !isLocked && this.handleFactionClick(id, 'engine')
                             }
-                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''
-                              }`}
+                            aria-label={`${f.name}${
+                              isLocked ? ' (locked)' : ''
+                            }`}
                             tabIndex={isLocked ? -1 : 0}
                             style={{ ['--accent' as any]: f.color }}
                           >
@@ -896,12 +906,16 @@ const skirmishModal = {
     display: 'flex',
     height: '95vh',
     maxHeight: '95vh',
+    width: '90vw',
     maxWidth: '95vw',
-    width: '100%',
     background: 'transparent',
     border: 'none',
     padding: 0,
     overflow: 'hidden' as const,
   },
-  overlay: { zIndex: 10, backgroundColor: '#111111CC' },
+  overlay: {
+    zIndex: 10,
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    backdropFilter: 'blur(8px)',
+  },
 };
