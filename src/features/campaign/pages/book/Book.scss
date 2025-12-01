@@ -1,15 +1,37 @@
 ﻿@import 'src/shared/styles/main.scss';
 
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba($B_LGHT, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba($B_LGHT, 0.6);
+  }
+}
+
 .outer-book {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background: #11111188;
+  background: rgba($B_BACK, 0.85);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  animation: fadeIn 0.3s ease;
 
   .book {
     width: 1280px;
@@ -26,7 +48,8 @@
       width: 100%;
       min-height: 100%;
       max-height: 580px;
-      background: #11111188;
+      background: rgba($B_DARK, 0.6);
+      border-bottom: 2px solid rgba($B_LGHT, 0.3);
 
       .left {
         z-index: 30;
@@ -43,13 +66,38 @@
         .arcana-helper {
           width: 400px;
           height: 65px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 5px;
+          padding: 5px;
+          background: rgba($B_BACK, 0.3);
+          border-radius: 4px;
+          border: 1px solid rgba($B_LGHT, 0.2);
+
+          .arcane {
+            transition: all 0.2s ease;
+            border-radius: 4px;
+            border: 2px solid transparent;
+
+            &:hover {
+              transform: scale(1.1);
+              border-color: rgba($B_LGHT, 0.6);
+              filter: drop-shadow(0 0 8px rgba($B_LGHT, 0.8));
+            }
+
+            &.focus {
+              border-color: $B_FACT;
+              filter: drop-shadow(0 0 10px rgba($B_FACT, 1));
+              animation: glow 1.5s infinite;
+            }
+          }
         }
       }
 
       .center {
         display: flex;
         justify-content: flex-end;
-        // align-items: center;
+        align-items: center;
         width: 480px;
       }
 
@@ -71,12 +119,17 @@
           align-items: center;
           height: 100%;
           width: 100%;
+          background: rgba($B_DARK, 0.4);
+          border-radius: 4px;
+          margin: 5px;
 
           .multiplier {
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100px;
+            color: $B_LGHT;
+            font-weight: bold;
           }
 
           .points {
@@ -93,6 +146,7 @@
               flex-grow: 0;
               flex-shrink: 0;
               justify-content: flex-end;
+              color: $B_LGHT;
             }
           }
         }
@@ -103,30 +157,73 @@
       display: grid;
       grid-template-columns: 400px 480px 400px;
       grid-template-rows: 480px;
-      background: #11111100;
+      background: transparent;
+      gap: 2px;
 
       .nodes {
         width: 100%;
-        background: #11111188;
+        background: rgba($B_DARK, 0.6);
         overflow-y: scroll;
+        border-right: 1px solid rgba($B_LGHT, 0.2);
+
+        &::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: rgba($B_BACK, 0.3);
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: rgba($B_LGHT, 0.5);
+          border-radius: 4px;
+
+          &:hover {
+            background: rgba($B_LGHT, 0.7);
+          }
+        }
+
+        .select-node {
+          border-bottom: 1px solid rgba($B_LGHT, 0.1);
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: rgba($B_LGHT, 0.1) !important;
+            border-left: 3px solid $B_LGHT;
+          }
+
+          &.completed {
+            opacity: 0.7;
+            background: rgba($B_BACK, 0.3) !important;
+          }
+        }
 
         .node {
           .node-title {
             margin: 10px;
+            color: $B_LGHT;
+            font-weight: bold;
           }
 
           .node-description {
             p {
               margin: 10px;
+              line-height: 1.6;
             }
           }
         }
       }
 
       .chess-tab {
+        background: rgba($B_BACK, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
         .tactorius-board {
           height: 480px;
           width: 480px;
+          box-shadow: 0 0 20px rgba($B_LGHT, 0.3);
 
           .tactorius {
             height: 480px;
@@ -141,13 +238,34 @@
         .story-text {
           display: flex;
           width: 100%;
+          height: 480px;
           overflow-y: scroll;
+          background: rgba($B_DARK, 0.6);
+          padding: 20px;
+
+          &::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          &::-webkit-scrollbar-track {
+            background: rgba($B_BACK, 0.3);
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background: rgba($B_LGHT, 0.5);
+            border-radius: 4px;
+
+            &:hover {
+              background: rgba($B_LGHT, 0.7);
+            }
+          }
 
           .node {
             margin: 10px;
 
             .node-title {
               text-align: center;
+              color: $B_LGHT;
             }
 
             .node-description {
@@ -155,6 +273,7 @@
 
               p {
                 margin: 10px;
+                line-height: 1.6;
               }
             }
           }
@@ -168,22 +287,44 @@
         align-items: center;
         width: 400px;
         height: 480px;
-        background: #11111188;
+        background: rgba($B_DARK, 0.6);
+        border-left: 1px solid rgba($B_LGHT, 0.2);
 
         .description {
           width: 400px;
           height: 480px;
+          overflow-y: auto;
+
+          &::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          &::-webkit-scrollbar-track {
+            background: rgba($B_BACK, 0.3);
+          }
+
+          &::-webkit-scrollbar-thumb {
+            background: rgba($B_LGHT, 0.5);
+            border-radius: 4px;
+
+            &:hover {
+              background: rgba($B_LGHT, 0.7);
+            }
+          }
 
           .node {
             margin: 20px;
 
             .node-title {
               text-align: center;
+              color: $B_LGHT;
+              font-weight: bold;
             }
 
             .node-description {
               p {
                 margin: 10px;
+                line-height: 1.5;
               }
             }
           }
@@ -201,6 +342,19 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            border-radius: 4px;
+            border: 1px solid rgba($B_LGHT, 0.2);
+            transition: all 0.3s ease;
+
+            &.time-arcana-white {
+              background: rgba($B_LGHT, 0.15);
+              border-color: rgba($B_LGHT, 0.3);
+            }
+
+            &.time-arcana-black {
+              background: rgba($B_DARK, 0.5);
+              border-color: rgba($B_LGHT, 0.15);
+            }
 
             .time {
               display: flex;
@@ -208,6 +362,9 @@
               align-items: center;
               height: 60px;
               width: 180px;
+              color: $B_LGHT;
+              font-weight: bold;
+              border-bottom: 1px solid rgba($B_LGHT, 0.2);
             }
 
             .arcana-picker-wrapper {
@@ -223,10 +380,39 @@
                 width: 200px;
                 height: calc(100% - 40px);
                 overflow-y: scroll;
+                padding: 5px;
+
+                &::-webkit-scrollbar {
+                  width: 6px;
+                }
+
+                &::-webkit-scrollbar-track {
+                  background: rgba($B_BACK, 0.3);
+                }
+
+                &::-webkit-scrollbar-thumb {
+                  background: rgba($B_LGHT, 0.5);
+                  border-radius: 3px;
+
+                  &:hover {
+                    background: rgba($B_LGHT, 0.7);
+                  }
+                }
 
                 .arcane {
                   height: 60px;
                   width: 60px;
+                  transition: transform 0.2s ease, filter 0.2s ease;
+                  
+                  &:hover {
+                    transform: scale(1.1);
+                    filter: drop-shadow(0 0 5px rgba($B_LGHT, 0.8));
+                  }
+
+                  &.focus {
+                    transform: scale(1.15);
+                    filter: drop-shadow(0 0 8px rgba($B_FACT, 1));
+                  }
                 }
               }
             }
@@ -237,127 +423,264 @@
   }
 }
 
-@media (max-width: 1024px) {
+// Tablet / Medium screens
+@media (max-width: 1024px) and (min-width: 769px) {
   .outer-book {
-    all: unset;
-    display: block;
-    width: 100%;
-    overflow-y: auto;
-    padding: 0;
+    background: rgba($B_BACK, 0.9);
 
     .book {
-      all: unset;
-      display: flex;
-      flex-direction: column;
       width: 100%;
-      height: auto;
-      margin: 0 auto;
-      padding: 0;
+      max-width: 768px;
+      grid-template-rows: auto 1fr;
 
       .hud {
-        all: unset;
-        display: flex;
         flex-direction: column;
+        max-height: none;
+        padding: 10px;
         gap: 10px;
-        width: 100%;
-        height: auto;
-        overflow: visible;
 
-        .left {
-          display: flex;
-          flex-direction: row;
-          justify-content: space-between;
+        .left,
+        .center,
+        .right {
+          width: 100%;
         }
 
-        .center {
-          width: 360px;
+        .left {
+          .arcana-helper {
+            width: 100%;
+            justify-content: center;
+          }
         }
 
         .right {
-          all: unset;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          width: 100%;
-          padding: 10px;
-          box-sizing: border-box;
+          .buttons {
+            width: 100%;
+            justify-content: center;
+          }
 
           .score {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px;
-            background: #11111188;
+            margin: 5px 0;
           }
         }
       }
 
       .content {
-        all: unset;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
         height: auto;
-        overflow: visible;
+        gap: 10px;
+        padding: 10px;
 
         .nodes {
-          all: unset;
-          position: relative;
-          height: 300px;
-          overflow-y: auto;
-          padding: 10px;
-          background: #11111188;
+          height: 250px;
+          border-right: none;
+          border-bottom: 1px solid rgba($B_LGHT, 0.2);
         }
 
         .chess-tab {
-          all: unset;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-
-          .description-spellBook {
-            display: flex;
-            flex-direction: column-reverse;
+          .tactorius-board {
             width: 100%;
+            max-width: 480px;
             height: auto;
-            padding: 10px;
+            aspect-ratio: 1;
 
-            .spellBook {
+            .tactorius {
               width: 100%;
               height: auto;
             }
+          }
+        }
 
-            .spellBook .time-arcana {
-              all: unset;
+        .description-spellBook {
+          width: 100%;
+          height: auto;
+          border-left: none;
+          border-top: 1px solid rgba($B_LGHT, 0.2);
 
-              .arcana {
-                all: unset;
-                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-                height: auto;
-              }
-            }
+          .description {
+            width: 100%;
+            height: auto;
+            max-height: 300px;
           }
 
-          .tactorius-board {
-            min-width: 360px;
-            max-width: 360px;
-            min-width: 360px;
-            max-height: 360px;
-            aspect-ratio: 1;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            display: flex;
+          .spellBook {
+            width: 100%;
+            flex-direction: row;
+            flex-wrap: wrap;
             justify-content: center;
-            align-items: center;
-            overflow-y: hidden;
+            gap: 10px;
           }
         }
       }
     }
+  }
+}
+
+// Mobile screens
+@media (max-width: 768px) {
+  .outer-book {
+    background: rgba($B_BACK, 0.95);
+    height: auto;
+    min-height: 100vh;
+
+    .book {
+      width: 100%;
+      max-height: none;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+      padding: 10px;
+
+      .hud {
+        flex-direction: column;
+        max-height: none;
+        background: rgba($B_DARK, 0.8);
+        padding: 15px;
+        gap: 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+
+        .left {
+          width: 100%;
+          height: auto;
+
+          > div {
+            flex-direction: column;
+            gap: 10px;
+          }
+
+          a,
+          button {
+            width: 100% !important;
+          }
+
+          .arcana-helper {
+            width: 100%;
+            justify-content: center;
+            padding: 10px;
+            background: rgba($B_BACK, 0.4);
+            border-radius: 4px;
+          }
+        }
+
+        .center {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .right {
+          width: 100%;
+
+          .buttons {
+            width: 100%;
+            justify-content: center;
+
+            a,
+            button {
+              width: 100% !important;
+            }
+          }
+
+          .score {
+            width: 100%;
+            padding: 15px;
+            border-radius: 4px;
+
+            .multiplier {
+              font-size: 1.2rem;
+            }
+
+            .points {
+              width: auto;
+              flex: 1;
+              justify-content: center;
+            }
+          }
+        }
+      }
+
+      .content {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 15px;
+        height: auto;
+
+        .nodes {
+          width: 100%;
+          height: 250px;
+          border-radius: 8px;
+          border-right: none;
+          border-bottom: none;
+        }
+
+        .chess-tab {
+          width: 100%;
+          border-radius: 8px;
+
+          .tactorius-board {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            aspect-ratio: 1;
+            max-height: 90vw;
+
+            .tactorius {
+              width: 100%;
+              height: 100%;
+            }
+          }
+        }
+
+        .description-spellBook {
+          width: 100%;
+          height: auto;
+          border-radius: 8px;
+          border-left: none;
+          padding: 15px;
+
+          .description {
+            width: 100%;
+            height: auto;
+            max-height: 250px;
+            padding: 10px;
+          }
+
+          .spellBook {
+            width: 100%;
+            height: auto;
+            flex-direction: column;
+            gap: 15px;
+
+            .time-arcana {
+              width: 100%;
+              max-width: 100%;
+
+              .time {
+                width: 100%;
+                font-size: 1.1rem;
+              }
+
+              .arcana-picker-wrapper {
+                width: 100%;
+                max-width: 100%;
+
+                .arcana-picker {
+                  width: 100%;
+                  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+                  justify-content: center;
+                  gap: 10px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Ensure touch targets are large enough
+  button,
+  .arcane {
+    min-height: 44px;
+    min-width: 44px;
   }
 }

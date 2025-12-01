@@ -404,7 +404,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
               <Button
                 text="BACK TO CAMPAIGN"
                 className="primary"
-                color="S"
+                color="B"
                 height={200}
                 width={400}
               />
@@ -454,21 +454,19 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                       <Button
                         text="BACK"
                         className="tertiary"
-                        color="S"
+                        color="B"
                         width={200}
                         height={35}
                         disabled={false}
-                        backgroundColorOverride="#33333388"
                       />
                     </Link>
                     <Button
                       text="UNLOCK CHAPTERS"
                       className="tertiary"
-                      color="S"
+                      color="B"
                       width={200}
                       height={35}
                       disabled={false}
-                      backgroundColorOverride="#33333388"
                       onClick={() => this.toggleAllNodesUnlocked()}
                     />
                   </div>
@@ -539,7 +537,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                       <Button
                         text="START"
                         className="primary"
-                        color="S"
+                        color="B"
                         width={200}
                         disabled={this.state.selectedSwatch === ''}
                         styles={{ color: 'white', borderRadius: 0 }}
@@ -588,17 +586,12 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                     return (
                       <Button
                         text={node.title}
-                        color="S"
+                        color="B"
                         width={'100%'}
                         height={60}
                         disabled={false}
                         key={i}
                         className={`select-node tertiary`}
-                        backgroundColorOverride={
-                          _.includes(Object.keys(LS.nodeScores), node.id)
-                            ? '#11111100'
-                            : '#55555588'
-                        }
                         onClick={() => {
                           const currLS = getLocalStorage(
                             this.props.auth.user.username
@@ -681,15 +674,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                       }
                     }
                   >
-                    <div
-                      className="story-text"
-                      style={{
-                        // width: '880px',
-                        height: '480px',
-                        background: '#11111188',
-                        padding: '20px',
-                      }}
-                    >
+                    <div className="story-text">
                       {this.state.selectedSwatch !== '' ? (
                         <div className="node">
                           <b className="node-title">
@@ -868,8 +853,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                   </div>
                   <div className="spellBook">
                     <div
-                      className="time-arcana"
-                      style={{ background: '#77777788' }}
+                      className="time-arcana time-arcana-white"
                     >
                       <h2 className="time">{this.getTimeDisplay()}</h2>
                       <div
@@ -917,8 +901,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                       </div>
                     </div>
                     <div
-                      className="time-arcana"
-                      style={{ background: '#33333388' }}
+                      className="time-arcana time-arcana-black"
                     >
                       <h2 className="time">{this.getTimeDisplay()}</h2>
                       <div

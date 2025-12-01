@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import _ from 'lodash';
 
+import './ArcanaSelect.scss';
 import Button from 'src/shared/components/Button/Button';
 
 import { setLocalStorage, getLocalStorage } from 'src/shared/utils/handleLocalStorage';
@@ -297,19 +298,14 @@ export default class ArcanaSelect extends React.Component<
     if (!isMission) return null;
 
     return (
-      <div
-        style={{
-          height: '240px',
-          width: '200px',
-        }}
-      >
+      <div className="book-arcana-select">
         {isPlayerArcana && (
           <div className="arcana-picker-wrapper">
             <Button
-              color="S"
+              color="B"
               width={200}
               text="CLEAR ARCANA"
-              className="tertiary"
+              className="tertiary clear-arcana-button"
               onClick={() => this.handleClearArcana()}
             />
             <div className="arcana-picker">
@@ -323,22 +319,16 @@ export default class ArcanaSelect extends React.Component<
                 const isDisabled = !isPlayerArcana || hasMissionArcana;
 
                 return (
-                  <div
-                    key={key}
-                    style={{ position: 'relative', display: 'inline-block' }}
-                  >
-                    <div style={{ position: 'absolute' }}>
+                  <div key={key} className="arcane-wrapper">
+                    <div className="arcane-badge">
                       {this.getBadgeText(key, hasMissionArcana, missionArcana)}
                     </div>
                     <img
-                      className={`arcane ${hoverArcane === key ? 'focus' : ''}`}
-                      src={`/assets/arcanaImages${meta.imagePath}.svg`} // ← use meta
-                      style={{
-                        opacity: isDisabled || isSelected ? 1 : 0.5,
-                        cursor: isDisabled
-                          ? 'not-allowed'
-                          : 'url(/assets/images/cursors/pointer.svg) 12 4, pointer',
-                      }}
+                      className={`arcane ${hoverArcane === key ? 'focus' : ''} ${
+                        isSelected ? 'selected' : ''
+                      } ${isDisabled ? 'disabled' : ''}`}
+                      src={`/assets/arcanaImages${meta.imagePath}.svg`}
+                      alt={meta.name}
                       onClick={() => {
                         if (isDisabled) return;
                         this.handleArcanaClick(key, value);
@@ -359,24 +349,19 @@ export default class ArcanaSelect extends React.Component<
                 this.props.engineArcana || {},
                 (value: number, key: string) => {
                   const meta = this.getArcana(key);
-                  if (!meta) return null; // skip unknown keys so we don't crash
+                  if (!meta) return null;
 
                   return (
-                    <div
-                      key={key}
-                      style={{ position: 'relative', display: 'inline-block' }}
-                    >
-                      <div style={{ position: 'absolute' }}>
-                        {/* Engine badge: INH if inherent, otherwise the engine's count */}
+                    <div key={key} className="arcane-wrapper">
+                      <div className="arcane-badge">
                         {meta.type === 'inherent' ? 'INH' : String(value)}
                       </div>
-
                       <img
-                        className={`arcane ${
+                        className={`arcane disabled ${
                           this.state.hoverArcane === key ? 'focus' : ''
                         }`}
                         src={`/assets/arcanaImages${meta.imagePath}.svg`}
-                        style={{ opacity: 0.5, cursor: 'not-allowed' }}
+                        alt={meta.name}
                         onMouseEnter={() => this.props.onToggleHover(`${key}`)}
                         onMouseLeave={() => this.props.onToggleHover('')}
                       />
@@ -386,14 +371,7 @@ export default class ArcanaSelect extends React.Component<
               )}
             </div>
 
-            <div
-              style={{
-                height: '40px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
+            <div className="imbalance-score">
               Imbalance Score: {this.calculateArcanaScore(LS)}
             </div>
           </div>
