@@ -7,12 +7,10 @@
   gap: 16px;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    135deg,
-    rgba(15, 15, 40, 0.95),
-    rgba(20, 10, 30, 0.95)
-  );
-  border: 2px solid rgba(79, 72, 204, 0.4);
+  background: linear-gradient(135deg,
+      rgba(10, 25, 50, 0.95),
+      rgba(5, 15, 30, 0.95));
+  border: 2px solid rgba(68, 170, 255, 0.4);
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
@@ -86,7 +84,7 @@
       font-size: 24px;
       font-weight: 700;
       margin: 0;
-      text-shadow: 0 2px 8px rgba(79, 72, 204, 0.6);
+      text-shadow: 0 2px 8px rgba(68, 170, 255, 0.6);
     }
 
     // Tab navigation (hidden on desktop, shown on mobile)
@@ -98,7 +96,7 @@
       .tab-button {
         padding: 8px 16px;
         background: rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(79, 72, 204, 0.3);
+        border: 1px solid rgba(68, 170, 255, 0.3);
         border-radius: 8px;
         color: rgba(255, 255, 255, 0.7);
         font-size: 14px;
@@ -107,15 +105,15 @@
         transition: all 0.2s ease;
 
         &:hover {
-          background: rgba(79, 72, 204, 0.2);
-          border-color: rgba(79, 72, 204, 0.5);
+          background: rgba(68, 170, 255, 0.2);
+          border-color: rgba(68, 170, 255, 0.5);
         }
 
         &.active {
-          background: rgba(79, 72, 204, 0.4);
-          border-color: rgba(79, 72, 204, 0.8);
+          background: rgba(68, 170, 255, 0.4);
+          border-color: rgba(68, 170, 255, 0.8);
           color: rgba(255, 255, 255, 0.95);
-          box-shadow: 0 0 12px rgba(79, 72, 204, 0.4);
+          box-shadow: 0 0 12px rgba(68, 170, 255, 0.4);
         }
       }
     }
@@ -124,7 +122,7 @@
   // Hover panel - in header for medium/large, separate only for small
   .hover-panel {
     background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(79, 72, 204, 0.4);
+    border: 1px solid rgba(68, 170, 255, 0.4);
     border-radius: 12px;
     padding: 16px;
     height: 80px;
@@ -189,7 +187,7 @@
     flex-direction: column;
     gap: 4px;
     background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(79, 72, 204, 0.3);
+    border: 1px solid rgba(68, 170, 255, 0.3);
     border-radius: 12px;
     padding: 16px;
     overflow-y: auto;
@@ -218,7 +216,7 @@
         gap: 6px;
         padding: 4px 12px;
         background: rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(79, 72, 204, 0.3);
+        border: 1px solid rgba(68, 170, 255, 0.3);
         border-radius: 8px;
         font-size: 14px;
         color: rgba(255, 255, 255, 0.85);
@@ -293,11 +291,11 @@
       }
 
       &::-webkit-scrollbar-thumb {
-        background: rgba(79, 72, 204, 0.5);
+        background: rgba(68, 170, 255, 0.5);
         border-radius: 3px;
 
         &:hover {
-          background: rgba(79, 72, 204, 0.7);
+          background: rgba(68, 170, 255, 0.7);
         }
       }
 
@@ -320,7 +318,7 @@
         gap: 4px;
         padding: 12px;
         background: rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(79, 72, 204, 0.2);
+        border: 1px solid rgba(68, 170, 255, 0.2);
         border-radius: 8px;
         font-size: 12px;
         color: rgba(255, 255, 255, 0.8);
@@ -341,8 +339,8 @@
         .action-btn {
           width: 100%;
           padding: 14px 20px;
-          background: rgba(79, 72, 204, 0.3);
-          border: 1px solid rgba(79, 72, 204, 0.5);
+          background: rgba(68, 170, 255, 0.3);
+          border: 1px solid rgba(68, 170, 255, 0.5);
           border-radius: 10px;
           color: rgba(255, 255, 255, 0.95);
           font-size: 15px;
@@ -357,10 +355,10 @@
           gap: 8px;
 
           &:hover {
-            background: rgba(79, 72, 204, 0.5);
-            border-color: rgba(79, 72, 204, 0.8);
+            background: rgba(68, 170, 255, 0.5);
+            border-color: rgba(68, 170, 255, 0.8);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(79, 72, 204, 0.4);
+            box-shadow: 0 4px 12px rgba(68, 170, 255, 0.4);
           }
 
           &:active {
@@ -368,18 +366,19 @@
           }
 
           &.start-btn {
-            background: rgba(79, 72, 204, 0.6);
-            border-color: rgba(79, 72, 204, 0.8);
+            background: rgba(68, 170, 255, 0.6);
+            border-color: rgba(68, 170, 255, 0.8);
 
             &:hover {
-              background: rgba(79, 72, 204, 0.8);
-              box-shadow: 0 4px 16px rgba(79, 72, 204, 0.6);
+              background: rgba(68, 170, 255, 0.8);
+              box-shadow: 0 4px 16px rgba(68, 170, 255, 0.6);
             }
           }
         }
       }
     }
   }
+
 
   // Section header with inline button
   .section-header {
@@ -400,15 +399,15 @@
       gap: 8px;
       padding: 6px 12px;
       background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(79, 72, 204, 0.3);
+      border: 1px solid rgba(68, 170, 255, 0.3);
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
       min-height: 36px;
 
       &:hover {
-        background: rgba(79, 72, 204, 0.2);
-        border-color: rgba(79, 72, 204, 0.5);
+        background: rgba(68, 170, 255, 0.2);
+        border-color: rgba(68, 170, 255, 0.5);
       }
 
       img {
@@ -439,8 +438,8 @@
   // Override Button component styles to match Skirmish modal
   .button {
     padding: 14px 20px !important;
-    background: rgba(79, 72, 204, 0.6) !important;
-    border: 1px solid rgba(79, 72, 204, 0.8) !important;
+    background: rgba(68, 170, 255, 0.6) !important;
+    border: 1px solid rgba(68, 170, 255, 0.8) !important;
     border-radius: 10px !important;
     color: rgba(255, 255, 255, 0.95) !important;
     font-size: 15px !important;
@@ -450,10 +449,10 @@
     transition: all 0.2s ease !important;
 
     &:hover:not([disabled]) {
-      background: rgba(79, 72, 204, 0.8) !important;
-      border-color: rgba(79, 72, 204, 1) !important;
+      background: rgba(68, 170, 255, 0.8) !important;
+      border-color: rgba(68, 170, 255, 1) !important;
       transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(79, 72, 204, 0.6);
+      box-shadow: 0 4px 16px rgba(68, 170, 255, 0.6);
       border-radius: 10px !important;
     }
 
@@ -562,8 +561,8 @@
         display: flex;
         margin-top: 8px;
         padding: 12px 20px;
-        background: rgba(79, 72, 204, 0.6);
-        border: 1px solid rgba(79, 72, 204, 0.8);
+        background: rgba(68, 170, 255, 0.6);
+        border: 1px solid rgba(68, 170, 255, 0.8);
         border-radius: 10px;
         color: rgba(255, 255, 255, 0.95);
         font-size: 14px;
@@ -578,10 +577,10 @@
         flex-shrink: 0;
 
         &:hover {
-          background: rgba(79, 72, 204, 0.8);
-          border-color: rgba(79, 72, 204, 1);
+          background: rgba(68, 170, 255, 0.8);
+          border-color: rgba(68, 170, 255, 1);
           transform: translateY(-1px);
-          box-shadow: 0 4px 16px rgba(79, 72, 204, 0.6);
+          box-shadow: 0 4px 16px rgba(68, 170, 255, 0.6);
         }
 
         &:active {
@@ -623,8 +622,8 @@
 
           .action-btn {
             padding: 12px 16px;
-            background: rgba(79, 72, 204, 0.3);
-            border: 1px solid rgba(79, 72, 204, 0.5);
+            background: rgba(68, 170, 255, 0.3);
+            border: 1px solid rgba(68, 170, 255, 0.5);
             border-radius: 10px;
             color: rgba(255, 255, 255, 0.95);
             font-size: 14px;
@@ -640,10 +639,10 @@
             flex: 1;
 
             &:hover {
-              background: rgba(79, 72, 204, 0.5);
-              border-color: rgba(79, 72, 204, 0.8);
+              background: rgba(68, 170, 255, 0.5);
+              border-color: rgba(68, 170, 255, 0.8);
               transform: translateY(-1px);
-              box-shadow: 0 4px 12px rgba(79, 72, 204, 0.4);
+              box-shadow: 0 4px 12px rgba(68, 170, 255, 0.4);
             }
 
             &:active {
@@ -651,13 +650,13 @@
             }
 
             &.start-btn {
-              background: rgba(79, 72, 204, 0.6);
-              border-color: rgba(79, 72, 204, 0.8);
+              background: rgba(68, 170, 255, 0.6);
+              border-color: rgba(68, 170, 255, 0.8);
               flex: 1.5;
 
               &:hover {
-                background: rgba(79, 72, 204, 0.8);
-                box-shadow: 0 4px 16px rgba(79, 72, 204, 0.6);
+                background: rgba(68, 170, 255, 0.8);
+                box-shadow: 0 4px 16px rgba(68, 170, 255, 0.6);
               }
             }
           }
@@ -803,8 +802,8 @@
         display: flex;
         margin-top: 8px;
         padding: 12px 20px;
-        background: rgba(79, 72, 204, 0.6);
-        border: 1px solid rgba(79, 72, 204, 0.8);
+        background: rgba(68, 170, 255, 0.6);
+        border: 1px solid rgba(68, 170, 255, 0.8);
         border-radius: 10px;
         color: rgba(255, 255, 255, 0.95);
         font-size: 14px;
@@ -819,8 +818,8 @@
         flex-shrink: 0;
 
         &:hover {
-          background: rgba(79, 72, 204, 0.8);
-          box-shadow: 0 4px 16px rgba(79, 72, 204, 0.6);
+          background: rgba(68, 170, 255, 0.8);
+          box-shadow: 0 4px 16px rgba(68, 170, 255, 0.6);
         }
 
         &:active {

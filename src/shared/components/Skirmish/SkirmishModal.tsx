@@ -525,61 +525,60 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
           ariaHideApp={false}
         >
           <div className="skirmish-modal">
-            {/* Header */}
-            <div className="skirmish-header">
-              <div className="header-left">
-                <button
-                  className="home-button"
-                  onClick={() => this.props.navigate('/')}
-                >
-                  <img className="logo" src="/assets/logoall+.png" alt="Home" />
-                </button>
-              </div>
-
-              {/* Tab navigation for mobile */}
-              <div className="tab-nav">
-                <button
-                  className={`tab-button ${
-                    this.state.activeTab === 'player' ? 'active' : ''
-                  }`}
-                  onClick={() => this.setState({ activeTab: 'player' })}
-                >
-                  Player
-                </button>
-                <button
-                  className={`tab-button ${
-                    this.state.activeTab === 'engine' ? 'active' : ''
-                  }`}
-                  onClick={() => this.setState({ activeTab: 'engine' })}
-                >
-                  Engine
-                </button>
-              </div>
-            </div>
-
-            {/* Hover panel */}
-            <div className="hover-panel">
-              {this.state.hoverId ? (
-                <>
-                  <div className="hover-title">
-                    {arcana[this.state.hoverId]?.name || 'Info'}
-                  </div>
-                  <div className="hover-description">{hoverText}</div>
-                </>
-              ) : (
-                <div className="hover-empty">
-                  Choose a faction or adjust engine settings.
+            <div className="top-section">
+              {/* Header */}
+              <div className="skirmish-header">
+                <div className="header-left">
+                  <button
+                    className="home-button"
+                    onClick={() => this.props.navigate('/')}
+                  >
+                    <img className="logo" src="/assets/logoall+.png" alt="Home" />
+                  </button>
                 </div>
-              )}
+
+                {/* Tab navigation for mobile */}
+                <div className="tab-nav">
+                  <button
+                    className={`tab-button ${this.state.activeTab === 'player' ? 'active' : ''
+                      }`}
+                    onClick={() => this.setState({ activeTab: 'player' })}
+                  >
+                    Player
+                  </button>
+                  <button
+                    className={`tab-button ${this.state.activeTab === 'engine' ? 'active' : ''
+                      }`}
+                    onClick={() => this.setState({ activeTab: 'engine' })}
+                  >
+                    Engine
+                  </button>
+                </div>
+              </div>
+
+              {/* Hover panel */}
+              <div className="hover-panel">
+                {this.state.hoverId ? (
+                  <>
+                    <div className="hover-title">
+                      {arcana[this.state.hoverId]?.name || 'Info'}
+                    </div>
+                    <div className="hover-description">{hoverText}</div>
+                  </>
+                ) : (
+                  <div className="hover-empty">
+                    Choose a faction or adjust engine settings.
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Content container */}
             <div className="content-container">
               {/* Player Section */}
               <div
-                className={`player-section ${
-                  this.state.activeTab === 'player' ? 'active' : ''
-                }`}
+                className={`player-section ${this.state.activeTab === 'player' ? 'active' : ''
+                  }`}
               >
                 <div className="section-header">
                   <h3>Your Setup</h3>
@@ -657,9 +656,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                             onClick={() =>
                               !isLocked && this.handleFactionClick(id, 'player')
                             }
-                            aria-label={`${f.name}${
-                              isLocked ? ' (locked)' : ''
-                            }`}
+                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''
+                              }`}
                             tabIndex={isLocked ? -1 : 0}
                             style={{ ['--accent' as any]: f.color }}
                           >
@@ -676,9 +674,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
 
               {/* Engine Section */}
               <div
-                className={`engine-section ${
-                  this.state.activeTab === 'engine' ? 'active' : ''
-                }`}
+                className={`engine-section ${this.state.activeTab === 'engine' ? 'active' : ''
+                  }`}
               >
                 <div className="section-header">
                   <h3>Engine Setup</h3>
@@ -756,9 +753,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                             onClick={() =>
                               !isLocked && this.handleFactionClick(id, 'engine')
                             }
-                            aria-label={`${f.name}${
-                              isLocked ? ' (locked)' : ''
-                            }`}
+                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''
+                              }`}
                             tabIndex={isLocked ? -1 : 0}
                             style={{ ['--accent' as any]: f.color }}
                           >
@@ -833,6 +829,7 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                     onClick={this.start}
                     disabled={!canStart}
                     aria-disabled={!canStart}
+                    title={canStart ? 'Start Game' : 'Select factions to start'}
                   >
                     START
                   </button>
@@ -840,7 +837,7 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
               </div>
             </div>
 
-            {/* Action buttons */}
+            {/* Action buttons for mobile */}
             <div className="action-buttons">
               <button
                 type="button"
@@ -866,6 +863,7 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                 onClick={this.start}
                 disabled={!canStart}
                 aria-disabled={!canStart}
+                title={canStart ? 'Start Game' : 'Select factions to start'}
               >
                 START
               </button>

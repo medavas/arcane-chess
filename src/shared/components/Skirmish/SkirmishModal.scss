@@ -1,467 +1,302 @@
-﻿@import 'src/shared/styles/_components.scss';
-@import 'src/shared/styles/_variables.scss';
-
-.skirmish-modal {
+﻿.skirmish-modal {
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    135deg,
-    rgba(15, 15, 40, 0.95),
-    rgba(20, 10, 30, 0.95)
-  );
-  border: 2px solid rgba(79, 72, 204, 0.4);
+  background: linear-gradient(135deg,
+      rgba(10, 25, 50, 0.95),
+      rgba(5, 15, 30, 0.95));
+  border: 2px solid rgba(68, 170, 255, 0.4);
   border-radius: 16px;
   padding: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
   overflow: hidden;
+}
 
-  // Header with tabs
-  .skirmish-header {
-    display: flex;
-    justify-content: space-between;
+.top-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
     align-items: center;
-    padding-bottom: 8px;
-    flex-shrink: 0;
+    gap: 16px;
 
-    .header-left {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-
-      .home-button {
-        background: transparent;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        transition: all 0.2s ease;
-
-        &:hover {
-          transform: scale(1.1);
-          filter: brightness(1.2);
-        }
-
-        .logo {
-          width: 48px;
-          height: 48px;
-          display: block;
-        }
-      }
+    .skirmish-header {
+      width: auto;
+      padding-bottom: 0;
+      flex-shrink: 0;
+      border-bottom: none;
     }
 
-    h2 {
-      color: rgba(255, 255, 255, 0.95);
-      font-size: 24px;
-      font-weight: 700;
-      margin: 0;
-      text-shadow: 0 2px 8px rgba(79, 72, 204, 0.6);
-    }
-
-    // Tab navigation (hidden on desktop, shown on mobile)
-    .tab-nav {
-      display: none;
-      gap: 8px;
-
-      .tab-button {
-        padding: 8px 16px;
-        background: rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(79, 72, 204, 0.3);
-        border-radius: 8px;
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-
-        &:hover {
-          background: rgba(79, 72, 204, 0.2);
-          border-color: rgba(79, 72, 204, 0.5);
-        }
-
-        &.active {
-          background: rgba(79, 72, 204, 0.4);
-          border-color: rgba(79, 72, 204, 0.8);
-          color: rgba(255, 255, 255, 0.95);
-          box-shadow: 0 0 12px rgba(79, 72, 204, 0.4);
-        }
-      }
+    .hover-panel {
+      flex: 1;
+      height: 100%;
+      max-height: 60px;
     }
   }
+}
 
-  // Hover panel - always visible at top
-  .hover-panel {
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(79, 72, 204, 0.4);
-    border-radius: 12px;
-    padding: 12px;
-    height: 70px;
-    max-height: 70px;
+.skirmish-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(68, 170, 255, 0.2);
+  flex-shrink: 0;
+
+  .header-left {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex-shrink: 0;
-    overflow: hidden;
+    align-items: center;
+    gap: 16px;
 
-    .hover-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: rgba(100, 200, 255, 0.95);
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .hover-description {
-      font-size: 13px;
-      line-height: 1.5;
-      color: rgba(255, 255, 255, 0.85);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
-      -webkit-box-orient: vertical;
-    }
-
-    .hover-empty {
-      font-size: 13px;
-      color: rgba(255, 255, 255, 0.5);
-      font-style: italic;
-      text-align: center;
-      margin: auto;
-    }
-  }
-
-  // Content container - holds all sections
-  .content-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-    position: relative;
-  }
-
-  // Shared section styles
-  .player-section,
-  .faction-picker-section,
-  .engine-section,
-  .settings-section {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(79, 72, 204, 0.3);
-    border-radius: 12px;
-    padding: 16px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    min-height: 0;
-
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 3px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba(79, 72, 204, 0.5);
-      border-radius: 3px;
+    .home-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.2s ease;
 
       &:hover {
-        background: rgba(79, 72, 204, 0.7);
+        transform: scale(1.1);
+      }
+
+      .logo {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 8px rgba(68, 170, 255, 0.5));
       }
     }
+  }
 
-    .section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-shrink: 0;
+  .tab-nav {
+    display: flex;
+    gap: 2px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid rgba(68, 170, 255, 0.2);
 
-      h3 {
-        font-size: 16px;
-        font-weight: 600;
-        margin: 0;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .color-indicator {
-        font-size: 14px;
-        padding: 4px 8px;
-        background: rgba(0, 0, 0, 0.3);
-        border: 1px solid rgba(79, 72, 204, 0.3);
-        border-radius: 6px;
-        font-weight: 600;
-        text-transform: capitalize;
-      }
-    }
-
-    .faction-badge-clickable {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      padding: 8px;
-      background: rgba(0, 0, 0, 0.2);
-      border: 2px solid rgba(79, 72, 204, 0.4);
-      border-radius: 8px;
-      flex-shrink: 0;
+    .tab-button {
+      padding: 6px 16px;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
 
       &:hover {
-        background: rgba(0, 0, 0, 0.4);
-        border-color: rgba(79, 72, 204, 0.6);
-        transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(79, 72, 204, 0.3);
+        color: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.05);
       }
 
-      &:active {
-        transform: translateY(0);
-      }
-
-      .badge-glyph {
-        font-size: 36px;
-        font-weight: 700;
-        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
-      }
-
-      .faction-name-small {
-        font-size: 12px;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.85);
-        text-align: center;
-      }
-    }
-
-    .arcana-section {
-      flex-shrink: 0;
-      position: relative;
-      z-index: 50;
-    }
-
-    .army-section {
-      flex-shrink: 0;
-      position: relative;
-      z-index: 40;
-    }
-  }
-
-  .player-section h3 {
-    color: rgba(100, 200, 255, 0.95);
-  }
-
-  .faction-picker-section h3 {
-    color: rgba(150, 255, 150, 0.95);
-  }
-
-  .engine-section h3 {
-    color: rgba(255, 100, 100, 0.95);
-  }
-
-  .settings-section h3 {
-    color: rgba(255, 200, 100, 0.95);
-  }
-
-  // Skirmish-specific arcana styling
-  @media (min-width: 1024px) {
-    .arcane-select .spellBook {
-      grid-template-columns: repeat(6, minmax(50px, 60px));
-      grid-template-rows: 60px;
-      gap: 4px;
-      width: 100%;
-      max-width: 100%;
-    }
-  }
-
-  // Action buttons inside settings section on large screens
-  .settings-section {
-    .action-buttons-large {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: auto;
-
-      .action-btn {
-        width: 100%;
-        padding: 14px 20px;
-        background: rgba(79, 72, 204, 0.3);
-        border: 1px solid rgba(79, 72, 204, 0.5);
-        border-radius: 10px;
-        color: rgba(255, 255, 255, 0.95);
-        font-size: 15px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-
-        img {
-          width: 20px;
-          height: 20px;
-          filter: brightness(0) invert(1);
-        }
-
-        &:hover {
-          background: rgba(79, 72, 204, 0.5);
-          border-color: rgba(79, 72, 204, 0.8);
-          transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(79, 72, 204, 0.4);
-        }
-
-        &:active {
-          transform: translateY(0);
-        }
-
-        &.start-btn {
-          background: rgba(79, 72, 204, 0.6);
-          border-color: rgba(79, 72, 204, 0.8);
-
-          &:hover {
-            background: rgba(79, 72, 204, 0.8);
-            box-shadow: 0 4px 16px rgba(79, 72, 204, 0.6);
-          }
-
-          &:disabled {
-            background: rgba(100, 100, 100, 0.3);
-            border-color: rgba(100, 100, 100, 0.5);
-            color: rgba(255, 255, 255, 0.4);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-          }
-        }
+      &.active {
+        background: rgba(68, 170, 255, 0.3);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
       }
     }
   }
+}
 
-  // Faction picker panel that appears below faction badge
-  .faction-picker-section {
-    position: absolute;
-    z-index: 100;
-    animation: fadeIn 0.2s ease-out;
-    background: rgba(0, 0, 0, 0.4);
-    border: 2px solid rgba(79, 72, 204, 0.4);
+.hover-panel {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(68, 170, 255, 0.3);
+  border-radius: 12px;
+  padding: 10px 16px;
+  height: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+
+  .hover-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #44aaff;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .hover-description {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .hover-empty {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    font-style: italic;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+.content-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 280px;
+  gap: 16px;
+  flex: 1;
+  min-height: 0; // Important for nested flex scrolling
+  padding-bottom: 2px; // Prevent scrollbar overlap
+}
+
+.player-section,
+.engine-section,
+.settings-section {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(68, 170, 255, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: rgba(68, 170, 255, 0.4);
+    background: rgba(0, 0, 0, 0.25);
+  }
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  min-height: 32px;
+
+  h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #44aaff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .color-indicator {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 4px 8px;
     border-radius: 12px;
-    padding: 10px;
-    backdrop-filter: blur(8px);
-    max-width: calc(100% - 40px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+.faction-badge-clickable {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(68, 170, 255, 0.1);
+    border-color: rgba(68, 170, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 
-  // Position picker below respective section on large screens
-  .player-section .faction-picker-section {
-    top: 140px;
-    left: 16px;
-    right: auto;
-    transform: none;
+  .badge-glyph {
+    font-family: 'Cinzel', serif;
+    font-size: 42px;
+    line-height: 1;
+    font-weight: 700;
   }
 
-  .engine-section .faction-picker-section {
-    top: 140px;
-    left: 16px;
-    right: auto;
-    transform: none;
+  .faction-name-small {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
+}
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
+.arcana-section {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 
-  // Faction grid for picker section
-  .faction-picker-section {
-    .faction-grid {
-      display: flex;
+  // Override ArcanaSelect styles for modal context
+  .arcane-select {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .spellBook {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
-      flex-wrap: nowrap;
+      padding: 4px;
+      overflow-y: auto;
+      padding-right: 4px;
 
-      .faction-tile {
-        --accent: #00b4ff;
-        position: relative;
-        width: 48px;
-        height: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(0, 0, 0, 0.4);
-        border: 2px solid transparent;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        flex-shrink: 0;
+      &::-webkit-scrollbar {
+        width: 4px;
+      }
 
-        .faction-glyph {
-          font-size: 26px;
-          font-weight: 900;
-          color: #fff;
-          text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
-        }
-
-        &.is-unlocked {
-          cursor: pointer;
-
-          &:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px var(--accent);
-          }
-        }
-
-        &.is-selected {
-          border-color: var(--accent);
-          box-shadow: 0 0 16px var(--accent);
-          background: rgba(0, 0, 0, 0.6);
-        }
-
-        &.is-locked {
-          filter: grayscale(0.6) brightness(0.5);
-          cursor: not-allowed;
-          opacity: 0.4;
-        }
+      &::-webkit-scrollbar-thumb {
+        background: rgba(68, 170, 255, 0.3);
+        border-radius: 2px;
       }
     }
   }
+}
 
-  // Engine settings content
-  .engine-section {
-    .settings-content {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      flex-shrink: 0;
-    }
+.army-section {
+  margin-top: auto;
+}
+
+.settings-section h3 {
+  color: rgba(255, 200, 100, 0.95);
+}
+
+// Skirmish-specific arcana styling
+@media (min-width: 1024px) {
+  .arcane-select .spellBook {
+    grid-template-columns: repeat(6, minmax(50px, 60px));
+    grid-template-rows: 60px;
+    gap: 4px;
+    width: 100%;
+    max-width: 100%;
   }
+}
 
-  // Action buttons at bottom
-  .action-buttons {
-    display: none;
+// Action buttons inside settings section on large screens
+.settings-section {
+  .action-buttons-large {
+    display: flex;
+    flex-direction: column;
     gap: 12px;
-    flex-shrink: 0;
+    margin-top: auto;
 
     .action-btn {
-      flex: 1;
+      width: 100%;
       padding: 14px 20px;
-      background: rgba(79, 72, 204, 0.3);
-      border: 1px solid rgba(79, 72, 204, 0.5);
+      background: rgba(68, 170, 255, 0.3);
+      border: 1px solid rgba(68, 170, 255, 0.5);
       border-radius: 10px;
       color: rgba(255, 255, 255, 0.95);
       font-size: 15px;
@@ -482,10 +317,10 @@
       }
 
       &:hover {
-        background: rgba(79, 72, 204, 0.5);
-        border-color: rgba(79, 72, 204, 0.8);
+        background: rgba(68, 170, 255, 0.5);
+        border-color: rgba(68, 170, 255, 0.8);
         transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(79, 72, 204, 0.4);
+        box-shadow: 0 4px 12px rgba(68, 170, 255, 0.4);
       }
 
       &:active {
@@ -493,13 +328,12 @@
       }
 
       &.start-btn {
-        flex: 1.5;
-        background: rgba(79, 72, 204, 0.6);
-        border-color: rgba(79, 72, 204, 0.8);
+        background: rgba(68, 170, 255, 0.6);
+        border-color: rgba(68, 170, 255, 0.8);
 
         &:hover {
-          background: rgba(79, 72, 204, 0.8);
-          box-shadow: 0 4px 16px rgba(79, 72, 204, 0.6);
+          background: rgba(68, 170, 255, 0.8);
+          box-shadow: 0 4px 16px rgba(68, 170, 255, 0.6);
         }
 
         &:disabled {
@@ -514,6 +348,172 @@
     }
   }
 }
+
+// Faction picker panel that appears below faction badge
+.faction-picker-section {
+  position: absolute;
+  z-index: 100;
+  animation: fadeIn 0.2s ease-out;
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid rgba(68, 170, 255, 0.4);
+  border-radius: 12px;
+  padding: 10px;
+  backdrop-filter: blur(8px);
+  max-width: calc(100% - 40px);
+}
+
+// Position picker below respective section on large screens
+.player-section .faction-picker-section {
+  top: 140px;
+  left: 16px;
+  right: auto;
+  transform: none;
+}
+
+.engine-section .faction-picker-section {
+  top: 140px;
+  left: 16px;
+  right: auto;
+  transform: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+// Faction grid for picker section
+.faction-picker-section {
+  .faction-grid {
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+
+    .faction-tile {
+      --accent: #00b4ff;
+      position: relative;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+
+      .faction-glyph {
+        font-size: 26px;
+        font-weight: 900;
+        color: #fff;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
+      }
+
+      &.is-unlocked {
+        cursor: pointer;
+
+        &:hover {
+          border-color: var(--accent);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px var(--accent);
+        }
+      }
+
+      &.is-selected {
+        border-color: var(--accent);
+        box-shadow: 0 0 16px var(--accent);
+        background: rgba(0, 0, 0, 0.6);
+      }
+
+      &.is-locked {
+        filter: grayscale(0.6) brightness(0.5);
+        cursor: not-allowed;
+        opacity: 0.4;
+      }
+    }
+  }
+}
+
+// Engine settings content
+.engine-section {
+  .settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+}
+
+// Action buttons at bottom
+.action-buttons {
+  display: none;
+  gap: 12px;
+  flex-shrink: 0;
+
+  .action-btn {
+    flex: 1;
+    padding: 14px 20px;
+    background: rgba(68, 170, 255, 0.3);
+    border: 1px solid rgba(68, 170, 255, 0.5);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    img {
+      width: 20px;
+      height: 20px;
+      filter: brightness(0) invert(1);
+    }
+
+    &:hover {
+      background: rgba(68, 170, 255, 0.5);
+      border-color: rgba(68, 170, 255, 0.8);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(68, 170, 255, 0.4);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &.start-btn {
+      flex: 1.5;
+      background: rgba(68, 170, 255, 0.6);
+      border-color: rgba(68, 170, 255, 0.8);
+
+      &:hover {
+        background: rgba(68, 170, 255, 0.8);
+        box-shadow: 0 4px 16px rgba(68, 170, 255, 0.6);
+      }
+
+      &:disabled {
+        background: rgba(100, 100, 100, 0.3);
+        border-color: rgba(100, 100, 100, 0.5);
+        color: rgba(255, 255, 255, 0.4);
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  }
+}
+
 
 // Tablet and below: Show 2 columns (Player | Engine), scroll for action buttons
 @media (max-width: 1024px) {
@@ -562,195 +562,147 @@
       max-width: none;
     }
 
-    .faction-picker-section {
-      .faction-grid {
-        overflow-x: auto;
-        justify-content: flex-start;
-        -webkit-overflow-scrolling: touch;
-      }
+    h2 {
+      font-size: 16px;
     }
   }
-}
 
-// Mobile: Compact everything with tab navigation
-@media (max-width: 768px) {
-  .skirmish-modal {
+  .content-container {
+    grid-template-columns: 1fr;
+  }
+
+  .player-section,
+  .engine-section,
+  .settings-section {
+    display: none;
+
+    &.active {
+      display: flex;
+    }
+  }
+
+  .action-buttons {
+    grid-column: 1;
+  }
+
+  .hover-panel {
+    padding: 8px;
+    height: 60px;
+    max-height: 60px;
+    border-radius: 8px;
+
+    .hover-title {
+      font-size: 12px;
+    }
+
+    .hover-description {
+      font-size: 10px;
+      line-height: 1.2;
+      -webkit-line-clamp: 2;
+    }
+
+    .hover-empty {
+      font-size: 10px;
+    }
+  }
+
+  .content-container {
     gap: 8px;
+  }
+
+  .player-section,
+  .faction-picker-section,
+  .engine-section {
     padding: 10px;
-    border-radius: 12px;
-    max-height: 95vh;
+    gap: 8px;
+    border-radius: 8px;
 
-    .skirmish-header {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 12px;
-      padding-bottom: 0;
-
-      .tab-nav {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-
-        .tab-button {
-          flex: 1;
-          padding: 6px 4px;
-          font-size: 11px;
-        }
-      }
-
-      .header-left {
-        flex-direction: row;
-        align-items: center;
-        gap: 6px;
-        width: 100%;
-
-        .home-button .logo {
-          width: 32px;
-          height: 32px;
-        }
-      }
-
-      h2 {
-        font-size: 16px;
-      }
-    }
-
-    .content-container {
-      grid-template-columns: 1fr;
-    }
-
-    .player-section,
-    .engine-section,
-    .settings-section {
-      display: none;
-
-      &.active {
-        display: flex;
-      }
-    }
-
-    .action-buttons {
-      grid-column: 1;
-    }
-
-    .hover-panel {
-      padding: 8px;
-      height: 60px;
-      max-height: 60px;
-      border-radius: 8px;
-
-      .hover-title {
-        font-size: 12px;
-      }
-
-      .hover-description {
-        font-size: 10px;
-        line-height: 1.2;
-        -webkit-line-clamp: 2;
-      }
-
-      .hover-empty {
-        font-size: 10px;
-      }
-    }
-
-    .content-container {
-      gap: 8px;
-    }
-
-    .player-section,
-    .faction-picker-section,
-    .engine-section {
-      padding: 10px;
-      gap: 8px;
-      border-radius: 8px;
-
-      .section-header {
-        gap: 6px;
-
-        h3 {
-          font-size: 13px;
-        }
-
-        .color-indicator {
-          font-size: 11px;
-          padding: 3px 6px;
-        }
-      }
-
-      .faction-badge-clickable {
-        padding: 8px;
-        gap: 6px;
-        border-width: 2px;
-
-        .badge-glyph {
-          font-size: 32px;
-        }
-
-        .faction-name-small {
-          font-size: 12px;
-        }
-      }
-    }
-
-    .player-section .faction-picker-section,
-    .engine-section .faction-picker-section {
-      position: fixed;
-      left: 50%;
-      top: auto;
-      bottom: 80px;
-      transform: translateX(-50%);
-      width: calc(100% - 20px);
-      max-width: none;
-      padding: 8px;
-      overflow-x: hidden;
-      z-index: 1000;
-
-      .faction-grid {
-        gap: 4px;
-        justify-content: flex-start;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-
-        &::-webkit-scrollbar {
-          display: none;
-        }
-      }
-
-      .faction-tile {
-        width: 44px;
-        height: 44px;
-        border-width: 2px;
-        border-radius: 6px;
-
-        .faction-glyph {
-          font-size: 20px;
-        }
-      }
-    }
-
-    .engine-section .settings-content {
-      gap: 8px;
-    }
-
-    .action-buttons {
-      flex-direction: column;
+    .section-header {
       gap: 6px;
 
-      .action-btn {
-        padding: 10px 14px;
-        font-size: 12px;
+      h3 {
+        font-size: 13px;
+      }
 
-        img {
-          width: 16px;
-          height: 16px;
-        }
+      .color-indicator {
+        font-size: 11px;
+        padding: 3px 6px;
+      }
+    }
+
+    .faction-badge-clickable {
+      padding: 8px;
+      gap: 6px;
+      border-width: 2px;
+
+      .badge-glyph {
+        font-size: 32px;
+      }
+
+      .faction-name-small {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .player-section .faction-picker-section,
+  .engine-section .faction-picker-section {
+    position: fixed;
+    left: 50%;
+    top: auto;
+    bottom: 80px;
+    transform: translateX(-50%);
+    width: calc(100% - 20px);
+    max-width: none;
+    padding: 8px;
+    overflow-x: hidden;
+    z-index: 1000;
+
+    .faction-grid {
+      gap: 4px;
+      justify-content: flex-start;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .faction-tile {
+      width: 44px;
+      height: 44px;
+      border-width: 2px;
+      border-radius: 6px;
+
+      .faction-glyph {
+        font-size: 20px;
+      }
+    }
+  }
+
+  .engine-section .settings-content {
+    gap: 8px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 6px;
+
+    .action-btn {
+      padding: 10px 14px;
+      font-size: 12px;
+
+      img {
+        width: 16px;
+        height: 16px;
       }
     }
   }
 }
+
 
 // Very small screens - extra compact
 @media (max-width: 400px) {
