@@ -248,6 +248,11 @@
     .spellBook {
       display: grid;
       grid-template-columns: repeat(3, 50px);
+
+      @media (min-width: 768px) {
+        grid-template-columns: repeat(3, 70px);
+      }
+
       gap: 8px;
       padding: 4px;
       overflow-y: auto;
@@ -276,14 +281,14 @@
 }
 
 // Skirmish-specific arcana styling
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .skirmish-header .tab-nav {
     display: none;
   }
 
   .arcane-select .spellBook {
-    grid-template-columns: repeat(3, 50px);
-    grid-auto-rows: 50px;
+    grid-template-columns: repeat(3, 60px);
+    grid-auto-rows: 60px;
     gap: 8px;
     width: 100%;
     max-width: 100%;
@@ -525,10 +530,6 @@
 // Tablet and below: Show 2 columns (Player | Engine), scroll for action buttons
 @media (max-width: 1024px) {
   .skirmish-modal {
-    .skirmish-header {
-      // Tabs visible on mobile/tablet
-    }
-
     .content-container {
       grid-template-columns: 1fr 1fr;
       overflow-y: auto;
@@ -593,7 +594,7 @@
     .hover-description {
       font-size: 10px;
       line-height: 1.2;
-      -webkit-line-clamp: 2;
+      // -webkit-line-clamp: 2;
     }
 
     .hover-empty {
