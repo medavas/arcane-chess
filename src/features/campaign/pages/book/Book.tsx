@@ -428,49 +428,41 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
             </Link>
           </div>
         ) : (
-          <div
-            className="outer-book"
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100vw',
-              height: '100vh',
-              // background:
-              //   this.state.theme === 'black'
-              //     ? ''
-              //     : `url(/assets/pages/${this.state.theme}.webp)`,
-              background:
-                this.state.theme === 'black'
-                  ? '#000000cc'
-                  : `radial-gradient(
-          circle,
-         rgba(221, 221, 221, 0.6) 0%,
-          rgba(0, 0, 0, 1) 80%    
-        )`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-            }}
-          >
+          <>
             <TactoriusModal
               isOpen={this.state.armoryOpen}
               type="armory"
-              // imgPath="public/assets/treeBoat.jpg"
             />
             <TactoriusModal
               isOpen={this.state.endChapterOpen}
               type="chapterEnd"
-              // imgPath="public/assets/treeBoat.jpg"
             />
             <div className="book">
-              {/* Mobile Header with Logo */}
+              {/* Mobile Header with Logo, Arcana Preview, and Score */}
               <div className="mobile-header">
                 <Link to="/campaign" style={{ textDecoration: 'none' }}>
                   <div className="hex-home-icon">
                     <img src="/assets/logo.svg" alt="Home" />
                   </div>
                 </Link>
+                <div className="header-arcana-preview">
+                  {Object.keys(LS.arcana || {}).length > 0 ? (
+                    _.map(LS.arcana, (value, key: string) => (
+                      <div key={key} className="arcane-preview-item">
+                        <img
+                          src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
+                          alt={arcana[key].name}
+                          onClick={() => this.toggleHover(key)}
+                        />
+                        {arcana[key].type !== 'inherent' && (
+                          <div className="badge">{value}</div>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <span className="empty-preview">No arcana</span>
+                  )}
+                </div>
                 <div className="mobile-score">
                   <span className="multiplier">x{this.state.multiplier}</span>
                   <span className="points">{digits}</span>
@@ -598,26 +590,8 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                 </div>
               </div>
 
-              {/* Player Arcana Section with Preview */}
+              {/* Player Arcana Section */}
               <div className="mobile-arcana-section">
-                <div className="arcana-preview">
-                  {Object.keys(LS.arcana || {}).length > 0 ? (
-                    _.map(LS.arcana, (value, key: string) => (
-                      <div key={key} className="arcane-preview-item">
-                        <img
-                          src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
-                          alt={arcana[key].name}
-                          onClick={() => this.toggleHover(key)}
-                        />
-                        <div className="badge">
-                          {arcana[key].type === 'inherent' ? 'INH' : value}
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <span className="empty-preview">No arcana selected</span>
-                  )}
-                </div>
                 <div className="arcana-selector-label">Your Arcana</div>
                 <div className="time-display">{this.getTimeDisplay()}</div>
                 {this.state.selectedSwatch &&
@@ -1249,7 +1223,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                 </Link>
               </div>
             </div>
-          </div>
+          </>
         )}
       </>
     );
