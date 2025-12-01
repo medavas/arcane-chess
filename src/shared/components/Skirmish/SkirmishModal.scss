@@ -643,12 +643,11 @@
 
   .player-section .faction-picker-section,
   .engine-section .faction-picker-section {
-    position: fixed;
-    left: 50%;
-    top: auto;
-    bottom: 80px;
-    transform: translateX(-50%);
-    width: calc(100% - 20px);
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: 140px;
+    width: auto;
     max-width: none;
     padding: 8px;
     overflow-x: hidden;
@@ -656,9 +655,10 @@
 
     .faction-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, 48px);
       gap: 8px;
-      justify-content: center;
+      margin: 0 auto;
+      width: fit-content;
       overflow-x: visible;
 
       &::-webkit-scrollbar {
