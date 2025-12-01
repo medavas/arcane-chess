@@ -309,16 +309,15 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                   </i>
                 </strong>
                 <div className="buttons">
-                  <Button
-                    text="CONTINUE"
-                    className="primary"
-                    width={180}
-                    height={90}
-                    color="S"
+                  <button
+                    type="button"
+                    className="endgame-btn primary-btn"
                     onClick={() => {
                       this.props.navigate('/chapter');
                     }}
-                  />
+                  >
+                    CONTINUE
+                  </button>
                 </div>
               </div>
             </div>
@@ -337,37 +336,34 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                 </strong>
                 <div className="buttons">
                   <div className="left-buttons">
-                    <Button
-                      text="TO CHAPTER"
-                      className="secondary"
-                      color="S"
-                      width={160}
-                      height={40}
+                    <button
+                      type="button"
+                      className="endgame-btn secondary-btn"
                       onClick={() => {
                         this.props.navigate('/chapter');
                       }}
-                    />
-                    <Button
-                      text="ANALYZE"
-                      className="secondary"
-                      color="S"
-                      width={160}
-                      height={40}
+                    >
+                      TO CHAPTER
+                    </button>
+                    <button
+                      type="button"
+                      className="endgame-btn secondary-btn"
                       onClick={() => {
                         this.props.handleClose();
                       }}
-                    />
+                    >
+                      ANALYZE
+                    </button>
                   </div>
-                  <Button
-                    text="RETRY"
-                    className="primary"
-                    width={180}
-                    height={90}
-                    color="S"
+                  <button
+                    type="button"
+                    className="endgame-btn primary-btn"
                     onClick={() => {
                       location.reload();
                     }}
-                  />
+                  >
+                    RETRY
+                  </button>
                 </div>
               </div>
             </div>
@@ -409,8 +405,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                             <img
                               key={key}
                               className={`arcane ${this.state.hoverArcane === `${key}`
-                                  ? 'focus'
-                                  : ''
+                                ? 'focus'
+                                : ''
                                 }`}
                               src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
                               onMouseEnter={() => this.toggleHover(`${key}`)}
@@ -539,37 +535,34 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                 </strong>
                 <div className="buttons">
                   <div className="left-buttons">
-                    <Button
-                      text="HOME"
-                      className="secondary"
-                      color="S"
-                      width={160}
-                      height={40}
+                    <button
+                      type="button"
+                      className="endgame-btn secondary-btn"
                       onClick={() => {
                         this.props.navigate('/');
                       }}
-                    />
-                    <Button
-                      text="ANALYZE"
-                      className="secondary"
-                      color="S"
-                      width={160}
-                      height={40}
+                    >
+                      HOME
+                    </button>
+                    <button
+                      type="button"
+                      className="endgame-btn secondary-btn"
                       onClick={() => {
                         this.props.handleClose();
                       }}
-                    />
+                    >
+                      ANALYZE
+                    </button>
                   </div>
-                  <Button
-                    text="RETRY"
-                    className="primary"
-                    width={180}
-                    height={90}
-                    color="S"
+                  <button
+                    type="button"
+                    className="endgame-btn primary-btn"
                     onClick={() => {
                       location.reload();
                     }}
-                  />
+                  >
+                    RETRY
+                  </button>
                 </div>
               </div>
             </div>
@@ -588,37 +581,34 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                 </strong>
                 <div className="buttons">
                   <div className="left-buttons">
-                    <Button
-                      text="HOME"
-                      className="secondary"
-                      color="S"
-                      width={160}
-                      height={40}
+                    <button
+                      type="button"
+                      className="endgame-btn secondary-btn"
                       onClick={() => {
                         this.props.navigate('/');
                       }}
-                    />
-                    <Button
-                      text="ANALYZE"
-                      className="secondary"
-                      color="S"
-                      width={160}
-                      height={40}
+                    >
+                      HOME
+                    </button>
+                    <button
+                      type="button"
+                      className="endgame-btn secondary-btn"
                       onClick={() => {
                         this.props.handleClose();
                       }}
-                    />
+                    >
+                      ANALYZE
+                    </button>
                   </div>
-                  <Button
-                    text="RETRY"
-                    className="primary"
-                    width={180}
-                    height={90}
-                    color="S"
+                  <button
+                    type="button"
+                    className="endgame-btn primary-btn"
                     onClick={() => {
                       location.reload();
                     }}
-                  />
+                  >
+                    RETRY
+                  </button>
                 </div>
               </div>
             </div>
