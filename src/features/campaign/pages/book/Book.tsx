@@ -7,18 +7,26 @@ import './Book.scss';
 import 'src/features/game/board/styles/chessground.scss';
 import 'src/features/game/board/styles/normal.scss';
 
-import { Chessground, IChessgroundApi } from 'src/features/game/board/chessgroundMod';
+import {
+  Chessground,
+  IChessgroundApi,
+} from 'src/features/game/board/chessgroundMod';
 
 import GlobalVolumeControl from 'src/shared/utils/audio/GlobalVolumeControl';
 
 import TactoriusModal from 'src/shared/components/Modal/Modal';
 import Button from 'src/shared/components/Button/Button';
-import ArcanaSelect, { unlockableArcana } from 'src/features/campaign/pages/book/ArcanaSelect';
+import ArcanaSelect, {
+  unlockableArcana,
+} from 'src/features/campaign/pages/book/ArcanaSelect';
 
 import arcanaJson from 'src/shared/data/arcana.json';
 
 import { swapArmies } from 'src/shared/utils/utils';
-import { setLocalStorage, getLocalStorage } from 'src/shared/utils/handleLocalStorage';
+import {
+  setLocalStorage,
+  getLocalStorage,
+} from 'src/shared/utils/handleLocalStorage';
 
 import book1 from 'src/shared/data/books/book1.json';
 import book2 from 'src/shared/data/books/book2.json';
@@ -55,6 +63,7 @@ interface BookState {
   endChapterOpen: boolean;
   selectedTab: string;
   hoverArcane: string;
+  chapterDropdownOpen: boolean;
 }
 
 interface Node {
@@ -175,8 +184,16 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
       selectedTab: 'chess',
       hoverArcane: '',
       selectedArcana: getLocalStorage(this.props.auth.user.username)?.arcana,
+      chapterDropdownOpen: false,
     };
     this.toggleAllNodesUnlocked = this.toggleAllNodesUnlocked.bind(this);
+    this.toggleChapterDropdown = this.toggleChapterDropdown.bind(this);
+  }
+
+  toggleChapterDropdown() {
+    this.setState((prevState) => ({
+      chapterDropdownOpen: !prevState.chapterDropdownOpen,
+    }));
   }
 
   toggleAllNodesUnlocked() {
@@ -228,8 +245,8 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
       selectedSwatch.split('-')[0] === 'mission'
         ? '+'
         : selectedSwatch.split('-')[0] === 'temple'
-          ? '-'
-          : '';
+        ? '-'
+        : '';
 
     return (
       <>
@@ -439,14 +456,212 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
             <TactoriusModal
               isOpen={this.state.armoryOpen}
               type="armory"
-            // imgPath="public/assets/treeBoat.jpg"
+              // imgPath="public/assets/treeBoat.jpg"
             />
             <TactoriusModal
               isOpen={this.state.endChapterOpen}
               type="chapterEnd"
-            // imgPath="public/assets/treeBoat.jpg"
+              // imgPath="public/assets/treeBoat.jpg"
             />
             <div className="book">
+              {/* Mobile Header with Logo */}
+              <div className="mobile-header">
+                <Link to="/campaign" style={{ textDecoration: 'none' }}>
+                  <div className="hex-home-icon">
+                    <img src="/assets/logo.svg" alt="Home" />
+                  </div>
+                </Link>
+                <div className="mobile-score">
+                  <span className="multiplier">x{this.state.multiplier}</span>
+                  <span className="points">{digits}</span>
+                </div>
+              </div>
+
+              {/* Chapter Dropdown Selector */}
+              <div className="chapter-dropdown">
+                <div
+                  className="chapter-selected"
+                  onClick={this.toggleChapterDropdown}
+                >
+                  <span className="chapter-title">
+                    {this.state.selectedSwatch
+                      ? this.state.book[this.state.selectedSwatch]?.title
+                      : 'Select a Chapter'}
+                  </span>
+                  <span
+                    className={`chapter-icon ${
+                      this.state.chapterDropdownOpen ? 'open' : ''
+                    }`}
+                  >
+                    ▼
+                  </span>
+                </div>
+                <div
+                  className={`chapter-list ${
+                    this.state.chapterDropdownOpen ? 'open' : ''
+                  }`}
+                >
+                  {_.filter(this.state.book, (node) => {
+                    const currLS = getLocalStorage(
+                      this.props.auth.user.username
+                    );
+                    if (this.state.allNodesUnlocked) return true;
+                    if (
+                      (_.includes(node.id, 'mission') ||
+                        _.includes(node.id, 'temple')) &&
+                      currLS.nodeScores[node.id]
+                    )
+                      return false;
+                    if (
+                      !_.includes(node.id, 'lesson') &&
+                      currLS.nodeScores &&
+                      currLS.nodeScores[node.id]
+                    )
+                      return false;
+                    if (
+                      node.prereq &&
+                      !_.includes(Object.keys(currLS.nodeScores), node.prereq)
+                    )
+                      return false;
+                    return true;
+                  }).map((node, i) => (
+                    <div
+                      key={i}
+                      className={`chapter-item ${
+                        _.includes(Object.keys(LS.nodeScores), node.id)
+                          ? 'completed'
+                          : ''
+                      } ${
+                        this.state.selectedSwatch === node.id ? 'selected' : ''
+                      }`}
+                      onClick={() => {
+                        const currLS = getLocalStorage(
+                          this.props.auth.user.username
+                        );
+                        this.setState(
+                          {
+                            selectedSwatch: node.id,
+                            bookTheme: node.bookTheme,
+                            theme: node.theme,
+                            config: currLS.config,
+                            chapterDropdownOpen: false,
+                          },
+                          () => {
+                            const missionArcanaDelta =
+                              this.booksMap[`book${LS.chapter}`]?.[
+                                this.state.selectedSwatch
+                              ]?.panels['panel-1'].whiteArcane;
+                            const arcanaToStore = Object.keys(
+                              missionArcanaDelta || {}
+                            ).length
+                              ? {}
+                              : currLS.arcana;
+                            const diffMults: Record<string, number> = {
+                              novice: 80,
+                              intermediate: 95,
+                              advanced: 110,
+                              expert: 125,
+                            };
+                            const updatedConfig = { ...LS.config };
+                            let updatedArcana = arcanaToStore;
+                            if (_.includes(node.id, 'temple')) {
+                              updatedArcana = {};
+                              this.updateMultiplier(
+                                diffMults[LS.difficulty],
+                                true
+                              );
+                            }
+                            if (Object.keys(missionArcanaDelta || {}).length) {
+                              this.updateMultiplier(
+                                diffMults[LS.difficulty],
+                                true
+                              );
+                            }
+                            setLocalStorage({
+                              auth: currLS.auth,
+                              chapter: currLS.chapter,
+                              config: updatedConfig,
+                              arcana: updatedArcana,
+                              nodeScores: currLS.nodeScores,
+                              spellBook: currLS.spellBook,
+                              nodeId: node.id,
+                              chapterEnd: currLS.chapterEnd,
+                              difficulty: currLS.difficulty,
+                            });
+                          }
+                        );
+                      }}
+                    >
+                      {node.title}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Player Arcana Section with Preview */}
+              <div className="mobile-arcana-section">
+                <div className="arcana-preview">
+                  {Object.keys(LS.arcana || {}).length > 0 ? (
+                    _.map(LS.arcana, (value, key: string) => (
+                      <div key={key} className="arcane-preview-item">
+                        <img
+                          src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
+                          alt={arcana[key].name}
+                          onClick={() => this.toggleHover(key)}
+                        />
+                        <div className="badge">
+                          {arcana[key].type === 'inherent' ? 'INH' : value}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <span className="empty-preview">No arcana selected</span>
+                  )}
+                </div>
+                <div className="arcana-selector-label">Your Arcana</div>
+                <div className="time-display">{this.getTimeDisplay()}</div>
+                {this.state.selectedSwatch &&
+                  isMission &&
+                  this.state.playerColor === 'white' && (
+                    <ArcanaSelect
+                      auth={this.props.auth}
+                      isPlayerArcana
+                      isMission={isMission}
+                      updateBookMultiplier={(value) =>
+                        this.updateMultiplier(value)
+                      }
+                      missionArcana={{
+                        ...this.booksMap[`book${LS.chapter}`]?.[
+                          this.state.selectedSwatch
+                        ]?.panels['panel-1'].whiteArcane,
+                      }}
+                      onToggleHover={(arcane: string) =>
+                        this.toggleHover(arcane)
+                      }
+                    />
+                  )}
+                {this.state.selectedSwatch &&
+                  isMission &&
+                  this.state.playerColor === 'black' && (
+                    <ArcanaSelect
+                      auth={this.props.auth}
+                      isPlayerArcana
+                      isMission={isMission}
+                      updateBookMultiplier={(value) =>
+                        this.updateMultiplier(value)
+                      }
+                      missionArcana={{
+                        ...this.booksMap[`book${LS.chapter}`]?.[
+                          this.state.selectedSwatch
+                        ]?.panels['panel-1'].whiteArcane,
+                      }}
+                      onToggleHover={(arcane: string) =>
+                        this.toggleHover(arcane)
+                      }
+                    />
+                  )}
+              </div>
+
               <div className="hud">
                 <div className="left">
                   <div style={{ display: 'flex' }}>
@@ -491,8 +706,9 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                           </div>
                           <img
                             key={key}
-                            className={`arcane ${this.state.hoverArcane === key ? 'focus' : ''
-                              }`}
+                            className={`arcane ${
+                              this.state.hoverArcane === key ? 'focus' : ''
+                            }`}
                             src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
                             style={{
                               height: '50px',
@@ -754,7 +970,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                         // }}
                         orientation={
                           this.state.playerColor === 'black' &&
-                            this.state.selectedSwatch.split('-')[0] === 'mission'
+                          this.state.selectedSwatch.split('-')[0] === 'mission'
                             ? 'black'
                             : 'white'
                         }
@@ -806,7 +1022,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                 ) : null}
                 <div
                   className="description-spellBook"
-                // style={{ zIndex: 100 }}
+                  // style={{ zIndex: 100 }}
                 >
                   <div className="description">
                     {this.state.selectedSwatch !== '' ? (
@@ -837,12 +1053,12 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                                     {p}
                                     {this.state.book[this.state.selectedSwatch]
                                       .boss && (
-                                        <span style={{ color: 'red' }}>
-                                          This is a boss level. Completing this
-                                          mission will reset your progress in this
-                                          chapter.
-                                        </span>
-                                      )}
+                                      <span style={{ color: 'red' }}>
+                                        This is a boss level. Completing this
+                                        mission will reset your progress in this
+                                        chapter.
+                                      </span>
+                                    )}
                                   </p>
                                 ))}
                             </div>
@@ -852,9 +1068,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                     ) : null}
                   </div>
                   <div className="spellBook">
-                    <div
-                      className="time-arcana time-arcana-white"
-                    >
+                    <div className="time-arcana time-arcana-white">
                       <h2 className="time">{this.getTimeDisplay()}</h2>
                       <div
                         style={{
@@ -863,7 +1077,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                         }}
                       >
                         {this.state.selectedSwatch === '' ? null : this.state
-                          .playerColor === 'white' ? (
+                            .playerColor === 'white' ? (
                           <ArcanaSelect
                             auth={this.props.auth}
                             isPlayerArcana
@@ -900,9 +1114,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                         )}
                       </div>
                     </div>
-                    <div
-                      className="time-arcana time-arcana-black"
-                    >
+                    <div className="time-arcana time-arcana-black">
                       <h2 className="time">{this.getTimeDisplay()}</h2>
                       <div
                         style={{
@@ -911,7 +1123,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                         }}
                       >
                         {this.state.selectedSwatch === '' ? null : this.state
-                          .playerColor === 'black' ? (
+                            .playerColor === 'black' ? (
                           <ArcanaSelect
                             auth={this.props.auth}
                             isPlayerArcana
@@ -950,6 +1162,91 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                     </div>
                   </div>
                 </div>
+
+                {/* Opponent Arcana Section for Mobile */}
+                <div className="opponent-arcana-section">
+                  <div className="arcana-selector-label">Opponent Arcana</div>
+                  <div className="time-display">{this.getTimeDisplay()}</div>
+                  {this.state.selectedSwatch &&
+                    isMission &&
+                    this.state.playerColor === 'white' && (
+                      <ArcanaSelect
+                        auth={this.props.auth}
+                        isPlayerArcana={false}
+                        engineArcana={{
+                          ...this.booksMap[`book${LS.chapter}`]?.[
+                            this.state.selectedSwatch
+                          ]?.panels['panel-1'].blackArcane,
+                        }}
+                        isMission={isMission}
+                        updateBookMultiplier={(value) =>
+                          this.updateMultiplier(value)
+                        }
+                        onToggleHover={(arcane: string) =>
+                          this.toggleHover(arcane)
+                        }
+                      />
+                    )}
+                  {this.state.selectedSwatch &&
+                    isMission &&
+                    this.state.playerColor === 'black' && (
+                      <ArcanaSelect
+                        auth={this.props.auth}
+                        isPlayerArcana={false}
+                        engineArcana={{
+                          ...this.booksMap[`book${LS.chapter}`]?.[
+                            this.state.selectedSwatch
+                          ]?.panels['panel-1'].blackArcane,
+                        }}
+                        isMission={isMission}
+                        updateBookMultiplier={(value) =>
+                          this.updateMultiplier(value)
+                        }
+                        onToggleHover={(arcane: string) =>
+                          this.toggleHover(arcane)
+                        }
+                      />
+                    )}
+                </div>
+
+                {/* Mobile Description (Optional) */}
+                {this.state.selectedSwatch && this.state.hoverArcane !== '' && (
+                  <div className="mobile-description">
+                    <div className="node-title">
+                      {arcana[this.state.hoverArcane].name}
+                    </div>
+                    <div className="node-description">
+                      {arcana[this.state.hoverArcane].description}
+                    </div>
+                  </div>
+                )}
+                {this.state.selectedSwatch && this.state.hoverArcane === '' && (
+                  <div className="mobile-description">
+                    <div className="node-title">
+                      {this.state.book[this.state.selectedSwatch].title}
+                    </div>
+                    <div className="node-description">
+                      {this.state.book[this.state.selectedSwatch].nodeText
+                        .split('\n\n')
+                        .map((p: string, i: number) => (
+                          <p key={i}>{p}</p>
+                        ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Mobile Start Button (Sticky at bottom) */}
+              <div className="mobile-start-button">
+                <Link to={`/${this.state.selectedSwatch.split('-')[0]}`}>
+                  <Button
+                    text="START CHAPTER"
+                    className="primary"
+                    color="B"
+                    width={200}
+                    disabled={this.state.selectedSwatch === ''}
+                  />
+                </Link>
               </div>
             </div>
           </div>

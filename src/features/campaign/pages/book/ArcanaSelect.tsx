@@ -4,7 +4,10 @@ import _ from 'lodash';
 import './ArcanaSelect.scss';
 import Button from 'src/shared/components/Button/Button';
 
-import { setLocalStorage, getLocalStorage } from 'src/shared/utils/handleLocalStorage';
+import {
+  setLocalStorage,
+  getLocalStorage,
+} from 'src/shared/utils/handleLocalStorage';
 
 import arcanaJson from 'src/shared/data/arcana.json';
 
@@ -324,9 +327,11 @@ export default class ArcanaSelect extends React.Component<
                       {this.getBadgeText(key, hasMissionArcana, missionArcana)}
                     </div>
                     <img
-                      className={`arcane ${hoverArcane === key ? 'focus' : ''} ${
-                        isSelected ? 'selected' : ''
-                      } ${isDisabled ? 'disabled' : ''}`}
+                      className={`arcane ${
+                        hoverArcane === key ? 'focus' : ''
+                      } ${isSelected ? 'selected' : ''} ${
+                        isDisabled ? 'disabled' : ''
+                      }`}
                       src={`/assets/arcanaImages${meta.imagePath}.svg`}
                       alt={meta.name}
                       onClick={() => {

@@ -13,7 +13,8 @@
 }
 
 @keyframes glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 5px rgba($B_LGHT, 0.3);
   }
   50% {
@@ -27,11 +28,16 @@
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background: rgba($B_BACK, 0.85);
+  background: radial-gradient(
+    circle,
+    rgba($B_DARK, 0.4) 0%,
+    rgba(0, 0, 0, 0.95) 80%
+  );
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   animation: fadeIn 0.3s ease;
+  overflow-x: hidden;
 
   .book {
     width: 1280px;
@@ -402,8 +408,10 @@
                 .arcane {
                   height: 60px;
                   width: 60px;
-                  transition: transform 0.2s ease, filter 0.2s ease;
-                  
+                  transition:
+                    transform 0.2s ease,
+                    filter 0.2s ease;
+
                   &:hover {
                     transform: scale(1.1);
                     filter: drop-shadow(0 0 5px rgba($B_LGHT, 0.8));
@@ -420,6 +428,19 @@
         }
       }
     }
+  }
+
+  // Mobile-specific components
+  .mobile-header {
+    display: none; // Hidden on desktop
+  }
+
+  .chapter-dropdown {
+    display: none; // Hidden on desktop
+  }
+
+  .mobile-arcana-section {
+    display: none; // Hidden on desktop
   }
 }
 
@@ -516,28 +537,266 @@
   }
 }
 
-// Mobile screens
+// Mobile screens - Completely restructured layout
 @media (max-width: 768px) {
+  // Ensure no body margins interfere
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
   .outer-book {
-    background: rgba($B_BACK, 0.95);
+    background: radial-gradient(
+      circle,
+      rgba($B_DARK, 0.3) 0%,
+      rgba(0, 0, 0, 1) 80%
+    );
     height: auto;
     min-height: 100vh;
+    width: 100vw;
+    max-width: 100vw;
+    padding: 0;
+    margin: 0;
+    align-items: stretch;
+    justify-content: stretch;
+    overflow-x: hidden;
+    position: relative;
 
     .book {
-      width: 100%;
+      width: 100vw;
+      max-width: 100vw;
       max-height: none;
-      grid-template-columns: 1fr;
-      grid-template-rows: auto 1fr;
-      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      margin: 0;
+      gap: 0;
 
-      .hud {
-        flex-direction: column;
-        max-height: none;
-        background: rgba($B_DARK, 0.8);
+      // 1. Mobile Header with Logo
+      .mobile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         padding: 15px;
-        gap: 15px;
-        border-radius: 8px;
-        margin-bottom: 10px;
+        background: rgba(0, 0, 0, 0.85);
+        border-bottom: 1px solid rgba($B_LGHT, 0.15);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        width: 100%;
+
+        .hex-home-icon {
+          width: 50px;
+          height: 50px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transition: all 0.3s ease;
+          cursor: pointer;
+
+          &:hover {
+            transform: scale(1.05);
+            opacity: 0.8;
+          }
+
+          svg,
+          img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+          }
+        }
+
+        .mobile-score {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          background: rgba(0, 0, 0, 0.5);
+          padding: 8px 15px;
+          border-radius: 20px;
+          border: 1px solid rgba($B_LGHT, 0.15);
+
+          .multiplier {
+            color: $B_LGHT;
+            font-weight: bold;
+            font-size: 1.1rem;
+          }
+
+          .points {
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+          }
+        }
+      }
+
+      // 2. Chapter Dropdown Selector
+      .chapter-dropdown {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        z-index: 90;
+
+        .chapter-selected {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 15px 20px;
+          background: rgba(0, 0, 0, 0.7);
+          border-bottom: 1px solid rgba($B_LGHT, 0.15);
+          cursor: pointer;
+          transition: all 0.2s ease;
+
+          &:hover {
+            background: rgba($B_DARK, 0.3);
+          }
+
+          .chapter-title {
+            color: $B_LGHT;
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex: 1;
+          }
+
+          .chapter-icon {
+            color: $B_LGHT;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+
+            &.open {
+              transform: rotate(180deg);
+            }
+          }
+        }
+
+        .chapter-list {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: rgba(0, 0, 0, 0.95);
+          max-height: 60vh;
+          overflow-y: auto;
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+          border-left: 1px solid rgba($B_LGHT, 0.15);
+          border-right: 1px solid rgba($B_LGHT, 0.15);
+          border-bottom: 1px solid rgba($B_LGHT, 0.15);
+          display: none;
+
+          &.open {
+            display: block;
+          }
+
+          .chapter-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba($B_LGHT, 0.05);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: transparent;
+
+            &:hover {
+              background: rgba($B_LGHT, 0.05);
+              border-left: 3px solid rgba($B_LGHT, 0.5);
+            }
+
+            &.completed {
+              opacity: 0.5;
+              background: rgba(0, 0, 0, 0.3);
+            }
+
+            &.selected {
+              background: rgba($B_DARK, 0.4);
+              border-left: 3px solid $B_LGHT;
+            }
+          }
+        }
+      }
+
+      // 3. Player Arcana Section (with preview at top)
+      .mobile-arcana-section {
+        display: flex;
+        flex-direction: column;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.6);
+        border-bottom: 1px solid rgba($B_LGHT, 0.1);
+
+        .arcana-preview {
+          display: flex;
+          gap: 8px;
+          padding: 10px;
+          background: rgba(0, 0, 0, 0.4);
+          border-radius: 4px;
+          margin-bottom: 15px;
+          flex-wrap: wrap;
+          justify-content: center;
+          min-height: 70px;
+          align-items: center;
+
+          .arcane-preview-item {
+            position: relative;
+            width: 50px;
+            height: 50px;
+
+            img {
+              width: 100%;
+              height: 100%;
+              border-radius: 4px;
+              border: 2px solid rgba($B_LGHT, 0.3);
+              transition: all 0.2s ease;
+
+              &:hover {
+                transform: scale(1.1);
+                border-color: $B_LGHT;
+              }
+            }
+
+            .badge {
+              position: absolute;
+              top: -5px;
+              right: -5px;
+              background: $B_FACT;
+              color: white;
+              border-radius: 50%;
+              width: 20px;
+              height: 20px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 0.7rem;
+              font-weight: bold;
+              border: 2px solid white;
+            }
+          }
+
+          .empty-preview {
+            color: rgba($B_LGHT, 0.5);
+            font-style: italic;
+          }
+        }
+
+        .arcana-selector-label {
+          color: $B_LGHT;
+          font-weight: bold;
+          margin-bottom: 10px;
+          font-size: 1.1rem;
+        }
+
+        .time-display {
+          color: $B_LGHT;
+          font-weight: bold;
+          text-align: center;
+          padding: 10px;
+          background: rgba(0, 0, 0, 0.4);
+          border-radius: 4px;
+          margin-bottom: 10px;
+          font-size: 1.1rem;
+        }
+      }
+
+      // Hide desktop HUD on mobile
+      .hud {
+        display: none !important;
 
         .left {
           width: 100%;
@@ -599,29 +858,31 @@
       }
 
       .content {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto;
-        gap: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
         height: auto;
 
+        // Hide desktop nodes list on mobile
         .nodes {
-          width: 100%;
-          height: 250px;
-          border-radius: 8px;
-          border-right: none;
-          border-bottom: none;
+          display: none;
         }
 
+        // 4. Chess Board
         .chess-tab {
           width: 100%;
-          border-radius: 8px;
+          padding: 15px;
+          background: rgba(0, 0, 0, 0.4);
 
           .tactorius-board {
             width: 100%;
             max-width: 100%;
             height: auto;
             aspect-ratio: 1;
-            max-height: 90vw;
+            margin: 0 auto;
+            box-shadow: 0 4px 12px rgba($B_LGHT, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
 
             .tactorius {
               width: 100%;
@@ -630,46 +891,107 @@
           }
         }
 
-        .description-spellBook {
-          width: 100%;
-          height: auto;
-          border-radius: 8px;
-          border-left: none;
+        // 5. Opponent Arcana Section
+        .opponent-arcana-section {
+          display: flex;
+          flex-direction: column;
           padding: 15px;
+          background: rgba(0, 0, 0, 0.6);
+          border-top: 1px solid rgba($B_LGHT, 0.1);
 
-          .description {
-            width: 100%;
-            height: auto;
-            max-height: 250px;
-            padding: 10px;
+          .arcana-selector-label {
+            color: $B_LGHT;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
           }
 
-          .spellBook {
-            width: 100%;
-            height: auto;
-            flex-direction: column;
-            gap: 15px;
+          .time-display {
+            color: $B_LGHT;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            background: rgba($B_BACK, 0.4);
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+          }
+        }
 
-            .time-arcana {
-              width: 100%;
-              max-width: 100%;
+        // Hide desktop description panel
+        .description-spellBook {
+          display: none;
+        }
 
-              .time {
-                width: 100%;
-                font-size: 1.1rem;
-              }
+        // Description panel for mobile (optional - can be shown in modal)
+        .mobile-description {
+          display: flex;
+          flex-direction: column;
+          padding: 15px;
+          background: rgba(0, 0, 0, 0.7);
+          border-top: 1px solid rgba($B_LGHT, 0.1);
 
-              .arcana-picker-wrapper {
-                width: 100%;
-                max-width: 100%;
+          .node-title {
+            color: $B_LGHT;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            text-align: center;
+          }
 
-                .arcana-picker {
-                  width: 100%;
-                  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-                  justify-content: center;
-                  gap: 10px;
-                }
-              }
+          .node-description {
+            color: rgba(white, 0.9);
+            line-height: 1.6;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba($B_BACK, 0.3);
+            border-radius: 4px;
+
+            &::-webkit-scrollbar {
+              width: 6px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+              background: rgba($B_LGHT, 0.5);
+              border-radius: 3px;
+            }
+          }
+        }
+      }
+
+      // 6. Start Button (Sticky at bottom)
+      .mobile-start-button {
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.9);
+        border-top: 1px solid rgba($B_LGHT, 0.15);
+        z-index: 80;
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
+
+        a {
+          display: block;
+          width: 100%;
+
+          button {
+            width: 100% !important;
+            height: 60px !important;
+            font-size: 1.3rem !important;
+            font-weight: bold !important;
+            box-shadow: 0 4px 12px rgba($B_FACT, 0.4);
+            transition: all 0.3s ease;
+
+            &:hover:not(:disabled) {
+              transform: translateY(-2px);
+              box-shadow: 0 6px 16px rgba($B_FACT, 0.6);
+            }
+
+            &:disabled {
+              opacity: 0.4;
+              cursor: not-allowed;
             }
           }
         }
