@@ -1,4 +1,4 @@
-﻿.skirmish-modal {
+.skirmish-modal {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -402,9 +402,9 @@
 // Faction grid for picker section
 .faction-picker-section {
   .faction-grid {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4, 48px);
     gap: 8px;
-    flex-wrap: nowrap;
 
     .faction-tile {
       --accent: #00b4ff;
@@ -699,7 +699,7 @@
 }
 
 // Mobile layout: Show tabs, single column, toggle sections
-@media (max-width: 470px) {
+@media (max-width: 580px) {
   .skirmish-modal {
     .skirmish-header .tab-nav {
       display: flex;
