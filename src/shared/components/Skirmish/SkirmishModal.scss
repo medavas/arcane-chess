@@ -74,7 +74,7 @@
   }
 
   .tab-nav {
-    display: flex;
+    display: none;
     gap: 2px;
     background: rgba(0, 0, 0, 0.3);
     padding: 4px;
@@ -576,16 +576,6 @@
     grid-template-columns: 1fr;
   }
 
-  .player-section,
-  .engine-section,
-  .settings-section {
-    display: none;
-
-    &.active {
-      display: flex;
-    }
-  }
-
   .action-buttons {
     grid-column: 1;
   }
@@ -707,6 +697,27 @@
   }
 }
 
+// Mobile layout: Show tabs, single column, toggle sections
+@media (max-width: 470px) {
+  .skirmish-modal {
+    .skirmish-header .tab-nav {
+      display: flex;
+    }
+
+    .content-container {
+      grid-template-columns: 1fr;
+    }
+
+    .player-section,
+    .engine-section {
+      display: none;
+
+      &.active {
+        display: flex;
+      }
+    }
+  }
+}
 
 // Very small screens - extra compact
 @media (max-width: 400px) {
