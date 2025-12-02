@@ -12,11 +12,7 @@
     grid-template-rows: 60px;
     height: 60px;
     width: 100%;
-    background: linear-gradient(
-      135deg,
-      rgba($B_LGHT, 0.3),
-      rgba($B_DARK, 0.5)
-    );
+    background: linear-gradient(135deg, rgba($B_LGHT, 0.3), rgba($B_DARK, 0.5));
     border: 1px solid rgba($B_LGHT, 0.4);
     border-radius: 8px;
     overflow: hidden;

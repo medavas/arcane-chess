@@ -173,7 +173,7 @@ export default class ArcanaSelect extends React.Component<
     const chapter = getLocalStorage(this.props.auth.user.username).chapter;
     // Return cumulative arcana from all chapters up to and including current chapter
     const cumulativeArcana: { [key: string]: number } = {};
-    
+
     // Loop from chapter 1 (index 0) through current chapter (inclusive)
     for (let i = 0; i <= chapter - 1 && i < unlockableArcana.length; i++) {
       const chapterArcana = unlockableArcana[i];
@@ -181,7 +181,7 @@ export default class ArcanaSelect extends React.Component<
         cumulativeArcana[key] = (cumulativeArcana[key] || 0) + value;
       });
     }
-    
+
     return cumulativeArcana;
   };
 
@@ -330,13 +330,19 @@ export default class ArcanaSelect extends React.Component<
                   return null;
                 }
 
-                const isSelected = selectedArcana[key] && selectedArcana[key] > 0;
+                const isSelected =
+                  selectedArcana[key] && selectedArcana[key] > 0;
                 const isDisabled = !isPlayerArcana || hasMissionArcana;
 
                 return (
                   <div key={key} className="arcane-wrapper">
                     <div className="arcane-badge">
-                      {this.getBadgeText(key, hasMissionArcana, value, missionArcana)}
+                      {this.getBadgeText(
+                        key,
+                        hasMissionArcana,
+                        value,
+                        missionArcana
+                      )}
                     </div>
                     <img
                       className={`arcane ${

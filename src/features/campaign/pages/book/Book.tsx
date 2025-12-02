@@ -268,7 +268,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
 
     // Return cumulative arcana from all chapters up to and including current chapter
     const cumulativeArcana: { [key: string]: number } = {};
-    
+
     for (let i = 0; i <= chapter - 1 && i < unlockableArcana.length; i++) {
       const chapterArcana = unlockableArcana[i];
       Object.entries(chapterArcana).forEach(([key, value]) => {

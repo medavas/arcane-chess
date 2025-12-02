@@ -5,11 +5,7 @@
   flex-direction: row-reverse;
   gap: 6px;
   padding: 6px;
-  background: linear-gradient(
-    135deg,
-    rgba($B_LGHT, 0.3),
-    rgba($B_DARK, 0.5)
-  );
+  background: linear-gradient(135deg, rgba($B_LGHT, 0.3), rgba($B_DARK, 0.5));
   border: 1px solid rgba($B_LGHT, 0.4);
   border-radius: 6px;
   width: 100%;
