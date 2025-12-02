@@ -23,9 +23,11 @@ body {
   font-size: 0.9rem;
 
   background-image: url('/assets/images/textures/random-grey-variations.png'),
-    radial-gradient(circle,
+    radial-gradient(
+      circle,
       rgba(52, 120, 220, 0.6) 0%,
-      rgba(17, 17, 17, 0.2) 80%);
+      rgba(17, 17, 17, 0.2) 80%
+    );
   background-position: center;
 
   opacity: 0;
@@ -187,7 +189,7 @@ body {
         align-self: flex-end;
         width: 75vw;
         max-width: calc(100vw - 20px);
-        min-height: 72px;
+        min-height: 80px;
         padding: 14px 16px;
         border: 1px solid rgba(68, 170, 255, 0.3);
         border-radius: 6px;
@@ -324,8 +326,7 @@ body {
   .dashboard {
     .dashboard-header {
       min-height: auto;
-      grid-template-columns:
-        auto minmax(380px, 1.45fr) minmax(240px, 1fr);
+      grid-template-columns: auto minmax(380px, 1.45fr) minmax(240px, 1fr);
       grid-template-rows: auto auto;
       grid-template-areas:
         'logo mainnav xp'

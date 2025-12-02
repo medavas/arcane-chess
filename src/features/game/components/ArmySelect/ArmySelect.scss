@@ -1,3 +1,5 @@
+@import 'src/shared/styles/main.scss';
+
 .army-select {
   width: 100%;
   max-width: 100%;
@@ -12,10 +14,10 @@
     width: 100%;
     background: linear-gradient(
       135deg,
-      rgba(20, 15, 35, 0.6),
-      rgba(35, 25, 50, 0.6)
+      rgba($B_LGHT, 0.3),
+      rgba($B_DARK, 0.5)
     );
-    border: 1px solid rgba(79, 72, 204, 0.3);
+    border: 1px solid rgba($B_LGHT, 0.4);
     border-radius: 8px;
     overflow: hidden;
     box-sizing: border-box;
@@ -32,12 +34,12 @@
       min-height: 0;
 
       &:hover {
-        background-color: rgba(79, 72, 204, 0.3);
+        background-color: rgba($B_LGHT, 0.3);
       }
     }
   }
   .army.hover-army > * {
-    background-color: rgba(79, 72, 204, 0.5);
+    background-color: rgba($B_LGHT, 0.5);
     cursor: pointer;
   }
   .army-block {
@@ -51,8 +53,8 @@
     max-width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(79, 72, 204, 0.3);
+    background: rgba($B_DARK, 0.5);
+    border: 1px solid rgba($B_LGHT, 0.4);
     border-radius: 8px;
     margin-top: 8px;
 
@@ -61,16 +63,16 @@
     }
 
     &::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba($B_DARK, 0.5);
       border-radius: 4px;
     }
 
     &::-webkit-scrollbar-thumb {
-      background: rgba(79, 72, 204, 0.5);
+      background: rgba($B_LGHT, 0.5);
       border-radius: 4px;
 
       &:hover {
-        background: rgba(79, 72, 204, 0.7);
+        background: rgba($B_LGHT, 0.7);
       }
     }
 
@@ -83,10 +85,10 @@
       flex-shrink: 0;
       background: linear-gradient(
         135deg,
-        rgba(20, 15, 35, 0.4),
-        rgba(35, 25, 50, 0.4)
+        rgba($B_LGHT, 0.2),
+        rgba($B_DARK, 0.4)
       );
-      border-bottom: 1px solid rgba(79, 72, 204, 0.2);
+      border-bottom: 1px solid rgba($B_LGHT, 0.3);
       overflow: hidden;
       box-sizing: border-box;
 
@@ -107,7 +109,7 @@
       }
     }
     .army-item.hover-army > * {
-      background-color: rgba(79, 72, 204, 0.5) !important;
+      background-color: rgba($B_LGHT, 0.5) !important;
       cursor: pointer;
     }
   }
@@ -128,10 +130,10 @@
       width: 100%;
       background: linear-gradient(
         135deg,
-        rgba(20, 15, 35, 0.6),
-        rgba(35, 25, 50, 0.6)
+        rgba($B_LGHT, 0.3),
+        rgba($B_DARK, 0.5)
       );
-      border: 1px solid rgba(79, 72, 204, 0.3);
+      border: 1px solid rgba($B_LGHT, 0.4);
       border-radius: 6px;
       overflow: hidden;
       box-sizing: border-box;
@@ -148,12 +150,12 @@
         min-height: 0;
 
         &:hover {
-          background-color: rgba(79, 72, 204, 0.3);
+          background-color: rgba($B_LGHT, 0.3);
         }
       }
     }
     .army.hover-army > * {
-      background-color: rgba(79, 72, 204, 0.5);
+      background-color: rgba($B_LGHT, 0.5);
       cursor: pointer;
     }
     .army-block {
@@ -167,8 +169,8 @@
       max-width: 100%;
       overflow-y: auto;
       overflow-x: hidden;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(79, 72, 204, 0.3);
+      background: rgba($B_DARK, 0.5);
+      border: 1px solid rgba($B_LGHT, 0.4);
       border-radius: 8px;
       margin-top: 8px;
 
@@ -177,16 +179,16 @@
       }
 
       &::-webkit-scrollbar-track {
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba($B_DARK, 0.5);
         border-radius: 3px;
       }
 
       &::-webkit-scrollbar-thumb {
-        background: rgba(79, 72, 204, 0.5);
+        background: rgba($B_LGHT, 0.5);
         border-radius: 3px;
 
         &:hover {
-          background: rgba(79, 72, 204, 0.7);
+          background: rgba($B_LGHT, 0.7);
         }
       }
 
@@ -200,10 +202,10 @@
         flex-shrink: 0;
         background: linear-gradient(
           135deg,
-          rgba(20, 15, 35, 0.4),
-          rgba(35, 25, 50, 0.4)
+          rgba($B_LGHT, 0.2),
+          rgba($B_DARK, 0.4)
         );
-        border-bottom: 1px solid rgba(79, 72, 204, 0.2);
+        border-bottom: 1px solid rgba($B_LGHT, 0.3);
         overflow: hidden;
         box-sizing: border-box;
 
@@ -224,7 +226,7 @@
         }
       }
       .army-item.hover-army > * {
-        background-color: rgba(79, 72, 204, 0.5) !important;
+        background-color: rgba($B_LGHT, 0.5) !important;
         cursor: pointer;
       }
     }
