@@ -384,6 +384,67 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
     });
   };
 
+  swapSides = () => {
+    const prevPlayerColor = this.state.playerColor;
+    const prevEngineColor = this.state.engineColor;
+
+    const nextPlayerColor = prevPlayerColor === 'white' ? 'black' : 'white';
+    const nextEngineColor = prevEngineColor === 'white' ? 'black' : 'white';
+
+    const playerArmy =
+      prevPlayerColor === 'white'
+        ? this.state.whiteSetup
+        : this.state.blackSetup;
+    const playerInv =
+      prevPlayerColor === 'white'
+        ? this.state.whiteArcana
+        : this.state.blackArcana;
+
+    const engineArmy =
+      prevEngineColor === 'white'
+        ? this.state.whiteSetup
+        : this.state.blackSetup;
+    const engineInv =
+      prevEngineColor === 'white'
+        ? this.state.whiteArcana
+        : this.state.blackArcana;
+
+    // enforce casing by color
+    const nextWhiteSetup = (
+      nextPlayerColor === 'white' ? playerArmy : engineArmy
+    ).toUpperCase();
+    const nextBlackSetup = (
+      nextPlayerColor === 'black' ? playerArmy : engineArmy
+    ).toLowerCase();
+
+    const nextWhiteArc = nextPlayerColor === 'white' ? playerInv : engineInv;
+    const nextBlackArc = nextPlayerColor === 'black' ? playerInv : engineInv;
+
+    this.setState(
+      {
+        playerColor: nextPlayerColor,
+        engineColor: nextEngineColor,
+        whiteSetup: nextWhiteSetup,
+        blackSetup: nextBlackSetup,
+        whiteArcana: nextWhiteArc,
+        blackArcana: nextBlackArc,
+        playerCharacterImgPath: this.state.engineCharacterImgPath,
+        engineCharacterImgPath: this.state.playerCharacterImgPath,
+      },
+      () => {
+        const wCounts = this.transformedSpellBook(this.state.whiteArcana);
+        const bCounts = this.transformedSpellBook(this.state.blackArcana);
+
+        this.props.updateConfig?.('playerColor', this.state.playerColor);
+        this.props.updateConfig?.('engineColor', this.state.engineColor);
+        this.props.updateConfig?.('whiteSetup', this.state.whiteSetup);
+        this.props.updateConfig?.('blackSetup', this.state.blackSetup);
+        this.props.updateConfig?.('wArcana', wCounts);
+        this.props.updateConfig?.('bArcana', bCounts);
+      }
+    );
+  };
+
   componentDidMount() {
     this.randomGameMode('test5');
   }
@@ -948,22 +1009,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                     <button
                       type="button"
                       className="action-btn swap-btn"
-                      onClick={() => {
-                        this.setState((prevState) => ({
-                          playerColor:
-                            prevState.playerColor === 'white'
-                              ? 'black'
-                              : 'white',
-                          engineColor:
-                            prevState.engineColor === 'white'
-                              ? 'black'
-                              : 'white',
-                          playerCharacterImgPath:
-                            prevState.engineCharacterImgPath,
-                          engineCharacterImgPath:
-                            prevState.playerCharacterImgPath,
-                        }));
-                      }}
+                      onClick={this.swapSides}
                       onMouseEnter={() =>
                         this.setState({ hoverId: 'swapSides' })
                       }

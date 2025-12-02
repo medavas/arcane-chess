@@ -571,14 +571,18 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
           <TactoriusModal
             isOpen={this.state.gameOver}
             handleClose={() => this.analyzeGame()}
-            message={[
-              'stalemate',
-              '3-fold repetition',
-              'insufficient material',
-              'fifty move rule'
-            ].some(drawType => this.state.gameOverType.toLowerCase().includes(drawType))
-              ? `Draw - ${this.state.gameOverType}`
-              : this.state.gameOverType}
+            message={
+              [
+                'stalemate',
+                '3-fold repetition',
+                'insufficient material',
+                'fifty move rule',
+              ].some((drawType) =>
+                this.state.gameOverType.toLowerCase().includes(drawType)
+              )
+                ? `Draw - ${this.state.gameOverType}`
+                : this.state.gameOverType
+            }
             score={LS.nodeScores[this.state.nodeId]}
             type={
               this.state.gameOverType.split(' ')[1] === 'mates' &&
@@ -588,8 +592,10 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
                     'stalemate',
                     '3-fold repetition',
                     'insufficient material',
-                    'fifty move rule'
-                  ].some(drawType => this.state.gameOverType.toLowerCase().includes(drawType))
+                    'fifty move rule',
+                  ].some((drawType) =>
+                    this.state.gameOverType.toLowerCase().includes(drawType)
+                  )
                 ? 'draw-qp'
                 : 'defeat-qp'
             }

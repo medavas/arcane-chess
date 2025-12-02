@@ -744,7 +744,12 @@ class UnwrappedTempleView extends React.Component<Props, State> {
               message={
                 this.state.gameOverType === 'puzzle victory'
                   ? this.state.victoryMessage
-                  : ['stalemate', '3-fold repetition', 'insufficient material', 'fifty move rule'].some(drawType => 
+                  : [
+                      'stalemate',
+                      '3-fold repetition',
+                      'insufficient material',
+                      'fifty move rule',
+                    ].some((drawType) =>
                       this.state.gameOverType.toLowerCase().includes(drawType)
                     )
                   ? `Draw - ${this.state.gameOverType}. The puzzle ended in a draw.`
@@ -754,7 +759,12 @@ class UnwrappedTempleView extends React.Component<Props, State> {
               type={
                 this.state.gameOverType === 'puzzle victory'
                   ? 'victory'
-                  : ['stalemate', '3-fold repetition', 'insufficient material', 'fifty move rule'].some(drawType => 
+                  : [
+                      'stalemate',
+                      '3-fold repetition',
+                      'insufficient material',
+                      'fifty move rule',
+                    ].some((drawType) =>
                       this.state.gameOverType.toLowerCase().includes(drawType)
                     )
                   ? 'draw'

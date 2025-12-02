@@ -215,6 +215,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     min-height: 0;
+    isolation: isolate;
 
     .section-header {
       display: flex;
