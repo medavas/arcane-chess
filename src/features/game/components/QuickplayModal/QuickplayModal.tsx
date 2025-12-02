@@ -206,7 +206,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
           name: '',
           description: '',
           type: '',
-          imagePath: '/Empty',
+          imagePath: '/empty',
         });
       }
       this.setState({
@@ -246,7 +246,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
           name: '',
           description: '',
           type: '',
-          imagePath: '/Empty',
+          imagePath: '/empty',
         });
       }
       const paddedSpellBookB = [...characterB.spellBook];
@@ -256,7 +256,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
           name: '',
           description: '',
           type: '',
-          imagePath: '/Empty',
+          imagePath: '/empty',
         });
       }
       this.setState({
@@ -336,14 +336,37 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
 
     const { white, black } = chosenMode;
 
-    this.props.updateConfig('wArcana', this.transformedSpellBook(white.arcana));
-    this.props.updateConfig('bArcana', this.transformedSpellBook(black.arcana));
+    // Pad arcana arrays to 6 slots with empty spells
+    const paddedWhiteArcana = [...white.arcana];
+    while (paddedWhiteArcana.length < 6) {
+      paddedWhiteArcana.push({
+        id: 'empty',
+        name: '',
+        description: '',
+        type: '',
+        imagePath: '/empty',
+      });
+    }
+
+    const paddedBlackArcana = [...black.arcana];
+    while (paddedBlackArcana.length < 6) {
+      paddedBlackArcana.push({
+        id: 'empty',
+        name: '',
+        description: '',
+        type: '',
+        imagePath: '/empty',
+      });
+    }
+
+    this.props.updateConfig('wArcana', this.transformedSpellBook(paddedWhiteArcana));
+    this.props.updateConfig('bArcana', this.transformedSpellBook(paddedBlackArcana));
     this.props.updateConfig('whiteSetup', white.setup);
     this.props.updateConfig('blackSetup', black.setup);
 
     this.setState({
-      whiteArcana: white.arcana,
-      blackArcana: black.arcana,
+      whiteArcana: paddedWhiteArcana,
+      blackArcana: paddedBlackArcana,
       whiteSetup: white.setup,
       blackSetup: black.setup,
       playerCharacterImgPath: '',
@@ -776,11 +799,34 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                             (mode) => mode.name === val
                           );
                           if (selectedMode && this.props.updateConfig) {
+                            // Pad arcana arrays to 6 slots with empty spells
+                            const paddedWhiteArcana = [...selectedMode.white.arcana];
+                            while (paddedWhiteArcana.length < 6) {
+                              paddedWhiteArcana.push({
+                                id: 'empty',
+                                name: '',
+                                description: '',
+                                type: '',
+                                imagePath: '/empty',
+                              });
+                            }
+
+                            const paddedBlackArcana = [...selectedMode.black.arcana];
+                            while (paddedBlackArcana.length < 6) {
+                              paddedBlackArcana.push({
+                                id: 'empty',
+                                name: '',
+                                description: '',
+                                type: '',
+                                imagePath: '/empty',
+                              });
+                            }
+
                             const whiteConfigArcana = this.transformedSpellBook(
-                              selectedMode.white.arcana
+                              paddedWhiteArcana
                             );
                             const blackConfigArcana = this.transformedSpellBook(
-                              selectedMode.black.arcana
+                              paddedBlackArcana
                             );
                             this.props.updateConfig(
                               'whiteSetup',
@@ -799,9 +845,9 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                               blackConfigArcana
                             );
                             this.setState({
-                              whiteArcana: selectedMode.white.arcana,
+                              whiteArcana: paddedWhiteArcana,
                               whiteSetup: selectedMode.white.setup,
-                              blackArcana: selectedMode.black.arcana,
+                              blackArcana: paddedBlackArcana,
                               blackSetup: selectedMode.black.setup,
                               engineCharacterImgPath: '',
                               playerCharacterImgPath: '',

@@ -236,7 +236,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
         name: '',
         description: '',
         type: '',
-        imagePath: '/Empty',
+        imagePath: '/empty',
       });
     }
 
