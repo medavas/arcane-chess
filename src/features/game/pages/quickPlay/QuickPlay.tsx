@@ -401,10 +401,10 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
         [this.state.nodeId]:
           Math.abs(
             100000 -
-              Math.abs(
-                GameBoard.material[this.state.playerColor === 'white' ? 0 : 1] -
-                  GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
-              )
+            Math.abs(
+              GameBoard.material[this.state.playerColor === 'white' ? 0 : 1] -
+              GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
+            )
           ) *
           (timeLeft || 1) *
           LS.config.multiplier,
@@ -570,9 +570,8 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                   } else {
                     value =
                       pieces[
-                        `${
-                          this.state.playerColor === 'white' ? 'w' : 'b'
-                        }${value}`
+                      `${this.state.playerColor === 'white' ? 'w' : 'b'
+                      }${value}`
                       ];
                   }
                 }
@@ -599,18 +598,18 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
             score={LS.nodeScores[this.state.nodeId]}
             type={
               this.state.gameOverType.split(' ')[1] === 'mates' &&
-              this.state.playerColor === this.state.gameOverType.split(' ')[0]
+                this.state.playerColor === this.state.gameOverType.split(' ')[0]
                 ? 'victory-qp'
                 : [
-                    'stalemate',
-                    '3-fold repetition',
-                    'insufficient material',
-                    'fifty move rule',
-                  ].some((drawType) =>
-                    this.state.gameOverType.toLowerCase().includes(drawType)
-                  )
-                ? 'draw-qp'
-                : 'defeat-qp'
+                  'stalemate',
+                  '3-fold repetition',
+                  'insufficient material',
+                  'fifty move rule',
+                ].some((drawType) =>
+                  this.state.gameOverType.toLowerCase().includes(drawType)
+                )
+                  ? 'draw-qp'
+                  : 'defeat-qp'
             }
           />
           <PromotionModal
@@ -767,13 +766,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
               }}
             />
           </div>
-          {/* Shared hover text box for spell details */}
-          {this.state.hoverArcane && (
-            <div className="shared-spell-detail">
-              <h3>{arcana[this.state.hoverArcane]?.name}</h3>
-              <p>{arcana[this.state.hoverArcane]?.description}</p>
-            </div>
-          )}
+
         </div>
       </div>
     );

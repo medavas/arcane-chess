@@ -1,4 +1,4 @@
-﻿@import 'src/shared/styles/_components.scss';
+@import 'src/shared/styles/_components.scss';
 @import 'src/shared/styles/_variables.scss';
 
 .mission-view::before {
@@ -20,11 +20,9 @@
   justify-content: center;
   align-items: center;
   background-image: url('/assets/images/textures/random-grey-variations.png'),
-    radial-gradient(
-      circle,
+    radial-gradient(circle,
       rgba(52, 120, 220, 0.6) 0%,
-      rgba(17, 17, 17, 0.2) 80%
-    );
+      rgba(17, 17, 17, 0.2) 80%);
   background-position: center;
 
   .mission-view {
@@ -277,7 +275,11 @@
         .full-move {
           display: flex;
           margin: 5px;
-          height: 20px;
+          height: auto;
+          gap: 2px;
+          align-items: center;
+
+          button { flex: 1; min-width: 0; width: auto !important; height: auto !important; padding: 2px 4px; font-size: 12px !important; }
         }
 
         .pgn-item {
@@ -582,6 +584,17 @@
           .full-move {
             display: flex;
             margin: 5px;
+            gap: 2px;
+            align-items: center;
+
+            button { flex: 1; min-width: 0; width: auto !important; height: auto !important; padding: 2px 4px; font-size: 12px !important; }
+
+            .move-number {
+              flex-shrink: 0;
+              margin: 0 8px 0 2px;
+              width: 18px;
+              font-size: 12px;
+            }
           }
 
           .pgn-item {

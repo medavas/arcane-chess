@@ -16,7 +16,6 @@ type DashboardProps = {
 };
 type DashboardState = {
   hoverKey: string;
-  settingsOpen: boolean;
   fadeIn: boolean;
   fadeOut: boolean;
 };
@@ -82,7 +81,6 @@ export class UnwrappedDashboard extends React.Component<
     super(props);
     this.state = {
       hoverKey: '',
-      settingsOpen: false,
       fadeIn: false,
       fadeOut: false,
     };
@@ -118,9 +116,8 @@ export class UnwrappedDashboard extends React.Component<
 
     return (
       <div
-        className={`dashboard ${this.state.fadeIn ? 'fade-in' : ''} ${
-          this.state.fadeOut ? 'fade-out' : ''
-        }`}
+        className={`dashboard ${this.state.fadeIn ? 'fade-in' : ''} ${this.state.fadeOut ? 'fade-out' : ''
+          }`}
         ref={this.rootRef}
       >
         <div className={`fade-overlay ${this.state.fadeOut ? 'active' : ''}`} />
@@ -156,22 +153,7 @@ export class UnwrappedDashboard extends React.Component<
 
           <div className="nav-right">
             <div className="right-actions">
-              <Button
-                text="SETTINGS"
-                className="tertiary"
-                color="B"
-                height={50}
-                width="100%"
-                disabled={false}
-                onClick={() => {
-                  this.setState({
-                    settingsOpen: this.state.settingsOpen ? false : true,
-                  });
-                }}
-                onMouseEnter={() => this.setHover('settings')}
-                backgroundColorOverride="#11111188"
-              />
-              {this.state.settingsOpen && <GlobalVolumeControl />}
+              <GlobalVolumeControl />
               <Button
                 text="LOGOUT"
                 className="tertiary"

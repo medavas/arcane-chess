@@ -273,7 +273,11 @@
         .full-move {
           display: flex;
           margin: 5px;
-          height: 20px;
+          height: auto;
+          gap: 2px;
+          align-items: center;
+
+          button { flex: 1; min-width: 0; width: auto !important; height: auto !important; padding: 2px 4px; font-size: 12px !important; }
         }
 
         .pgn-item {
@@ -608,6 +612,17 @@
           .full-move {
             display: flex;
             margin: 5px;
+            gap: 2px;
+            align-items: center;
+
+            button { flex: 1; min-width: 0; width: auto !important; height: auto !important; padding: 2px 4px; font-size: 12px !important; }
+
+            .move-number {
+              flex-shrink: 0;
+              margin: 0 8px 0 2px;
+              width: 18px;
+              font-size: 12px;
+            }
           }
 
           .pgn-item {
