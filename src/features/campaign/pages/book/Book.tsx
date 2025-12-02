@@ -146,27 +146,9 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
     const LS = getLocalStorage(this.props.auth.user.username);
     const currentBook =
       this.booksMap[
-        `book${getLocalStorage(this.props.auth.user.username)?.chapter}`
+      `book${getLocalStorage(this.props.auth.user.username)?.chapter}`
       ];
-    // Get all available nodes and select the last one
-    const availableNodes = _.filter(currentBook, (node) => {
-      if (LS.allNodesUnlocked) return true;
-      if (
-        (_.includes(node.id, 'mission') || _.includes(node.id, 'temple')) &&
-        LS.nodeScores[node.id]
-      )
-        return false;
-      if (
-        !_.includes(node.id, 'lesson') &&
-        LS.nodeScores &&
-        LS.nodeScores[node.id]
-      )
-        return false;
-      if (node.prereq && !_.includes(Object.keys(LS.nodeScores), node.prereq))
-        return false;
-      return true;
-    });
-    const lastAvailableNode = availableNodes[availableNodes.length - 1];
+    const lastAvailableNode = this.getLatestAvailableNode(LS, currentBook);
     this.state = {
       allNodesUnlocked: false,
       armoryOpen: false,
@@ -214,6 +196,31 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
     };
     this.toggleAllNodesUnlocked = this.toggleAllNodesUnlocked.bind(this);
     this.toggleChapterDropdown = this.toggleChapterDropdown.bind(this);
+  }
+
+  getLatestAvailableNode(
+    LS: any,
+    currentBook: { [key: string]: Node }
+  ): Node | undefined {
+    // Get all available nodes and select the last one
+    const availableNodes = _.filter(currentBook, (node) => {
+      if (LS.allNodesUnlocked || this.state?.allNodesUnlocked) return true;
+      if (
+        (_.includes(node.id, 'mission') || _.includes(node.id, 'temple')) &&
+        LS.nodeScores[node.id]
+      )
+        return false;
+      if (
+        !_.includes(node.id, 'lesson') &&
+        LS.nodeScores &&
+        LS.nodeScores[node.id]
+      )
+        return false;
+      if (node.prereq && !_.includes(Object.keys(LS.nodeScores), node.prereq))
+        return false;
+      return true;
+    });
+    return availableNodes[availableNodes.length - 1];
   }
 
   toggleChapterDropdown() {
@@ -342,8 +349,8 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
       selectedSwatch.split('-')[0] === 'mission'
         ? '+'
         : selectedSwatch.split('-')[0] === 'temple'
-        ? '-'
-        : '';
+          ? '-'
+          : '';
 
     return (
       <>
@@ -390,6 +397,28 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
         this.setState({ allNodesUnlocked: !prevState.allNodesUnlocked });
       }
     }
+
+    // Check if nodeScores changed (e.g., user returned from completing a chapter)
+    const LS = getLocalStorage(this.props.auth.user.username);
+    if (!_.isEqual(LS.nodeScores, prevState.nodeScores)) {
+      const currentBook = this.booksMap[`book${LS.chapter}`];
+      const latestNode = this.getLatestAvailableNode(LS, currentBook);
+
+      if (latestNode && latestNode.id !== this.state.selectedSwatch) {
+        // Update localStorage.nodeId so START button loads the correct node
+        setLocalStorage({
+          ...LS,
+          nodeId: latestNode.id,
+        });
+
+        this.setState({
+          selectedSwatch: latestNode.id,
+          nodeScores: LS.nodeScores,
+          theme: latestNode.theme,
+          bookTheme: latestNode.bookTheme,
+        });
+      }
+    }
   }
 
   componentDidMount() {
@@ -397,6 +426,26 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
     this.setState({ targetValue });
 
     (window as any).toggleAllNodesUnlocked = this.toggleAllNodesUnlocked;
+
+    // Sync latest available node from localStorage on mount
+    const LS = getLocalStorage(this.props.auth.user.username);
+    const currentBook = this.booksMap[`book${LS.chapter}`];
+    const latestNode = this.getLatestAvailableNode(LS, currentBook);
+
+    if (latestNode && latestNode.id !== this.state.selectedSwatch) {
+      // Update localStorage.nodeId so START button loads the correct node
+      setLocalStorage({
+        ...LS,
+        nodeId: latestNode.id,
+      });
+
+      this.setState({
+        selectedSwatch: latestNode.id,
+        nodeScores: LS.nodeScores,
+        theme: latestNode.theme,
+        bookTheme: latestNode.bookTheme,
+      });
+    }
 
     const startAnimation = () => {
       const startTime = Date.now();
@@ -567,17 +616,15 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                   : 'Select a Chapter'}
               </span>
               <span
-                className={`chapter-icon ${
-                  this.state.chapterDropdownOpen ? 'open' : ''
-                }`}
+                className={`chapter-icon ${this.state.chapterDropdownOpen ? 'open' : ''
+                  }`}
               >
                 ▼
               </span>
             </div>
             <div
-              className={`chapter-list ${
-                this.state.chapterDropdownOpen ? 'open' : ''
-              }`}
+              className={`chapter-list ${this.state.chapterDropdownOpen ? 'open' : ''
+                }`}
             >
               {_.filter(this.state.book, (node) => {
                 const currLS = getLocalStorage(this.props.auth.user.username);
@@ -603,11 +650,10 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
               }).map((node, i) => (
                 <div
                   key={i}
-                  className={`chapter-item ${
-                    _.includes(Object.keys(LS.nodeScores), node.id)
-                      ? 'completed'
-                      : ''
-                  } ${this.state.selectedSwatch === node.id ? 'selected' : ''}`}
+                  className={`chapter-item ${_.includes(Object.keys(LS.nodeScores), node.id)
+                    ? 'completed'
+                    : ''
+                    } ${this.state.selectedSwatch === node.id ? 'selected' : ''}`}
                   onClick={() => {
                     const currLS = getLocalStorage(
                       this.props.auth.user.username
@@ -705,9 +751,8 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                       </div>
                       <img
                         key={key}
-                        className={`arcane ${
-                          this.state.hoverArcane === key ? 'focus' : ''
-                        }`}
+                        className={`arcane ${this.state.hoverArcane === key ? 'focus' : ''
+                          }`}
                         src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
                         style={{
                           height: '50px',
@@ -756,6 +801,14 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                     width={200}
                     disabled={this.state.selectedSwatch === ''}
                     styles={{ color: 'white', borderRadius: 0 }}
+                    onClick={() => {
+                      // Ensure localStorage.nodeId is updated before navigation
+                      const LS = getLocalStorage(this.props.auth.user.username);
+                      setLocalStorage({
+                        ...LS,
+                        nodeId: this.state.selectedSwatch,
+                      });
+                    }}
                   />
                 </Link>
               </div>
@@ -791,7 +844,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                   }}
                   orientation={
                     this.state.playerColor === 'black' &&
-                    this.state.selectedSwatch.split('-')[0] === 'mission'
+                      this.state.selectedSwatch.split('-')[0] === 'mission'
                       ? 'black'
                       : 'white'
                   }
@@ -815,17 +868,15 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                       : 'Select a Chapter'}
                   </span>
                   <span
-                    className={`chapter-icon ${
-                      this.state.chapterDropdownOpen ? 'open' : ''
-                    }`}
+                    className={`chapter-icon ${this.state.chapterDropdownOpen ? 'open' : ''
+                      }`}
                   >
                     ▼
                   </span>
                 </div>
                 <div
-                  className={`chapter-list ${
-                    this.state.chapterDropdownOpen ? 'open' : ''
-                  }`}
+                  className={`chapter-list ${this.state.chapterDropdownOpen ? 'open' : ''
+                    }`}
                 >
                   {_.filter(this.state.book, (node) => {
                     const currLS = getLocalStorage(
@@ -853,13 +904,11 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                   }).map((node, i) => (
                     <div
                       key={i}
-                      className={`chapter-item ${
-                        _.includes(Object.keys(LS.nodeScores), node.id)
-                          ? 'completed'
-                          : ''
-                      } ${
-                        this.state.selectedSwatch === node.id ? 'selected' : ''
-                      }`}
+                      className={`chapter-item ${_.includes(Object.keys(LS.nodeScores), node.id)
+                        ? 'completed'
+                        : ''
+                        } ${this.state.selectedSwatch === node.id ? 'selected' : ''
+                        }`}
                       onClick={() => {
                         const currLS = getLocalStorage(
                           this.props.auth.user.username
@@ -1034,6 +1083,14 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                     color="B"
                     width={200}
                     disabled={this.state.selectedSwatch === ''}
+                    onClick={() => {
+                      // Ensure localStorage.nodeId is updated before navigation
+                      const LS = getLocalStorage(this.props.auth.user.username);
+                      setLocalStorage({
+                        ...LS,
+                        nodeId: this.state.selectedSwatch,
+                      });
+                    }}
                   />
                 </Link>
               </div>
@@ -1049,6 +1106,14 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                 color="B"
                 width={200}
                 disabled={this.state.selectedSwatch === ''}
+                onClick={() => {
+                  // Ensure localStorage.nodeId is updated before navigation
+                  const LS = getLocalStorage(this.props.auth.user.username);
+                  setLocalStorage({
+                    ...LS,
+                    nodeId: this.state.selectedSwatch,
+                  });
+                }}
               />
             </Link>
           </div>
