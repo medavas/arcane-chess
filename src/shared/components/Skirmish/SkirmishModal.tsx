@@ -544,17 +544,15 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                 {/* Tab navigation for mobile */}
                 <div className="tab-nav">
                   <button
-                    className={`tab-button ${
-                      this.state.activeTab === 'player' ? 'active' : ''
-                    }`}
+                    className={`tab-button ${this.state.activeTab === 'player' ? 'active' : ''
+                      }`}
                     onClick={() => this.setState({ activeTab: 'player' })}
                   >
                     Player
                   </button>
                   <button
-                    className={`tab-button ${
-                      this.state.activeTab === 'engine' ? 'active' : ''
-                    }`}
+                    className={`tab-button ${this.state.activeTab === 'engine' ? 'active' : ''
+                      }`}
                     onClick={() => this.setState({ activeTab: 'engine' })}
                   >
                     Engine
@@ -583,9 +581,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
             <div className="content-container">
               {/* Player Section */}
               <div
-                className={`player-section ${
-                  this.state.activeTab === 'player' ? 'active' : ''
-                }`}
+                className={`player-section ${this.state.activeTab === 'player' ? 'active' : ''
+                  }`}
               >
                 <div className="section-header">
                   <h3>Your Setup</h3>
@@ -663,9 +660,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                             onClick={() =>
                               !isLocked && this.handleFactionClick(id, 'player')
                             }
-                            aria-label={`${f.name}${
-                              isLocked ? ' (locked)' : ''
-                            }`}
+                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''
+                              }`}
                             tabIndex={isLocked ? -1 : 0}
                             style={{ ['--accent' as any]: f.color }}
                           >
@@ -682,9 +678,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
 
               {/* Engine Section */}
               <div
-                className={`engine-section ${
-                  this.state.activeTab === 'engine' ? 'active' : ''
-                }`}
+                className={`engine-section ${this.state.activeTab === 'engine' ? 'active' : ''
+                  }`}
               >
                 <div className="section-header">
                   <h3>Engine Setup</h3>
@@ -762,9 +757,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                             onClick={() =>
                               !isLocked && this.handleFactionClick(id, 'engine')
                             }
-                            aria-label={`${f.name}${
-                              isLocked ? ' (locked)' : ''
-                            }`}
+                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''
+                              }`}
                             tabIndex={isLocked ? -1 : 0}
                             style={{ ['--accent' as any]: f.color }}
                           >
@@ -794,10 +788,13 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                   >
                     <Select
                       title="Difficulty"
-                      type="number"
+                      defaultOption={
+                        this.state.difficulty.charAt(0).toUpperCase() +
+                        this.state.difficulty.slice(1)
+                      }
+                      type="string"
                       width={240}
                       height={40}
-                      defaultOption={'Novice'}
                       options={['Novice', 'Intermediate', 'Advanced', 'Expert']}
                       onChange={(val: string) => {
                         if (
