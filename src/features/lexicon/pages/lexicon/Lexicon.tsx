@@ -256,10 +256,19 @@ class UnwrappedLexicon extends React.Component<Props, State> {
 
   componentDidMount() {
     window.addEventListener('resize', this.handleResize);
+    window.addEventListener('keydown', this.handleKeyDown);
+    this.chessgroundRef.current?.setAutoShapes([
+      ...(this.state.currentLesson?.panels?.[`panel-1`].arrowsCircles || []),
+    ]);
+    this.setState({
+      arrowsCircles:
+        this.state.currentLesson?.panels?.[`panel-1`].arrowsCircles || [],
+    });
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('keydown', this.handleKeyDown);
   }
 
   changePosition = (direction: 'inc' | 'dec') => {
@@ -404,18 +413,12 @@ class UnwrappedLexicon extends React.Component<Props, State> {
       case 'ArrowRight':
         this.stepForward();
         break;
-      default:
-        break;
     }
   }
 
   filterLessonsByCategory = (category: string) => {
     return allLessons.filter((lesson) => lesson.category === category);
   };
-
-  componentWillUnmount(): void {
-    window.removeEventListener('keydown', this.handleKeyDown);
-  }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
     // Check if relevant data has changed
@@ -433,24 +436,9 @@ class UnwrappedLexicon extends React.Component<Props, State> {
         // Ensure the ref is available before setting auto shapes
         if (this.chessgroundRef.current) {
           this.chessgroundRef.current.setAutoShapes([...autoShapes]);
-        } else {
-          console.error('Chessground Ref is not available.');
         }
-      } else {
-        console.error('LS data is not available or invalid.');
       }
     }
-  }
-
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeyDown);
-    this.chessgroundRef.current?.setAutoShapes([
-      ...(this.state.currentLesson?.panels?.[`panel-1`].arrowsCircles || []),
-    ]);
-    this.setState({
-      arrowsCircles:
-        this.state.currentLesson?.panels?.[`panel-1`].arrowsCircles || [],
-    });
   }
 
   render() {
@@ -477,7 +465,8 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                     />
                   </Link>
                 )}
-                {!(this.state.isMobile && this.state.currentLesson?.panels) && this.state.selectedCategory === '' ? (
+                {!(this.state.isMobile && this.state.currentLesson?.panels) &&
+                this.state.selectedCategory === '' ? (
                   <div style={{ width: '100%' }}>
                     <Button
                       className="tertiary"
@@ -576,7 +565,9 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                       backgroundColorOverride="#11111188"
                     />
                   </div>
-                ) : !(this.state.isMobile && this.state.currentLesson?.panels) ? (
+                ) : !(
+                    this.state.isMobile && this.state.currentLesson?.panels
+                  ) ? (
                   <div
                     style={{
                       width: '100%',
@@ -664,7 +655,15 @@ class UnwrappedLexicon extends React.Component<Props, State> {
               </div>
             </div>
             {this.state.isMobile && this.state.currentLesson?.panels && (
-              <div style={{ width: '100%', maxWidth: '380px', margin: '10px', display: 'flex', justifyContent: 'center' }}>
+              <div
+                style={{
+                  width: '100%',
+                  maxWidth: '380px',
+                  margin: '10px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
                 <Button
                   text="← BACK TO LESSONS"
                   className="tertiary"
@@ -729,7 +728,16 @@ class UnwrappedLexicon extends React.Component<Props, State> {
               </div>
             </div>
             {this.state.isMobile && this.state.currentLesson?.panels && (
-              <div style={{ width: '100%', maxWidth: '380px', margin: '10px 10px 20px 10px', display: 'flex', justifyContent: 'center', gap: '15px' }}>
+              <div
+                style={{
+                  width: '100%',
+                  maxWidth: '380px',
+                  margin: '10px 10px 20px 10px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  gap: '15px',
+                }}
+              >
                 <Button
                   className="tertiary"
                   onClick={() => {
@@ -759,7 +767,10 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                 />
               </div>
             )}
-            <div className="lexicon-clock-buttons" style={{ display: this.state.isMobile ? 'none' : 'flex' }}>
+            <div
+              className="lexicon-clock-buttons"
+              style={{ display: this.state.isMobile ? 'none' : 'flex' }}
+            >
               <div className="global-volume-control">
                 <GlobalVolumeControl />
               </div>
