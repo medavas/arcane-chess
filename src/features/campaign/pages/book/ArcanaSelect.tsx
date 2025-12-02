@@ -46,6 +46,7 @@ interface ArcanaSelectState {
 export const unlockableArcana = [
   // 1
   {
+    empty: 0,
     sumnP: 1,
     dyadB: 1,
     shftP: 1,

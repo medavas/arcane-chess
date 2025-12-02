@@ -27,7 +27,10 @@ import 'src/features/game/board/styles/lambda.scss';
 
 // import arcanaJson from 'src/shared/data/arcana.json';
 
-import { setLocalStorage, getLocalStorage } from 'src/shared/utils/handleLocalStorage';
+import {
+  setLocalStorage,
+  getLocalStorage,
+} from 'src/shared/utils/handleLocalStorage';
 
 import TactoriusModal from 'src/shared/components/Modal/Modal';
 
@@ -41,7 +44,10 @@ import { editMovePiece } from 'src/features/game/engine/gui.mjs';
 
 import Button from 'src/shared/components/Button/Button';
 
-import { Chessground, IChessgroundApi } from 'src/features/game/board/chessgroundMod';
+import {
+  Chessground,
+  IChessgroundApi,
+} from 'src/features/game/board/chessgroundMod';
 import GlobalVolumeControl from 'src/shared/utils/audio/GlobalVolumeControl';
 
 // import { getProgressState } from 'src/features/game/engine/arcaneDefs.mjs';
@@ -690,7 +696,7 @@ class UnwrappedLessonView extends React.Component<Props, State> {
                 </div>
               </div>
               <div className="time-board-time">
-                <div className={`board-view ${this.state.theme}-board`}>
+                <div className={`board-view tactorius-default-board`}>
                   <Chessground
                     forwardedRef={this.chessgroundRef}
                     fen={

@@ -279,11 +279,19 @@
     color: #44aaff;
   }
 
-  // Quickplay-specific arcana styling
+  // Quickplay-specific arcana styling - force 3x2 grid at all breakpoints
+  .arcane-select .spellBook {
+    grid-template-columns: repeat(3, 70px) !important;
+    grid-template-rows: repeat(2, 70px) !important;
+    grid-auto-rows: auto !important;
+    gap: 6px;
+  }
+  
   @media (min-width: 1024px) {
     .arcane-select .spellBook {
-      grid-template-columns: repeat(2, 70px);
-      grid-template-rows: repeat(3, 70px);
+      grid-template-columns: repeat(3, 70px) !important;
+      grid-template-rows: repeat(2, 70px) !important;
+      grid-auto-rows: auto !important;
       gap: 6px;
     }
   }

@@ -199,11 +199,21 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
         'blackSetup',
         characterA.setup.toLocaleLowerCase()
       );
+      const paddedSpellBook = [...characterA.spellBook];
+      while (paddedSpellBook.length < 6) {
+        paddedSpellBook.push({
+          id: 'empty',
+          name: '',
+          description: '',
+          type: '',
+          imagePath: '/Empty',
+        });
+      }
       this.setState({
         whiteSetup: characterA.setup,
         blackSetup: characterA.setup,
-        whiteArcana: characterA.spellBook,
-        blackArcana: characterA.spellBook,
+        whiteArcana: paddedSpellBook,
+        blackArcana: paddedSpellBook,
         showArmySelect: '',
         showArcanaSelect: '',
         showCharacterSelect: '',
@@ -229,11 +239,31 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
         'blackSetup',
         characterB.setup.toLocaleLowerCase()
       );
+      const paddedSpellBookA = [...characterA.spellBook];
+      while (paddedSpellBookA.length < 6) {
+        paddedSpellBookA.push({
+          id: 'empty',
+          name: '',
+          description: '',
+          type: '',
+          imagePath: '/Empty',
+        });
+      }
+      const paddedSpellBookB = [...characterB.spellBook];
+      while (paddedSpellBookB.length < 6) {
+        paddedSpellBookB.push({
+          id: 'empty',
+          name: '',
+          description: '',
+          type: '',
+          imagePath: '/Empty',
+        });
+      }
       this.setState({
         whiteSetup: characterA.setup,
         blackSetup: characterB.setup,
-        whiteArcana: characterA.spellBook,
-        blackArcana: characterB.spellBook,
+        whiteArcana: paddedSpellBookA,
+        blackArcana: paddedSpellBookB,
         showArmySelect: '',
         showArcanaSelect: '',
         showCharacterSelect: '',

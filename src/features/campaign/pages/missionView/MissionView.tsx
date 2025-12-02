@@ -330,7 +330,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
           ? this.hasMissionArcana
             ? booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
                 .whiteArcane
-            : LS.arcana
+            : LS.inventory
           : // black should always be engine arcana
             booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
               .blackArcane,
@@ -339,7 +339,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
           ? this.hasMissionArcana
             ? booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
                 .whiteArcane
-            : LS.arcana
+            : LS.inventory
           : // black should always be engine arcana
             booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
               .blackArcane,

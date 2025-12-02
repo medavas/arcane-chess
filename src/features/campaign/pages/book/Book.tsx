@@ -167,7 +167,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
       multiplier: getLocalStorage(this.props.auth.user.username)?.config
         .multiplier,
       nodeScores: getLocalStorage(this.props.auth.user.username)?.nodeScores,
-      spellBook: getLocalStorage(this.props.auth.user.username)?.spellBook,
+      inventory: getLocalStorage(this.props.auth.user.username)?.inventory,
       endChapterOpen: getLocalStorage(this.props.auth.user.username)
         ?.chapterEnd,
       playerColor: getLocalStorage(this.props.auth.user.username)?.config.color,
@@ -212,8 +212,11 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
   };
 
   getPlayerSpellBook = () => {
-    const LS = getLocalStorage(this.props.auth.user.username);
-    const spellBookObj = LS.spellBook || {};
+    // Use state if available, otherwise read from localStorage
+    const spellBookObj =
+      this.state.inventory ||
+      getLocalStorage(this.props.auth.user.username)?.inventory ||
+      {};
     const spellBookArray: ArcanaDetail[] = [];
 
     // Convert spellBook object to array format expected by ArcanaSelect
@@ -256,10 +259,10 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
 
     setLocalStorage({
       ...LS,
-      spellBook: spellBookObj,
+      inventory: spellBookObj,
     });
 
-    this.setState({ spellBook: spellBookObj });
+    this.setState({ inventory: spellBookObj });
   };
 
   getUnlockedArcana = () => {
@@ -344,7 +347,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
       },
       arcana: LS.arcana,
       nodeScores: LS.nodeScores,
-      spellBook: LS.spellBook,
+      inventory: LS.inventory,
       nodeId: LS.nodeId,
       chapterEnd: LS.chapterEnd,
       difficulty: LS.difficulty,
@@ -613,7 +616,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                           config: updatedConfig,
                           arcana: updatedArcana,
                           nodeScores: currLS.nodeScores,
-                          spellBook: currLS.spellBook,
+                          inventory: currLS.inventory,
                           nodeId: node.id,
                           chapterEnd: currLS.chapterEnd,
                           difficulty: currLS.difficulty,
@@ -868,7 +871,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                               config: updatedConfig,
                               arcana: updatedArcana,
                               nodeScores: currLS.nodeScores,
-                              spellBook: currLS.spellBook,
+                              inventory: currLS.inventory,
                               nodeId: node.id,
                               chapterEnd: currLS.chapterEnd,
                               difficulty: currLS.difficulty,
