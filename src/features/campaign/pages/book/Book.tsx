@@ -266,10 +266,17 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
     const LS = getLocalStorage(this.props.auth.user.username);
     const chapter = LS.chapter || 0;
 
-    // Only return arcana from the current chapter (not previous chapters)
-    const currentChapterArcana = unlockableArcana[chapter - 1] || {};
+    // Return cumulative arcana from all chapters up to and including current chapter
+    const cumulativeArcana: { [key: string]: number } = {};
+    
+    for (let i = 0; i <= chapter - 1 && i < unlockableArcana.length; i++) {
+      const chapterArcana = unlockableArcana[i];
+      Object.entries(chapterArcana).forEach(([key, value]) => {
+        cumulativeArcana[key] = (cumulativeArcana[key] || 0) + value;
+      });
+    }
 
-    return Object.keys(currentChapterArcana);
+    return cumulativeArcana;
   };
 
   getFen() {

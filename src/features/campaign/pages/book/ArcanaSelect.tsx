@@ -171,9 +171,18 @@ export default class ArcanaSelect extends React.Component<
 
   availableChapterArcana = () => {
     const chapter = getLocalStorage(this.props.auth.user.username).chapter;
-    // Only return arcana from the current chapter (not previous chapters)
-    const currentChapterArcana = unlockableArcana[chapter - 1] || {};
-    return currentChapterArcana;
+    // Return cumulative arcana from all chapters up to and including current chapter
+    const cumulativeArcana: { [key: string]: number } = {};
+    
+    // Loop from chapter 1 (index 0) through current chapter (inclusive)
+    for (let i = 0; i <= chapter - 1 && i < unlockableArcana.length; i++) {
+      const chapterArcana = unlockableArcana[i];
+      Object.entries(chapterArcana).forEach(([key, value]) => {
+        cumulativeArcana[key] = (cumulativeArcana[key] || 0) + value;
+      });
+    }
+    
+    return cumulativeArcana;
   };
 
   handleMultiplierChange = (value: number) => {
@@ -183,7 +192,7 @@ export default class ArcanaSelect extends React.Component<
     this.props.updateBookMultiplier(value);
   };
 
-  handleArcanaClick = (key: string, value: number) => {
+  handleArcanaClick = (key: string, value: number, maxAvailable: number) => {
     const { selectedArcana, allowedArcana } = this.state;
     const { auth } = this.props;
 
@@ -198,6 +207,8 @@ export default class ArcanaSelect extends React.Component<
 
     if (meta.type === 'inherent' && selectedArcana[key]) return; // ← use meta
     if (totalArcanaValue >= allowedArcana) return;
+    // Prevent selecting more than available
+    if ((newSelectedArcana[key] || 0) >= maxAvailable) return;
 
     newSelectedArcana[key] = (newSelectedArcana[key] || 0) + 1;
 
@@ -277,13 +288,15 @@ export default class ArcanaSelect extends React.Component<
   getBadgeText = (
     k: string,
     hasMissionArcana: boolean,
+    maxAvailable: number,
     missionArcana?: { [key: string]: number | string }
   ) => {
     const a = this.getArcana(k);
     if (a?.type === 'inherent') return 'INH';
     if (hasMissionArcana) return String(missionArcana?.[k] ?? '');
-    const LS = getLocalStorage(this.props.auth.user.username);
-    return String(LS?.arcana?.[k] ?? '');
+    // Show selected/available format
+    const selected = this.state.selectedArcana?.[k] || 0;
+    return `${selected}/${maxAvailable}`;
   };
 
   render() {
@@ -317,13 +330,13 @@ export default class ArcanaSelect extends React.Component<
                   return null;
                 }
 
-                const isSelected = _.includes(Object.keys(selectedArcana), key);
+                const isSelected = selectedArcana[key] && selectedArcana[key] > 0;
                 const isDisabled = !isPlayerArcana || hasMissionArcana;
 
                 return (
                   <div key={key} className="arcane-wrapper">
                     <div className="arcane-badge">
-                      {this.getBadgeText(key, hasMissionArcana, missionArcana)}
+                      {this.getBadgeText(key, hasMissionArcana, value, missionArcana)}
                     </div>
                     <img
                       className={`arcane ${
@@ -335,7 +348,7 @@ export default class ArcanaSelect extends React.Component<
                       alt={meta.name}
                       onClick={() => {
                         if (isDisabled) return;
-                        this.handleArcanaClick(key, value);
+                        this.handleArcanaClick(key, value, value);
                       }}
                       onMouseEnter={() => this.props.onToggleHover(`${key}`)}
                       onMouseLeave={() => this.props.onToggleHover('')}

@@ -23,8 +23,8 @@ interface ArcanaSelectProps {
   handleToggle?: () => void;
   /** When true, disables hovering and clicking. */
   readOnly?: boolean;
-  /** Array of arcana IDs that are unlocked for the current chapter */
-  unlockedArcana?: string[];
+  /** Object of unlocked arcana with their counts from all chapters */
+  unlockedArcana?: { [key: string]: number };
 }
 
 interface ArcanaSelectState {
@@ -143,7 +143,7 @@ export default class ArcanaSelect extends React.Component<
               // Filter to only show unlocked arcana if unlockedArcana prop is provided
               if (
                 this.props.unlockedArcana &&
-                !this.props.unlockedArcana.includes(key)
+                !(key in this.props.unlockedArcana)
               ) {
                 return null;
               }
