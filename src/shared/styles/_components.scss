@@ -30,21 +30,27 @@ $hover_colors: (
   $hover_var: map-get($hover_colors, $color);
 
   .primary-#{$color} {
-    background: $color_var;
-    border: $color_var 1px solid;
-    border-radius: 6px;
+    background: rgba(52, 120, 220, 0.6);
+    border: 2px solid rgba(74, 144, 226, 0.8);
+    border-radius: 10px;
     transition:
       border 0.2s ease-in,
-      background 0.2s ease-in;
+      background 0.2s ease-in,
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
   }
   .primary-#{$color}:hover {
     cursor: pointer;
-    background: $hover_var;
-    border: $hover_var 2px solid;
-    border-radius: 6px;
+    background: rgba(74, 144, 226, 0.8);
+    border: 2px solid rgba(74, 144, 226, 1);
+    border-radius: 10px;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(52, 120, 220, 0.6);
     transition:
       border 0.2s ease-in,
-      background 0.2s ease-in;
+      background 0.2s ease-in,
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
   }
   .primary-#{$color}-disabled {
     color: #aaaaaa;

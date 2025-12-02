@@ -104,21 +104,6 @@ export class SpellHandler {
   handleArcanaClick = (key: string): void => {
     const playerColor = this.callbacks.getPlayerColor();
     const arcane = this.callbacks.getArcaneChess();
-    const entry = (arcanaJson as any)[key];
-    if (!entry) {
-      console.log('SpellHandler: No entry found for key:', key);
-      return;
-    }
-
-    const thinking = this.callbacks.getThinking();
-    const callbackColor = this.callbacks.getPlayerColor();
-
-    if (thinking || callbackColor !== playerColor) {
-      console.log(
-        'SpellHandler: Early return due to thinking or color mismatch'
-      );
-      return;
-    }
 
     this.callbacks.updateSpellState({
       placingPiece: 0,

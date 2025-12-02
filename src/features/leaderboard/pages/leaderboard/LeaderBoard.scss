@@ -82,7 +82,7 @@
     .standing-int {
       font-size: 1.2rem;
       font-weight: 700;
-      color: $B_MENU; // Highlight rank
+      color: #4a90e2; // Highlight rank
       width: 40px;
       text-align: center;
     }
@@ -106,7 +106,7 @@
       gap: 2px;
       font-family: monospace; // For alignment
       font-size: 1.2rem;
-      color: #e6e6e6;
+      color: rgba(255, 255, 255, 0.95);
 
       .digit-box {
         display: inline-block;

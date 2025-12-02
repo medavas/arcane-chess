@@ -5,10 +5,10 @@
     align-items: center;
     height: 40px;
     width: 60px;
-    border: 1px solid rgba(79, 72, 204, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 8px;
     color: rgba(255, 255, 255, 0.95);
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(34, 34, 34, 0.7);
     text-align-last: center;
     box-sizing: border-box;
     padding: 0 12px;
@@ -18,17 +18,17 @@
     cursor: pointer;
   }
   .dropdown:hover {
-    background: rgba(79, 72, 204, 0.3);
-    border-color: rgba(79, 72, 204, 0.7);
+    background: rgba(52, 120, 220, 0.4);
+    border-color: rgba(74, 144, 226, 0.6);
   }
   .dropdown:focus {
     outline: none;
-    border-color: rgba(79, 72, 204, 0.8);
-    box-shadow: 0 0 8px rgba(79, 72, 204, 0.4);
+    border-color: rgba(74, 144, 226, 0.8);
+    box-shadow: 0 0 8px rgba(52, 120, 220, 0.4);
   }
 
   .dropdown option {
-    background: rgba(20, 20, 40, 0.98);
+    background: rgba(34, 34, 34, 0.98);
     color: rgba(255, 255, 255, 0.95);
     padding: 8px;
   }

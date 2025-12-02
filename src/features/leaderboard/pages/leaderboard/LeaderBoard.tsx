@@ -34,7 +34,6 @@ export class UnwrappedLeaderBoard extends React.Component<
           chapter: chapter,
         },
       });
-      console.log(response);
       this.setState({
         currentChapterTopScores: response.data,
       });
@@ -61,12 +60,7 @@ export class UnwrappedLeaderBoard extends React.Component<
       <div className="outer-leaderboard">
         <div className="nav">
           <Link to="/">
-            <Button
-              text="BACK"
-              className="tertiary"
-              color="S"
-              width={200}
-            />
+            <Button text="BACK" className="tertiary" color="S" width={200} />
           </Link>
           <div className="chapter-select">
             <Select
@@ -87,7 +81,7 @@ export class UnwrappedLeaderBoard extends React.Component<
                 '12',
               ]}
               onChange={(val) => this.getLeaderboard(val)}
-            // onChange={() => null}
+              // onChange={() => null}
             />
           </div>
         </div>
