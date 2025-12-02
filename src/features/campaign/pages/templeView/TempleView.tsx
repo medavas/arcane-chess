@@ -34,7 +34,10 @@ import 'src/features/game/board/styles/lambda.scss';
 
 // import arcanaJson from 'src/shared/data/arcana.json';
 
-import { setLocalStorage, getLocalStorage } from 'src/shared/utils/handleLocalStorage';
+import {
+  setLocalStorage,
+  getLocalStorage,
+} from 'src/shared/utils/handleLocalStorage';
 
 import TactoriusModal from 'src/shared/components/Modal/Modal';
 
@@ -68,7 +71,10 @@ import { TakeMove } from 'src/features/game/engine/makemove.mjs';
 import Button from 'src/shared/components/Button/Button';
 import ChessClock from 'src/features/game/components/Clock/Clock';
 
-import { Chessground, IChessgroundApi } from 'src/features/game/board/chessgroundMod';
+import {
+  Chessground,
+  IChessgroundApi,
+} from 'src/features/game/board/chessgroundMod';
 import GlobalVolumeControl from 'src/shared/utils/audio/GlobalVolumeControl';
 
 const booksMap: { [key: string]: { [key: string]: Node } } = {
