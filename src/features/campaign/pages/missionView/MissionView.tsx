@@ -747,6 +747,15 @@ class UnwrappedMissionView extends React.Component<Props, State> {
       this.state.gameOverType.split(' ')[1] === 'mates' &&
       getLocalStorage(this.props.auth.user.username).config.color ===
         this.state.gameOverType.split(' ')[0];
+    
+    // Check if game ended in a draw
+    const isDraw = [
+      'stalemate',
+      '3-fold repetition',
+      'insufficient material',
+      'fifty move rule'
+    ].some(drawType => this.state.gameOverType.toLowerCase().includes(drawType));
+    
     const variantExpos: Record<string, string> = {
       XCHECK: '3 checks equals a win.',
       CRAZYHOUSE:
@@ -854,14 +863,16 @@ class UnwrappedMissionView extends React.Component<Props, State> {
               isOpen={this.state.gameOver}
               handleClose={() => this.setState({ gameOver: false })}
               // modalType={this.state.endScenario}
-              message={`${this.state.gameOverType} 
+              message={`${isDraw ? 'Draw - ' : ''}${this.state.gameOverType} 
                 ${
                   playerWins
                     ? this.state.victoryMessage
+                    : isDraw
+                    ? 'The game ended in a draw.'
                     : this.state.defeatMessage
                 }`}
               score={LS.nodeScores[this.state.nodeId]}
-              type={playerWins ? 'victory' : 'defeat'}
+              type={playerWins ? 'victory' : isDraw ? 'draw' : 'defeat'}
             />
             <PromotionModal
               isOpen={this.state.promotionModalOpen}

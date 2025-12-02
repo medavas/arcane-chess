@@ -382,6 +382,58 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       );
     }
 
+    if (this.props.type === 'draw') {
+      return (
+        <Modal
+          style={endgameModal}
+          isOpen={this.props.isOpen}
+          ariaHideApp={false}
+        >
+          <div className="endgame">
+            <div className="endgame-content">
+              <strong>
+                <i>Draw</i>
+              </strong>
+              <p style={{ textAlign: 'center', marginTop: '10px' }}>
+                {this.props.message}
+              </p>
+              <div className="buttons">
+                <div className="left-buttons">
+                  <button
+                    type="button"
+                    className="endgame-btn secondary-btn"
+                    onClick={() => {
+                      this.props.navigate('/chapter');
+                    }}
+                  >
+                    TO CHAPTER
+                  </button>
+                  <button
+                    type="button"
+                    className="endgame-btn secondary-btn"
+                    onClick={() => {
+                      this.props.handleClose();
+                    }}
+                  >
+                    ANALYZE
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  className="endgame-btn primary-btn"
+                  onClick={() => {
+                    location.reload();
+                  }}
+                >
+                  RETRY
+                </button>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      );
+    }
+
     if (this.props.type === 'chapterEnd') {
       return (
         <Modal
@@ -603,6 +655,58 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
               <strong>
                 <i>Defeat...</i>
               </strong>
+              <div className="buttons">
+                <div className="left-buttons">
+                  <button
+                    type="button"
+                    className="endgame-btn secondary-btn"
+                    onClick={() => {
+                      this.props.navigate('/');
+                    }}
+                  >
+                    HOME
+                  </button>
+                  <button
+                    type="button"
+                    className="endgame-btn secondary-btn"
+                    onClick={() => {
+                      this.props.handleClose();
+                    }}
+                  >
+                    ANALYZE
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  className="endgame-btn primary-btn"
+                  onClick={() => {
+                    location.reload();
+                  }}
+                >
+                  RETRY
+                </button>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      );
+    }
+
+    if (this.props.type === 'draw-qp') {
+      return (
+        <Modal
+          style={endgameModal}
+          isOpen={this.props.isOpen}
+          ariaHideApp={false}
+        >
+          <div className="endgame">
+            <div className="endgame-content">
+              <strong>
+                <i>Draw</i>
+              </strong>
+              <p style={{ textAlign: 'center', marginTop: '10px' }}>
+                {this.props.message}
+              </p>
               <div className="buttons">
                 <div className="left-buttons">
                   <button
