@@ -155,15 +155,15 @@ interface State {
   gameOverType: string;
   arcaneHover: string;
   wArcana:
-    | {
-        [key: string]: number | string;
-      }
-    | undefined;
+  | {
+    [key: string]: number | string;
+  }
+  | undefined;
   bArcana:
-    | {
-        [key: string]: number | string;
-      }
-    | undefined;
+  | {
+    [key: string]: number | string;
+  }
+  | undefined;
   lastMove: string[];
   hideCompletedPage: boolean;
   viewOnly: boolean;
@@ -466,7 +466,7 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                   </Link>
                 )}
                 {!(this.state.isMobile && this.state.currentLesson?.panels) &&
-                this.state.selectedCategory === '' ? (
+                  this.state.selectedCategory === '' ? (
                   <div style={{ width: '100%' }}>
                     <Button
                       className="tertiary"
@@ -566,8 +566,8 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                     />
                   </div>
                 ) : !(
-                    this.state.isMobile && this.state.currentLesson?.panels
-                  ) ? (
+                  this.state.isMobile && this.state.currentLesson?.panels
+                ) ? (
                   <div
                     style={{
                       width: '100%',
@@ -656,6 +656,7 @@ class UnwrappedLexicon extends React.Component<Props, State> {
             </div>
             {this.state.isMobile && this.state.currentLesson?.panels && (
               <div
+                className="mobile-back-button"
                 style={{
                   width: '100%',
                   maxWidth: '380px',
@@ -729,6 +730,7 @@ class UnwrappedLexicon extends React.Component<Props, State> {
             </div>
             {this.state.isMobile && this.state.currentLesson?.panels && (
               <div
+                className="mobile-nav-buttons"
                 style={{
                   width: '100%',
                   maxWidth: '380px',
@@ -749,7 +751,7 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                   color="S"
                   strong={true}
                   variant="<"
-                  width={120}
+                  width="calc(50% - 7.5px)"
                   height={50}
                   fontSize={28}
                 />
@@ -761,7 +763,7 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                   color="S"
                   strong={true}
                   variant=">"
-                  width={120}
+                  width="calc(50% - 7.5px)"
                   height={50}
                   fontSize={28}
                 />
@@ -793,7 +795,7 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                   color="S"
                   strong={true}
                   variant="<"
-                  width={90}
+                  width="calc(50% - 5px)"
                   fontSize={24}
                 />
                 <Button
@@ -804,7 +806,7 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                   color="S"
                   strong={true}
                   variant=">"
-                  width={90}
+                  width="calc(50% - 5px)"
                   fontSize={24}
                 />
               </div>

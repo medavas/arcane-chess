@@ -7,14 +7,10 @@
   overflow: hidden;
 
   background:
-    url('/assets/images/textures/random-grey-variations.png') center / 250px
-      repeat,
-    radial-gradient(
-        circle,
-        rgba(52, 120, 220, 0.6) 0%,
-        rgba(17, 17, 17, 0.2) 80%
-      )
-      center / cover no-repeat;
+    url('/assets/images/textures/random-grey-variations.png') center / 250px repeat,
+    radial-gradient(circle,
+      rgba(52, 120, 220, 0.6) 0%,
+      rgba(17, 17, 17, 0.2) 80%) center / cover no-repeat;
 
   .lexicon-view {
     height: 100%;
@@ -275,7 +271,7 @@
   }
 }
 
-// Mobile screens (≤768px): lesson-list → board → textbox (hide nav arrows)
+// Mobile screens (≤768px): back button → lesson text → board → nav arrows
 @media (max-width: 768px) {
   .tactorius-board {
     width: 100%;
@@ -295,7 +291,13 @@
       justify-content: flex-start;
       align-items: center;
 
+      // Reorder: back button (1) → lesson list (2) → board (3) → nav arrows (4)
+      .mobile-back-button {
+        order: 1;
+      }
+
       .opponent-arcana-volume {
+        order: 2;
         display: flex;
         gap: 10px;
         flex-direction: column;
@@ -356,6 +358,7 @@
       }
 
       .time-board-time {
+        order: 3;
         max-width: 360px;
         min-height: 360px;
         max-height: 360px;
@@ -379,7 +382,13 @@
         }
       }
 
+      // Nav buttons at the bottom
+      .mobile-nav-buttons {
+        order: 4;
+      }
+
       .lexicon-clock-buttons {
+        order: 4;
         display: flex;
         flex-direction: column;
         gap: 10px;
