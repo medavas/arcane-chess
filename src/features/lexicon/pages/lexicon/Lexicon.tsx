@@ -34,7 +34,10 @@ import { editMovePiece } from 'src/features/game/engine/gui.mjs';
 
 import Button from 'src/shared/components/Button/Button';
 
-import { Chessground, IChessgroundApi } from 'src/features/game/board/chessgroundMod';
+import {
+  Chessground,
+  IChessgroundApi,
+} from 'src/features/game/board/chessgroundMod';
 import GlobalVolumeControl from 'src/shared/utils/audio/GlobalVolumeControl';
 
 const booksMap: { [key: string]: { [key: string]: Node } } = {
@@ -152,15 +155,15 @@ interface State {
   gameOverType: string;
   arcaneHover: string;
   wArcana:
-  | {
-    [key: string]: number | string;
-  }
-  | undefined;
+    | {
+        [key: string]: number | string;
+      }
+    | undefined;
   bArcana:
-  | {
-    [key: string]: number | string;
-  }
-  | undefined;
+    | {
+        [key: string]: number | string;
+      }
+    | undefined;
   lastMove: string[];
   hideCompletedPage: boolean;
   viewOnly: boolean;
@@ -171,6 +174,7 @@ interface State {
   allLessons: Node[];
   currentLesson: Node;
   selectedCategory: string;
+  isMobile: boolean;
 }
 
 interface Props {
@@ -236,12 +240,26 @@ class UnwrappedLexicon extends React.Component<Props, State> {
       allLessons: allLessons,
       currentLesson: {} as Node,
       selectedCategory: '',
+      isMobile: window.innerWidth <= 768,
     };
     this.arcaneChess = () => {
       return arcaneChess();
     };
     this.chessgroundRef = React.createRef();
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleResize = this.handleResize.bind(this);
+  }
+
+  handleResize = () => {
+    this.setState({ isMobile: window.innerWidth <= 768 });
+  };
+
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize);
   }
 
   changePosition = (direction: 'inc' | 'dec') => {
@@ -629,6 +647,15 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                     )}
                   </div>
                 )}
+                {this.state.isMobile && this.state.currentLesson?.panels && (
+                  <div className="lexicon-text" style={{ marginTop: '10px' }}>
+                    <div>
+                      {this.state.currentLesson?.panels?.[
+                        `panel-${this.state.currPanel}`
+                      ].panelText || ''}
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="global-volume-control">
                 <GlobalVolumeControl />
@@ -679,7 +706,36 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                 />
               </div>
             </div>
-            <div className="lexicon-clock-buttons">
+            {this.state.isMobile && (
+              <div className="lexicon-nav-arrows" style={{ margin: '10px' }}>
+                <Button
+                  className="tertiary"
+                  onClick={() => {
+                    this.stepBackward();
+                  }}
+                  disabled={
+                    this.state.moveNumber === 0 && this.state.currPanel === 1
+                  }
+                  color="S"
+                  strong={true}
+                  variant="<"
+                  width={90}
+                  fontSize={24}
+                />
+                <Button
+                  className="tertiary"
+                  onClick={() => {
+                    this.stepForward();
+                  }}
+                  color="S"
+                  strong={true}
+                  variant=">"
+                  width={90}
+                  fontSize={24}
+                />
+              </div>
+            )}
+            <div className="lexicon-clock-buttons" style={{ display: this.state.isMobile ? 'none' : 'flex' }}>
               <div className="global-volume-control">
                 <GlobalVolumeControl />
               </div>
@@ -721,7 +777,7 @@ class UnwrappedLexicon extends React.Component<Props, State> {
           </div>
         </div>
         {/* <div className="lexicon-curtain"></div> */}
-      </div >
+      </div>
     );
   }
 }
