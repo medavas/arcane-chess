@@ -9,6 +9,10 @@
   align-items: center;
   overflow-x: hidden;
 
+  @media (min-width: 1025px) {
+    justify-content: center;
+  }
+
   background-image: url('/assets/images/textures/random-grey-variations.png'),
     radial-gradient(
       circle,
@@ -90,6 +94,7 @@
     justify-content: flex-start;
     min-width: 100vw;
     object-fit: cover;
+    padding-top: 80px;
 
     .book-grid {
       .chapters {
