@@ -17,41 +17,6 @@
   padding: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
   overflow: hidden;
-
-  .campaign-header {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-shrink: 0;
-    gap: 12px;
-    margin-bottom: 10px;
-
-    .header-left {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-
-      .home-button {
-        background: transparent;
-        border: none;
-        padding: 0;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        flex-shrink: 0;
-
-        &:hover {
-          transform: scale(1.1);
-          filter: brightness(1.2);
-        }
-
-        .logo {
-          width: 40px;
-          height: 40px;
-          object-fit: contain;
-        }
-      }
-    }
-  }
 }
 
 .image-text {

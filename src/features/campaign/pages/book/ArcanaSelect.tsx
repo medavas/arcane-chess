@@ -171,12 +171,9 @@ export default class ArcanaSelect extends React.Component<
 
   availableChapterArcana = () => {
     const chapter = getLocalStorage(this.props.auth.user.username).chapter;
-    const unlockedArcana = unlockableArcana
-      .slice(0, chapter)
-      .reduce((acc, current) => {
-        return { ...acc, ...current };
-      }, {});
-    return unlockedArcana;
+    // Only return arcana from the current chapter (not previous chapters)
+    const currentChapterArcana = unlockableArcana[chapter - 1] || {};
+    return currentChapterArcana;
   };
 
   handleMultiplierChange = (value: number) => {
@@ -216,14 +213,16 @@ export default class ArcanaSelect extends React.Component<
   handleClearArcana = () => {
     const { selectedArcana } = this.state;
     const { auth, missionArcana } = this.props;
-    const arcanaObj: Record<string, number> =
-      (Object.keys(missionArcana || {}).length !== 0
+    const arcanaObj =
+      Object.keys(missionArcana || {}).length !== 0
         ? missionArcana
-        : this.availableChapterArcana()) || {};
+        : this.availableChapterArcana();
     let multiplierAddBack = 0;
     Object.keys(selectedArcana).forEach((key) => {
-      if (arcanaObj[key] !== undefined) {
-        multiplierAddBack += arcanaObj[key] * selectedArcana[key];
+      const value = (arcanaObj as any)?.[key];
+      if (value !== undefined) {
+        const numValue = typeof value === 'number' ? value : Number(value);
+        multiplierAddBack += numValue * selectedArcana[key];
       }
     });
     this.setState({

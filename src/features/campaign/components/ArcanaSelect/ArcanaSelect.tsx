@@ -23,6 +23,8 @@ interface ArcanaSelectProps {
   handleToggle?: () => void;
   /** When true, disables hovering and clicking. */
   readOnly?: boolean;
+  /** Array of arcana IDs that are unlocked for the current chapter */
+  unlockedArcana?: string[];
 }
 
 interface ArcanaSelectState {
@@ -137,37 +139,46 @@ export default class ArcanaSelect extends React.Component<
             >
               ✕
             </button>
-            {_.map(arcana, (arcaneObject: ArcanaDetail, key: string) => (
-              <img
-                key={key}
-                className={`arcane ${hoverId === key ? 'focus' : ''}`}
-                src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
-                style={{
-                  cursor: cursorInteractive,
-                }}
-                onMouseEnter={
-                  readOnly
-                    ? undefined
-                    : () => {
-                        updateHover?.(arcaneObject);
-                        this.setState({ hoverId: key });
-                      }
-                }
-                onMouseLeave={
-                  readOnly
-                    ? undefined
-                    : () => {
-                        updateHover?.({} as ArcanaDetail);
-                        this.setState({ hoverId: '' });
-                      }
-                }
-                onClick={
-                  readOnly ? undefined : () => this.updateSlot(arcaneObject)
-                }
-                alt={arcaneObject.name}
-                draggable={false}
-              />
-            ))}
+            {_.map(arcana, (arcaneObject: ArcanaDetail, key: string) => {
+              // Filter to only show unlocked arcana if unlockedArcana prop is provided
+              if (
+                this.props.unlockedArcana &&
+                !this.props.unlockedArcana.includes(key)
+              ) {
+                return null;
+              }
+              return (
+                <img
+                  key={key}
+                  className={`arcane ${hoverId === key ? 'focus' : ''}`}
+                  src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
+                  style={{
+                    cursor: cursorInteractive,
+                  }}
+                  onMouseEnter={
+                    readOnly
+                      ? undefined
+                      : () => {
+                          updateHover?.(arcaneObject);
+                          this.setState({ hoverId: key });
+                        }
+                  }
+                  onMouseLeave={
+                    readOnly
+                      ? undefined
+                      : () => {
+                          updateHover?.({} as ArcanaDetail);
+                          this.setState({ hoverId: '' });
+                        }
+                  }
+                  onClick={
+                    readOnly ? undefined : () => this.updateSlot(arcaneObject)
+                  }
+                  alt={arcaneObject.name}
+                  draggable={false}
+                />
+              );
+            })}
           </div>
         )}
       </div>

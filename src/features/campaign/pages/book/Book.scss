@@ -22,6 +22,35 @@
   }
 }
 
+@keyframes bossGlow {
+  0%,
+  100% {
+    text-shadow:
+      0 0 10px rgba(255, 215, 0, 0.8),
+      0 0 20px rgba(255, 215, 0, 0.5),
+      0 0 30px rgba(255, 140, 0, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow:
+      0 0 15px rgba(255, 215, 0, 1),
+      0 0 30px rgba(255, 215, 0, 0.8),
+      0 0 45px rgba(255, 140, 0, 0.6),
+      0 0 60px rgba(255, 69, 0, 0.4);
+    transform: scale(1.05);
+  }
+}
+
+@keyframes bossPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
 .book {
   display: flex;
   flex-direction: column;
@@ -743,38 +772,53 @@
         }
 
         .start-button-section {
+          position: sticky;
+          bottom: 0;
           flex-shrink: 0;
           padding: 20px;
-          background: rgba(0, 0, 0, 0.7);
-          border-top: 1px solid rgba($B_LGHT, 0.1);
+          background: rgba(0, 0, 0, 0.95);
+          border-top: 2px solid rgba($B_LGHT, 0.3);
           display: flex;
           justify-content: center;
           margin-top: auto;
+          z-index: 50;
+          backdrop-filter: blur(8px);
 
           a {
             display: block;
             width: 100%;
 
-            button {
+            button.button {
               width: 100% !important;
               padding: 16px 28px !important;
               font-size: 1.2rem !important;
               font-weight: bold !important;
+              letter-spacing: 1px !important;
               cursor: pointer;
-              transition: all 0.3s ease;
+              transition: all 0.3s ease !important;
               box-shadow:
                 0 4px 16px rgba($B_FACT, 0.6),
                 0 0 24px rgba($B_LGHT, 0.3) !important;
               border-radius: 6px !important;
+              background: rgba($B_FACT, 0.6) !important;
+              border: 1px solid rgba($B_LGHT, 0.4) !important;
+              color: white !important;
+              display: flex !important;
+              align-items: center !important;
+              justify-content: center !important;
+              text-align: center !important;
 
-              &:hover:not(:disabled) {
-                transform: translateY(-3px);
+              &:hover:not(:disabled):not([disabled]) {
+                transform: translateY(-3px) !important;
                 box-shadow:
                   0 8px 24px rgba($B_FACT, 0.8),
                   0 0 36px rgba($B_LGHT, 0.5) !important;
+                background: rgba($B_FACT, 0.8) !important;
+                border-color: rgba($B_LGHT, 0.6) !important;
               }
 
-              &:disabled {
+              &:disabled,
+              &[disabled] {
                 opacity: 0.4;
                 cursor: not-allowed;
               }
@@ -865,12 +909,14 @@
       }
 
       .mobile-arcana-section {
+        position: relative;
         display: flex;
         flex-direction: column;
         padding: 15px;
         background: rgba(0, 0, 0, 0.6);
         border-bottom: 1px solid rgba($B_LGHT, 0.1);
         flex-shrink: 0;
+        min-height: 200px;
 
         .arcana-selector-label {
           color: $B_LGHT;
@@ -910,10 +956,28 @@
 
           .boss-indicator {
             display: inline-block;
-            margin-left: 8px;
-            color: gold;
+            margin-left: 12px;
+            padding: 4px 12px;
+            background: linear-gradient(
+              135deg,
+              rgba(255, 215, 0, 0.2) 0%,
+              rgba(255, 140, 0, 0.2) 50%,
+              rgba(255, 69, 0, 0.2) 100%
+            );
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            border-radius: 6px;
+            color: #ffd700;
             font-size: 0.95rem;
-            animation: glow 2s infinite;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            animation:
+              bossGlow 2s ease-in-out infinite,
+              bossPulse 3s ease-in-out infinite;
+            box-shadow:
+              0 0 20px rgba(255, 215, 0, 0.4),
+              inset 0 0 10px rgba(255, 215, 0, 0.1);
+            backdrop-filter: blur(4px);
           }
         }
 
@@ -930,29 +994,46 @@
     }
 
     .mobile-start-button {
+      position: sticky;
+      bottom: 0;
       flex-shrink: 0;
       padding: 8px 15px;
-      background: rgba(0, 0, 0, 0.9);
-      border-top: 1px solid rgba($B_LGHT, 0.15);
+      background: rgba(0, 0, 0, 0.95);
+      border-top: 2px solid rgba($B_LGHT, 0.3);
+      z-index: 100;
+      backdrop-filter: blur(8px);
 
       a {
         display: block;
         width: 100%;
 
-        button {
+        button.button {
           width: 100% !important;
           height: 50px !important;
           font-size: 1.2rem !important;
           font-weight: bold !important;
-          box-shadow: 0 4px 12px rgba($B_FACT, 0.4);
-          transition: all 0.3s ease;
+          letter-spacing: 1px !important;
+          cursor: pointer;
+          transition: all 0.3s ease !important;
+          box-shadow:
+            0 4px 16px rgba($B_FACT, 0.6),
+            0 0 24px rgba($B_LGHT, 0.3) !important;
+          border-radius: 6px !important;
+          background: rgba($B_FACT, 0.6) !important;
+          border: 1px solid rgba($B_LGHT, 0.4) !important;
+          color: white !important;
 
-          &:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba($B_FACT, 0.6);
+          &:hover:not(:disabled):not([disabled]) {
+            transform: translateY(-3px) !important;
+            box-shadow:
+              0 8px 24px rgba($B_FACT, 0.8),
+              0 0 36px rgba($B_LGHT, 0.5) !important;
+            background: rgba($B_FACT, 0.8) !important;
+            border-color: rgba($B_LGHT, 0.6) !important;
           }
 
-          &:disabled {
+          &:disabled,
+          &[disabled] {
             opacity: 0.4;
             cursor: not-allowed;
           }
@@ -1351,38 +1432,53 @@
         }
 
         .start-button-section {
+          position: sticky;
+          bottom: 0;
           flex-shrink: 0;
           padding: 24px;
-          background: rgba(0, 0, 0, 0.7);
-          border-top: 1px solid rgba($B_LGHT, 0.1);
+          background: rgba(0, 0, 0, 0.95);
+          border-top: 2px solid rgba($B_LGHT, 0.3);
           display: flex;
           justify-content: center;
           margin-top: auto;
+          z-index: 50;
+          backdrop-filter: blur(8px);
 
           a {
             display: block;
             width: 100%;
 
-            button {
+            button.button {
               width: 100% !important;
               padding: 18px 32px !important;
               font-size: 1.3rem !important;
               font-weight: bold !important;
+              letter-spacing: 1px !important;
               cursor: pointer;
-              transition: all 0.3s ease;
+              transition: all 0.3s ease !important;
               box-shadow:
                 0 4px 16px rgba($B_FACT, 0.6),
                 0 0 24px rgba($B_LGHT, 0.3) !important;
               border-radius: 6px !important;
+              background: rgba($B_FACT, 0.6) !important;
+              border: 1px solid rgba($B_LGHT, 0.4) !important;
+              color: white !important;
+              display: flex !important;
+              align-items: center !important;
+              justify-content: center !important;
+              text-align: center !important;
 
-              &:hover:not(:disabled) {
-                transform: translateY(-3px);
+              &:hover:not(:disabled):not([disabled]) {
+                transform: translateY(-3px) !important;
                 box-shadow:
                   0 8px 24px rgba($B_FACT, 0.8),
                   0 0 36px rgba($B_LGHT, 0.5) !important;
+                background: rgba($B_FACT, 0.8) !important;
+                border-color: rgba($B_LGHT, 0.6) !important;
               }
 
-              &:disabled {
+              &:disabled,
+              &[disabled] {
                 opacity: 0.4;
                 cursor: not-allowed;
               }
@@ -1437,10 +1533,28 @@
 
           .boss-indicator {
             display: inline-block;
-            margin-left: 10px;
-            color: gold;
+            margin-left: 12px;
+            padding: 5px 14px;
+            background: linear-gradient(
+              135deg,
+              rgba(255, 215, 0, 0.2) 0%,
+              rgba(255, 140, 0, 0.2) 50%,
+              rgba(255, 69, 0, 0.2) 100%
+            );
+            border: 2px solid rgba(255, 215, 0, 0.5);
+            border-radius: 6px;
+            color: #ffd700;
             font-size: 1rem;
-            animation: glow 2s infinite;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            animation:
+              bossGlow 2s ease-in-out infinite,
+              bossPulse 3s ease-in-out infinite;
+            box-shadow:
+              0 0 20px rgba(255, 215, 0, 0.4),
+              inset 0 0 10px rgba(255, 215, 0, 0.1);
+            backdrop-filter: blur(4px);
           }
         }
 
@@ -1456,11 +1570,13 @@
       }
 
       .mobile-arcana-section {
+        position: relative;
         display: flex;
         flex-direction: column;
         padding: 20px;
         background: rgba(0, 0, 0, 0.6);
         flex-shrink: 0;
+        min-height: 200px;
 
         .arcana-preview {
           display: flex;
@@ -1537,31 +1653,47 @@
     }
 
     .mobile-start-button {
+      position: sticky;
+      bottom: 0;
       flex-shrink: 0;
       padding: 10px 20px;
-      background: rgba(0, 0, 0, 0.9);
-      border-top: 1px solid rgba($B_LGHT, 0.15);
-      z-index: 80;
+      background: rgba(0, 0, 0, 0.95);
+      border-top: 2px solid rgba($B_LGHT, 0.3);
+      z-index: 100;
+      backdrop-filter: blur(8px);
       box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
 
       a {
         display: block;
         width: 100%;
 
-        button {
+        button.button {
           width: 100% !important;
           height: 55px !important;
           font-size: 1.3rem !important;
           font-weight: bold !important;
-          box-shadow: 0 4px 12px rgba($B_FACT, 0.4);
-          transition: all 0.3s ease;
+          letter-spacing: 1px !important;
+          cursor: pointer;
+          transition: all 0.3s ease !important;
+          box-shadow:
+            0 4px 16px rgba($B_FACT, 0.6),
+            0 0 24px rgba($B_LGHT, 0.3) !important;
+          border-radius: 6px !important;
+          background: rgba($B_FACT, 0.6) !important;
+          border: 1px solid rgba($B_LGHT, 0.4) !important;
+          color: white !important;
 
-          &:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba($B_FACT, 0.6);
+          &:hover:not(:disabled):not([disabled]) {
+            transform: translateY(-3px) !important;
+            box-shadow:
+              0 8px 24px rgba($B_FACT, 0.8),
+              0 0 36px rgba($B_LGHT, 0.5) !important;
+            background: rgba($B_FACT, 0.8) !important;
+            border-color: rgba($B_LGHT, 0.6) !important;
           }
 
-          &:disabled {
+          &:disabled,
+          &[disabled] {
             opacity: 0.4;
             cursor: not-allowed;
           }
@@ -1838,6 +1970,7 @@
 
     // 3. Player Arcana Section (with preview at top)
     .mobile-arcana-section {
+      position: relative;
       display: flex;
       flex-direction: column;
       padding: 3px;
@@ -1845,6 +1978,7 @@
       border-bottom: 1px solid rgba($B_LGHT, 0.1);
       box-sizing: border-box;
       flex-shrink: 0;
+      min-height: 200px;
 
       .arcana-preview {
         display: flex;
@@ -1996,14 +2130,131 @@
 
       // Hide old desktop sections on mobile
       .nodes,
-      .description-spellBook,
-      .right-panel {
+      .description-spellBook {
         display: none !important;
       }
 
-      // Explicitly hide right-panel's chapter-dropdown on mobile (it's inside right-panel which is hidden)
-      .right-panel .chapter-dropdown {
-        display: none !important;
+      // Show right-panel on mobile but hide certain elements
+      .right-panel {
+        display: flex !important;
+        flex-direction: column;
+        border-left: none;
+
+        // Hide chapter-dropdown on mobile (we have it in header)
+        .chapter-dropdown {
+          display: none !important;
+        }
+
+        // Hide the desktop start button section on mobile
+        .start-button-section {
+          display: none !important;
+        }
+
+        // Style chapter description on mobile
+        .chapter-description {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          padding: 10px;
+          background: rgba(0, 0, 0, 0.7);
+          border-bottom: 1px solid rgba($B_LGHT, 0.1);
+          overflow-y: auto;
+          min-height: 150px;
+
+          .node-title {
+            color: $B_LGHT;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 1rem;
+
+            .boss-indicator {
+              display: inline-block;
+              margin-left: 10px;
+              padding: 3px 10px;
+              background: linear-gradient(
+                135deg,
+                rgba(255, 215, 0, 0.2) 0%,
+                rgba(255, 140, 0, 0.2) 50%,
+                rgba(255, 69, 0, 0.2) 100%
+              );
+              border: 2px solid rgba(255, 215, 0, 0.5);
+              border-radius: 6px;
+              color: #ffd700;
+              font-size: 0.9rem;
+              font-weight: 800;
+              letter-spacing: 1.5px;
+              text-transform: uppercase;
+              animation:
+                bossGlow 2s ease-in-out infinite,
+                bossPulse 3s ease-in-out infinite;
+              box-shadow:
+                0 0 20px rgba(255, 215, 0, 0.4),
+                inset 0 0 10px rgba(255, 215, 0, 0.1);
+              backdrop-filter: blur(4px);
+            }
+          }
+
+          .node-description {
+            color: rgba(white, 0.9);
+            line-height: 1.5;
+            font-size: 0.9rem;
+
+            p {
+              margin-bottom: 10px;
+            }
+          }
+        }
+
+        // Style opponent and player arcana sections on mobile
+        .opponent-arcana-section {
+          padding: 10px;
+          padding-bottom: 15px;
+          background: rgba(0, 0, 0, 0.6);
+          border-bottom: 1px solid rgba($B_LGHT, 0.1);
+          margin-bottom: 10px;
+
+          .arcana-selector-label {
+            color: $B_LGHT;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+          }
+
+          .time-display {
+            color: $B_LGHT;
+            font-weight: bold;
+            text-align: center;
+            padding: 8px;
+            background: rgba($B_BACK, 0.4);
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 1rem;
+          }
+        }
+
+        .mobile-arcana-section {
+          padding: 10px;
+          background: rgba(0, 0, 0, 0.6);
+          border-bottom: 1px solid rgba($B_LGHT, 0.1);
+
+          .arcana-selector-label {
+            color: $B_LGHT;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+          }
+
+          .time-display {
+            color: $B_LGHT;
+            font-weight: bold;
+            text-align: center;
+            padding: 8px;
+            background: rgba($B_BACK, 0.4);
+            border-radius: 4px;
+            margin-bottom: 8px;
+            font-size: 1rem;
+          }
+        }
       }
 
       // 4. Chess Board
@@ -2105,42 +2356,53 @@
 
     // 6. Start Button (at bottom of flow)
     .mobile-start-button {
+      position: sticky;
+      bottom: 0;
       display: flex !important;
       flex-shrink: 0;
       padding: 15px 20px;
       background: rgba(0, 0, 0, 0.95);
       border-top: 2px solid rgba($B_LGHT, 0.3);
       box-sizing: border-box;
-      margin-bottom: 40px;
-      margin-top: 10px;
       width: 100%;
       justify-content: center;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.5);
 
       a {
         display: block;
         width: 100%;
         max-width: 400px;
 
-        button {
+        button.button {
           width: 100% !important;
           height: auto !important;
           padding: 14px 24px !important;
           font-size: 1.1rem !important;
           font-weight: bold !important;
+          letter-spacing: 1px !important;
+          cursor: pointer;
+          transition: all 0.3s ease !important;
           box-shadow:
             0 4px 16px rgba($B_FACT, 0.6),
             0 0 24px rgba($B_LGHT, 0.3) !important;
           border-radius: 6px !important;
-          transition: all 0.3s ease;
+          background: rgba($B_FACT, 0.6) !important;
+          border: 1px solid rgba($B_LGHT, 0.4) !important;
+          color: white !important;
 
-          &:hover:not(:disabled) {
-            transform: translateY(-3px);
+          &:hover:not(:disabled):not([disabled]) {
+            transform: translateY(-3px) !important;
             box-shadow:
               0 8px 24px rgba($B_FACT, 0.8),
               0 0 36px rgba($B_LGHT, 0.5) !important;
+            background: rgba($B_FACT, 0.8) !important;
+            border-color: rgba($B_LGHT, 0.6) !important;
           }
 
-          &:disabled {
+          &:disabled,
+          &[disabled] {
             opacity: 0.4;
             cursor: not-allowed;
           }

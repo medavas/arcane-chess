@@ -19,6 +19,7 @@ import Button from 'src/shared/components/Button/Button';
 import ArcanaSelect, {
   unlockableArcana,
 } from 'src/features/campaign/pages/book/ArcanaSelect';
+import CampaignArcanaSelect from 'src/features/campaign/components/ArcanaSelect/ArcanaSelect';
 
 import arcanaJson from 'src/shared/data/arcana.json';
 
@@ -64,6 +65,7 @@ interface BookState {
   selectedTab: string;
   hoverArcane: string;
   chapterDropdownOpen: boolean;
+  showArcanaSelect: boolean;
 }
 
 interface Node {
@@ -187,6 +189,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
       hoverArcane: '',
       selectedArcana: getLocalStorage(this.props.auth.user.username)?.arcana,
       chapterDropdownOpen: false,
+      showArcanaSelect: false,
     };
     this.toggleAllNodesUnlocked = this.toggleAllNodesUnlocked.bind(this);
     this.toggleChapterDropdown = this.toggleChapterDropdown.bind(this);
@@ -206,6 +209,67 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
 
   toggleHover = (arcane: string) => {
     this.setState({ hoverArcane: arcane });
+  };
+
+  getPlayerSpellBook = () => {
+    const LS = getLocalStorage(this.props.auth.user.username);
+    const spellBookObj = LS.spellBook || {};
+    const spellBookArray: ArcanaDetail[] = [];
+
+    // Convert spellBook object to array format expected by ArcanaSelect
+    Object.keys(spellBookObj).forEach((arcaneId) => {
+      const count = spellBookObj[arcaneId];
+      for (let i = 0; i < count; i++) {
+        if (arcana[arcaneId]) {
+          spellBookArray.push(arcana[arcaneId]);
+        }
+      }
+    });
+
+    // Fill remaining slots with empty (limit to 6 spells)
+    while (spellBookArray.length < 6) {
+      spellBookArray.push({
+        id: 'empty',
+        name: '',
+        description: '',
+        type: '',
+        imagePath: '/Empty',
+      });
+    }
+
+    return spellBookArray.slice(0, 6);
+  };
+
+  updatePlayerSpellBook = (spellBook: ArcanaDetail[]) => {
+    const LS = getLocalStorage(this.props.auth.user.username);
+    const spellBookObj: { [key: string]: number } = {};
+
+    // Convert array back to object format
+    spellBook.forEach((arcane) => {
+      if (arcane.id === 'empty') return;
+      if (spellBookObj[arcane.id]) {
+        spellBookObj[arcane.id] += 1;
+      } else {
+        spellBookObj[arcane.id] = 1;
+      }
+    });
+
+    setLocalStorage({
+      ...LS,
+      spellBook: spellBookObj,
+    });
+
+    this.setState({ spellBook: spellBookObj });
+  };
+
+  getUnlockedArcana = () => {
+    const LS = getLocalStorage(this.props.auth.user.username);
+    const chapter = LS.chapter || 0;
+
+    // Only return arcana from the current chapter (not previous chapters)
+    const currentChapterArcana = unlockableArcana[chapter - 1] || {};
+
+    return Object.keys(currentChapterArcana);
   };
 
   getFen() {
@@ -521,11 +585,6 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                           this.booksMap[`book${LS.chapter}`]?.[
                             this.state.selectedSwatch
                           ]?.panels['panel-1'].whiteArcane;
-                        const arcanaToStore = Object.keys(
-                          missionArcanaDelta || {}
-                        ).length
-                          ? {}
-                          : currLS.arcana;
                         const diffMults: Record<string, number> = {
                           novice: 80,
                           intermediate: 95,
@@ -533,9 +592,9 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                           expert: 125,
                         };
                         const updatedConfig = { ...LS.config };
-                        let updatedArcana = arcanaToStore;
+                        // Always clear arcana for missions and temples to use only current chapter's unlockable arcana
+                        const updatedArcana = {};
                         if (_.includes(node.id, 'temple')) {
-                          updatedArcana = {};
                           this.updateMultiplier(diffMults[LS.difficulty], true);
                         }
                         if (Object.keys(missionArcanaDelta || {}).length) {
@@ -699,88 +758,6 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
               </div>
             </div>
 
-            {/* Mobile-only sections (visible on mobile, hidden on tablet/desktop) */}
-            <div className="opponent-arcana-section mobile-only">
-              <div className="arcana-selector-label">Opponent Arcana</div>
-              {this.state.selectedSwatch &&
-                isMission &&
-                this.state.playerColor === 'white' && (
-                  <ArcanaSelect
-                    auth={this.props.auth}
-                    isPlayerArcana={false}
-                    engineArcana={{
-                      ...this.booksMap[`book${LS.chapter}`]?.[
-                        this.state.selectedSwatch
-                      ]?.panels['panel-1'].blackArcane,
-                    }}
-                    isMission={isMission}
-                    updateBookMultiplier={(value) =>
-                      this.updateMultiplier(value)
-                    }
-                    onToggleHover={(arcane: string) => this.toggleHover(arcane)}
-                  />
-                )}
-              {this.state.selectedSwatch &&
-                isMission &&
-                this.state.playerColor === 'black' && (
-                  <ArcanaSelect
-                    auth={this.props.auth}
-                    isPlayerArcana={false}
-                    engineArcana={{
-                      ...this.booksMap[`book${LS.chapter}`]?.[
-                        this.state.selectedSwatch
-                      ]?.panels['panel-1'].blackArcane,
-                    }}
-                    isMission={isMission}
-                    updateBookMultiplier={(value) =>
-                      this.updateMultiplier(value)
-                    }
-                    onToggleHover={(arcane: string) => this.toggleHover(arcane)}
-                  />
-                )}
-            </div>
-
-            <div className="mobile-arcana-section mobile-only">
-              <div className="arcana-selector-label">Your Arcana</div>
-              <div className="time-display">{this.getTimeDisplay()}</div>
-              {this.state.selectedSwatch &&
-                isMission &&
-                this.state.playerColor === 'white' && (
-                  <ArcanaSelect
-                    auth={this.props.auth}
-                    isPlayerArcana
-                    isMission={isMission}
-                    updateBookMultiplier={(value) =>
-                      this.updateMultiplier(value)
-                    }
-                    missionArcana={{
-                      ...this.booksMap[`book${LS.chapter}`]?.[
-                        this.state.selectedSwatch
-                      ]?.panels['panel-1'].whiteArcane,
-                    }}
-                    onToggleHover={(arcane: string) => this.toggleHover(arcane)}
-                  />
-                )}
-              {this.state.selectedSwatch &&
-                isMission &&
-                this.state.playerColor === 'black' && (
-                  <ArcanaSelect
-                    auth={this.props.auth}
-                    isPlayerArcana
-                    isMission={isMission}
-                    updateBookMultiplier={(value) =>
-                      this.updateMultiplier(value)
-                    }
-                    missionArcana={{
-                      ...this.booksMap[`book${LS.chapter}`]?.[
-                        this.state.selectedSwatch
-                      ]?.panels['panel-1'].whiteArcane,
-                    }}
-                    onToggleHover={(arcane: string) => this.toggleHover(arcane)}
-                  />
-                )}
-            </div>
-
             {/* Right Panel - Info Stack */}
             <div className="right-panel">
               {/* Chapter Dropdown inside right panel (tablet/desktop only) */}
@@ -857,11 +834,6 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                               this.booksMap[`book${LS.chapter}`]?.[
                                 this.state.selectedSwatch
                               ]?.panels['panel-1'].whiteArcane;
-                            const arcanaToStore = Object.keys(
-                              missionArcanaDelta || {}
-                            ).length
-                              ? {}
-                              : currLS.arcana;
                             const diffMults: Record<string, number> = {
                               novice: 80,
                               intermediate: 95,
@@ -869,9 +841,9 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                               expert: 125,
                             };
                             const updatedConfig = { ...LS.config };
-                            let updatedArcana = arcanaToStore;
+                            // Always clear arcana for missions and temples to use only current chapter's unlockable arcana
+                            const updatedArcana = {};
                             if (_.includes(node.id, 'temple')) {
-                              updatedArcana = {};
                               this.updateMultiplier(
                                 diffMults[LS.difficulty],
                                 true
@@ -902,6 +874,11 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              {/* Time Display */}
+              <div className="opponent-arcana-section">
+                <div className="time-display">{this.getTimeDisplay()}</div>
               </div>
 
               {/* 1. Opponent Arcana */}
@@ -949,7 +926,33 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                   )}
               </div>
 
-              {/* 2. Chapter Description */}
+              {/* 2. Player Arcana */}
+              <div className="mobile-arcana-section">
+                <div className="arcana-selector-label">Your Arcana</div>
+                {this.state.selectedSwatch && (
+                  <CampaignArcanaSelect
+                    spellBook={this.getPlayerSpellBook()}
+                    color={this.state.playerColor}
+                    isOpen={this.state.showArcanaSelect}
+                    handleToggle={() => {
+                      this.setState({
+                        showArcanaSelect: !this.state.showArcanaSelect,
+                      });
+                    }}
+                    updateSpellBook={(spellBook) => {
+                      this.updatePlayerSpellBook(spellBook);
+                    }}
+                    updateHover={(arcaneObject) => {
+                      this.setState({
+                        hoverArcane: arcaneObject.id || '',
+                      });
+                    }}
+                    unlockedArcana={this.getUnlockedArcana()}
+                  />
+                )}
+              </div>
+
+              {/* 3. Chapter Description */}
               <div className="chapter-description">
                 {this.state.selectedSwatch && this.state.hoverArcane !== '' ? (
                   <>
@@ -977,52 +980,6 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                     </div>
                   </>
                 ) : null}
-              </div>
-
-              {/* 3. Player Arcana */}
-              <div className="mobile-arcana-section">
-                <div className="arcana-selector-label">Your Arcana</div>
-                <div className="time-display">{this.getTimeDisplay()}</div>
-                {this.state.selectedSwatch &&
-                  isMission &&
-                  this.state.playerColor === 'white' && (
-                    <ArcanaSelect
-                      auth={this.props.auth}
-                      isPlayerArcana
-                      isMission={isMission}
-                      updateBookMultiplier={(value) =>
-                        this.updateMultiplier(value)
-                      }
-                      missionArcana={{
-                        ...this.booksMap[`book${LS.chapter}`]?.[
-                          this.state.selectedSwatch
-                        ]?.panels['panel-1'].whiteArcane,
-                      }}
-                      onToggleHover={(arcane: string) =>
-                        this.toggleHover(arcane)
-                      }
-                    />
-                  )}
-                {this.state.selectedSwatch &&
-                  isMission &&
-                  this.state.playerColor === 'black' && (
-                    <ArcanaSelect
-                      auth={this.props.auth}
-                      isPlayerArcana
-                      isMission={isMission}
-                      updateBookMultiplier={(value) =>
-                        this.updateMultiplier(value)
-                      }
-                      missionArcana={{
-                        ...this.booksMap[`book${LS.chapter}`]?.[
-                          this.state.selectedSwatch
-                        ]?.panels['panel-1'].whiteArcane,
-                      }}
-                      onToggleHover={(arcane: string) =>
-                        this.toggleHover(arcane)
-                      }
-                    />
-                  )}
               </div>
 
               {/* Start Button inside right panel (tablet/desktop only) */}

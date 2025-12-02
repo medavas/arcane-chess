@@ -178,16 +178,6 @@ class UnwrappedCampaignSettingsModal extends React.Component<
         ariaHideApp={false}
       >
         <div className="campaign-settings-modal">
-          <div className="campaign-header">
-            <div className="header-left">
-              <button
-                className="home-button"
-                onClick={() => this.props.navigate('/')}
-              >
-                <img src="/assets/logoall+.png" alt="Home" className="logo" />
-              </button>
-            </div>
-          </div>
           <div className="multiplier-settings-buttons">
             <div className="difficulty-text">
               <div className="multiplier">SELECT A DIFFICULTY</div>
