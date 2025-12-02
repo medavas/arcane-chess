@@ -443,16 +443,6 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
         >
           <div
             className="chapter-end"
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%',
-              maxHeight: '100%',
-              // background:
-              //   'url(/assets/chapterend.webp) no-repeat center center',
-              backgroundSize: 'cover',
-            }}
           >
             <div className="chapter-end-text" style={{ padding: '20px' }}>
               <div className="chapter-end-text-top">
@@ -471,9 +461,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                         return (
                           <img
                             key={key}
-                            className={`arcane ${
-                              this.state.hoverArcane === `${key}` ? 'focus' : ''
-                            }`}
+                            className={`arcane ${this.state.hoverArcane === `${key}` ? 'focus' : ''
+                              }`}
                             src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
                             onMouseEnter={() => this.toggleHover(`${key}`)}
                             onMouseLeave={() => this.toggleHover('')}
@@ -482,10 +471,16 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                       }
                     )}
                   </div>
-                  <span>
-                    <b>{arcana[this.state.hoverArcane.split('-')[0]]?.name}</b>
-                  </span>
-                  {arcana[this.state.hoverArcane.split('-')[0]]?.description}
+                  <div className="arcana-description">
+                    <span>
+                      <b>
+                        {arcana[this.state.hoverArcane.split('-')[0]]?.name}
+                      </b>
+                    </span>
+                    <p>
+                      {arcana[this.state.hoverArcane.split('-')[0]]?.description}
+                    </p>
+                  </div>
                 </div>
                 <Button
                   text="CONTINUE"
@@ -842,15 +837,17 @@ const chapterEndModal = {
     marginRight: 'auto',
     transform: 'translate(-50%, -50%)',
     display: 'flex',
-    height: '500px',
-    width: '1000px',
+    // height: '500px', // Removed fixed height
+    // width: '1000px', // Removed fixed width
     background: '#111111',
     borderRadius: '10px',
     border: '2px solid #3f48cc',
     padding: '0',
+    maxWidth: '95vw', // Added max-width for responsiveness
+    maxHeight: '95vh', // Added max-height for responsiveness
   },
   overlay: {
-    zIndex: 30,
-    backgroundColor: '#111111',
+    zIndex: 1000, // Increased z-index to overlay everything
+    backgroundColor: '#111111EE', // Added transparency to match other modals
   },
 };
