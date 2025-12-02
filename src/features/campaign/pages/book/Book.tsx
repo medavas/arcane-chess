@@ -144,6 +144,29 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
   constructor(props: BookProps) {
     super(props);
     const LS = getLocalStorage(this.props.auth.user.username);
+    const currentBook =
+      this.booksMap[
+        `book${getLocalStorage(this.props.auth.user.username)?.chapter}`
+      ];
+    // Get all available nodes and select the last one
+    const availableNodes = _.filter(currentBook, (node) => {
+      if (LS.allNodesUnlocked) return true;
+      if (
+        (_.includes(node.id, 'mission') || _.includes(node.id, 'temple')) &&
+        LS.nodeScores[node.id]
+      )
+        return false;
+      if (
+        !_.includes(node.id, 'lesson') &&
+        LS.nodeScores &&
+        LS.nodeScores[node.id]
+      )
+        return false;
+      if (node.prereq && !_.includes(Object.keys(LS.nodeScores), node.prereq))
+        return false;
+      return true;
+    });
+    const lastAvailableNode = availableNodes[availableNodes.length - 1];
     this.state = {
       allNodesUnlocked: false,
       armoryOpen: false,
@@ -159,10 +182,8 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
       chapter: [
         `jsonChapter${getLocalStorage(this.props.auth.user.username)?.chapter}`,
       ],
-      book: this.booksMap[
-        `book${getLocalStorage(this.props.auth.user.username)?.chapter}`
-      ],
-      selectedSwatch: '',
+      book: currentBook,
+      selectedSwatch: lastAvailableNode?.id || '',
       config: getLocalStorage(this.props.auth.user.username)?.config,
       multiplier: getLocalStorage(this.props.auth.user.username)?.config
         .multiplier,
@@ -521,7 +542,16 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
             </div>
             <div className="mobile-score">
               <span className="multiplier">x{this.state.multiplier}</span>
-              <span className="points">{digits}</span>
+              <span
+                className="points"
+                style={{
+                  minWidth: '200px',
+                  textAlign: 'right',
+                  display: 'inline-block',
+                }}
+              >
+                {digits}
+              </span>
             </div>
           </div>
 
@@ -731,7 +761,10 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
               </div>
               <div className="score">
                 <span className="multiplier">x{this.state.multiplier}</span>
-                <div className="points">
+                <div
+                  className="points"
+                  style={{ minWidth: '200px', textAlign: 'right' }}
+                >
                   <span className="digit-box">{digits}</span>
                 </div>
               </div>

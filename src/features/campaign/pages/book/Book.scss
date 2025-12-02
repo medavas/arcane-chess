@@ -488,6 +488,21 @@
   }
 }
 
+// Mobile score wrapping for screens 768px and below
+@media (max-width: 768px) {
+  .book {
+    .mobile-header {
+      flex-wrap: wrap;
+      gap: 8px;
+
+      .mobile-score {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+}
+
 // Tablet / Medium screens (769px - 1024px)
 @media (max-width: 1024px) and (min-width: 769px) {
   body {
