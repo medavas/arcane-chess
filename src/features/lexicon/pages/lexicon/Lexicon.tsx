@@ -465,17 +465,19 @@ class UnwrappedLexicon extends React.Component<Props, State> {
           <div className="lexicon-view">
             <div className="opponent-arcana-volume">
               <div className="lesson-list">
-                <Link to="/" style={{ width: '160px' }}>
-                  <Button
-                    text="BACK"
-                    className="tertiary"
-                    color="G"
-                    width={160}
-                    height={40}
-                    disabled={false}
-                  />
-                </Link>
-                {this.state.selectedCategory === '' ? (
+                {!(this.state.isMobile && this.state.currentLesson?.panels) && (
+                  <Link to="/" style={{ width: '160px' }}>
+                    <Button
+                      text="BACK"
+                      className="tertiary"
+                      color="G"
+                      width={160}
+                      height={40}
+                      disabled={false}
+                    />
+                  </Link>
+                )}
+                {!(this.state.isMobile && this.state.currentLesson?.panels) && this.state.selectedCategory === '' ? (
                   <div style={{ width: '100%' }}>
                     <Button
                       className="tertiary"
@@ -574,7 +576,7 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                       backgroundColorOverride="#11111188"
                     />
                   </div>
-                ) : (
+                ) : !(this.state.isMobile && this.state.currentLesson?.panels) ? (
                   <div
                     style={{
                       width: '100%',
@@ -646,7 +648,7 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                       }
                     )}
                   </div>
-                )}
+                ) : null}
                 {this.state.isMobile && this.state.currentLesson?.panels && (
                   <div className="lexicon-text" style={{ marginTop: '10px' }}>
                     <div>
@@ -661,6 +663,26 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                 <GlobalVolumeControl />
               </div>
             </div>
+            {this.state.isMobile && this.state.currentLesson?.panels && (
+              <div style={{ width: '100%', maxWidth: '380px', margin: '10px', display: 'flex', justifyContent: 'center' }}>
+                <Button
+                  text="← BACK TO LESSONS"
+                  className="tertiary"
+                  color="G"
+                  width="100%"
+                  height={50}
+                  onClick={() => {
+                    this.setState({
+                      currentLesson: {} as Node,
+                      fen: '8/8/8/8/8/8/8/8 w - - 0 1',
+                      fenHistory: ['8/8/8/8/8/8/8/8 w - - 0 1'],
+                      currPanel: 1,
+                      moveNumber: 0,
+                    });
+                  }}
+                />
+              </div>
+            )}
             <div className="time-board-time">
               <div className={`board-view lexicon-board`}>
                 <Chessground
@@ -706,8 +728,8 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                 />
               </div>
             </div>
-            {this.state.isMobile && (
-              <div className="lexicon-nav-arrows" style={{ margin: '10px' }}>
+            {this.state.isMobile && this.state.currentLesson?.panels && (
+              <div style={{ width: '100%', maxWidth: '380px', margin: '10px 10px 20px 10px', display: 'flex', justifyContent: 'center', gap: '15px' }}>
                 <Button
                   className="tertiary"
                   onClick={() => {
@@ -719,8 +741,9 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                   color="S"
                   strong={true}
                   variant="<"
-                  width={90}
-                  fontSize={24}
+                  width={120}
+                  height={50}
+                  fontSize={28}
                 />
                 <Button
                   className="tertiary"
@@ -730,8 +753,9 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                   color="S"
                   strong={true}
                   variant=">"
-                  width={90}
-                  fontSize={24}
+                  width={120}
+                  height={50}
+                  fontSize={28}
                 />
               </div>
             )}
