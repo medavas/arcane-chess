@@ -10,18 +10,34 @@
   overflow-x: hidden;
 
   background-image: url('/assets/images/textures/random-grey-variations.png'),
-    radial-gradient(circle,
+    radial-gradient(
+      circle,
       rgba(52, 120, 220, 0.6) 0%,
-      rgba(17, 17, 17, 0.2) 80%);
+      rgba(17, 17, 17, 0.2) 80%
+    );
   background-position: center;
   background-size: 250px, cover;
 
-  .back {
-    width: 815px;
-    display: flex;
-    text-align: left;
-    justify-content: start;
-    margin-bottom: 10px;
+  .home-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.2s ease;
+    z-index: 100;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+    }
   }
 
   .book-grid {

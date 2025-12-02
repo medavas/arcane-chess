@@ -5,7 +5,10 @@ import { withRouter } from 'src/shared/hooks/withRouter/withRouter';
 
 import './Campaign.scss';
 
-import { setLocalStorage, getLocalStorage } from 'src/shared/utils/handleLocalStorage';
+import {
+  setLocalStorage,
+  getLocalStorage,
+} from 'src/shared/utils/handleLocalStorage';
 
 import Button from 'src/shared/components/Button/Button';
 import CampaignSettingsModal from 'src/features/campaign/components/CampaignSettingsModal/CampaignSettingsModal';
@@ -55,22 +58,10 @@ export class UnwrappedCampaign extends React.Component<
 
   render() {
     return (
-      <div
-        className="campaign"
-      >
-        <div className="back">
-          <Link to="/">
-            <Button
-              text="BACK"
-              className="tertiary"
-              color="S"
-              width={200}
-              height={40}
-              disabled={false}
-              backgroundColorOverride="#11111188"
-            />
-          </Link>
-        </div>
+      <div className="campaign">
+        <Link to="/" className="home-button">
+          <img src="/assets/logoall+.png" alt="Home" className="logo" />
+        </Link>
         <div className="book-grid">
           {/* <div className="book-titles">
             <span>Book I</span>

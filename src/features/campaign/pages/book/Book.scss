@@ -493,26 +493,38 @@
       z-index: 100;
       width: 100%;
       flex-shrink: 0;
-      .hex-home-icon {
-        width: 60px;
-        height: 60px;
+
+      .left-section {
         display: flex;
-        justify-content: center;
         align-items: center;
-        transition: all 0.3s ease;
+        gap: 15px;
+      }
+
+      .hex-home-icon {
+        background: transparent;
+        border: none;
+        padding: 0;
         cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
 
         &:hover {
-          transform: scale(1.05);
-          opacity: 0.8;
+          transform: scale(1.1);
+          filter: brightness(1.2);
         }
 
+        .logo,
         svg,
         img {
-          width: 60px;
-          height: 60px;
+          width: 50px;
+          height: 50px;
           object-fit: contain;
         }
+      }
+
+      .audio-controls {
+        display: flex;
+        align-items: center;
       }
 
       .header-arcana-preview {
@@ -704,20 +716,27 @@
               cursor: pointer;
               transition: all 0.2s ease;
               background: transparent;
+              color: white;
+              font-size: 1rem;
+              font-weight: 500;
 
               &:hover {
-                background: rgba($B_LGHT, 0.05);
-                border-left: 3px solid rgba($B_LGHT, 0.5);
+                background: rgba($B_LGHT, 0.1);
+                border-left: 3px solid $B_LGHT;
+                color: $B_LGHT;
               }
 
               &.completed {
-                opacity: 0.5;
+                opacity: 0.6;
                 background: rgba(0, 0, 0, 0.3);
+                color: rgba(white, 0.7);
               }
 
               &.selected {
                 background: rgba($B_DARK, 0.4);
                 border-left: 3px solid $B_LGHT;
+                color: $B_LGHT;
+                font-weight: bold;
               }
             }
           }
@@ -725,7 +744,7 @@
 
         .start-button-section {
           flex-shrink: 0;
-          padding: 15px;
+          padding: 20px;
           background: rgba(0, 0, 0, 0.7);
           border-top: 1px solid rgba($B_LGHT, 0.1);
           display: flex;
@@ -738,16 +757,21 @@
 
             button {
               width: 100% !important;
-              padding: 12px 20px !important;
-              font-size: 1.1rem !important;
+              padding: 16px 28px !important;
+              font-size: 1.2rem !important;
               font-weight: bold !important;
               cursor: pointer;
-              transition: all 0.2s ease;
-              box-shadow: 0 4px 12px rgba($B_FACT, 0.4);
+              transition: all 0.3s ease;
+              box-shadow:
+                0 4px 16px rgba($B_FACT, 0.6),
+                0 0 24px rgba($B_LGHT, 0.3) !important;
+              border-radius: 6px !important;
 
               &:hover:not(:disabled) {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 16px rgba($B_FACT, 0.6);
+                transform: translateY(-3px);
+                box-shadow:
+                  0 8px 24px rgba($B_FACT, 0.8),
+                  0 0 36px rgba($B_LGHT, 0.5) !important;
               }
 
               &:disabled {
@@ -883,6 +907,14 @@
           font-weight: bold;
           margin-bottom: 8px;
           font-size: 1.1rem;
+
+          .boss-indicator {
+            display: inline-block;
+            margin-left: 8px;
+            color: gold;
+            font-size: 0.95rem;
+            animation: glow 2s infinite;
+          }
         }
 
         .node-description {
@@ -981,26 +1013,37 @@
       z-index: 100;
       width: 100%;
 
-      .hex-home-icon {
-        width: 60px;
-        height: 60px;
+      .left-section {
         display: flex;
-        justify-content: center;
         align-items: center;
-        transition: all 0.3s ease;
+        gap: 20px;
+      }
+
+      .hex-home-icon {
+        background: transparent;
+        border: none;
+        padding: 0;
         cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
 
         &:hover {
-          transform: scale(1.05);
-          opacity: 0.8;
+          transform: scale(1.1);
+          filter: brightness(1.2);
         }
 
+        .logo,
         svg,
         img {
-          width: 60px;
-          height: 60px;
+          width: 50px;
+          height: 50px;
           object-fit: contain;
         }
+      }
+
+      .audio-controls {
+        display: flex;
+        align-items: center;
       }
 
       .header-arcana-preview {
@@ -1140,20 +1183,27 @@
           cursor: pointer;
           transition: all 0.2s ease;
           background: transparent;
+          color: white;
+          font-size: 1rem;
+          font-weight: 500;
 
           &:hover {
-            background: rgba($B_LGHT, 0.05);
-            border-left: 3px solid rgba($B_LGHT, 0.5);
+            background: rgba($B_LGHT, 0.1);
+            border-left: 3px solid $B_LGHT;
+            color: $B_LGHT;
           }
 
           &.completed {
-            opacity: 0.5;
+            opacity: 0.6;
             background: rgba(0, 0, 0, 0.3);
+            color: rgba(white, 0.7);
           }
 
           &.selected {
             background: rgba($B_DARK, 0.4);
             border-left: 3px solid $B_LGHT;
+            color: $B_LGHT;
+            font-weight: bold;
           }
         }
       }
@@ -1274,20 +1324,27 @@
               cursor: pointer;
               transition: all 0.2s ease;
               background: transparent;
+              color: white;
+              font-size: 1rem;
+              font-weight: 500;
 
               &:hover {
-                background: rgba($B_LGHT, 0.05);
-                border-left: 3px solid rgba($B_LGHT, 0.5);
+                background: rgba($B_LGHT, 0.1);
+                border-left: 3px solid $B_LGHT;
+                color: $B_LGHT;
               }
 
               &.completed {
-                opacity: 0.5;
+                opacity: 0.6;
                 background: rgba(0, 0, 0, 0.3);
+                color: rgba(white, 0.7);
               }
 
               &.selected {
                 background: rgba($B_DARK, 0.4);
                 border-left: 3px solid $B_LGHT;
+                color: $B_LGHT;
+                font-weight: bold;
               }
             }
           }
@@ -1295,7 +1352,7 @@
 
         .start-button-section {
           flex-shrink: 0;
-          padding: 20px;
+          padding: 24px;
           background: rgba(0, 0, 0, 0.7);
           border-top: 1px solid rgba($B_LGHT, 0.1);
           display: flex;
@@ -1308,16 +1365,21 @@
 
             button {
               width: 100% !important;
-              padding: 14px 24px !important;
-              font-size: 1.2rem !important;
+              padding: 18px 32px !important;
+              font-size: 1.3rem !important;
               font-weight: bold !important;
               cursor: pointer;
-              transition: all 0.2s ease;
-              box-shadow: 0 4px 12px rgba($B_FACT, 0.4);
+              transition: all 0.3s ease;
+              box-shadow:
+                0 4px 16px rgba($B_FACT, 0.6),
+                0 0 24px rgba($B_LGHT, 0.3) !important;
+              border-radius: 6px !important;
 
               &:hover:not(:disabled) {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 16px rgba($B_FACT, 0.6);
+                transform: translateY(-3px);
+                box-shadow:
+                  0 8px 24px rgba($B_FACT, 0.8),
+                  0 0 36px rgba($B_LGHT, 0.5) !important;
               }
 
               &:disabled {
@@ -1372,6 +1434,14 @@
           font-weight: bold;
           margin-bottom: 10px;
           font-size: 1.2rem;
+
+          .boss-indicator {
+            display: inline-block;
+            margin-left: 10px;
+            color: gold;
+            font-size: 1rem;
+            animation: glow 2s infinite;
+          }
         }
 
         .node-description {
@@ -1568,26 +1638,37 @@
       width: 100%;
       box-sizing: border-box;
 
-      .hex-home-icon {
-        width: 50px;
-        height: 50px;
+      .left-section {
         display: flex;
-        justify-content: center;
         align-items: center;
-        transition: all 0.3s ease;
+        gap: 10px;
+      }
+
+      .hex-home-icon {
+        background: transparent;
+        border: none;
+        padding: 0;
         cursor: pointer;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
 
         &:hover {
-          transform: scale(1.05);
-          opacity: 0.8;
+          transform: scale(1.1);
+          filter: brightness(1.2);
         }
 
+        .logo,
         svg,
         img {
-          width: 50px;
-          height: 50px;
+          width: 40px;
+          height: 40px;
           object-fit: contain;
         }
+      }
+
+      .audio-controls {
+        display: flex;
+        align-items: center;
       }
 
       .header-arcana-preview {
@@ -2026,7 +2107,7 @@
     .mobile-start-button {
       display: flex !important;
       flex-shrink: 0;
-      padding: 10px 15px;
+      padding: 15px 20px;
       background: rgba(0, 0, 0, 0.95);
       border-top: 2px solid rgba($B_LGHT, 0.3);
       box-sizing: border-box;
@@ -2042,15 +2123,21 @@
 
         button {
           width: 100% !important;
-          height: 45px !important;
-          font-size: 1rem !important;
+          height: auto !important;
+          padding: 14px 24px !important;
+          font-size: 1.1rem !important;
           font-weight: bold !important;
-          box-shadow: 0 4px 12px rgba($B_FACT, 0.4);
+          box-shadow:
+            0 4px 16px rgba($B_FACT, 0.6),
+            0 0 24px rgba($B_LGHT, 0.3) !important;
+          border-radius: 6px !important;
           transition: all 0.3s ease;
 
           &:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba($B_FACT, 0.6);
+            transform: translateY(-3px);
+            box-shadow:
+              0 8px 24px rgba($B_FACT, 0.8),
+              0 0 36px rgba($B_LGHT, 0.5) !important;
           }
 
           &:disabled {

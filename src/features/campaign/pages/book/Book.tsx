@@ -70,6 +70,7 @@ interface Node {
   id: string; // 'lesson-1';
   title: string;
   storyTitle: string;
+  storyText?: string;
   time: number[][]; // seconds
   nodeText: string;
   reward: (number | string)[];
@@ -88,6 +89,7 @@ interface Node {
   hero: string;
   theme: string;
   bookTheme: string;
+  boss?: boolean;
   panels: {
     [key: string]: {
       fen: string;
@@ -433,13 +435,15 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
         <div className="book">
           {/* Mobile Header with Logo, Arcana Preview, and Score */}
           <div className="mobile-header">
-            <Link to="/campaign" style={{ textDecoration: 'none' }}>
-              <div className="hex-home-icon">
-                <img src="/assets/logo.svg" alt="Home" />
+            <div className="left-section">
+              <Link to="/campaign" style={{ textDecoration: 'none' }}>
+                <div className="hex-home-icon">
+                  <img src="/assets/logoall+.png" alt="Home" />
+                </div>
+              </Link>
+              <div className="audio-controls">
+                <GlobalVolumeControl />
               </div>
-            </Link>
-            <div className="header-arcana-preview">
-              <GlobalVolumeControl />
             </div>
             <div className="mobile-score">
               <span className="multiplier">x{this.state.multiplier}</span>
@@ -960,6 +964,9 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
                   <>
                     <div className="node-title">
                       {this.state.book[this.state.selectedSwatch].title}
+                      {this.state.book[this.state.selectedSwatch].boss && (
+                        <span className="boss-indicator"> 👑 BOSS BATTLE</span>
+                      )}
                     </div>
                     <div className="node-description">
                       {this.state.book[this.state.selectedSwatch].nodeText

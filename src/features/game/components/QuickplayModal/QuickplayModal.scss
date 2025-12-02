@@ -7,9 +7,11 @@
   gap: 10px;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg,
-      rgba(10, 25, 50, 0.95),
-      rgba(5, 15, 30, 0.95));
+  background: linear-gradient(
+    135deg,
+    rgba(10, 25, 50, 0.95),
+    rgba(5, 15, 30, 0.95)
+  );
   border: 2px solid rgba(68, 170, 255, 0.4);
   border-radius: 16px;
   padding: 20px;
@@ -48,7 +50,6 @@
           width: 40px;
           height: 40px;
           object-fit: contain;
-          filter: drop-shadow(0 0 8px rgba(68, 170, 255, 0.5));
         }
       }
 
@@ -399,7 +400,6 @@
       }
     }
   }
-
 
   // Section header with inline button
   .section-header {

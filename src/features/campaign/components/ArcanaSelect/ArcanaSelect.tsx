@@ -75,8 +75,6 @@ export default class ArcanaSelect extends React.Component<
     const cursorInteractive =
       "url('/assets/images/cursors/pointer.svg') 12 4, pointer";
 
-    console.log('ArcanaSelect render - isOpen:', isOpen);
-
     return (
       <div className="arcane-select">
         <div className="spellBook">
