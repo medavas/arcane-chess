@@ -741,7 +741,7 @@ export class UnwrappedBook extends React.Component<BookProps, BookState> {
             {/* Chess Board */}
             <div className="chess-tab" key={this.state.bookTheme}>
               <div
-                className={`cg-wrap board-view tactorius-board ${this.state.theme}-board`}
+                className={`cg-wrap tactorius-board tactorius-default-board`}
               >
                 <Chessground
                   forwardedRef={this.chessgroundRef}

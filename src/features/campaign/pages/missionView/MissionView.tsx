@@ -839,19 +839,13 @@ class UnwrappedMissionView extends React.Component<Props, State> {
               alignItems: 'center',
               width: '100vw',
               height: '100vh',
-              // background:
-              //   this.state.theme === 'black'
-              //     ? ''
-              //     : `url(/assets/pages/${this.state.theme}.webp)`,
-              background:
-                this.state.theme === 'black'
-                  ? '#000000cc'
-                  : `radial-gradient(
-          circle,
-         rgba(221, 221, 221, 0.6) 0%,
-          rgba(0, 0, 0, 1) 80%    
-        )`,
-              backgroundSize: 'cover',
+              background: `url('/assets/images/textures/random-grey-variations.png'),
+                radial-gradient(
+                  circle,
+                  rgba(52, 120, 220, 0.6) 0%,
+                  rgba(17, 17, 17, 0.2) 80%
+                )`,
+              backgroundSize: 'auto, cover',
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
             }}
@@ -920,7 +914,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
               />
               <div className="time-board-time">
                 <div className="board-frame"></div>
-                <div className={`board-view ${this.state.theme}-board`}>
+                <div className="board-view tactorius-default-board">
                   <BoardUX
                     forwardedRef={this.chessgroundRef}
                     game={this.arcaneChess()}

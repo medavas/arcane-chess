@@ -5,6 +5,15 @@
   height: 100%;
   padding: 0;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('/assets/images/textures/random-grey-variations.png'),
+    radial-gradient(circle,
+      rgba(52, 120, 220, 0.6) 0%,
+      rgba(17, 17, 17, 0.2) 80%);
+  background-position: center;
+
   .temple-view {
     height: 100%;
     display: flex;
@@ -237,7 +246,7 @@
           align-items: center;
           height: 400px;
           padding: 20px;
-          background-color: #11111188;
+          background-color: rgba(34, 34, 34, 0.7);
           .time-text {
             font-size: 72px;
           }
@@ -329,7 +338,7 @@
           flex-direction: column;
           height: 390px;
           width: 380px;
-          background: #11111188;
+          background: rgba(34, 34, 34, 0.7);
         }
       }
       .time-board-time {
@@ -370,7 +379,7 @@
           width: 380px;
           height: 400px;
           padding: 20px;
-          background-color: #11111188;
+          background-color: rgba(34, 34, 34, 0.7);
           .time-text {
             font-size: 72px;
           }
@@ -389,7 +398,7 @@
           .avatar {
             max-width: 60px;
             height: 60px;
-            background: #11111188;
+            background: rgba(34, 34, 34, 0.7);
           }
           .info {
             width: 100%;
@@ -398,7 +407,7 @@
             justify-content: space-around;
             align-items: center;
             margin-left: 10px;
-            background: #11111188;
+            background: rgba(34, 34, 34, 0.7);
             .name {
               text-align: right;
             }

@@ -5,6 +5,14 @@
   height: 100%;
   padding: 0;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('/assets/images/textures/random-grey-variations.png'),
+    radial-gradient(circle,
+      rgba(52, 120, 220, 0.6) 0%,
+      rgba(17, 17, 17, 0.2) 80%);
+  background-position: center;
 
   .lesson-view {
     height: 100%;
@@ -32,7 +40,7 @@
 
         .avatar {
           position: relative;
-          background: #11111188;
+          background: rgba(34, 34, 34, 0.7);
           width: 60px;
           height: 60px;
         }
@@ -47,7 +55,7 @@
           overflow-x: auto;
           overflow-y: hidden;
           white-space: nowrap;
-          background: #11111188;
+          background: rgba(34, 34, 34, 0.7);
 
           .arcane {
             height: 45px;
@@ -65,7 +73,7 @@
         display: flex;
         flex-direction: column;
         height: 190px;
-        background: #11111188;
+        background: rgba(34, 34, 34, 0.7);
       }
     }
 
@@ -418,7 +426,7 @@
           align-items: center;
           height: 400px;
           padding: 20px;
-          background: #11111188;
+          background: rgba(34, 34, 34, 0.7);
 
           .time-text {
             font-size: 72px;
@@ -525,7 +533,7 @@
           flex-direction: column;
           height: 390px;
           width: 380px;
-          background: #11111188;
+          background: rgba(34, 34, 34, 0.7);
         }
       }
 
@@ -570,7 +578,7 @@
           width: 380px;
           height: 400px;
           padding: 20px;
-          background: #11111188;
+          background: rgba(34, 34, 34, 0.7);
 
           .time-text {
             font-size: 72px;
@@ -593,7 +601,7 @@
           .avatar {
             max-width: 60px;
             height: 60px;
-            background: #11111188;
+            background: rgba(34, 34, 34, 0.7);
           }
 
           .info {
@@ -603,7 +611,7 @@
             justify-content: space-around;
             align-items: center;
             margin-left: 10px;
-            background: #11111188;
+            background: rgba(34, 34, 34, 0.7);
 
             .name {
               text-align: right;

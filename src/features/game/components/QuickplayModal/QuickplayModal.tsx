@@ -359,8 +359,14 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       });
     }
 
-    this.props.updateConfig('wArcana', this.transformedSpellBook(paddedWhiteArcana));
-    this.props.updateConfig('bArcana', this.transformedSpellBook(paddedBlackArcana));
+    this.props.updateConfig(
+      'wArcana',
+      this.transformedSpellBook(paddedWhiteArcana)
+    );
+    this.props.updateConfig(
+      'bArcana',
+      this.transformedSpellBook(paddedBlackArcana)
+    );
     this.props.updateConfig('whiteSetup', white.setup);
     this.props.updateConfig('blackSetup', black.setup);
 
@@ -800,7 +806,9 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                           );
                           if (selectedMode && this.props.updateConfig) {
                             // Pad arcana arrays to 6 slots with empty spells
-                            const paddedWhiteArcana = [...selectedMode.white.arcana];
+                            const paddedWhiteArcana = [
+                              ...selectedMode.white.arcana,
+                            ];
                             while (paddedWhiteArcana.length < 6) {
                               paddedWhiteArcana.push({
                                 id: 'empty',
@@ -811,7 +819,9 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                               });
                             }
 
-                            const paddedBlackArcana = [...selectedMode.black.arcana];
+                            const paddedBlackArcana = [
+                              ...selectedMode.black.arcana,
+                            ];
                             while (paddedBlackArcana.length < 6) {
                               paddedBlackArcana.push({
                                 id: 'empty',
@@ -822,12 +832,10 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                               });
                             }
 
-                            const whiteConfigArcana = this.transformedSpellBook(
-                              paddedWhiteArcana
-                            );
-                            const blackConfigArcana = this.transformedSpellBook(
-                              paddedBlackArcana
-                            );
+                            const whiteConfigArcana =
+                              this.transformedSpellBook(paddedWhiteArcana);
+                            const blackConfigArcana =
+                              this.transformedSpellBook(paddedBlackArcana);
                             this.props.updateConfig(
                               'whiteSetup',
                               selectedMode.white.setup
