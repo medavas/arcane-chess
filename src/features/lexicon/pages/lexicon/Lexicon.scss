@@ -7,8 +7,14 @@
   overflow: hidden;
 
   background:
-    url('/assets/images/textures/random-grey-variations.png') center / 250px repeat,
-    radial-gradient(circle, rgba(52, 120, 220, 0.6) 0%, rgba(17, 17, 17, 0.2) 80%) center / cover no-repeat;
+    url('/assets/images/textures/random-grey-variations.png') center / 250px
+      repeat,
+    radial-gradient(
+        circle,
+        rgba(52, 120, 220, 0.6) 0%,
+        rgba(17, 17, 17, 0.2) 80%
+      )
+      center / cover no-repeat;
 
   .lexicon-view {
     height: 100%;
@@ -54,7 +60,7 @@
       }
 
       .lexicon-nav-arrows {
-        display: none; // Hidden on desktop
+        display: none;
       }
 
       .arcana {
@@ -129,60 +135,10 @@
       }
 
       .lexicon-nav-arrows {
-        display: none; // Hidden on desktop
-      }
-
-      .lexicon-buttons {
         display: flex;
         justify-content: center;
-        height: 40px;
-      }
-
-      .info-avatar {
-        display: flex;
-        width: 100%;
-
-        .avatar {
-          position: relative;
-          width: 60px;
-          height: 60px;
-
-          // Glassmorphism
-          background: rgba(0, 0, 0, 0.4);
-          backdrop-filter: blur(8px);
-          border: 1px solid rgba(68, 170, 255, 0.3);
-          border-radius: 6px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .arcana-select {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 5px;
-          height: 60px;
-          width: 100%;
-          overflow-x: auto;
-          overflow-y: hidden;
-          white-space: nowrap;
-
-          // Glassmorphism
-          background: rgba(0, 0, 0, 0.4);
-          backdrop-filter: blur(8px);
-          border: 1px solid rgba(68, 170, 255, 0.3);
-          border-radius: 6px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-
-          .arcane {
-            height: 45px;
-            width: 45px;
-            flex-shrink: 0;
-
-            &:hover {
-              cursor: pointer;
-            }
-          }
-        }
+        gap: 10px;
+        height: 60px;
       }
     }
   }
@@ -238,6 +194,7 @@
         .lexicon-nav-arrows {
           display: flex;
           justify-content: center;
+          gap: 10px;
           height: 60px;
         }
 
@@ -284,11 +241,8 @@
         .lexicon-nav-arrows {
           display: flex;
           justify-content: center;
+          gap: 10px;
           height: 60px;
-        }
-
-        .info-avatar {
-          display: none;
         }
       }
 
@@ -349,13 +303,14 @@
         margin: 10px;
         width: 100%;
         max-width: 380px;
+        min-height: 450px;
 
         .lesson-list {
           display: flex;
           flex-direction: column;
           width: 100%;
           height: auto;
-          max-height: 200px;
+          max-height: 300px;
           overflow-y: auto;
 
           // Glassmorphism
@@ -416,7 +371,40 @@
       }
 
       .lexicon-clock-buttons {
-        display: none; // Hide textbox on mobile
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        max-width: 380px;
+        margin: 0 10px;
+
+        .global-volume-control {
+          display: none;
+        }
+
+        .lexicon-text {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex: 1;
+          min-height: 150px;
+          padding: 20px;
+          overflow-y: auto;
+
+          // Glassmorphism
+          background: rgba(0, 0, 0, 0.4);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(68, 170, 255, 0.3);
+          border-radius: 6px;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .lexicon-nav-arrows {
+          display: flex;
+          justify-content: center;
+          gap: 10px;
+          height: 60px;
+        }
       }
     }
   }

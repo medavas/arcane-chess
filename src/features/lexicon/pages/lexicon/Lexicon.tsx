@@ -630,24 +630,6 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                   </div>
                 )}
               </div>
-              <div className="lexicon-nav-arrows">
-                <Button
-                  className="tertiary"
-                  onClick={() => {
-                    this.stepBackward();
-                  }}
-                  disabled={
-                    this.state.moveNumber === 0 && this.state.currPanel === 1
-                      ? true
-                      : false
-                  }
-                  color="S"
-                  strong={true}
-                  variant="<"
-                  width={190}
-                  fontSize={36}
-                />
-              </div>
               <div className="global-volume-control">
                 <GlobalVolumeControl />
               </div>
@@ -712,27 +694,28 @@ class UnwrappedLexicon extends React.Component<Props, State> {
                 <Button
                   className="tertiary"
                   onClick={() => {
+                    this.stepBackward();
+                  }}
+                  disabled={
+                    this.state.moveNumber === 0 && this.state.currPanel === 1
+                  }
+                  color="S"
+                  strong={true}
+                  variant="<"
+                  width={90}
+                  fontSize={24}
+                />
+                <Button
+                  className="tertiary"
+                  onClick={() => {
                     this.stepForward();
                   }}
                   color="S"
                   strong={true}
                   variant=">"
-                  width={190}
-                  fontSize={36}
+                  width={90}
+                  fontSize={24}
                 />
-              </div>
-              <div className="info-avatar">
-                <div className="avatar">
-                  {/* <img
-                    src="/assets/avatars/hero.webp"
-                    style={{
-                      height: '60px',
-                      width: '60px',
-                      objectFit: 'contain',
-                    }}
-                  /> */}
-                </div>
-                <div className="arcana-select"></div>
               </div>
             </div>
           </div>
