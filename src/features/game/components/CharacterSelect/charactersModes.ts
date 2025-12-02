@@ -214,7 +214,7 @@ export const modes: Record<string, GameModeType> = padModes({
         // arcana.sumnP,
         // arcana.sumnP,
         // arcana.shftA,
-        arcana.modsDIM,
+        arcana.sumnRT,
         arcana.toknHER,
         // arcana.toknHEM,
         arcana.sumnH,
@@ -226,7 +226,8 @@ export const modes: Record<string, GameModeType> = padModes({
         // arcana.modsDIS,
         // arcana.modsHEX,
         // arcana.modsAET,
-        arcana.modsSUS,
+        arcana.sumnRI,
+        arcana.sumnRG
         // arcana.areaQ,
         // arcana.areaT,
         // arcana.gainDYA,

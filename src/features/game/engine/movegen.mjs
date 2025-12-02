@@ -213,7 +213,7 @@ export function AddQuietMove(move, capturesOnly) {
     } else {
       GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply + 1]] =
         GameBoard.searchHistory[
-          GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
+        GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
         ];
     }
     GameBoard.moveListStart[GameBoard.ply + 1]++;
@@ -793,7 +793,7 @@ export function GenerateMoves(
           if (
             i === j ||
             GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][i]] ===
-              GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
+            GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
           ) {
             continue;
           }
@@ -1208,7 +1208,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.whiteArcane[3]
                 ) {
                   if (
@@ -1251,7 +1251,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.blackArcane[3]
                 ) {
                   if (

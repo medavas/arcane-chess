@@ -958,6 +958,11 @@ export function MakeMove(move, moveType = '') {
         if (GameBoard.royaltyN[square] > 0) GameBoard.royaltyN[square] = 0;
         GameBoard.royaltyF[square] = 9;
       }
+      GameBoard.hermitTracker[`pattern_9_${to}`] = {
+        type: 'F',
+        squares: THREE_SQUARE_OFFSETS.map((offset) => to + offset),
+        value: 9,
+      };
     } else if (captured === 10) {
       for (let i = 0; i < FIVE_SQUARE_OFFSETS.length; i++) {
         const square = to + FIVE_SQUARE_OFFSETS[i];
@@ -969,7 +974,14 @@ export function MakeMove(move, moveType = '') {
         if (GameBoard.royaltyN[square] > 0) GameBoard.royaltyN[square] = 0;
         GameBoard.royaltyF[square] = 9;
       }
+      GameBoard.hermitTracker[`pattern_10_${to}`] = {
+        type: 'F',
+        squares: FIVE_SQUARE_OFFSETS.map((offset) => to + offset),
+        value: 9,
+      };
     } else if (captured === 11) {
+      const squaresF = [];
+      const squaresE = [];
       for (let i = 0; i < FIVE_SQUARE_A.length; i++) {
         const square = to + FIVE_SQUARE_A[i];
         if (GameBoard.royaltyQ[square] > 0) GameBoard.royaltyQ[square] = 0;
@@ -979,6 +991,7 @@ export function MakeMove(move, moveType = '') {
         if (GameBoard.royaltyE[square] > 0) GameBoard.royaltyE[square] = 0;
         if (GameBoard.royaltyN[square] > 0) GameBoard.royaltyN[square] = 0;
         GameBoard.royaltyF[square] = 9;
+        squaresF.push(square);
       }
       for (let i = 0; i < FIVE_SQUARE_B.length; i++) {
         const square = to + FIVE_SQUARE_B[i];
@@ -989,7 +1002,18 @@ export function MakeMove(move, moveType = '') {
         if (GameBoard.royaltyE[square] > 0) GameBoard.royaltyF[square] = 0;
         if (GameBoard.royaltyN[square] > 0) GameBoard.royaltyN[square] = 0;
         GameBoard.royaltyE[square] = 9;
+        squaresE.push(square);
       }
+      GameBoard.hermitTracker[`pattern_11_F_${to}`] = {
+        type: 'F',
+        squares: squaresF,
+        value: 9,
+      };
+      GameBoard.hermitTracker[`pattern_11_E_${to}`] = {
+        type: 'E',
+        squares: squaresE,
+        value: 9,
+      };
     } else if (captured === 12) {
       if (GameBoard.royaltyQ[to] > 0) GameBoard.royaltyQ[to] = 0;
       if (GameBoard.royaltyT[to] > 0) GameBoard.royaltyT[to] = 0;
@@ -1007,11 +1031,41 @@ export function MakeMove(move, moveType = '') {
       GameBoard.royaltyM[to + 9] = 9;
       GameBoard.royaltyQ[to + 10] = 9;
       GameBoard.royaltyM[to + 11] = 9;
+
+      GameBoard.hermitTracker[`pattern_12_M_${to}`] = {
+        type: 'M',
+        squares: [to - 11, to - 9, to + 9, to + 11],
+        value: 9,
+      };
+      GameBoard.hermitTracker[`pattern_12_Q_${to}`] = {
+        type: 'Q',
+        squares: [to - 10, to + 10],
+        value: 9,
+      };
+      GameBoard.hermitTracker[`pattern_12_T_${to}`] = {
+        type: 'T',
+        squares: [to - 1, to + 1],
+        value: 9,
+      };
+      GameBoard.hermitTracker[`pattern_12_V_${to}`] = {
+        type: 'V',
+        squares: [to],
+        value: 9,
+      };
     } else if (sumnCap > 0) {
       const idx = royaltyIndexMapRestructure[sumnCap];
       const sym = RTY_CHARS[idx];
       const map = GameBoard[`royalty${sym}`];
-      if (map && (map[to] === undefined || map[to] <= 0)) map[to] = 9;
+      if (map && (map[to] === undefined || map[to] <= 0)) {
+        map[to] = 9;
+        // Add to tracker so it persists across turns
+        const trackerKey = `summon_${to}`;
+        GameBoard.hermitTracker[trackerKey] = {
+          type: sym,
+          squares: [to],
+          value: 9,
+        };
+      }
     } else if (promoEpsilon > 0) {
       // Store any existing piece at the destination for proper undo
       const existingPiece = GameBoard.pieces[to];
