@@ -92,7 +92,7 @@ export const OpponentPanel: React.FC<OpponentPanelProps> = ({
           {dialogue.map((item, key) => {
             return <li key={key}>{item}</li>;
           })}
-          {thinking && <li>The engine is thinking...</li>}
+          {!!thinking && <li>The engine is thinking...</li>}
         </ul>
       </div>
       {showResign && (

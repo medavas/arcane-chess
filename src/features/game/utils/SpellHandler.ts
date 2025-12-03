@@ -43,6 +43,7 @@ export interface SpellHandlerCallbacks {
   }) => void;
   addDialogue: (message: string) => void;
   activateGlitch: () => void;
+  setThinking: (thinking: boolean) => void;
 }
 
 export class SpellHandler {
@@ -301,7 +302,9 @@ export class SpellHandler {
     // === ENGINE HINT: Tactical Vision (From Square Only) ===
     if (key === 'modsIMP') {
       audioManager.playSFX('spell');
+      this.callbacks.setThinking(true);
       arcane.engineSuggestion(playerColor, 1).then((hint: any) => {
+        this.callbacks.setThinking(false);
         if (hint) {
           this.callbacks.addDialogue(
             `${playerColor} used Tactical Vision — ${hint}`
@@ -314,7 +317,9 @@ export class SpellHandler {
     // === ENGINE HINT: Oracle Whisper (From and To Square) ===
     if (key === 'modsORA') {
       audioManager.playSFX('spell');
+      this.callbacks.setThinking(true);
       arcane.engineSuggestion(playerColor, 2).then((hint: any) => {
+        this.callbacks.setThinking(false);
         if (hint) {
           this.callbacks.addDialogue(
             `${playerColor} used Oracle Whisper — ${hint}`
@@ -327,7 +332,9 @@ export class SpellHandler {
     // === ENGINE HINT: Temporal Pincer (Best Line) ===
     if (key === 'modsTEM') {
       audioManager.playSFX('spell');
+      this.callbacks.setThinking(true);
       arcane.engineSuggestion(playerColor, 3).then((hint: any) => {
+        this.callbacks.setThinking(false);
         if (hint) {
           this.callbacks.addDialogue(
             `${playerColor} used Temporal Pincer — ${hint}`

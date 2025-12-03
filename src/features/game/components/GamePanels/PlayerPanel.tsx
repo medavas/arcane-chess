@@ -179,7 +179,7 @@ export const PlayerPanel: React.FC<PlayerPanelProps> = ({
           {dialogue.map((item, key) => {
             return <li key={key}>{item}</li>;
           })}
-          {thinking && <li>The engine is thinking...</li>}
+          {!!thinking && <li>The engine is thinking...</li>}
         </ul>
       </div>
       <div className="info-avatar">
