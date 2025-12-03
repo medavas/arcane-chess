@@ -295,6 +295,46 @@ export class SpellHandler {
       audioManager.playSFX('spell');
       arcane.subtractArcanaUse('modsGLI', playerColor);
       this.callbacks.activateGlitch();
+      return;
+    }
+
+    // === ENGINE HINT: Tactical Vision (From Square Only) ===
+    if (key === 'modsIMP') {
+      audioManager.playSFX('spell');
+      arcane.engineSuggestion(playerColor, 1).then((hint: any) => {
+        if (hint) {
+          this.callbacks.addDialogue(
+            `${playerColor} used Tactical Vision — ${hint}`
+          );
+        }
+      });
+      return;
+    }
+
+    // === ENGINE HINT: Oracle Whisper (From and To Square) ===
+    if (key === 'modsORA') {
+      audioManager.playSFX('spell');
+      arcane.engineSuggestion(playerColor, 2).then((hint: any) => {
+        if (hint) {
+          this.callbacks.addDialogue(
+            `${playerColor} used Oracle Whisper — ${hint}`
+          );
+        }
+      });
+      return;
+    }
+
+    // === ENGINE HINT: Temporal Pincer (Best Line) ===
+    if (key === 'modsTEM') {
+      audioManager.playSFX('spell');
+      arcane.engineSuggestion(playerColor, 3).then((hint: any) => {
+        if (hint) {
+          this.callbacks.addDialogue(
+            `${playerColor} used Temporal Pincer — ${hint}`
+          );
+        }
+      });
+      return;
     }
   };
 
@@ -309,7 +349,11 @@ export class SpellHandler {
 
     if (key === 'shftT') return state.isTeleport;
 
-    if (key.includes('dyad')) return state.isDyadMove;
+    if (key.includes('dyad')) {
+      const arcane = this.callbacks.getArcaneChess();
+      const dyadName = typeof arcane.getDyadName === 'function' ? arcane.getDyadName() : '';
+      return state.isDyadMove && dyadName === key;
+    }
 
     if (key.includes('swap')) {
       const type = key.split('swap')[1];

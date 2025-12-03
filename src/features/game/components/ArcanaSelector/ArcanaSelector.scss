@@ -222,6 +222,16 @@
       opacity: 0.4;
       cursor: not-allowed;
     }
+
+    &.is-exhausted {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+
+      .new-arcana-selector__item-icon img {
+        filter: grayscale(0.8) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+      }
+    }
   }
 
   &__item-count {
@@ -230,7 +240,7 @@
     left: 4px;
     font-size: 10px;
     font-weight: 700;
-    color: #fff;
+    color: rgba(74, 144, 226, 1);
     background: rgba(0, 0, 0, 0.9);
     padding: 2px 5px;
     border-radius: 3px;
@@ -240,6 +250,11 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
     border: 1px solid rgba(255, 255, 255, 0.3);
     line-height: 1;
+
+    &.is-zero {
+      color: rgba(220, 50, 50, 1);
+      font-weight: 800;
+    }
   }
 
   &__item-icon {

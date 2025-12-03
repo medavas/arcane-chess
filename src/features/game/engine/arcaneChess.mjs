@@ -16,6 +16,8 @@ import {
   randomize,
   ParseFen,
   outputFenOfCurrentPosition,
+  FROMSQ,
+  TOSQ,
 } from './board';
 import {
   validMoves,
@@ -213,10 +215,23 @@ export default function arcaneChess() {
       if (level === 2) {
         playerArcana.modsORA -= 1;
       }
+      let time = 1000;
       if (level === 3) {
         playerArcana.modsTEM -= 1;
+        time = 3000;
       }
-      return await engineSuggestion();
+      const { bestMove, temporalPincer } = await engineSuggestion(time);
+
+      if (level === 1) {
+        return PrSq(FROMSQ(bestMove));
+      }
+      if (level === 2) {
+        return PrSq(FROMSQ(bestMove)) + PrSq(TOSQ(bestMove));
+      }
+      if (level === 3) {
+        return temporalPincer;
+      }
+      return '';
     },
     getDyadClock: () => {
       return GameBoard.dyadClock;

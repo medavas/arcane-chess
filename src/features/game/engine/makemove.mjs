@@ -1557,13 +1557,14 @@ export function TakeMove(wasDyadMove = false) {
     !isSummon(move) &&
     !isSwap(move)
   ) {
-    const L = PceChar.charAt(promoEpsilon).toUpperCase();
-    const expectedPromo =
-      GameBoard.side === COLOURS.WHITE ? PIECES[`w${L}`] : PIECES[`b${L}`];
-
-    if (GameBoard.pieces[from] === expectedPromo) {
+    // Use promoEpsilon directly as it already contains the correct color information
+    // from the original move, including for condition-based promotions
+    if (GameBoard.pieces[from] === promoEpsilon) {
       ClearPiece(from);
-      AddPiece(from, GameBoard.side === COLOURS.WHITE ? PIECES.wP : PIECES.bP);
+      // Determine the original pawn color from the promoted piece color
+      const promotedPieceColor = PieceCol[promoEpsilon];
+      const originalPawn = promotedPieceColor === COLOURS.WHITE ? PIECES.wP : PIECES.bP;
+      AddPiece(from, originalPawn);
 
       try {
         if (

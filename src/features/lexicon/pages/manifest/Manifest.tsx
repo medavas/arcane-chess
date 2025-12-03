@@ -295,86 +295,46 @@ class UnwrappedManifest extends React.Component<RouterishProps, State> {
                   </li>
                 </ol>
                 <div id="links" className="links">
-                  <div className="link">
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href="https://discord.gg/QuuNv3Gqts"
-                    >
-                      <Button
-                        text="DISCORD"
-                        className="secondary"
-                        color="S"
-                        width={200}
-                        height={50}
-                        disabled={false}
-                      />
-                    </a>
-                  </div>
-                  <div className="link">
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href="https://x.com/tactorius"
-                    >
-                      <Button
-                        text="X"
-                        className="secondary"
-                        color="S"
-                        width={200}
-                        height={50}
-                        disabled={false}
-                      />
-                    </a>
-                  </div>
-                  <div className="link">
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href="https://paypal.me/tactorius?country.x=US&locale.x=en_US"
-                    >
-                      <Button
-                        text="PAYPAL"
-                        className="secondary"
-                        color="S"
-                        width={200}
-                        height={50}
-                        disabled={false}
-                      />
-                    </a>
-                  </div>
-                  <div className="link">
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href="https://github.com/medavas/arcane-chess"
-                    >
-                      <Button
-                        text="PROJECT REPO"
-                        className="secondary"
-                        color="S"
-                        width={200}
-                        height={50}
-                        disabled={false}
-                      />
-                    </a>
-                  </div>
-                  <div className="link">
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href="https://github.com/medavas/night-chess-ui-2"
-                    >
-                      <Button
-                        text="CHESSGROUNDx FORK"
-                        className="secondary"
-                        color="S"
-                        width={200}
-                        height={50}
-                        disabled={false}
-                      />
-                    </a>
-                  </div>
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://discord.gg/QuuNv3Gqts"
+                    className="link-button"
+                  >
+                    DISCORD
+                  </a>
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://x.com/tactorius"
+                    className="link-button"
+                  >
+                    X
+                  </a>
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://paypal.me/tactorius?country.x=US&locale.x=en_US"
+                    className="link-button"
+                  >
+                    PAYPAL
+                  </a>
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://github.com/medavas/arcane-chess"
+                    className="link-button"
+                  >
+                    PROJECT REPO
+                  </a>
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://github.com/medavas/night-chess-ui-2"
+                    className="link-button"
+                  >
+                    CHESSGROUNDx FORK
+                  </a>
                 </div>
               </div>
             ) : this.state.currentTab === 'pieces' ? (

@@ -62,9 +62,9 @@ export const OpponentPanel: React.FC<OpponentPanelProps> = ({
               (engineColor === 'white'
                 ? whiteArcaneConfig
                 : blackArcaneConfig) as Record<
-                string,
-                number | string | undefined
-              >
+                  string,
+                  number | string | undefined
+                >
             }
             spellBook={
               (engineColor === 'white'
@@ -92,6 +92,7 @@ export const OpponentPanel: React.FC<OpponentPanelProps> = ({
           {dialogue.map((item, key) => {
             return <li key={key}>{item}</li>;
           })}
+          {thinking && <li>The engine is thinking...</li>}
         </ul>
       </div>
       {showResign && (

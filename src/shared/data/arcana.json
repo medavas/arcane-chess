@@ -702,21 +702,21 @@
   "areaE": {
     "id": "areaE",
     "name": "Ice Howl",
-    "description": "Hermit aura casts Entanglement.",
+    "description": "Hermit casts Entanglement Aura.",
     "type": "inherent",
     "imagePath": "/areaE"
   },
   "areaF": {
     "id": "areaF",
     "name": "Hiding Lantern",
-    "description": "Hermit aura casts Fog of War.",
+    "description": "Hermit casts Fog of War Aura.",
     "type": "inherent",
     "imagePath": "/areaF"
   },
   "areaN": {
     "id": "areaN",
     "name": "Aura of Disarmament",
-    "description": "Disarmament aura for Hermit.",
+    "description": "Hermit casts Disarmament Aura.",
     "type": "inherent",
     "imagePath": "/areaN"
   },

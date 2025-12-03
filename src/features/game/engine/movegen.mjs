@@ -321,7 +321,7 @@ export function AddWhitePawnCaptureMove(
       AddCaptureMove(MOVE(from, to, cap, PIECES.wV, flag), flag, capturesOnly);
     }
   } else {
-    AddCaptureMove(MOVE(from, to, cap, eps, flag), flag, capturesOnly);
+    AddCaptureMove(MOVE(from, to, cap, PIECES.EMPTY, flag), flag, capturesOnly);
   }
 }
 
@@ -365,7 +365,7 @@ export function AddBlackPawnCaptureMove(
       AddCaptureMove(MOVE(from, to, cap, PIECES.bV, flag), flag, capturesOnly);
     }
   } else {
-    AddCaptureMove(MOVE(from, to, cap, eps, flag), flag, capturesOnly);
+    AddCaptureMove(MOVE(from, to, cap, PIECES.EMPTY, flag), flag, capturesOnly);
   }
 }
 
@@ -404,7 +404,7 @@ export function AddWhitePawnQuietMove(from, to, eps, flag, capturesOnly) {
       AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wV, flag), capturesOnly);
     }
   } else {
-    AddQuietMove(MOVE(from, to, PIECES.EMPTY, eps, flag), capturesOnly);
+    AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.EMPTY, flag), capturesOnly);
   }
 }
 
@@ -443,7 +443,7 @@ export function AddBlackPawnQuietMove(from, to, eps, flag, capturesOnly) {
       AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bV, flag), capturesOnly);
     }
   } else {
-    AddQuietMove(MOVE(from, to, PIECES.EMPTY, eps, flag), capturesOnly);
+    AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.EMPTY, flag), capturesOnly);
   }
 }
 
@@ -2117,7 +2117,8 @@ export function GenerateMoves(
                   sq,
                   t_sq,
                   GameBoard.pieces[t_sq],
-                  false,
+                  PIECES.EMPTY,
+                  0,
                   capturesOnly
                 );
               } else if (GameBoard.pieces[sq] === PIECES.bP) {
@@ -2125,7 +2126,8 @@ export function GenerateMoves(
                   sq,
                   t_sq,
                   GameBoard.pieces[t_sq],
-                  false,
+                  PIECES.EMPTY,
+                  0,
                   capturesOnly
                 );
               } else {
@@ -2153,7 +2155,8 @@ export function GenerateMoves(
                     sq,
                     t_sq,
                     GameBoard.pieces[t_sq],
-                    true,
+                    PIECES.EMPTY,
+                    MFLAGCNSM,
                     capturesOnly
                   );
                 } else {
@@ -2179,7 +2182,8 @@ export function GenerateMoves(
                     sq,
                     t_sq,
                     GameBoard.pieces[t_sq],
-                    true,
+                    PIECES.EMPTY,
+                    MFLAGCNSM,
                     capturesOnly
                   );
                 } else {
@@ -2209,9 +2213,9 @@ export function GenerateMoves(
           GameBoard.pieces[t_sq] === PIECES.EMPTY
         ) {
           if (GameBoard.pieces[sq] === PIECES.wP) {
-            AddWhitePawnQuietMove(sq, t_sq, 0, capturesOnly);
+            AddWhitePawnQuietMove(sq, t_sq, PIECES.EMPTY, 0, capturesOnly);
           } else if (GameBoard.pieces[sq] === PIECES.bP) {
-            AddBlackPawnQuietMove(sq, t_sq, 0, capturesOnly);
+            AddBlackPawnQuietMove(sq, t_sq, PIECES.EMPTY, 0, capturesOnly);
           } else {
             AddQuietMove(
               MOVE(sq, t_sq, PIECES.EMPTY, PIECES.EMPTY, 0),
@@ -2278,7 +2282,8 @@ export function GenerateMoves(
                     sq,
                     t_sq,
                     GameBoard.pieces[t_sq],
-                    false,
+                    PIECES.EMPTY,
+                    0,
                     capturesOnly
                   );
                 } else if (GameBoard.pieces[sq] === PIECES.bP) {
@@ -2286,7 +2291,8 @@ export function GenerateMoves(
                     sq,
                     t_sq,
                     GameBoard.pieces[t_sq],
-                    false,
+                    PIECES.EMPTY,
+                    0,
                     capturesOnly
                   );
                 } else {
@@ -2316,7 +2322,8 @@ export function GenerateMoves(
                     sq,
                     t_sq,
                     GameBoard.pieces[t_sq],
-                    true,
+                    PIECES.EMPTY,
+                    MFLAGCNSM,
                     capturesOnly
                   );
                 } else if (GameBoard.pieces[sq] === PIECES.bP) {
@@ -2324,7 +2331,8 @@ export function GenerateMoves(
                     sq,
                     t_sq,
                     GameBoard.pieces[t_sq],
-                    true,
+                    PIECES.EMPTY,
+                    MFLAGCNSM,
                     capturesOnly
                   );
                 } else {
@@ -2357,9 +2365,9 @@ export function GenerateMoves(
               (herrings.length && _.includes(herrings, t_sq))
             ) {
               if (GameBoard.pieces[sq] === PIECES.wP) {
-                AddWhitePawnQuietMove(sq, t_sq, 0, capturesOnly);
+                AddWhitePawnQuietMove(sq, t_sq, PIECES.EMPTY, 0, capturesOnly);
               } else if (GameBoard.pieces[sq] === PIECES.bP) {
-                AddBlackPawnQuietMove(sq, t_sq, 0, capturesOnly);
+                AddBlackPawnQuietMove(sq, t_sq, PIECES.EMPTY, 0, capturesOnly);
               } else {
                 AddQuietMove(
                   MOVE(sq, t_sq, PIECES.EMPTY, PIECES.EMPTY, 0),

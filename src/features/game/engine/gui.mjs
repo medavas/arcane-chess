@@ -433,9 +433,9 @@ export async function PreSearch(thinkingTime, depth, engineColor) {
   // }
 }
 
-export function engineSuggestion() {
-  SearchController.depth = 7;
-  SearchController.time = 8 * 1000;
+export function engineSuggestion(time = 8000, depth = 7) {
+  SearchController.depth = depth;
+  SearchController.time = time;
   const { bestMove, bestScore, temporalPincer } = SearchPosition();
   return { bestMove, bestScore, temporalPincer };
 }

@@ -179,6 +179,7 @@ export const PlayerPanel: React.FC<PlayerPanelProps> = ({
           {dialogue.map((item, key) => {
             return <li key={key}>{item}</li>;
           })}
+          {thinking && <li>The engine is thinking...</li>}
         </ul>
       </div>
       <div className="info-avatar">
@@ -189,9 +190,9 @@ export const PlayerPanel: React.FC<PlayerPanelProps> = ({
               (playerColor === 'white'
                 ? whiteArcaneConfig
                 : blackArcaneConfig) as Record<
-                string,
-                number | string | undefined
-              >
+                  string,
+                  number | string | undefined
+                >
             }
             spellBook={
               (playerColor === 'white'

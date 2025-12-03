@@ -106,7 +106,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       }
       audioManager.playSFX('fire');
       onGameStateChange({
-        history: [...((gameState as any).history || []), [PrMove(parsed)]], // Note: history needs to be passed in gameState or handled differently if not present
+        history: [...((gameState as any).history || []), PrMove(parsed)],
         fen: outputFenOfCurrentPosition(),
         fenHistory: [
           ...((gameState as any).fenHistory || []),
@@ -334,24 +334,24 @@ export const BoardUX: React.FC<BoardUXProps> = ({
   const getSelected = () => {
     return interactionState.placingPiece !== 0
       ? {
-          role: `${PceChar.split('')[
-            interactionState.placingPiece
-          ].toLowerCase()}-piece`,
-          color: interactionState.playerColor,
-        }
+        role: `${PceChar.split('')[
+          interactionState.placingPiece
+        ].toLowerCase()}-piece`,
+        color: interactionState.playerColor,
+      }
       : interactionState.placingRoyalty !== 0
-      ? {
+        ? {
           role: `r${RtyChar.split('')[
             interactionState.placingRoyalty
           ].toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }
-      : interactionState.offeringType !== ''
-      ? {
-          role: `o${interactionState.offeringType.toLowerCase()}-piece`,
-          color: interactionState.playerColor,
-        }
-      : null;
+        : interactionState.offeringType !== ''
+          ? {
+            role: `o${interactionState.offeringType.toLowerCase()}-piece`,
+            color: interactionState.playerColor,
+          }
+          : null;
   };
 
   return (
@@ -396,7 +396,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         fromPocket: false,
       }}
       events={{
-        change: () => {},
+        change: () => { },
         dropNewPiece: handleDropNewPiece,
         move: handleMove,
         select: handleSelect,
