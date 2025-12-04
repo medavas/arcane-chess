@@ -567,15 +567,15 @@ export const getHerrings = (color) => {
   return herringsArr;
 };
 
-export const whiteTeleports = [
-  21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34, 35, 36, 37, 38, 41, 42, 43,
-  44, 45, 46, 47, 48, 51, 52, 53, 54, 55, 56, 57, 58,
-];
-
-export const blackTeleports = [
-  71, 72, 73, 74, 75, 76, 77, 78, 81, 82, 83, 84, 85, 86, 87, 88, 91, 92, 93,
-  94, 95, 96, 97, 98, 61, 62, 63, 64, 65, 66, 67, 68,
-];
+// export const whiteTeleports = [
+//   21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34, 35, 36, 37, 38, 41, 42, 43,
+//   44, 45, 46, 47, 48, 51, 52, 53, 54, 55, 56, 57, 58,
+// ];
+// 
+// export const blackTeleports = [
+//   71, 72, 73, 74, 75, 76, 77, 78, 81, 82, 83, 84, 85, 86, 87, 88, 91, 92, 93,
+//   94, 95, 96, 97, 98, 61, 62, 63, 64, 65, 66, 67, 68,
+// ];
 
 export function GenerateMoves(
   forcedMoves = true,
@@ -841,42 +841,42 @@ export function GenerateMoves(
 
     if (type2 === 'ADJ' || type2 === 'DEP') return;
 
-    if (!herrings.length && !forcedEpAvailable && (type2 === 'TELEPORT' || type2 === 'COMP')) {
-      const side = GameBoard.side;
-      const arcanaOK =
-        (side === COLOURS.WHITE && GameBoard.whiteArcane[1] & 16) ||
-        (side === COLOURS.BLACK && GameBoard.blackArcane[1] & 16);
-
-      if (arcanaOK) {
-        const teleportSquares =
-          side === COLOURS.WHITE ? whiteTeleports : blackTeleports;
-
-        // Allowed pieces by side: N, U, Z, B, R
-        const allowedPieces =
-          side === COLOURS.WHITE
-            ? [PIECES.wN, PIECES.wU, PIECES.wZ, PIECES.wB, PIECES.wR]
-            : [PIECES.bN, PIECES.bU, PIECES.bZ, PIECES.bB, PIECES.bR];
-
-        for (const pce of allowedPieces) {
-          const count = GameBoard.pceNum[pce] || 0;
-          for (let idx = 0; idx < count; idx++) {
-            const fromSq = GameBoard.pList[PCEINDEX(pce, idx)];
-
-            for (const toSq of teleportSquares) {
-              if (GameBoard.pieces[toSq] === PIECES.EMPTY) {
-                AddQuietMove(
-                  MOVE(fromSq, toSq, 31, 0, MFLAGSHFT),
-                  capturesOnly
-                );
-              }
-            }
-          }
-        }
-        return;
-      }
-    }
-
-    if (type2 === 'TELEPORT') return;
+    // if (!herrings.length && !forcedEpAvailable && (type2 === 'TELEPORT' || type2 === 'COMP')) {
+    //   const side = GameBoard.side;
+    //   const arcanaOK =
+    //     (side === COLOURS.WHITE && GameBoard.whiteArcane[1] & 16) ||
+    //     (side === COLOURS.BLACK && GameBoard.blackArcane[1] & 16);
+    // 
+    //   if (arcanaOK) {
+    //     const teleportSquares =
+    //       side === COLOURS.WHITE ? whiteTeleports : blackTeleports;
+    // 
+    //     // Allowed pieces by side: N, U, Z, B, R
+    //     const allowedPieces =
+    //       side === COLOURS.WHITE
+    //         ? [PIECES.wN, PIECES.wU, PIECES.wZ, PIECES.wB, PIECES.wR]
+    //         : [PIECES.bN, PIECES.bU, PIECES.bZ, PIECES.bB, PIECES.bR];
+    // 
+    //     for (const pce of allowedPieces) {
+    //       const count = GameBoard.pceNum[pce] || 0;
+    //       for (let idx = 0; idx < count; idx++) {
+    //         const fromSq = GameBoard.pList[PCEINDEX(pce, idx)];
+    // 
+    //         for (const toSq of teleportSquares) {
+    //           if (GameBoard.pieces[toSq] === PIECES.EMPTY) {
+    //             AddQuietMove(
+    //               MOVE(fromSq, toSq, 31, 0, MFLAGSHFT),
+    //               capturesOnly
+    //             );
+    //           }
+    //         }
+    //       }
+    //     }
+    //     return;
+    //   }
+    // }
+    // 
+    // if (type2 === 'TELEPORT') return;
 
     // OFFERINGS
     let offeringIndex = LoopPcePrimeIndex[GameBoard.side];
@@ -1519,7 +1519,13 @@ export function GenerateMoves(
         }
       }
 
-      if (GameBoard.dyad === 0) {
+      // NOTE WHITE EP
+      const whiteHasGluttony = GameBoard.whiteArcane[4] & 64;
+      const whiteDyadAorB = GameBoard.dyad === 1 || GameBoard.dyad === 2;
+      const allowForcedDyadEP =
+        activeBlackForcedEpCapture && whiteHasGluttony && whiteDyadAorB;
+
+      if (GameBoard.dyad === 0 || allowForcedDyadEP) {
         // NOTE WHITE EP
         if (
           (GameBoard.enPas !== SQUARES.NO_SQ && !herrings.length) ||
@@ -1893,7 +1899,13 @@ export function GenerateMoves(
       }
 
       // note BLACK EP
-      if (GameBoard.dyad === 0) {
+      // note BLACK EP
+      const blackHasGluttony = GameBoard.blackArcane[4] & 64;
+      const blackDyadAorB = GameBoard.dyad === 1 || GameBoard.dyad === 2;
+      const allowForcedDyadEP =
+        activeWhiteForcedEpCapture && blackHasGluttony && blackDyadAorB;
+
+      if (GameBoard.dyad === 0 || allowForcedDyadEP) {
         if (
           (GameBoard.enPas !== SQUARES.NO_SQ && !herrings.length) ||
           activeBlackForcedEpCapture

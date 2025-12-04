@@ -12,7 +12,7 @@ const royalties = ARCANE_BIT_VALUES;
 export interface SpellState {
   placingPiece: number;
   swapType: string;
-  isTeleport: boolean;
+  // isTeleport: boolean;
   placingRoyalty: number;
   offeringType: string;
   isDyadMove: boolean;
@@ -58,7 +58,7 @@ export class SpellHandler {
     return (
       state.placingPiece > 0 ||
       state.swapType !== '' ||
-      state.isTeleport === true ||
+      // state.isTeleport === true ||
       state.placingRoyalty > 0 ||
       state.offeringType !== '' ||
       state.isDyadMove === true
@@ -89,7 +89,7 @@ export class SpellHandler {
     this.callbacks.updateSpellState({
       placingPiece: 0,
       swapType: '',
-      isTeleport: false,
+      // isTeleport: false,
       placingRoyalty: 0,
       offeringType: '',
       isDyadMove: false,
@@ -106,17 +106,12 @@ export class SpellHandler {
     const playerColor = this.callbacks.getPlayerColor();
     const arcane = this.callbacks.getArcaneChess();
 
-    // Block all spell clicks when forced en passant is active
-    if (arcane.isForcedEnPassantActive && arcane.isForcedEnPassantActive()) {
-      return;
-    }
-
     this.callbacks.updateSpellState({
       placingPiece: 0,
       placingRoyalty: 0,
       swapType: '',
       offeringType: '',
-      isTeleport: false,
+      // isTeleport: false,
       isDyadMove: false,
     });
 
@@ -291,10 +286,10 @@ export class SpellHandler {
     }
 
     // === TELEPORT ===
-    if (key === 'shftT') {
-      this.callbacks.updateSpellState({ isTeleport: !state.isTeleport });
-      return;
-    }
+    // if (key === 'shftT') {
+    //   this.callbacks.updateSpellState({ isTeleport: !state.isTeleport });
+    //   return;
+    // }
 
     // === GLITCH ===
     if (key === 'modsGLI') {
@@ -359,7 +354,7 @@ export class SpellHandler {
     )
       return false;
 
-    if (key === 'shftT') return state.isTeleport;
+    // if (key === 'shftT') return state.isTeleport;
 
     if (key.includes('dyad')) {
       const arcane = this.callbacks.getArcaneChess();

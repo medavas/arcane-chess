@@ -33,6 +33,8 @@ import { SearchPosition } from './search.mjs';
 import {
   whiteArcaneConfig,
   blackArcaneConfig,
+  whiteArcaneSpellBook,
+  blackArcaneSpellBook,
   setWhiteArcana,
   setBlackArcana,
   POWERBIT,
@@ -360,6 +362,13 @@ export default function arcaneChess() {
     },
     exposeForcedEpState: () => {
       return { forcedEpAvailable: GameBoard.troActive };
+    },
+    hasGluttony: (color) => {
+      if (color === 'white') {
+        return (whiteArcaneSpellBook.modsGLU || 0) > 0;
+      } else {
+        return (blackArcaneSpellBook.modsGLU || 0) > 0;
+      }
     },
   };
 }

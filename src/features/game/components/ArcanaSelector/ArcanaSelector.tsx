@@ -28,6 +28,7 @@ const arcana = arcanaJson as Record<string, any>;
 export const OldArcanaSelector: React.FC<ArcanaSelectorProps> = ({
   color,
   arcaneConfig,
+  spellBook,
   playerColor,
   thinking,
   historyLength,
@@ -63,10 +64,12 @@ export const OldArcanaSelector: React.FC<ArcanaSelectorProps> = ({
             const isFutureSightAvailable =
               historyLength >= 4 && futureSightAvailable;
 
+            const isDyad = key.startsWith('dyad');
+
             const isDisabled =
               playerColor !== color ||
               thinking ||
-              trojanGambitExists ||
+              (trojanGambitExists && !isDyad) ||
               (!isFutureSightAvailable && key === 'modsFUT');
 
             const active = isArcaneActive(key, color);
@@ -235,10 +238,12 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
             const isFutureSightAvailable =
               historyLength >= 4 && futureSightAvailable;
 
+            const isDyad = key.startsWith('dyad');
+
             const isDisabled =
               playerColor !== color ||
               thinking ||
-              trojanGambitExists ||
+              (trojanGambitExists && !isDyad) ||
               (!isFutureSightAvailable && key === 'modsFUT');
 
             const active = isArcaneActive(key, color);
@@ -266,7 +271,7 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
                   }${isExhausted ? ' is-exhausted' : ''}`}
                 key={key}
                 onClick={() => {
-                  if (isDisabled || isInherent || isExhausted || trojanGambitExists) return;
+                  if (isDisabled || isInherent || isExhausted) return;
                   onSpellClick(key);
                 }}
                 onMouseEnter={() => handleHoverEnter(key)}
@@ -351,10 +356,12 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
             const isFutureSightAvailable =
               historyLength >= 4 && futureSightAvailable;
 
+            const isDyad = key.startsWith('dyad');
+
             const isDisabled =
               playerColor !== color ||
               thinking ||
-              trojanGambitExists ||
+              (trojanGambitExists && !isDyad) ||
               (!isFutureSightAvailable && key === 'modsFUT');
 
             const active = isArcaneActive(key, color);
@@ -381,7 +388,7 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
                   }${isExhausted ? ' is-exhausted' : ''}`}
                 key={key}
                 onClick={() => {
-                  if (isDisabled || isInherent || isExhausted || trojanGambitExists) return;
+                  if (isDisabled || isInherent || isExhausted) return;
                   onSpellClick(key);
                 }}
                 onMouseEnter={() => handleHoverEnter(key)}

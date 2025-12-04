@@ -59,7 +59,7 @@ const royaltyIndexMapRestructure = [
 
 // cap 30 = capturable exile
 // cap 31 = teleport
-const TELEPORT_CONST = 31;
+// const TELEPORT_CONST = 31;
 // eps 30 = myriad
 const EPSILON_MYRIAD_CONST = 30;
 // eps 31 = eclipse
@@ -100,7 +100,7 @@ const WHITE_PIECE_TO_OFFERINGS = {
   16: ['sumnRT', 'sumnRT', 'sumnRT'],
   17: ['sumnRM', 'sumnRM', 'sumnRM'],
   18: ['sumnRV', 'sumnRV', 'sumnRV'],
-  19: ['shftT'],
+  // 19: ['shftT'],
   20: ['sumnRV', 'modsEXT', 'modsINH'],
   21: ['dyadA', 'modsGLU', 'modsINH'],
   22: ['sumnH', 'toknHER', 'areaQ'],
@@ -130,7 +130,7 @@ const BLACK_PIECE_TO_OFFERINGS = {
   16: ['sumnRT', 'sumnRT', 'sumnRT'],
   17: ['sumnRM', 'sumnRM', 'sumnRM'],
   18: ['sumnRV', 'sumnRV', 'sumnRV'],
-  19: ['shftT'],
+  // 19: ['shftT'],
   20: ['sumnRV', 'modsEXT', 'modsINH'],
   21: ['dyadA', 'modsGLU', 'modsINH'],
   22: ['sumnH', 'toknHER', 'areaQ'],
@@ -268,7 +268,7 @@ function sumnKeyFromMove(move) {
 
 function shiftKeyFromMove(move, moverPiece) {
   if ((move & MFLAGSHFT) === 0) return null;
-  if (CAPTURED(move) === TELEPORT_CONST) return 'shftT';
+  // if (CAPTURED(move) === TELEPORT_CONST) return 'shftT';
   const p = PROMOTED(move);
   const piece = p || moverPiece || PIECES.EMPTY;
   switch (piece) {
@@ -636,7 +636,7 @@ export function MakeMove(move, moveType = '') {
     to > 0 &&
     (move & (MFLAGSWAP | MFLAGSUMN | MFLAGEP)) === 0 &&
     targetPieceAtTo !== PIECES.EMPTY &&
-    targetPieceAtTo !== TELEPORT_CONST &&
+    // targetPieceAtTo !== TELEPORT_CONST &&
     (PieceCol[targetPieceAtTo] !== side || consume);
 
   if (isNormalCapture) {
@@ -756,7 +756,8 @@ export function MakeMove(move, moveType = '') {
 
   if (
     (move & MFLAGSUMN) === 0 &&
-    (TOSQ(move) > 0 || CAPTURED(move) === TELEPORT_CONST) &&
+    TOSQ(move) > 0 &&
+    // (TOSQ(move) > 0 || CAPTURED(move) === TELEPORT_CONST) &&
     (ARCANEFLAG(move) === 0 ||
       isShift(move) ||
       isEp(move) ||
@@ -1495,7 +1496,8 @@ export function TakeMove(wasDyadMove = false) {
 
   if (
     (move & MFLAGSUMN) === 0 &&
-    (TOSQ(move) > 0 || CAPTURED(move) === TELEPORT_CONST) &&
+    TOSQ(move) > 0 &&
+    // (TOSQ(move) > 0 || CAPTURED(move) === TELEPORT_CONST) &&
     (ARCANEFLAG(move) === 0 ||
       isShift(move) ||
       isEp(move) ||
@@ -1512,7 +1514,7 @@ export function TakeMove(wasDyadMove = false) {
   if (
     to > 0 &&
     captured !== PIECES.EMPTY &&
-    captured !== TELEPORT_CONST &&
+    // captured !== TELEPORT_CONST &&
     (move & (MFLAGSWAP | MFLAGSUMN | MFLAGEP)) === 0
   ) {
     AddPiece(to, captured);

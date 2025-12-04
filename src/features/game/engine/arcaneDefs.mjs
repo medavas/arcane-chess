@@ -121,7 +121,7 @@ export const POWERBIT = {
   shftN: 2,
   shftB: 4,
   shftR: 8,
-  shftT: 16, // active
+  // shftT: 16, // active
   shftG: 32,
   // shftH: 64,
   shftI: 128,
@@ -234,7 +234,7 @@ const POWER_BY_KEY = {
   shftN: 2,
   shftB: 2,
   shftR: 2,
-  shftT: 3,
+  // shftT: 3,
   shftG: 3,
   // shftH: 3,
   shftI: 3,
