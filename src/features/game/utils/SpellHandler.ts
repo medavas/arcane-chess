@@ -106,7 +106,10 @@ export class SpellHandler {
     const playerColor = this.callbacks.getPlayerColor();
     const arcane = this.callbacks.getArcaneChess();
 
-    if (arcane.getIfTrojanGambitExists(playerColor)) return;
+    // Block all spell clicks when forced en passant is active
+    if (arcane.isForcedEnPassantActive && arcane.isForcedEnPassantActive()) {
+      return;
+    }
 
     this.callbacks.updateSpellState({
       placingPiece: 0,

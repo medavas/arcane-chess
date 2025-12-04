@@ -159,6 +159,11 @@ export default function arcaneChess() {
     getSwapMoves: (swapType) => {
       return validGroundMoves('', swapType);
     },
+    isForcedEnPassantActive: () => {
+      // Returns true if the current moving player is forced to make an en passant capture
+      // This blocks spell usage when modsTRO is forcing a capture
+      return GameBoard.troActive === 1;
+    },
     getIfTrojanGambitExists: (playerColor) => {
       // Badge should only glow for the player who HAS the modsTRO spell forcing opponent to capture
       // Example: White has modsTRO, Black must capture → White's badge glows (in opponent panel)
