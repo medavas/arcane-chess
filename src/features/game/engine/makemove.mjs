@@ -1195,15 +1195,21 @@ export function MakeMove(move, moveType = '') {
       : BLACK_PIECE_TO_OFFERINGS;
     const offeringNumbers = pieceToOfferings[promoted];
 
+    // Save the piece type BEFORE clearing (needed for Grave Offering)
+    const offeredPiece = GameBoard.pieces[from];
+
     ClearPiece(from);
 
-    if (Array.isArray(offeringNumbers) && offeringNumbers.length > 0) {
+    // Special case for offrI (Grave Offering, index 13): grant summon of offered piece
+    const isGraveOffering = promoted === 13;
+
+    if (isGraveOffering || (Array.isArray(offeringNumbers) && offeringNumbers.length > 0)) {
       const offerSymbol = OFFER_CHARS[promoted];
       const offrKey = `offr${offerSymbol}`;
       const have = arcaneConfig[offrKey] ?? 0;
 
       if (have <= 0) {
-        AddPiece(from, captured);
+        AddPiece(from, offeredPiece);
         return BOOL.FALSE;
       }
 
@@ -1212,15 +1218,24 @@ export function MakeMove(move, moveType = '') {
         h.offrKey = offrKey;
         h.offrPromoted = promoted;
         h.offrGifts = [];
-        for (let i = 0; i < offeringNumbers.length; i++) {
-          const gift = offeringNumbers[i];
-          if (typeof gift === 'string') {
-            offerGrant(useWhite ? 'white' : 'black', gift, 1);
-            h.offrGifts.push(gift);
-          } else if (gift !== PIECES.EMPTY) {
-            const sumnKey = `sumn${PceChar.charAt(gift).toUpperCase()}`;
-            offerGrant(useWhite ? 'white' : 'black', sumnKey, 1);
-            h.offrGifts.push(sumnKey);
+
+        if (isGraveOffering) {
+          // For Grave Offering, grant a summon of the piece that was offered
+          const sumnKey = `sumn${PceChar.charAt(offeredPiece).toUpperCase()}`;
+          offerGrant(useWhite ? 'white' : 'black', sumnKey, 1);
+          h.offrGifts.push(sumnKey);
+        } else {
+          // For other offerings, use the lookup table
+          for (let i = 0; i < offeringNumbers.length; i++) {
+            const gift = offeringNumbers[i];
+            if (typeof gift === 'string') {
+              offerGrant(useWhite ? 'white' : 'black', gift, 1);
+              h.offrGifts.push(gift);
+            } else if (gift !== PIECES.EMPTY) {
+              const sumnKey = `sumn${PceChar.charAt(gift).toUpperCase()}`;
+              offerGrant(useWhite ? 'white' : 'black', sumnKey, 1);
+              h.offrGifts.push(sumnKey);
+            }
           }
         }
       }
