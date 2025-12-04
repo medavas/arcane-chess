@@ -435,6 +435,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
       addDialogue: (message) =>
         this.setState((prev) => ({ dialogue: [...prev.dialogue, message] })),
       activateGlitch: () => this.setState({ glitchActive: true }),
+      setThinking: (thinking) => this.setState({ thinking }),
     });
 
     this.gameEngineHandler = new GameEngineHandler({
