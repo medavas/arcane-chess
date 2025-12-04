@@ -515,8 +515,11 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
     const gameBoardTurn = GameBoard.side === 0 ? 'white' : 'black';
     const LS = getLocalStorage(this.props.auth.user.username);
     const sortedHistory = _.chunk(this.state.history, 2);
-    const trojanActive = this.arcaneChess().getIfTrojanGambitExists(
+    const trojanActiveOpponent = this.arcaneChess().getIfTrojanGambitExists(
       this.state.engineColor
+    );
+    const trojanActivePlayer = this.arcaneChess().getIfTrojanGambitExists(
+      this.state.playerColor
     );
     return (
       <div className="quickplay-tactorius-board fade">
@@ -635,7 +638,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
               thinking={this.state.thinking}
               hoverArcane={this.state.hoverArcane}
               dialogue={this.state.dialogue}
-              trojanActive={trojanActive}
+              trojanActive={trojanActiveOpponent}
               futureSightAvailable={this.state.futureSightAvailable}
               historyLength={this.state.history.length}
               dyadName={
@@ -754,7 +757,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                   ? this.arcaneChess().getDyadOwner()
                   : undefined
               }
-              trojanActive={trojanActive}
+              trojanActive={trojanActivePlayer}
               onSpellClick={this.handleArcanaClick}
               onHover={this.toggleHover}
               isArcaneActive={this.isArcaneActive}

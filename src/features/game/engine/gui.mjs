@@ -523,5 +523,12 @@ export function startSearch(thinkingTime, depth, engineColor) {
 
   MakeMove(bestMove, 'commit');
   CheckAndSet();
+
+  // Check if forced EP is now active for the opponent (after engine's move)
+  if (GameBoard.troActive === 1) {
+    const opponentColor = engineColor === 'white' ? 'black' : 'white';
+    text.push(`Trojan Gambit activated - ${opponentColor} must capture via en passant!`);
+  }
+
   return { bestMove, bestScore, text };
 }

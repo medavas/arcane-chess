@@ -244,6 +244,7 @@ export class GameEngineHandler {
                     swapType: '',
                     isTeleport: false,
                     offeringType: '',
+                    dialogue: [], // Clear dialogue when player makes a move
                     royalties: {
                         ...prevState.royalties,
                         royaltyQ: _.mapValues(prevState.royalties.royaltyQ, (value) => {

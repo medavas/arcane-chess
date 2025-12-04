@@ -140,11 +140,9 @@
     transition: background 0.3s ease;
 
     &.is-filled {
-      background: linear-gradient(
-        90deg,
-        rgba(74, 144, 226, 0.9),
-        rgba(52, 120, 220, 1)
-      );
+      background: linear-gradient(90deg,
+          rgba(74, 144, 226, 0.9),
+          rgba(52, 120, 220, 1));
       box-shadow: 0 0 6px rgba(74, 144, 226, 0.6);
     }
   }
@@ -207,9 +205,10 @@
     }
 
     &.trojan-active {
-      border-color: rgba(255, 0, 0, 0.8);
-      box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);
-      animation: pulse-trojan 1.5s infinite;
+      border-color: rgba(255, 0, 0, 1);
+      background-color: rgba(255, 0, 0, 0.3) !important;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
+      animation: pulse-trojan 1s infinite;
     }
 
     &.is-hovered:not(.is-inherent):not(.is-passive):not(.is-active) {
@@ -264,11 +263,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.1) 0%,
-      transparent 70%
-    );
+    background: radial-gradient(circle,
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 70%);
     border-radius: 50%;
     padding: 2px;
     transition: all 0.08s ease;
@@ -277,23 +274,19 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.6))
-        drop-shadow(0 0 10px rgba(100, 150, 255, 0.4));
+      filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 10px rgba(100, 150, 255, 0.4));
       transition: all 0.08s ease;
     }
   }
 
   &__item:hover:not(.is-disabled):not(.is-inherent) &__item-icon {
-    background: radial-gradient(
-      circle,
-      rgba(255, 255, 255, 0.15) 0%,
-      transparent 70%
-    );
+    background: radial-gradient(circle,
+        rgba(255, 255, 255, 0.15) 0%,
+        transparent 70%);
     transform: scale(1.08);
 
     img {
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8))
-        drop-shadow(0 0 15px rgba(100, 150, 255, 0.6));
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 15px rgba(100, 150, 255, 0.6));
     }
   }
 
@@ -378,6 +371,7 @@
 }
 
 @keyframes pulse-trojan {
+
   0%,
   100% {
     box-shadow: 0 0 12px rgba(255, 0, 0, 0.4);

@@ -66,6 +66,7 @@ export const OldArcanaSelector: React.FC<ArcanaSelectorProps> = ({
             const isDisabled =
               playerColor !== color ||
               thinking ||
+              trojanGambitExists ||
               (!isFutureSightAvailable && key === 'modsFUT');
 
             const active = isArcaneActive(key, color);
@@ -237,6 +238,7 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
             const isDisabled =
               playerColor !== color ||
               thinking ||
+              trojanGambitExists ||
               (!isFutureSightAvailable && key === 'modsFUT');
 
             const active = isArcaneActive(key, color);
@@ -264,7 +266,7 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
                   }${isExhausted ? ' is-exhausted' : ''}`}
                 key={key}
                 onClick={() => {
-                  if (isDisabled || isInherent || isExhausted) return;
+                  if (isDisabled || isInherent || isExhausted || trojanGambitExists) return;
                   onSpellClick(key);
                 }}
                 onMouseEnter={() => handleHoverEnter(key)}
@@ -352,6 +354,7 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
             const isDisabled =
               playerColor !== color ||
               thinking ||
+              trojanGambitExists ||
               (!isFutureSightAvailable && key === 'modsFUT');
 
             const active = isArcaneActive(key, color);
@@ -378,7 +381,7 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
                   }${isExhausted ? ' is-exhausted' : ''}`}
                 key={key}
                 onClick={() => {
-                  if (isDisabled || isInherent || isExhausted) return;
+                  if (isDisabled || isInherent || isExhausted || trojanGambitExists) return;
                   onSpellClick(key);
                 }}
                 onMouseEnter={() => handleHoverEnter(key)}

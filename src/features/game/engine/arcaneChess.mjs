@@ -160,11 +160,28 @@ export default function arcaneChess() {
       return validGroundMoves('', swapType);
     },
     getIfTrojanGambitExists: (playerColor) => {
-      return (
-        GameBoard.troActive &&
-        ((GameBoard.side === 0 && playerColor === 'black') ||
-          (GameBoard.side === 1 && playerColor === 'white'))
-      );
+      // Badge should only glow for the player who HAS the modsTRO spell forcing opponent to capture
+      // Example: White has modsTRO, Black must capture → White's badge glows (in opponent panel)
+      if (!GameBoard.troActive) return false;
+
+      // Check which player's modsTRO is forcing the current player to capture
+      const isWhiteTurn = GameBoard.side === 0;
+      const isBlackTurn = GameBoard.side === 1;
+
+      const whiteHasTrojan = (GameBoard.whiteArcane[4] & 2048) !== 0;
+      const blackHasTrojan = (GameBoard.blackArcane[4] & 2048) !== 0;
+
+      // White is moving AND must capture → Black has modsTRO forcing White
+      if (isWhiteTurn && blackHasTrojan && playerColor === 'black') {
+        return true;
+      }
+
+      // Black is moving AND must capture → White has modsTRO forcing Black
+      if (isBlackTurn && whiteHasTrojan && playerColor === 'white') {
+        return true;
+      }
+
+      return false;
     },
     makeUserMove: (
       orig,
@@ -335,6 +352,9 @@ export default function arcaneChess() {
       if (varVar === 'NORMAL') {
         console.log('');
       }
+    },
+    exposeForcedEpState: () => {
+      return { forcedEpAvailable: GameBoard.troActive };
     },
   };
 }

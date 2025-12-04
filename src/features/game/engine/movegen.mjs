@@ -630,20 +630,24 @@ export function GenerateMoves(
     herrings = [];
   }
 
+  // White has modsTRO, so if Black is moving and can EP capture White, they must
   const activeWhiteForcedEpCapture =
     forcedMoves &&
-    GameBoard.side === COLOURS.WHITE &&
-    GameBoard.blackArcane[4] & 32768 &&
-    GameBoard.suspend <= 0 &&
-    (GameBoard.pieces[GameBoard.enPas - 9] === PIECES.wP ||
-      GameBoard.pieces[GameBoard.enPas - 11] === PIECES.wP);
-  const activeBlackForcedEpCapture =
-    forcedMoves &&
     GameBoard.side === COLOURS.BLACK &&
-    GameBoard.whiteArcane[4] & 32768 &&
+    GameBoard.whiteArcane[4] & 2048 &&
+    GameBoard.enPas !== SQUARES.NO_SQ &&
     GameBoard.suspend <= 0 &&
     (GameBoard.pieces[GameBoard.enPas + 9] === PIECES.bP ||
       GameBoard.pieces[GameBoard.enPas + 11] === PIECES.bP);
+  // Black has modsTRO, so if White is moving and can EP capture Black, they must
+  const activeBlackForcedEpCapture =
+    forcedMoves &&
+    GameBoard.side === COLOURS.WHITE &&
+    GameBoard.blackArcane[4] & 2048 &&
+    GameBoard.enPas !== SQUARES.NO_SQ &&
+    GameBoard.suspend <= 0 &&
+    (GameBoard.pieces[GameBoard.enPas - 9] === PIECES.wP ||
+      GameBoard.pieces[GameBoard.enPas - 11] === PIECES.wP);
 
   forcedEpAvailable = activeWhiteForcedEpCapture || activeBlackForcedEpCapture;
 
@@ -657,7 +661,7 @@ export function GenerateMoves(
 
   // todo note does swap override entangle and suspend? I think so maybe no entangle though
 
-  if (!activeWhiteForcedEpCapture || !activeBlackForcedEpCapture) {
+  if (!activeWhiteForcedEpCapture && !activeBlackForcedEpCapture) {
     // SWAP ADJACENT 4
     for (let sq = 21; sq <= 98; sq++) {
       if (GameBoard.pieces[sq] === PIECES.EMPTY) {
@@ -837,7 +841,7 @@ export function GenerateMoves(
 
     if (type2 === 'ADJ' || type2 === 'DEP') return;
 
-    if (!herrings.length && (type2 === 'TELEPORT' || type2 === 'COMP')) {
+    if (!herrings.length && !forcedEpAvailable && (type2 === 'TELEPORT' || type2 === 'COMP')) {
       const side = GameBoard.side;
       const arcanaOK =
         (side === COLOURS.WHITE && GameBoard.whiteArcane[1] & 16) ||
@@ -879,7 +883,7 @@ export function GenerateMoves(
     let offeringPce = LoopPcePrime[offeringIndex];
     let offeringSymbol = LoopPcePrimeSymbols[offeringIndex++];
 
-    if (!herrings.length && (type === 'OFFERING' || type === 'COMP')) {
+    if (!herrings.length && !forcedEpAvailable && (type === 'OFFERING' || type === 'COMP')) {
       while (offeringPce !== 0) {
         let offeringArcanaSide =
           GameBoard.side === COLOURS.WHITE
@@ -1138,7 +1142,7 @@ export function GenerateMoves(
     GameBoard.summonRankLimits[1] = blackLimit;
 
     // todo remove to allow blocking with pieces or royalty or not?
-    if (!herrings.length) {
+    if (!herrings.length && !forcedEpAvailable) {
       // todo remove parent conditional with herring check because sumnE can block from a piece attacking herring
       const royaltyIndexes = {
         31: 1,
@@ -1325,7 +1329,7 @@ export function GenerateMoves(
 
       // note WHITE PAWN QUIET MOVES
       if (
-        !activeWhiteForcedEpCapture &&
+        !activeBlackForcedEpCapture &&
         (GameBoard.dyad === 0 ||
           GameBoard.dyad === 1 ||
           GameBoard.dyad === 2) &&
@@ -1432,7 +1436,7 @@ export function GenerateMoves(
 
       // aether surge
       if (
-        !activeWhiteForcedEpCapture &&
+        !activeBlackForcedEpCapture &&
         GameBoard.whiteArcane[4] & 131072 &&
         (RanksBrd[sq] === RANKS.RANK_2 || RanksBrd[sq] === RANKS.RANK_1) &&
         GameBoard.pieces[sq + 10] === PIECES.EMPTY &&
@@ -1447,7 +1451,7 @@ export function GenerateMoves(
       }
 
       if (
-        !activeWhiteForcedEpCapture &&
+        !activeBlackForcedEpCapture &&
         ((SQOFFBOARD(sq + 9) === BOOL.FALSE && !herrings.length) ||
           (SQOFFBOARD(sq + 9) === BOOL.FALSE &&
             herrings.length &&
@@ -1483,7 +1487,7 @@ export function GenerateMoves(
       if (
         (SQOFFBOARD(sq + 11) === BOOL.FALSE &&
           !herrings.length &&
-          !activeWhiteForcedEpCapture) ||
+          !activeBlackForcedEpCapture) ||
         (SQOFFBOARD(sq + 11) === BOOL.FALSE &&
           herrings.length &&
           _.includes(herrings, sq + 11))
@@ -1698,7 +1702,7 @@ export function GenerateMoves(
 
       // note BLACK PAWN QUIET MOVES
       if (
-        !activeBlackForcedEpCapture &&
+        !activeWhiteForcedEpCapture &&
         (GameBoard.dyad === 0 ||
           GameBoard.dyad === 1 ||
           GameBoard.dyad === 2) &&
@@ -1805,7 +1809,7 @@ export function GenerateMoves(
 
       // aether surge
       if (
-        !activeBlackForcedEpCapture &&
+        !activeWhiteForcedEpCapture &&
         GameBoard.blackArcane[4] & 131072 &&
         (RanksBrd[sq] === RANKS.RANK_7 || RanksBrd[sq] === RANKS.RANK_8) &&
         GameBoard.pieces[sq - 10] === PIECES.EMPTY &&
@@ -1822,7 +1826,7 @@ export function GenerateMoves(
       if (
         (SQOFFBOARD(sq - 9) === BOOL.FALSE &&
           !herrings.length &&
-          !activeBlackForcedEpCapture) ||
+          !activeWhiteForcedEpCapture) ||
         (SQOFFBOARD(sq - 9) === BOOL.FALSE &&
           herrings.length &&
           _.includes(herrings, sq - 9))
@@ -1855,7 +1859,7 @@ export function GenerateMoves(
       }
 
       if (
-        !activeBlackForcedEpCapture &&
+        !activeWhiteForcedEpCapture &&
         ((SQOFFBOARD(sq - 11) === BOOL.FALSE && !herrings.length) ||
           (SQOFFBOARD(sq - 11) === BOOL.FALSE &&
             herrings.length &&

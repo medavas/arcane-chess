@@ -106,6 +106,8 @@ export class SpellHandler {
     const playerColor = this.callbacks.getPlayerColor();
     const arcane = this.callbacks.getArcaneChess();
 
+    if (arcane.getIfTrojanGambitExists(playerColor)) return;
+
     this.callbacks.updateSpellState({
       placingPiece: 0,
       placingRoyalty: 0,
