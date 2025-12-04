@@ -199,6 +199,19 @@ export class SpellHandler {
 
     // === DYAD ===
     if (key.startsWith('dyad')) {
+      // Block dyad if forced EP is active and Gluttony is not present
+      // (Gluttony allows captures during dyad, which is needed for the forced EP capture)
+      if (arcane.isForcedEnPassantActive && arcane.isForcedEnPassantActive()) {
+        // Check if player has Gluttony (modsGLU bit 64 in arcane[4])
+        const playerArcane = this.callbacks.getSelectedSide() === 'white'
+          ? GameBoard.whiteArcane
+          : GameBoard.blackArcane;
+        const hasGluttony = playerArcane && playerArcane[4] && (playerArcane[4] & 64) !== 0;
+        if (!hasGluttony) {
+          return;
+        }
+      }
+
       const dyadClock = arcane.getDyadClock();
       const dyadName =
         typeof arcane.getDyadName === 'function' ? arcane.getDyadName() : '';
