@@ -1173,6 +1173,10 @@ export function GenerateMoves(
             ) {
               continue;
             }
+            // Block summoning to en passant square when forced EP is active
+            if (forcedEpAvailable && sq === GameBoard.enPas) {
+              continue;
+            }
             if (summonPce === PIECES.wP && summonFlag < 16384) {
               if (
                 GameBoard.whiteArcane[4] & 16 &&

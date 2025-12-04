@@ -106,6 +106,21 @@ export class SpellHandler {
     const playerColor = this.callbacks.getPlayerColor();
     const arcane = this.callbacks.getArcaneChess();
 
+    // === SUMMONS ===
+    if (key.startsWith('sumn')) {
+      // Check BEFORE clearing state
+      const state = this.callbacks.getSpellState();
+      const dyadClock = arcane.getDyadClock();
+
+      // Block summons during dyad
+      if (dyadClock > 0 || state.isDyadMove) return;
+
+      // Block summon spells when forced en passant is active
+      if (arcane.isForcedEnPassantActive && arcane.isForcedEnPassantActive()) {
+        return;
+      }
+    }
+
     this.callbacks.updateSpellState({
       placingPiece: 0,
       placingRoyalty: 0,
@@ -119,8 +134,6 @@ export class SpellHandler {
 
     // === SUMMONS ===
     if (key.startsWith('sumn')) {
-      const dyadClock = arcane.getDyadClock();
-      if (dyadClock > 0 || state.isDyadMove) return;
 
       const suffix = key.slice(4);
       const side = this.callbacks.getSelectedSide() === 'white' ? 'w' : 'b';
