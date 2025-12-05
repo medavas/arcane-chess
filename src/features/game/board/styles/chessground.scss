@@ -1142,3 +1142,23 @@ cg-board square.move-dest:hover {
   flex: 1 1 auto;
   margin: 1px 3px 1px 3px;
 }
+
+/* Shift indicator donuts */
+.cg-wrap piece.can-shift::after {
+  content: '';
+  position: absolute;
+  width: 75%;
+  height: 75%;
+  top: 12.5%;
+  left: 12.5%;
+  border: 6px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  box-sizing: border-box;
+  pointer-events: none;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6)) drop-shadow(0 0 3px rgba(255, 255, 255, 0.4));
+}
+
+.cg-wrap piece.can-shift.has-sword::after {
+  border-color: rgba(255, 50, 50, 0.5);
+  filter: drop-shadow(0 0 8px rgba(255, 50, 50, 0.8)) drop-shadow(0 0 4px rgba(255, 50, 50, 0.6));
+}

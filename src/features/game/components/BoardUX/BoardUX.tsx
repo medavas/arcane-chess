@@ -23,6 +23,10 @@ import {
 import { CheckAndSet, CheckResult } from 'src/features/game/engine/gui.mjs';
 import { PrMove } from 'src/features/game/engine/io.mjs';
 import { audioManager } from 'src/shared/utils/audio/AudioManager';
+import {
+  whiteArcaneConfig,
+  blackArcaneConfig,
+} from 'src/features/game/engine/arcaneDefs.mjs';
 import _ from 'lodash';
 
 interface BoardUXProps {
@@ -74,6 +78,118 @@ export const BoardUX: React.FC<BoardUXProps> = ({
   // theme,
   forwardedRef,
 }) => {
+  // Apply 'can-shift' class to pieces with shift abilities
+  React.useEffect(() => {
+    const applyShiftClasses = () => {
+      const pieceElements = document.querySelectorAll('.cg-wrap piece');
+
+      pieceElements.forEach((pieceEl) => {
+        const classList = pieceEl.className;
+        const isWhitePiece = classList.includes('white');
+        const isBlackPiece = classList.includes('black');
+
+        // Determine which config to use based on piece color
+        const pieceConfig = isWhitePiece ? whiteArcaneConfig : (isBlackPiece ? blackArcaneConfig : null);
+
+        let canShift = false;
+        let forceRed = false; // For spells that always make donut red
+        let blockRed = false; // For spells that never turn red even with sword
+
+        if (pieceConfig) {
+          // Check for standard shift spells
+          const pieceHasShftP = ((pieceConfig as any)['shftP'] || 0) > 0;
+          const pieceHasShftN = ((pieceConfig as any)['shftN'] || 0) > 0;
+          const pieceHasShftB = ((pieceConfig as any)['shftB'] || 0) > 0;
+          const pieceHasShftR = ((pieceConfig as any)['shftR'] || 0) > 0;
+          const pieceHasShftG = ((pieceConfig as any)['shftG'] || 0) > 0;
+          const pieceHasShftK = ((pieceConfig as any)['shftK'] || 0) > 0;
+          const pieceHasShftI = ((pieceConfig as any)['shftI'] || 0) > 0;
+          const pieceHasShftA = ((pieceConfig as any)['shftA'] || 0) > 0;
+
+          // Check for modifier spells
+          const hasModsBAN = ((pieceConfig as any)['modsBAN'] || 0) > 0; // Banshee - Spectre only, white donut
+          const hasModsREA = ((pieceConfig as any)['modsREA'] || 0) > 0; // Iron Reach - Wraith & Valkyrie, always red
+          const hasModsSUR = ((pieceConfig as any)['modsSUR'] || 0) > 0; // Pawn Surge - pawns only, always red
+
+          // Piece type checks
+          const isPawn = classList.includes('p-piece');
+          const isKnight = classList.includes('n-piece') || classList.includes('z-piece') || classList.includes('u-piece');
+          const isBishop = classList.includes('b-piece');
+          const isRook = classList.includes('r-piece');
+          const isSpectre = classList.includes('s-piece');
+          const isWraith = classList.includes('w-piece');
+          const isKing = classList.includes('k-piece');
+          const isValkyrie = classList.includes('v-piece');
+
+          // Check if piece can shift based on standard shift spells
+          if (isPawn && (pieceHasShftP || pieceHasShftI || pieceHasShftA)) {
+            canShift = true;
+          } else if (isKnight && (pieceHasShftN || pieceHasShftI || pieceHasShftA)) {
+            canShift = true;
+          } else if (isBishop && (pieceHasShftB || pieceHasShftI || pieceHasShftA)) {
+            canShift = true;
+          } else if (isRook && (pieceHasShftR || pieceHasShftI || pieceHasShftA)) {
+            canShift = true;
+          } else if ((isSpectre || isWraith) && (pieceHasShftG || pieceHasShftI || pieceHasShftA)) {
+            canShift = true;
+          } else if (isKing && (pieceHasShftK || pieceHasShftI || pieceHasShftA)) {
+            canShift = true;
+          }
+
+          // Check for modifier spell effects
+          // modsBAN: Spectre only, white donut (blockRed)
+          if (hasModsBAN && isSpectre) {
+            canShift = true;
+            blockRed = true;
+          }
+
+          // modsSUR: only pawns can shift, always red
+          if (hasModsSUR && isPawn) {
+            canShift = true;
+            forceRed = true;
+          }
+
+          // modsREA: Wraith and Valkyrie, always red
+          if (hasModsREA && (isWraith || isValkyrie)) {
+            canShift = true;
+            forceRed = true;
+          }
+        }
+
+        if (canShift) {
+          pieceEl.classList.add('can-shift');
+
+          // Determine if donut should be red
+          if (forceRed) {
+            // Always red for modsSUR (pawns) and modsREA (wraith/valkyrie)
+            pieceEl.classList.add('has-sword');
+          } else if (blockRed) {
+            // Never red for modsBAN
+            pieceEl.classList.remove('has-sword');
+          } else if (pieceConfig) {
+            // Standard behavior: red only if has 5th Dimension Sword (modsDIM)
+            const hasSword = ((pieceConfig as any)['modsDIM'] || 0) > 0;
+            if (hasSword) {
+              pieceEl.classList.add('has-sword');
+            } else {
+              pieceEl.classList.remove('has-sword');
+            }
+          }
+        } else {
+          pieceEl.classList.remove('can-shift');
+          pieceEl.classList.remove('has-sword');
+        }
+      });
+    };
+
+    // Run immediately to avoid flickering
+    applyShiftClasses();
+
+    // Also run after a short delay to catch any late-rendered pieces
+    const timeoutId = setTimeout(applyShiftClasses, 10);
+    return () => clearTimeout(timeoutId);
+  }, [gameState.fen, whiteArcaneConfig, blackArcaneConfig]);
+
   const handleMove = (orig: string, dest: string) => {
     const swapOrTeleport = interactionState.isTeleport
       ? 'TELEPORT'
