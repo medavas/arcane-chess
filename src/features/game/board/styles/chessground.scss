@@ -301,7 +301,28 @@ cg-board square.move-dest:hover {
 }
 
 cg-board square.last-move {
-  background: rgba(255, 223, 0, 0.5) 22%;
+  background: rgba(255, 223, 0, 0.5);
+}
+
+/* Last move square that is also a destination - show both the highlight and the move dot */
+cg-board square.last-move.move-dest {
+  background: radial-gradient(
+      rgba(255, 223, 0, 0.8) 22%,
+      rgba(255, 223, 0, 0.8) 22%,
+      rgba(0, 0, 0, 0.3) 0,
+      rgba(0, 0, 0, 0) 0
+    ),
+    rgba(255, 223, 0, 0.5);
+}
+
+/* Last move square that is also an occupied destination - show highlight with ring */
+cg-board square.last-move.oc.move-dest {
+  background: radial-gradient(
+      transparent 0%,
+      transparent 80%,
+      rgba(255, 223, 0, 0.8) 22%
+    ),
+    rgba(255, 223, 0, 0.5);
 }
 
 cg-board square.selected {

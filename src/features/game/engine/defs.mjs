@@ -705,6 +705,42 @@ export const PieceSlides = [
   BOOL.FALSE,
 ];
 
+// Maps each piece to its dyad restriction value
+// dyadA: 1 (all), dyadB: 2 (P,H,X), dyadC: 4 (B,N,Z,U,R), dyadD: 8 (S,W), dyadE: 16 (M,T,Q), dyadF: 32 (V,K)
+export const PieceDyad = [
+  0,  // EMPTY
+  2,  // wP - dyadB
+  4,  // wN - dyadC
+  4,  // wB - dyadC
+  4,  // wR - dyadC
+  16, // wQ - dyadE
+  32, // wK - dyadF
+  2,  // bP - dyadB
+  4,  // bN - dyadC
+  4,  // bB - dyadC
+  4,  // bR - dyadC
+  16, // bQ - dyadE
+  32, // bK - dyadF
+  2,  // wX - dyadB
+  8,  // wS - dyadD
+  2,  // wH - dyadB
+  16, // wT - dyadE
+  16, // wM - dyadE
+  32, // wV - dyadF
+  8,  // bS - dyadD
+  2,  // bH - dyadB
+  16, // bT - dyadE
+  16, // bM - dyadE
+  32, // bV - dyadF
+  4,  // wZ - dyadC
+  4,  // wU - dyadC
+  4,  // bZ - dyadC
+  4,  // bU - dyadC
+  8,  // wW - dyadD
+  8,  // bW - dyadD
+  2,  // bX - dyadB
+];
+
 export let SpDir = [-21, -19, -12, -10, -8, -1, 1, 8, 10, 12, 19, 21];
 export let WrDir = [-22, -20, -18, -11, -9, -2, 2, 9, 11, 18, 20, 22];
 export let KnDir = [-8, -19, -21, -12, 8, 19, 21, 12];

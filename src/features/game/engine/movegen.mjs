@@ -28,6 +28,7 @@ import {
   SQUARES,
   PieceCol,
   PieceKing,
+  PieceDyad,
   LoopNonSlideDyad,
   LoopNonSlidePce,
   LoopSlideDyad,
@@ -150,12 +151,25 @@ export function AddCaptureMove(move, consume = false, capturesOnly = false) {
   }
 
   // gluttony
-  if (
-    GameBoard.dyad > 0 &&
-    ((GameBoard.side === COLOURS.WHITE && !(GameBoard.whiteArcane[4] & 64)) ||
-      (GameBoard.side === COLOURS.BLACK && !(GameBoard.blackArcane[4] & 64)))
-  )
-    return;
+  if (GameBoard.dyad > 0) {
+    const hasGluttony =
+      (GameBoard.side === COLOURS.WHITE && (GameBoard.whiteArcane[4] & 64)) ||
+      (GameBoard.side === COLOURS.BLACK && (GameBoard.blackArcane[4] & 64));
+    
+    if (!hasGluttony) {
+      return;
+    }
+
+    // Check if the moving piece is allowed by the current dyad type
+    const movingPiece = GameBoard.pieces[FROMSQ(move)];
+    const pieceDyadValue = PieceDyad[movingPiece] || 0;
+    
+    // If the piece's dyad value doesn't match the active dyad, block the capture
+    // Note: dyadA (value 1) allows all pieces, so we need to check if dyad matches OR dyad is 1
+    if (GameBoard.dyad !== 1 && (pieceDyadValue & GameBoard.dyad) === 0) {
+      return;
+    }
+  }
 
   // sixfold silk
   if (
