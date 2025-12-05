@@ -72,21 +72,19 @@ export const PlayerPanel: React.FC<PlayerPanelProps> = ({
 }) => {
   return (
     <div className="nav-history-buttons-player">
-      {volumeControl && (
-        <div className="global-volume-control">
-          <GlobalVolumeControl />
-        </div>
-      )}
-      {showResign && (
-        <div className="buttons">
-          <Button
-            className="tertiary"
-            onClick={onResign}
-            color={playerColor === 'white' ? 'S' : 'B'} // Heuristic
-            text="RESIGN"
-            width={100}
-            backgroundColorOverride="#222222"
-          />
+      {(volumeControl || showResign) && (
+        <div className="controls-container">
+          {showResign && (
+            <Button
+              className="tertiary"
+              onClick={onResign}
+              color={playerColor === 'white' ? 'S' : 'B'} // Heuristic
+              text="RESIGN"
+              width={100}
+              backgroundColorOverride="#222222"
+            />
+          )}
+          {volumeControl && <GlobalVolumeControl />}
         </div>
       )}
       <div className="nav">

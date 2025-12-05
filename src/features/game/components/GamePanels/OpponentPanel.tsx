@@ -95,21 +95,19 @@ export const OpponentPanel: React.FC<OpponentPanelProps> = ({
           {!!thinking && <li>The engine is thinking...</li>}
         </ul>
       </div>
-      {showResign && (
-        <div className="buttons">
-          <Button
-            className="tertiary"
-            onClick={onResign}
-            color={playerColor === 'white' ? 'B' : 'S'} // Heuristic based on existing code, might need prop
-            text="RESIGN"
-            width={100}
-            backgroundColorOverride="#222222"
-          />
-        </div>
-      )}
-      {volumeControl && (
-        <div className="global-volume-control">
-          <GlobalVolumeControl />
+      {(showResign || volumeControl) && (
+        <div className="controls-container">
+          {showResign && (
+            <Button
+              className="tertiary"
+              onClick={onResign}
+              color={playerColor === 'white' ? 'B' : 'S'} // Heuristic based on existing code, might need prop
+              text="RESIGN"
+              width={100}
+              backgroundColorOverride="#222222"
+            />
+          )}
+          {volumeControl && <GlobalVolumeControl />}
         </div>
       )}
     </div>

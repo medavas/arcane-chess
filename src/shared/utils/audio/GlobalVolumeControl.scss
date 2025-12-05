@@ -1,15 +1,10 @@
 ﻿@import '../../styles/variables.scss';
 
 .global-volume-control {
-  display: relative;
   display: flex;
   flex-direction: column;
-  justify-self: flex-end;
+  gap: 4px;
   z-index: 5;
-  padding: 6px;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
 
   .volume-group {
     .volume-bar {
@@ -18,13 +13,11 @@
       .volume-slider {
         width: 120px;
         appearance: none;
-        background: linear-gradient(
-          to right,
-          rgba(68, 170, 255, 0.8) 0%,
-          rgba(68, 170, 255, 0.8) var(--fill, 0%),
-          rgba(255, 255, 255, 0.1) var(--fill, 0%),
-          rgba(255, 255, 255, 0.1) 100%
-        );
+        background: linear-gradient(to right,
+            rgba(68, 170, 255, 0.8) 0%,
+            rgba(68, 170, 255, 0.8) var(--fill, 0%),
+            rgba(255, 255, 255, 0.1) var(--fill, 0%),
+            rgba(255, 255, 255, 0.1) 100%);
         background-repeat: no-repeat;
         background-size: 100% 100%;
         background-origin: content-box;
@@ -39,11 +32,9 @@
           appearance: none;
           width: 18px;
           height: 18px;
-          background: linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 0.9),
-            rgba(200, 200, 200, 0.9)
-          );
+          background: linear-gradient(135deg,
+              rgba(255, 255, 255, 0.9),
+              rgba(200, 200, 200, 0.9));
           border: 1px solid rgba(255, 255, 255, 0.3);
           border-radius: 50%;
           cursor:
@@ -54,11 +45,9 @@
         }
 
         &::-webkit-slider-thumb:hover {
-          background: linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 1),
-            rgba(220, 220, 220, 1)
-          );
+          background: linear-gradient(135deg,
+              rgba(255, 255, 255, 1),
+              rgba(220, 220, 220, 1));
           box-shadow: 0 0 8px rgba(68, 170, 255, 0.6);
           transform: scale(1.1);
         }
@@ -66,11 +55,9 @@
         &::-moz-range-thumb {
           width: 18px;
           height: 18px;
-          background: linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 0.9),
-            rgba(200, 200, 200, 0.9)
-          );
+          background: linear-gradient(135deg,
+              rgba(255, 255, 255, 0.9),
+              rgba(200, 200, 200, 0.9));
           border: 1px solid rgba(255, 255, 255, 0.3);
           border-radius: 50%;
           cursor:
@@ -81,11 +68,9 @@
         }
 
         &::-moz-range-thumb:hover {
-          background: linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 1),
-            rgba(220, 220, 220, 1)
-          );
+          background: linear-gradient(135deg,
+              rgba(255, 255, 255, 1),
+              rgba(220, 220, 220, 1));
           box-shadow: 0 0 8px rgba(68, 170, 255, 0.6);
           transform: scale(1.1);
         }
@@ -93,11 +78,9 @@
         &::-ms-thumb {
           width: 18px;
           height: 18px;
-          background: linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 0.9),
-            rgba(200, 200, 200, 0.9)
-          );
+          background: linear-gradient(135deg,
+              rgba(255, 255, 255, 0.9),
+              rgba(200, 200, 200, 0.9));
           border: 1px solid rgba(255, 255, 255, 0.3);
           border-radius: 50%;
           cursor:
@@ -108,11 +91,9 @@
         }
 
         &::-ms-thumb:hover {
-          background: linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 1),
-            rgba(220, 220, 220, 1)
-          );
+          background: linear-gradient(135deg,
+              rgba(255, 255, 255, 1),
+              rgba(220, 220, 220, 1));
           box-shadow: 0 0 8px rgba(68, 170, 255, 0.6);
           transform: scale(1.1);
         }

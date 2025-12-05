@@ -54,12 +54,21 @@
     }
   }
 
-  .buttons {
+  .controls-container {
     flex-shrink: 0;
-  }
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 6px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
 
-  .global-volume-control {
-    flex-shrink: 0;
+    // Hide on smaller screens (player panel will show controls instead)
+    @media (max-width: 1024px) {
+      display: none;
+    }
   }
 
   // Mobile styles

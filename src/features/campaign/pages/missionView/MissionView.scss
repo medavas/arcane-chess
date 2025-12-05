@@ -190,10 +190,46 @@
       }
 
       .dialogue {
-        height: 190px;
-        padding: 20px;
-        background: rgba(34, 34, 34, 0.7);
-        overflow-y: scroll;
+        flex: 1;
+        min-height: 190px;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        word-break: break-word;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 13px;
+        line-height: 1.5;
+        box-sizing: border-box;
+
+        li {
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          max-width: 100%;
+        }
+
+        &::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 3px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 3px;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.5);
+          }
+        }
       }
 
       .arcana {
@@ -205,6 +241,23 @@
         .arcana-side-buttons {
           height: 40px;
           display: flex;
+        }
+      }
+
+      .controls-container {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        padding: 6px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+
+        // Hide on smaller screens (player panel will show controls instead)
+        @media (max-width: 1024px) {
+          display: none;
         }
       }
 
@@ -301,6 +354,23 @@
         }
       }
 
+      .controls-container {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+        padding: 6px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+
+        // Hide on larger screens (opponent panel will show controls instead)
+        @media (min-width: 1025px) {
+          display: none;
+        }
+      }
+
       .global-volume-control {
         display: none;
       }
@@ -310,7 +380,43 @@
       }
 
       .dialogue {
-        display: none;
+        flex: 1;
+        min-height: 190px;
+        padding: 12px;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        word-break: break-word;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 13px;
+        line-height: 1.5;
+        box-sizing: border-box;
+
+        li {
+          word-wrap: break-word;
+          overflow-wrap: break-word;
+          max-width: 100%;
+        }
+
+        &::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 3px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 3px;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.5);
+          }
+        }
       }
 
       .info-avatar {
