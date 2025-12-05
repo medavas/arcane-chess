@@ -154,6 +154,61 @@ export const BoardUX: React.FC<BoardUXProps> = ({
             canShift = true;
             forceRed = true;
           }
+
+          // modsAET: Aetherstep - only show for pawns on starting rank with blocking piece
+          const hasModsAET = ((pieceConfig as any)['modsAET'] || 0) > 0;
+          if (hasModsAET && isPawn) {
+            // Get square position from piece element
+            const transform = (pieceEl as HTMLElement).style.transform;
+            const match = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+
+            if (match) {
+              const xStr = match[1].replace('px', '').trim();
+              const yStr = match[2].replace('px', '').trim();
+              const xPx = parseFloat(xStr);
+              const yPx = parseFloat(yStr);
+
+              const boardEl = (pieceEl as HTMLElement).closest('cg-board');
+              if (boardEl) {
+                const boardWidth = boardEl.clientWidth;
+                const squareSize = boardWidth / 8;
+                const file = Math.round(xPx / squareSize);
+                const visualRank = Math.round(yPx / squareSize);
+                // Convert visual rank (0-7 from top) to board rank (1-8)
+                // Visual 0 = Rank 8, Visual 7 = Rank 1
+                const boardRank = 8 - visualRank;
+                const sq = 21 + (boardRank - 1) * 10 + file;
+
+                console.log(`[modsAET] ${isWhitePiece ? 'White' : 'Black'} pawn at sq ${sq}, boardRank: ${boardRank}, visualRank: ${visualRank}, file: ${file}, pixels: (${xPx}, ${yPx})`);
+
+                if (isWhitePiece && (boardRank === 2 || boardRank === 3)) {
+                  // White pawns on board rank 2 or 3 (starting positions)
+                  const blocking = GameBoard.pieces[sq + 10];
+                  const destination = GameBoard.pieces[sq + 20];
+                  console.log(`[modsAET] White pawn on starting rank. sq=${sq}, Blocking at ${sq + 10}: ${blocking}, Dest at ${sq + 20}: ${destination}, EMPTY=${PIECES.EMPTY}`);
+                  if (blocking !== PIECES.EMPTY && destination === PIECES.EMPTY) {
+                    console.log('[modsAET] ✓ White pawn CAN HOP - showing indicator!');
+                    canShift = true;
+                    blockRed = true; // Aetherstep is never red (5D sword doesn't apply)
+                  }
+                } else if (isBlackPiece && (boardRank === 7 || boardRank === 6)) {
+                  // Black pawns on board rank 7 or 6 (starting positions)
+                  const blocking = GameBoard.pieces[sq - 10];
+                  const destination = GameBoard.pieces[sq - 20];
+                  console.log(`[modsAET] Black pawn on starting rank. sq=${sq}, Blocking at ${sq - 10}: ${blocking}, Dest at ${sq - 20}: ${destination}`);
+                  if (blocking !== PIECES.EMPTY && destination === PIECES.EMPTY) {
+                    console.log('[modsAET] ✓ Black pawn CAN HOP - showing indicator!');
+                    canShift = true;
+                    blockRed = true; // Aetherstep is never red (5D sword doesn't apply)
+                  }
+                } else if (pieceHasShftP || pieceHasShftA) {
+                  // Pawn has moved but has shftP or shftA
+                  console.log('[modsAET] Pawn has shftP or shftA - showing indicator');
+                  canShift = true;
+                }
+              }
+            }
+          }
         }
 
         if (canShift) {
