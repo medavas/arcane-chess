@@ -132,7 +132,62 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           } else if (isRook && (pieceHasShftR || pieceHasShftI || pieceHasShftA)) {
             canShift = true;
           } else if ((isSpectre || isWraith) && (pieceHasShftG || pieceHasShftI || pieceHasShftA)) {
-            canShift = true;
+            // For shftI and shftA, always show (they work universally)
+            if (pieceHasShftI || pieceHasShftA) {
+              canShift = true;
+            } else if (pieceHasShftG) {
+              // For shftG specifically, check if shift moves are available
+              const transform = (pieceEl as HTMLElement).style.transform;
+              const match = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+
+              if (match) {
+                const xStr = match[1].replace('px', '').trim();
+                const yStr = match[2].replace('px', '').trim();
+                const xPx = parseFloat(xStr);
+                const yPx = parseFloat(yStr);
+
+                const boardEl = (pieceEl as HTMLElement).closest('cg-board');
+                if (boardEl) {
+                  const boardWidth = boardEl.clientWidth;
+                  const squareSize = boardWidth / 8;
+                  const file = Math.round(xPx / squareSize);
+                  const visualRank = Math.round(yPx / squareSize);
+                  const boardRank = 8 - visualRank;
+                  const sq = 21 + (boardRank - 1) * 10 + file;
+
+                  // Define shift directions for Spectre and Wraith
+                  // SpDir = [-21, -19, -12, -10, -8, -1, 1, 8, 10, 12, 19, 21]
+                  // WrDir = [-22, -20, -18, -11, -9, -2, 2, 9, 11, 18, 20, 22]
+                  const shiftDirs = isSpectre
+                    ? [-21, -19, -12, -10, -8, -1, 1, 8, 10, 12, 19, 21]
+                    : [-22, -20, -18, -11, -9, -2, 2, 9, 11, 18, 20, 22];
+
+                  let hasShiftMove = false;
+                  for (const dir of shiftDirs) {
+                    const targetSq = sq + dir;
+                    // Check if square is on board
+                    if (targetSq >= 21 && targetSq <= 98) {
+                      const targetFile = (targetSq - 21) % 10;
+                      const targetRank = Math.floor((targetSq - 21) / 10);
+                      if (targetFile >= 0 && targetFile <= 7 && targetRank >= 0 && targetRank <= 7) {
+                        const targetPiece = GameBoard.pieces[targetSq];
+                        // Check if square is empty or contains enemy
+                        if (targetPiece === PIECES.EMPTY ||
+                          (isWhitePiece && targetPiece >= 7 && targetPiece <= 30) ||
+                          (isBlackPiece && ((targetPiece >= 1 && targetPiece <= 6) || (targetPiece >= 13 && targetPiece <= 28)))) {
+                          hasShiftMove = true;
+                          break;
+                        }
+                      }
+                    }
+                  }
+
+                  if (hasShiftMove) {
+                    canShift = true;
+                  }
+                }
+              }
+            }
           } else if (isKing && (pieceHasShftK || pieceHasShftI || pieceHasShftA)) {
             canShift = true;
           }
