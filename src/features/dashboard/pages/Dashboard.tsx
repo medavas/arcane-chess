@@ -341,6 +341,73 @@ export class UnwrappedDashboard extends React.Component<
             <h1 className="news-title">Transmissions</h1>
             <div className="news-item">
               <h4>
+                Patch 2.9 Live: Ghost of Christmas Future Update
+                <h6>Source: medavas</h6>
+                <h6>Date: December 2025</h6>
+                <h6>Category: Mechanics</h6>
+              </h4>
+              <ul>
+                <li>
+                  The future is scary but we must look ahead. To remind you of
+                  that, I have added two new, wandering, robed unit types that
+                  stack on top of the Herring - The Hermit and The Hemlock.
+                </li>
+                <li>
+                  The Hermit casts an aura of square conditions around it.
+                </li>
+                <li>
+                  The Hemlock has a far reaching move pattern - like a super
+                  Knight. It can hop to the other side of the board too!
+                </li>
+                <li>
+                  Bulletproof - when this is active you can now check or
+                  promote, no captures allowed.
+                </li>
+                <li>5 Dimensional Sword - Capture on shifts.</li>
+                <li>
+                  Disarmament - new square condition, a piece on an affected
+                  square may not make any captures
+                </li>
+                <li>
+                  Hexlash - when certain friendly units are captured, the
+                  square gains entanglement conditon
+                </li>
+                <li>
+                  Glare - any enemy piece a Rook attacks gains Disarmament
+                </li>
+                <li>Area of Effect - different auras for Hermit ability</li>
+                <li>
+                  Token Modifiers (Hermit and Hemlock) - Modifies Herring unit
+                </li>
+              </ul>
+            </div>
+            <div className="news-item">
+              <h4>
+                UI Overhaul and Skirmish Metagame Update
+                <h6>Source: medavas</h6>
+                <h6>Date: December 2025</h6>
+                <h6>Category: Announcements</h6>
+              </h4>
+              <ul>
+                <li>
+                  New, consistent UI across the site with more responsive
+                  designs.
+                </li>
+                <li>
+                  The board UI has indicators for pieces that have alternate
+                  move patterns so you aren&apos;t caught off guard when a
+                  Knight moves like a King. Square destinations have different
+                  coloring to let you know when you are about to use a limited
+                  arcane.
+                </li>
+                <li>
+                  Check out Skirmish, factions have a better variety of spells
+                  for more dynamic, interesting play. Explore!
+                </li>
+              </ul>
+            </div>
+            <div className="news-item">
+              <h4>
                 Patch 2.8 Live: Turkey Bowl Update
                 <h6>Source: medavas</h6>
                 <h6>Date: November 2025</h6>

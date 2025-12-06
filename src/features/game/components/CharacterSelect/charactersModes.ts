@@ -197,153 +197,6 @@ const padModes = (modes: Record<string, GameModeType>) => {
 };
 
 export const modes: Record<string, GameModeType> = padModes({
-  test5: {
-    name: 'Release Test 5',
-    white: {
-      arcana: [
-        // arcana.sumnRI,
-        // arcana.moriNOR,
-        // arcana.shftK,
-        // arcana.shftA,
-        // arcana.moriMAN,
-        // arcana.modsINH,
-        // arcana.modsDIV,
-        // arcana.modsEXT,
-        // arcana.sumnP,
-        // arcana.sumnP,
-        // arcana.sumnP,
-        // arcana.sumnP,
-        // arcana.shftA,
-        // arcana.sumnRT,
-        // arcana.toknHER,
-        // arcana.toknHEM,
-        // arcana.sumnH,
-        arcana.sumnRM,
-        // arcana.offrA,
-        // arcana.shftT,
-        // arcana.dyadB,
-        // arcana.dyadA,
-        // arcana.modsGLU,
-        // arcana.shftP,
-        // arcana.shftN,
-        // arcana.sumnRQ,
-        // arcana.sumnRV,
-        arcana.modsBAN,
-        arcana.modsDIM,
-        // arcana.sumnH,
-        // arcana.modsENS,
-        // arcana.modsHEX,
-        // arcana.modsGLA,
-        // arcana.moriDYA,
-        // arcana.moraDYA,
-        arcana.modsTRO,
-        arcana.modsREA,
-        arcana.modsAET,
-        // arcana.sumnRN,
-        // arcana.modsDIS,
-        // arcana.modsHEX,
-        // arcana.modsAET,
-        // arcana.dyadC,
-        // arcana.dyadB,
-        // arcana.sumnRI,
-        // arcana.sumnRG
-        // arcana.areaQ,
-        // arcana.areaT,
-        // arcana.gainDYA,
-        // arcana.gainDYA,
-        // arcana.gainDYA,
-      ],
-      setup: 'RNWTKWSR',
-    },
-    black: {
-      arcana: [
-        // arcana.sumnRG, arcana.sumnV, arcana.modsBAN,
-        arcana.modsINH,
-        // arcana.modsDIV,
-        // arcana.gainDYA,
-        // arcana.gainDYA,
-        // arcana.gainDYA,
-        // arcana.gainDYA,
-        // arcana.modsENS,
-        // arcana.modsDIM,
-        arcana.modsTRO,
-        // arcana.shftA,
-        // arcana.sumnH,
-        // arcana.toknHEM,
-        // arcana.toknHER,
-        arcana.modsSUR,
-        arcana.shftG,
-      ],
-      setup: 'rsbqkwnr',
-    },
-  },
-  test4: {
-    name: 'Release Test 4',
-    white: {
-      arcana: [
-        // arcana.sumnRI,
-        // arcana.moriNOR,
-        // arcana.shftK,
-        // arcana.shftA,
-        // arcana.moriMAN,
-        // arcana.modsINH,
-        arcana.modsDIV,
-        arcana.modsEXT,
-        arcana.sumnP,
-        arcana.sumnP,
-        arcana.sumnP,
-        arcana.sumnP,
-      ],
-      setup: 'RNWTKWNR',
-    },
-    black: {
-      arcana: [
-        // arcana.sumnRG, arcana.sumnV, arcana.modsBAN,
-        arcana.modsINH,
-        arcana.modsDIV,
-      ],
-      setup: '4k3',
-    },
-  },
-  test3: {
-    name: 'Release Test 3',
-    white: {
-      arcana: [arcana.shftA, arcana.modsGLU, arcana.moriPAW],
-      setup: 'RNBTKWSR',
-    },
-    black: {
-      arcana: [arcana.shftK, arcana.modsGLU, arcana.moriPAW],
-      setup: 'rnbmkwsr',
-    },
-  },
-  test2: {
-    name: 'Release Test 2',
-    white: {
-      arcana: [arcana.shftI, arcana.moraDYA, arcana.offrK],
-      setup: 'RNBMKWSR',
-    },
-    black: {
-      arcana: [arcana.sumnX, arcana.sumnRI, arcana.modsSUR],
-      setup: 'rnbqkwsr',
-    },
-  },
-  test1: {
-    name: 'Release Test 1',
-    white: {
-      arcana: [
-        arcana.moraMAN,
-        arcana.moraNOR,
-        arcana.sumnN,
-        arcana.sumnN,
-        arcana.sumnN,
-      ],
-      setup: 'RNBQKBNR',
-    },
-    black: {
-      arcana: [arcana.modsPHA, arcana.sumnRA, arcana.moraNOR, arcana.shftG],
-      setup: 'rswtkwsr',
-    },
-  },
   tutorial1: {
     name: 'Tutorial 1',
     white: {
@@ -377,39 +230,39 @@ export const modes: Record<string, GameModeType> = padModes({
       setup: 'rswqkwsr',
     },
   },
-  // senario2: {
-  //   name: 'Scenario 2',
-  //   white: {
-  //     arcana: [],
-  //     setup: 'RNBQKBNR',
-  //   },
-  //   black: {
-  //     arcana: [arcana.modsAET],
-  //     setup: 'rnbqkbnr',
-  //   },
-  // },
-  // secnario6: {
-  //   name: 'Scenario 6',
-  //   white: {
-  //     arcana: [arcana.modsAET],
-  //     setup: 'RNBQKBNR',
-  //   },
-  //   black: {
-  //     arcana: [arcana.dyadB],
-  //     setup: 'rnbqkbnr',
-  //   },
-  // },
-  // secnario7: {
-  //   name: 'Scenario 7',
-  //   white: {
-  //     arcana: [arcana.modsAET],
-  //     setup: 'RNBQKBNR',
-  //   },
-  //   black: {
-  //     arcana: [arcana.modsFUG],
-  //     setup: 'rnbqkbnr',
-  //   },
-  // },
+  senario2: {
+    name: 'Scenario 2',
+    white: {
+      arcana: [],
+      setup: 'RNBQKBNR',
+    },
+    black: {
+      arcana: [arcana.modsAET],
+      setup: 'rnbqkbnr',
+    },
+  },
+  secnario6: {
+    name: 'Scenario 6',
+    white: {
+      arcana: [arcana.modsAET],
+      setup: 'RNBQKBNR',
+    },
+    black: {
+      arcana: [arcana.dyadB],
+      setup: 'rnbqkbnr',
+    },
+  },
+  secnario7: {
+    name: 'Scenario 7',
+    white: {
+      arcana: [arcana.modsAET],
+      setup: 'RNBQKBNR',
+    },
+    black: {
+      arcana: [arcana.modsFUG],
+      setup: 'rnbqkbnr',
+    },
+  },
   newClassic: {
     name: 'The New Classic',
     white: {
