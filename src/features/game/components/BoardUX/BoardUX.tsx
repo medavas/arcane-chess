@@ -110,6 +110,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           const hasModsBAN = ((pieceConfig as any)['modsBAN'] || 0) > 0; // Banshee - Spectre only, white donut
           const hasModsREA = ((pieceConfig as any)['modsREA'] || 0) > 0; // Iron Reach - Wraith & Valkyrie, always red
           const hasModsSUR = ((pieceConfig as any)['modsSUR'] || 0) > 0; // Pawn Surge - pawns only, always red
+          const hasModsAET = ((pieceConfig as any)['modsAET'] || 0) > 0; // Aetherstep - pawns only
 
           // Piece type checks
           const isPawn = classList.includes('p-piece');
@@ -144,9 +145,54 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           }
 
           // modsSUR: only pawns can shift, always red
+          // Only show if pawn can actually make a surge move
           if (hasModsSUR && isPawn) {
-            canShift = true;
-            forceRed = true;
+            // Get square position from piece element
+            const transform = (pieceEl as HTMLElement).style.transform;
+            const match = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+
+            if (match) {
+              const xStr = match[1].replace('px', '').trim();
+              const yStr = match[2].replace('px', '').trim();
+              const xPx = parseFloat(xStr);
+              const yPx = parseFloat(yStr);
+
+              const boardEl = (pieceEl as HTMLElement).closest('cg-board');
+              if (boardEl) {
+                const boardWidth = boardEl.clientWidth;
+                const squareSize = boardWidth / 8;
+                const file = Math.round(xPx / squareSize);
+                const visualRank = Math.round(yPx / squareSize);
+                const boardRank = 8 - visualRank;
+                const sq = 21 + (boardRank - 1) * 10 + file;
+
+                if (isWhitePiece) {
+                  // White pawn - check if surge is possible (two squares forward)
+                  const oneAhead = GameBoard.pieces[sq + 10];
+                  const twoAhead = GameBoard.pieces[sq + 20];
+
+                  // Show donut if both squares are empty (can surge)
+                  // OR if there's a blocking piece and player has aetherstep (can jump)
+                  if ((oneAhead === PIECES.EMPTY && twoAhead === PIECES.EMPTY) ||
+                    (oneAhead !== PIECES.EMPTY && hasModsAET)) {
+                    canShift = true;
+                    forceRed = true;
+                  }
+                } else if (isBlackPiece) {
+                  // Black pawn - check if surge is possible
+                  const oneAhead = GameBoard.pieces[sq - 10];
+                  const twoAhead = GameBoard.pieces[sq - 20];
+
+                  // Show donut if both squares are empty (can surge)
+                  // OR if there's a blocking piece and player has aetherstep (can jump)
+                  if ((oneAhead === PIECES.EMPTY && twoAhead === PIECES.EMPTY) ||
+                    (oneAhead !== PIECES.EMPTY && hasModsAET)) {
+                    canShift = true;
+                    forceRed = true;
+                  }
+                }
+              }
+            }
           }
 
           // modsREA: Wraith and Valkyrie, always red
@@ -156,7 +202,6 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           }
 
           // modsAET: Aetherstep - only show for pawns on starting rank with blocking piece
-          const hasModsAET = ((pieceConfig as any)['modsAET'] || 0) > 0;
           if (hasModsAET && isPawn) {
             // Get square position from piece element
             const transform = (pieceEl as HTMLElement).style.transform;
