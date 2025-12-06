@@ -176,9 +176,9 @@ const router = createBrowserRouter(
       <Route
         path="/skirmish"
         element={
-          <PrivateRoute>
-            <Skirmish />
-          </PrivateRoute>
+          // <PrivateRoute>
+          <Skirmish />
+          // </PrivateRoute>
         }
       />
       {/* <Route path="/stacktadium" element={<></>} />src/data/book9.json src/data/book10.json src/data/book11.json src/data/book12.json */}

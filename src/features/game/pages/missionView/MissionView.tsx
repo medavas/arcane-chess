@@ -127,6 +127,7 @@ interface State {
     offeringType: string;
     isDyadMove: boolean;
     normalMovesOnly: boolean;
+    glitchQueued: boolean;
     selectedSide: string;
     hoverArcane: string;
     royalties: {
@@ -249,6 +250,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
             offeringType: '',
             isDyadMove: false,
             normalMovesOnly: false,
+            glitchQueued: false,
             selectedSide: LS.config.playerColor,
             hoverArcane: '',
             royalties: {},
@@ -296,12 +298,12 @@ class UnwrappedMissionView extends React.Component<Props, State> {
             getSpellState: () => ({
                 placingPiece: this.state.placingPiece,
                 swapType: this.state.swapType,
-                isTeleport: this.state.isTeleport,
                 placingRoyalty: this.state.placingRoyalty,
                 offeringType: this.state.offeringType,
                 isDyadMove: this.state.isDyadMove,
                 normalMovesOnly: this.state.normalMovesOnly,
                 hoverArcane: this.state.hoverArcane,
+                glitchQueued: this.state.glitchQueued,
             }),
             updateSpellState: (updates) => this.setState(updates as any),
             updateHistory: (updates) => this.setState(updates as any),
@@ -319,6 +321,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
             getState: () => ({
                 thinking: this.state.thinking,
                 glitchActive: this.state.glitchActive,
+                glitchQueued: this.state.glitchQueued,
                 thinkingTime: this.state.thinkingTime,
                 engineDepth: this.state.engineDepth,
                 engineColor: this.state.engineColor,

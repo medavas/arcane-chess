@@ -28,7 +28,7 @@ const arcana = arcanaJson as Record<string, any>;
 export const OldArcanaSelector: React.FC<ArcanaSelectorProps> = ({
   color,
   arcaneConfig,
-  spellBook,
+  spellBook: _spellBook,
   playerColor,
   thinking,
   historyLength,
