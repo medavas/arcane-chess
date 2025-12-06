@@ -1,4 +1,11 @@
 import { PIECES, PceChar, PiecePawn, BOOL } from './defs.mjs';
+import arcanaData from '../../../shared/data/arcana.json' assert { type: 'json' };
+
+// Helper function to get power value from arcana data
+function getPowerByKey(key) {
+  return arcanaData[key]?.value ?? 0;
+}
+
 
 export const whiteArcaneConfig = {};
 export const blackArcaneConfig = {};
@@ -222,97 +229,7 @@ export const POWERS = (config) => {
   );
 };
 
-// for timeslot unlocks
-const POWER_BY_KEY = {
-  dyadA: 1,
-  dyadB: 1,
-  dyadC: 2,
-  dyadD: 3,
-  dyadE: 3,
-  dyadF: 4,
-  shftP: 1,
-  shftN: 2,
-  shftB: 2,
-  shftR: 2,
-  // shftT: 3,
-  shftG: 3,
-  // shftH: 3,
-  shftI: 3,
-  shftA: 2,
-  swapDEP: 2,
-  swapADJ: 2,
-  sumnP: 1,
-  sumnS: 2,
-  sumnH: 2,
-  sumnN: 2,
-  sumnB: 2,
-  sumnR: 3,
-  sumnQ: 3,
-  sumnT: 3,
-  sumnM: 4,
-  sumnV: 4,
-  sumnZ: 4,
-  sumnU: 4,
-  sumnW: 4,
-  sumnX: 4,
-  sumnRQ: 4,
-  sumnRT: 4,
-  sumnRM: 5,
-  sumnRV: 5,
-  sumnRE: 5,
-  sumnRY: 5,
-  sumnRZ: 5,
-  sumnRA: 5,
-  sumnRF: 5,
-  sumnRG: 5,
-  sumnRH: 5,
-  sumnRI: 5,
-  sumnRN: 5,
-  modsCON: 1,
-  modsAET: 2,
-  modsFUG: 3,
-  modsSIL: 4,
-  modsINH: 4,
-  modsSUS: 2,
-  modsGLU: 3,
-  modsFUT: 3,
-  modsREA: 2,
-  modsEXT: 4,
-  modsTRO: 3,
-  modsREI: 3,
-  modsSOV: 2,
-  modsDOP: 2,
-  modsMAG: 3,
-  modsBLA: 3,
-  modsSUR: 1,
-  modsDIM: 2,
-  modsRES: 2,
-  modsBAN: 5,
-  modsFOG: 2,
-  modsMIS: 2,
-  modsHUR: 3,
-  modsHEX: 3,
-  offrA: 1,
-  offrB: 1,
-  offrC: 1,
-  offrD: 2,
-  offrE: 2,
-  offrF: 2,
-  offrG: 2,
-  offrH: 2,
-  offrI: 3,
-  offrJ: 3,
-  offrK: 3,
-  offrL: 3,
-  offrM: 4,
-  offrN: 4,
-  offrO: 4,
-  offrZ: 4,
-  offrQ: 4,
-  offrR: 4,
-  toknHER: 3,
-  toknHEM: 4,
-};
+
 
 function sideKey(x) {
   return x === 0 || x === 'white' ? 'white' : 'black';
@@ -446,7 +363,7 @@ const ArcanaProgression = (() => {
 
     // Exclude keys that were granted by offerings from progression grants
     let pool = universeFor(s).filter(
-      (k) => (POWER_BY_KEY[k] ?? 1) <= t && remainingFor(s, k) > 0 && !offeringTracker[k]
+      (k) => (getPowerByKey(k) || 1) <= t && remainingFor(s, k) > 0 && !offeringTracker[k]
     );
 
     // If nothing fits current tier, fall back to the smallest POWER_BY_KEY that still has remaining
@@ -455,19 +372,19 @@ const ArcanaProgression = (() => {
       if (!all.length) return null;
       let minP = Infinity;
       for (const k of all) {
-        const p = POWER_BY_KEY[k] ?? 1;
+        const p = getPowerByKey(k) || 1;
         if (p < minP) minP = p;
       }
-      pool = all.filter((k) => (POWER_BY_KEY[k] ?? 1) === minP);
+      pool = all.filter((k) => (getPowerByKey(k) || 1) === minP);
     }
 
     // Prefer strongest among the pool (deterministic tie-break by random index)
     let maxP = 1;
     for (const k of pool) {
-      const p = POWER_BY_KEY[k] ?? 1;
+      const p = getPowerByKey(k) || 1;
       if (p > maxP) maxP = p;
     }
-    const strongest = pool.filter((k) => (POWER_BY_KEY[k] ?? 1) === maxP);
+    const strongest = pool.filter((k) => (getPowerByKey(k) || 1) === maxP);
     const key = strongest[(Math.random() * strongest.length) | 0];
 
     // Actually increment; only count a grant if the live value changed

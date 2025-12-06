@@ -130,7 +130,7 @@ const BLACK_PIECE_TO_OFFERINGS = {
   16: ['sumnRT', 'sumnRT', 'sumnRT'],
   17: ['sumnRM', 'sumnRM', 'sumnRM'],
   18: ['sumnRV', 'sumnRV', 'sumnRV'],
-  // 19: ['shftT'],
+  19: ['swapDEP'],
   20: ['sumnRV', 'modsEXT', 'modsINH'],
   21: ['dyadA', 'modsGLU', 'modsINH'],
   22: ['sumnH', 'toknHER', 'areaQ'],
