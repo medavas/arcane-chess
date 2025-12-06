@@ -105,7 +105,7 @@ export const FACTIONS: Record<FactionId, Faction> = {
     id: 'chi',
     name: 'chi',
     army: 'RNBQKBNR',
-    arcana: ['dyadB', 'modsGLU', 'offrM', 'sumnX'],
+    arcana: ['sumnRE', 'modsSIL', 'sumnX', 'modsTRO', 'modsINH', 'swapADJ'],
     unlocked: true,
     description: 'Law-breaking Pawns, unpredictable Valkyrie impersonation.',
     color: MENU_COLORS.R_MENU,
@@ -114,7 +114,7 @@ export const FACTIONS: Record<FactionId, Faction> = {
     id: 'gamma',
     name: 'gamma',
     army: 'RNBTKBNR',
-    arcana: ['shftP', 'modsDIM', 'offrM'],
+    arcana: ['sumnRE', 'shftP', 'modsAET', 'modsSUR', 'modsEXT', 'modsSUS'],
     unlocked: true,
     description:
       'Dangerous, flexible Pawns, unpredictable Valkyrie impersonation',
@@ -124,7 +124,7 @@ export const FACTIONS: Record<FactionId, Faction> = {
     id: 'omega',
     name: 'omega',
     army: 'RNBMKBNR',
-    arcana: ['sumnRQ', 'modsEXT', 'offrN'],
+    arcana: ['dyadC', 'shftI', 'modsSUS', 'modsGLA', 'swapDEP', 'modsFUT'],
     unlocked: true,
     description:
       'Queen impersonation, flexible and dangerous double-moves at a price',
@@ -134,7 +134,7 @@ export const FACTIONS: Record<FactionId, Faction> = {
     id: 'lambda',
     name: 'lambda',
     army: '1SWTKWS1',
-    arcana: ['sumnRE', 'modsSIL', 'offrN'],
+    arcana: ['sumnRM', 'sumnRE', 'shftP', 'shftI', 'modsTRO', 'modsDIM'],
     unlocked: true,
     description:
       'Trap and capture pieces in a web, flexible and dangerous double-moves at a price',
@@ -144,7 +144,7 @@ export const FACTIONS: Record<FactionId, Faction> = {
     id: 'sigma',
     name: 'sigma',
     army: '1SWMKWS1',
-    arcana: ['modsREA', 'offrR'],
+    arcana: ['sumnRT', 'sumnRE', 'modsSIL', 'sumnX', 'modsFUG', 'modsBAN'],
     unlocked: true,
     description: 'Heavy-hitting Wraiths, trap pieces in multiple webs.',
     color: MENU_COLORS.B_MENU,
@@ -153,7 +153,7 @@ export const FACTIONS: Record<FactionId, Faction> = {
     id: 'psi',
     name: 'psi',
     army: '1SWQKWS1',
-    arcana: ['modsBAN', 'offrR'],
+    arcana: ['sumnRQ', 'dyadD', 'modsAET', 'modsINH', 'modsEXT', 'modsREA'],
     unlocked: true,
     description: 'Buff Spectres, trap pieces in multiple webs.',
     color: MENU_COLORS.V_MENU,
@@ -162,7 +162,7 @@ export const FACTIONS: Record<FactionId, Faction> = {
     id: 'tau',
     name: 'tau',
     army: '2VVKV2',
-    arcana: ['modsREA', 'shftG', 'dyadA', 'offrZ'],
+    arcana: ['sumnRA', 'modsSIL', 'dyadA', 'modsGLU', 'shftK', 'modsREA'],
     unlocked: true,
     description: 'Small army with many spells.',
     color: MENU_COLORS.S_MENU,
@@ -544,15 +544,17 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                 {/* Tab navigation for mobile */}
                 <div className="tab-nav">
                   <button
-                    className={`tab-button ${this.state.activeTab === 'player' ? 'active' : ''
-                      }`}
+                    className={`tab-button ${
+                      this.state.activeTab === 'player' ? 'active' : ''
+                    }`}
                     onClick={() => this.setState({ activeTab: 'player' })}
                   >
                     Player
                   </button>
                   <button
-                    className={`tab-button ${this.state.activeTab === 'engine' ? 'active' : ''
-                      }`}
+                    className={`tab-button ${
+                      this.state.activeTab === 'engine' ? 'active' : ''
+                    }`}
                     onClick={() => this.setState({ activeTab: 'engine' })}
                   >
                     Engine
@@ -581,8 +583,9 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
             <div className="content-container">
               {/* Player Section */}
               <div
-                className={`player-section ${this.state.activeTab === 'player' ? 'active' : ''
-                  }`}
+                className={`player-section ${
+                  this.state.activeTab === 'player' ? 'active' : ''
+                }`}
               >
                 <div className="section-header">
                   <h3>Your Setup</h3>
@@ -660,8 +663,9 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                             onClick={() =>
                               !isLocked && this.handleFactionClick(id, 'player')
                             }
-                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''
-                              }`}
+                            aria-label={`${f.name}${
+                              isLocked ? ' (locked)' : ''
+                            }`}
                             tabIndex={isLocked ? -1 : 0}
                             style={{ ['--accent' as any]: f.color }}
                           >
@@ -678,8 +682,9 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
 
               {/* Engine Section */}
               <div
-                className={`engine-section ${this.state.activeTab === 'engine' ? 'active' : ''
-                  }`}
+                className={`engine-section ${
+                  this.state.activeTab === 'engine' ? 'active' : ''
+                }`}
               >
                 <div className="section-header">
                   <h3>Engine Setup</h3>
@@ -757,8 +762,9 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                             onClick={() =>
                               !isLocked && this.handleFactionClick(id, 'engine')
                             }
-                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''
-                              }`}
+                            aria-label={`${f.name}${
+                              isLocked ? ' (locked)' : ''
+                            }`}
                             tabIndex={isLocked ? -1 : 0}
                             style={{ ['--accent' as any]: f.color }}
                           >
