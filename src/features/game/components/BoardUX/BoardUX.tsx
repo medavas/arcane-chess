@@ -279,15 +279,12 @@ export const BoardUX: React.FC<BoardUXProps> = ({
                 const boardRank = 8 - visualRank;
                 const sq = 21 + (boardRank - 1) * 10 + file;
 
-                console.log(`[modsAET] ${isWhitePiece ? 'White' : 'Black'} pawn at sq ${sq}, boardRank: ${boardRank}, visualRank: ${visualRank}, file: ${file}, pixels: (${xPx}, ${yPx})`);
 
                 if (isWhitePiece && (boardRank === 2 || boardRank === 3)) {
                   // White pawns on board rank 2 or 3 (starting positions)
                   const blocking = GameBoard.pieces[sq + 10];
                   const destination = GameBoard.pieces[sq + 20];
-                  console.log(`[modsAET] White pawn on starting rank. sq=${sq}, Blocking at ${sq + 10}: ${blocking}, Dest at ${sq + 20}: ${destination}, EMPTY=${PIECES.EMPTY}`);
                   if (blocking !== PIECES.EMPTY && destination === PIECES.EMPTY) {
-                    console.log('[modsAET] ✓ White pawn CAN HOP - showing indicator!');
                     canShift = true;
                     blockRed = true; // Aetherstep is never red (5D sword doesn't apply)
                   }
@@ -295,15 +292,12 @@ export const BoardUX: React.FC<BoardUXProps> = ({
                   // Black pawns on board rank 7 or 6 (starting positions)
                   const blocking = GameBoard.pieces[sq - 10];
                   const destination = GameBoard.pieces[sq - 20];
-                  console.log(`[modsAET] Black pawn on starting rank. sq=${sq}, Blocking at ${sq - 10}: ${blocking}, Dest at ${sq - 20}: ${destination}`);
                   if (blocking !== PIECES.EMPTY && destination === PIECES.EMPTY) {
-                    console.log('[modsAET] ✓ Black pawn CAN HOP - showing indicator!');
                     canShift = true;
                     blockRed = true; // Aetherstep is never red (5D sword doesn't apply)
                   }
                 } else if (pieceHasShftP || pieceHasShftA) {
                   // Pawn has moved but has shftP or shftA
-                  console.log('[modsAET] Pawn has shftP or shftA - showing indicator');
                   canShift = true;
                 }
               }

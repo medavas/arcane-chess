@@ -196,15 +196,15 @@ interface State {
   gameOverType: string;
   arcaneHover: string;
   wArcana:
-    | {
-        [key: string]: number | string;
-      }
-    | undefined;
+  | {
+    [key: string]: number | string;
+  }
+  | undefined;
   bArcana:
-    | {
-        [key: string]: number | string;
-      }
-    | undefined;
+  | {
+    [key: string]: number | string;
+  }
+  | undefined;
   lastMove: string[];
   royalties: {
     [key: string]: { [key: string]: number };
@@ -346,6 +346,7 @@ class UnwrappedTempleView extends React.Component<Props, State> {
       return arcaneChess();
     };
     this.chessgroundRef = React.createRef();
+    this.handleBeforeUnload = this.handleBeforeUnload.bind(this);
   }
 
   incrementMove = () => {
@@ -542,9 +543,9 @@ class UnwrappedTempleView extends React.Component<Props, State> {
         this.state.correctMoves[this.state.moveNumber].slice(0, 2),
         this.state.correctMoves[this.state.moveNumber].slice(2, 4),
         PIECES[
-          `${gameBoardTurn === 'white' ? 'w' : 'b'}${(
-            this.state.correctMoves[this.state.moveNumber][4] || ''
-          ).toUpperCase()}` as keyof typeof PIECES
+        `${gameBoardTurn === 'white' ? 'w' : 'b'}${(
+          this.state.correctMoves[this.state.moveNumber][4] || ''
+        ).toUpperCase()}` as keyof typeof PIECES
         ]
       );
       if (CAPTURED(parsed) > 0 && ARCANEFLAG(parsed) === 0) {
@@ -631,7 +632,17 @@ class UnwrappedTempleView extends React.Component<Props, State> {
     }
   };
 
+  handleBeforeUnload(event: BeforeUnloadEvent) {
+    // Prevent the default behavior and trigger the confirmation dialog
+    event.preventDefault();
+    // Chrome requires returnValue to be set
+    event.returnValue = 'Are you sure you want to leave?';
+    // Legacy support
+    return 'Are you sure you want to leave?';
+  }
+
   componentDidMount() {
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
     const LS = getLocalStorage(this.props.auth.user.username);
     if (this.state.hideCompletedPage) {
       return;
@@ -648,6 +659,10 @@ class UnwrappedTempleView extends React.Component<Props, State> {
       );
       this.compTempleMove();
     }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
   }
 
   render() {
@@ -745,30 +760,30 @@ class UnwrappedTempleView extends React.Component<Props, State> {
                 this.state.gameOverType === 'puzzle victory'
                   ? this.state.victoryMessage
                   : [
-                      'stalemate',
-                      '3-fold repetition',
-                      'insufficient material',
-                      'fifty move rule',
-                    ].some((drawType) =>
-                      this.state.gameOverType.toLowerCase().includes(drawType)
-                    )
-                  ? `Draw - ${this.state.gameOverType}. The puzzle ended in a draw.`
-                  : this.state.defeatMessage
+                    'stalemate',
+                    '3-fold repetition',
+                    'insufficient material',
+                    'fifty move rule',
+                  ].some((drawType) =>
+                    this.state.gameOverType.toLowerCase().includes(drawType)
+                  )
+                    ? `Draw - ${this.state.gameOverType}. The puzzle ended in a draw.`
+                    : this.state.defeatMessage
               }
               score={LS.nodeScores[this.state.nodeId]}
               type={
                 this.state.gameOverType === 'puzzle victory'
                   ? 'victory'
                   : [
-                      'stalemate',
-                      '3-fold repetition',
-                      'insufficient material',
-                      'fifty move rule',
-                    ].some((drawType) =>
-                      this.state.gameOverType.toLowerCase().includes(drawType)
-                    )
-                  ? 'draw'
-                  : 'defeat'
+                    'stalemate',
+                    '3-fold repetition',
+                    'insufficient material',
+                    'fifty move rule',
+                  ].some((drawType) =>
+                    this.state.gameOverType.toLowerCase().includes(drawType)
+                  )
+                    ? 'draw'
+                    : 'defeat'
               }
             />
             <div className="temple-view">
@@ -853,11 +868,11 @@ class UnwrappedTempleView extends React.Component<Props, State> {
                           orig,
                           dest,
                           PIECES[
-                            `${gameBoardTurn === 'white' ? 'w' : 'b'}${(
-                              this.state.correctMoves[
-                                this.state.moveNumber
-                              ][4] || ''
-                            ).toUpperCase()}` as keyof typeof PIECES
+                          `${gameBoardTurn === 'white' ? 'w' : 'b'}${(
+                            this.state.correctMoves[
+                            this.state.moveNumber
+                            ][4] || ''
+                          ).toUpperCase()}` as keyof typeof PIECES
                           ]
                         );
                         if (CAPTURED(parsed) > 0 && ARCANEFLAG(parsed) === 0) {

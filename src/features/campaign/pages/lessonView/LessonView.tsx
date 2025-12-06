@@ -168,15 +168,15 @@ interface State {
   gameOverType: string;
   arcaneHover: string;
   wArcana:
-    | {
-        [key: string]: number | string;
-      }
-    | undefined;
+  | {
+    [key: string]: number | string;
+  }
+  | undefined;
   bArcana:
-    | {
-        [key: string]: number | string;
-      }
-    | undefined;
+  | {
+    [key: string]: number | string;
+  }
+  | undefined;
   lastMove: string[];
   hideCompletedPage: boolean;
   viewOnly: boolean;
@@ -282,6 +282,7 @@ class UnwrappedLessonView extends React.Component<Props, State> {
     };
     this.chessgroundRef = React.createRef();
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleBeforeUnload = this.handleBeforeUnload.bind(this);
   }
 
   changePosition = (direction: 'inc' | 'dec') => {
@@ -495,8 +496,18 @@ class UnwrappedLessonView extends React.Component<Props, State> {
     }
   }
 
+  handleBeforeUnload(event: BeforeUnloadEvent) {
+    // Prevent the default behavior and trigger the confirmation dialog
+    event.preventDefault();
+    // Chrome requires returnValue to be set
+    event.returnValue = 'Are you sure you want to leave?';
+    // Legacy support
+    return 'Are you sure you want to leave?';
+  }
+
   componentWillUnmount(): void {
     window.removeEventListener('keydown', this.handleKeyDown);
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -527,6 +538,7 @@ class UnwrappedLessonView extends React.Component<Props, State> {
 
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
     if (!this.state.viewOnly) {
       this.arcaneChess().startGame(
         this.state.fen,
@@ -755,7 +767,7 @@ class UnwrappedLessonView extends React.Component<Props, State> {
                     variant="<"
                     width={190}
                     fontSize={36}
-                    // backgroundColorOverride="#3f48cc88"
+                  // backgroundColorOverride="#3f48cc88"
                   />
                   <Button
                     className="tertiary"
@@ -767,7 +779,7 @@ class UnwrappedLessonView extends React.Component<Props, State> {
                     variant=">"
                     width={190}
                     fontSize={36}
-                    // backgroundColorOverride="#3f48cc88"
+                  // backgroundColorOverride="#3f48cc88"
                   />
                 </div>
                 <div className="info-avatar">

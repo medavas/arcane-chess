@@ -251,6 +251,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
     this.chessgroundRef = React.createRef();
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleContextMenu = this.handleContextMenu.bind(this);
+    this.handleBeforeUnload = this.handleBeforeUnload.bind(this);
 
     // Initialize spell handler
     this.spellHandler = new SpellHandler({
@@ -386,10 +387,10 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
         [this.state.nodeId]:
           Math.abs(
             100000 -
-              Math.abs(
-                GameBoard.material[this.state.playerColor === 'white' ? 0 : 1] -
-                  GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
-              )
+            Math.abs(
+              GameBoard.material[this.state.playerColor === 'white' ? 0 : 1] -
+              GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
+            )
           ) *
           (timeLeft || 1) *
           LS.config.multiplier,
@@ -428,6 +429,15 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
     this.historyHandler.handleKeyDown(event);
   }
 
+  handleBeforeUnload(event: BeforeUnloadEvent) {
+    // Prevent the default behavior and trigger the confirmation dialog
+    event.preventDefault();
+    // Chrome requires returnValue to be set
+    event.returnValue = 'Are you sure you want to leave?';
+    // Legacy support
+    return 'Are you sure you want to leave?';
+  }
+
   componentDidUpdate(_prevProps: Props, prevState: State) {
     // Only update scroll positions when dialogue or history actually changes
     if (prevState.dialogue !== this.state.dialogue) {
@@ -447,12 +457,14 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
     window.addEventListener('contextmenu', this.handleContextMenu);
+    window.addEventListener('beforeunload', this.handleBeforeUnload);
     if (!this.hasMounted) this.hasMounted = true;
   }
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKeyDown);
     window.removeEventListener('contextmenu', this.handleContextMenu);
+    window.removeEventListener('beforeunload', this.handleBeforeUnload);
     clearArcanaConfig();
   }
 
@@ -558,9 +570,8 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                   } else {
                     value =
                       pieces[
-                        `${
-                          this.state.playerColor === 'white' ? 'w' : 'b'
-                        }${value}`
+                      `${this.state.playerColor === 'white' ? 'w' : 'b'
+                      }${value}`
                       ];
                   }
                 }
@@ -587,18 +598,18 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
             score={LS.nodeScores[this.state.nodeId]}
             type={
               this.state.gameOverType.split(' ')[1] === 'mates' &&
-              this.state.playerColor === this.state.gameOverType.split(' ')[0]
+                this.state.playerColor === this.state.gameOverType.split(' ')[0]
                 ? 'victory-qp'
                 : [
-                    'stalemate',
-                    '3-fold repetition',
-                    'insufficient material',
-                    'fifty move rule',
-                  ].some((drawType) =>
-                    this.state.gameOverType.toLowerCase().includes(drawType)
-                  )
-                ? 'draw-qp'
-                : 'defeat-qp'
+                  'stalemate',
+                  '3-fold repetition',
+                  'insufficient material',
+                  'fifty move rule',
+                ].some((drawType) =>
+                  this.state.gameOverType.toLowerCase().includes(drawType)
+                )
+                  ? 'draw-qp'
+                  : 'defeat-qp'
             }
           />
           <PromotionModal

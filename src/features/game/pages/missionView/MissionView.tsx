@@ -278,6 +278,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         this.chessgroundRef = React.createRef();
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.handleContextMenu = this.handleContextMenu.bind(this);
+        this.handleBeforeUnload = this.handleBeforeUnload.bind(this);
 
         // Initialize spell handler
         this.spellHandler = new SpellHandler({
@@ -504,6 +505,15 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         this.historyHandler.handleKeyDown(event);
     }
 
+    handleBeforeUnload(event: BeforeUnloadEvent) {
+        // Prevent the default behavior and trigger the confirmation dialog
+        event.preventDefault();
+        // Chrome requires returnValue to be set
+        event.returnValue = 'Are you sure you want to leave?';
+        // Legacy support
+        return 'Are you sure you want to leave?';
+    }
+
     componentDidUpdate() {
         const dialogueDiv = document.getElementById('dialogue');
         const historyDiv = document.getElementById('history');
@@ -518,6 +528,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
     componentDidMount() {
         window.addEventListener('keydown', this.handleKeyDown);
         window.addEventListener('contextmenu', this.handleContextMenu);
+        window.addEventListener('beforeunload', this.handleBeforeUnload);
         const LS = getLocalStorage(this.props.auth.user.username);
         const node = booksMap[`book${LS.chapter}`][LS.nodeId];
         this.setState(
@@ -558,6 +569,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
     componentWillUnmount() {
         window.removeEventListener('keydown', this.handleKeyDown);
         window.removeEventListener('contextmenu', this.handleContextMenu);
+        window.removeEventListener('beforeunload', this.handleBeforeUnload);
         clearArcanaConfig();
     }
 
