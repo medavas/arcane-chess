@@ -1167,10 +1167,12 @@ cg-board square.move-dest:hover {
   border-radius: 50%;
   box-sizing: border-box;
   pointer-events: none;
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6)) drop-shadow(0 0 3px rgba(255, 255, 255, 0.4));
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6))
+    drop-shadow(0 0 3px rgba(255, 255, 255, 0.4));
 }
 
 .cg-wrap piece.can-shift.has-sword::before {
   border-color: rgba(255, 50, 50, 0.5);
-  filter: drop-shadow(0 0 8px rgba(255, 50, 50, 0.8)) drop-shadow(0 0 4px rgba(255, 50, 50, 0.6));
+  filter: drop-shadow(0 0 8px rgba(255, 50, 50, 0.8))
+    drop-shadow(0 0 4px rgba(255, 50, 50, 0.6));
 }

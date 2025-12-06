@@ -1649,7 +1649,7 @@ export function GenerateMoves(
 
     // WARNING, this will only work in a vanilla setup, no extra rooks
     if (!activeWhiteForcedEpCapture) {
-      if (GameBoard.castlePerm & CASTLEBIT.WKCA && !herrings.length) {
+      if (GameBoard.castlePerm & CASTLEBIT.WKCA && !herrings.length && GameBoard.pieces[SQUARES.E1] === PIECES.wK) {
         if (GameBoard.blackArcane[4] & 8) {
           // todo remove
         } else {
@@ -1677,7 +1677,7 @@ export function GenerateMoves(
         }
       }
 
-      if (GameBoard.castlePerm & CASTLEBIT.WQCA && !herrings.length) {
+      if (GameBoard.castlePerm & CASTLEBIT.WQCA && !herrings.length && GameBoard.pieces[SQUARES.E1] === PIECES.wK) {
         if (GameBoard.blackArcane[4] & 8) {
           // randomize plus castle remove
         } else {
