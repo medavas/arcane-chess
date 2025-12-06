@@ -186,8 +186,8 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
     };
   }, []);
 
-  // Calculate progress bar segments - 8 segments for progression
-  const totalProgressSegments = 8;
+  // Calculate progress bar segments - 6 segments for progression
+  const totalProgressSegments = 6;
   const filledProgressSegments = React.useMemo(
     () => Math.round((progress.pct || 0) * totalProgressSegments),
     [progress.pct]
