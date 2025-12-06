@@ -18,6 +18,7 @@ export interface SpellState {
   isDyadMove: boolean;
   normalMovesOnly: boolean;
   hoverArcane: string;
+  glitchQueued: boolean;
 }
 
 export interface SpellHandlerCallbacks {
@@ -95,6 +96,7 @@ export class SpellHandler {
       isDyadMove: false,
       normalMovesOnly: false,
       hoverArcane: '',
+      glitchQueued: false,
     });
   };
 
@@ -320,9 +322,11 @@ export class SpellHandler {
 
     // === GLITCH ===
     if (key === 'modsGLI') {
-      audioManager.playSFX('spell');
-      arcane.subtractArcanaUse('modsGLI', playerColor);
-      this.callbacks.activateGlitch();
+      const state = this.callbacks.getSpellState();
+      // Toggle glitch queued state (like dyad/summon spells)
+      this.callbacks.updateSpellState({
+        glitchQueued: !state.glitchQueued,
+      });
       return;
     }
 
@@ -382,6 +386,10 @@ export class SpellHandler {
       return false;
 
     // if (key === 'shftT') return state.isTeleport;
+
+    if (key === 'modsGLI') {
+      return state.glitchQueued;
+    }
 
     if (key.includes('dyad')) {
       const arcane = this.callbacks.getArcaneChess();

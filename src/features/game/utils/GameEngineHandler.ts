@@ -25,6 +25,7 @@ export interface GameEngineHandlerCallbacks {
     getState: () => {
         thinking: boolean;
         glitchActive: boolean;
+        glitchQueued: boolean;
         thinkingTime: number;
         engineDepth: number;
         engineColor: string;
@@ -215,7 +216,13 @@ export class GameEngineHandler {
 
     normalMoveStateAndEngineGo = (parsed: number, orig: string, dest: string) => {
         const state = this.callbacks.getState();
+        const arcaneChess = this.callbacks.getArcaneChess();
         const char = RtyChar.split('')[state.placingRoyalty];
+
+        // If glitch was queued, subtract the arcana use now
+        if (state.glitchQueued) {
+            arcaneChess.subtractArcanaUse('modsGLI', state.playerColor);
+        }
 
         this.callbacks.setState(
             (prevState: any) => {
@@ -270,6 +277,9 @@ export class GameEngineHandler {
                             [dest]: 8,
                         },
                     },
+                    // Activate glitch if it was queued
+                    glitchActive: prevState.glitchQueued,
+                    glitchQueued: false,
                 };
             },
             () => {

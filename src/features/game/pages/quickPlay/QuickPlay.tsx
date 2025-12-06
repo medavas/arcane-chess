@@ -115,6 +115,7 @@ interface State {
   quickPlayModalOpen: boolean;
   futureSightAvailable: boolean;
   glitchActive: boolean;
+  glitchQueued: boolean;
   engineAvatar: string;
   dialogue: string[];
   dialogueList: Record<string, string>;
@@ -233,6 +234,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
       quickPlayModalOpen: true,
       futureSightAvailable: true,
       glitchActive: false,
+      glitchQueued: false,
       engineAvatar: 'normal',
       dialogueList: {
         win1: '',
@@ -275,6 +277,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
         isDyadMove: this.state.isDyadMove,
         normalMovesOnly: this.state.normalMovesOnly,
         hoverArcane: this.state.hoverArcane,
+        glitchQueued: this.state.glitchQueued,
       }),
       updateSpellState: (updates) => this.setState(updates as any),
       updateHistory: (updates) => this.setState(updates as any),
@@ -293,6 +296,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
       getState: () => ({
         thinking: this.state.thinking,
         glitchActive: this.state.glitchActive,
+        glitchQueued: this.state.glitchQueued,
         thinkingTime: this.state.thinkingTime,
         engineDepth: this.state.engineDepth,
         engineColor: this.state.engineColor,
