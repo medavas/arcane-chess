@@ -227,7 +227,7 @@ export function AddQuietMove(move, capturesOnly) {
     } else {
       GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply + 1]] =
         GameBoard.searchHistory[
-          GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
+        GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
         ];
     }
     GameBoard.moveListStart[GameBoard.ply + 1]++;
@@ -832,7 +832,7 @@ export function GenerateMoves(
           if (
             i === j ||
             GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][i]] ===
-              GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
+            GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
           ) {
             continue;
           }
@@ -1255,7 +1255,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.whiteArcane[3]
                 ) {
                   if (
@@ -1267,6 +1267,20 @@ export function GenerateMoves(
                     GameBoard.royaltyN[sq] > 0
                   ) {
                     continue;
+                  }
+                  // Check if trying to place royalty on a king in check
+                  const pieceAtSq = GameBoard.pieces[sq];
+                  const isKing = pieceAtSq === PIECES.wK || pieceAtSq === PIECES.bK;
+                  if (isKing && PieceCol[pieceAtSq] === GameBoard.side) {
+                    // Check if king is in check
+                    const kingSq = GameBoard.pList[PCEINDEX(pieceAtSq, 0)];
+                    if (SqAttacked(kingSq, GameBoard.side ^ 1) === BOOL.TRUE) {
+                      // Only allow royalties that affect checking squares: E, X, Y, A, I
+                      const royaltyChar = RtyChar.split('')[summonPce];
+                      if (royaltyChar !== 'E' && royaltyChar !== 'X' && royaltyChar !== 'Y' && royaltyChar !== 'A' && royaltyChar !== 'I') {
+                        continue;
+                      }
+                    }
                   }
                   addSummonMove(
                     MOVE(
@@ -1298,7 +1312,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.blackArcane[3]
                 ) {
                   if (
@@ -1310,6 +1324,20 @@ export function GenerateMoves(
                     GameBoard.royaltyF[sq] > 0
                   ) {
                     continue;
+                  }
+                  // Check if trying to place royalty on a king in check
+                  const pieceAtSq = GameBoard.pieces[sq];
+                  const isKing = pieceAtSq === PIECES.wK || pieceAtSq === PIECES.bK;
+                  if (isKing && PieceCol[pieceAtSq] === GameBoard.side) {
+                    // Check if king is in check
+                    const kingSq = GameBoard.pList[PCEINDEX(pieceAtSq, 0)];
+                    if (SqAttacked(kingSq, GameBoard.side ^ 1) === BOOL.TRUE) {
+                      // Only allow royalties that affect checking squares: E, X, Y, A, I
+                      const royaltyChar = RtyChar.split('')[summonPce];
+                      if (royaltyChar !== 'E' && royaltyChar !== 'X' && royaltyChar !== 'Y' && royaltyChar !== 'A' && royaltyChar !== 'I') {
+                        continue;
+                      }
+                    }
                   }
                   addSummonMove(
                     MOVE(

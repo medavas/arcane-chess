@@ -652,12 +652,25 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       if (forwardedRef && 'current' in forwardedRef && forwardedRef.current) {
         forwardedRef.current.setAutoShapes([]);
       }
+
+      // Get valid summon moves to check if this selection is allowed
+      const validMoves = game.getSummonMoves(interactionState.placingRoyalty);
+      const squareNum = prettyToSquare(key);
+      let isValidSelection = false;
+
+      // Check if this square is in the valid moves
+      if (validMoves && validMoves.has(`r${char.toLowerCase()}@`)) {
+        const destinations = validMoves.get(`r${char.toLowerCase()}@`);
+        isValidSelection = destinations && destinations.includes(key);
+      }
+
       if (
         ((GameBoard.side === COLOURS.WHITE &&
-          prettyToSquare(key) < whiteLimit) ||
+          squareNum < whiteLimit) ||
           (GameBoard.side === COLOURS.BLACK &&
-            prettyToSquare(key) > blackLimit)) &&
-        GameBoard.pieces[prettyToSquare(key)] !== PIECES.EMPTY
+            squareNum > blackLimit)) &&
+        GameBoard.pieces[squareNum] !== PIECES.EMPTY &&
+        isValidSelection
       ) {
         if (
           (gameState.royalties?.royaltyQ?.[key] ?? 0) > 0 ||
