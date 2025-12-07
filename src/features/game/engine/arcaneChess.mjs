@@ -289,6 +289,11 @@ export default function arcaneChess() {
         }
         GameBoard.ply = 0;
       });
+
+      // Revert charge progression for both sides by 2 turns (4 half-moves)
+      // This ensures the charge state matches the reverted board position
+      ArcanaProgression.rewindBy('white', 2);
+      ArcanaProgression.rewindBy('black', 2);
     },
     generatePlayableOptions: (
       forcedMoves = true,
