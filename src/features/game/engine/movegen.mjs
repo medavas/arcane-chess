@@ -1272,9 +1272,8 @@ export function GenerateMoves(
                   const pieceAtSq = GameBoard.pieces[sq];
                   const isKing = pieceAtSq === PIECES.wK || pieceAtSq === PIECES.bK;
                   if (isKing && PieceCol[pieceAtSq] === GameBoard.side) {
-                    // Check if king is in check
-                    const kingSq = GameBoard.pList[PCEINDEX(pieceAtSq, 0)];
-                    if (SqAttacked(kingSq, GameBoard.side ^ 1) === BOOL.TRUE) {
+                    // Check if king is in check (sq is the king's position)
+                    if (SqAttacked(sq, GameBoard.side ^ 1) === BOOL.TRUE) {
                       // Only allow royalties that affect checking squares: E, X, Y, A, I
                       const royaltyChar = RtyChar.split('')[summonPce];
                       if (royaltyChar !== 'E' && royaltyChar !== 'X' && royaltyChar !== 'Y' && royaltyChar !== 'A' && royaltyChar !== 'I') {
@@ -1329,9 +1328,8 @@ export function GenerateMoves(
                   const pieceAtSq = GameBoard.pieces[sq];
                   const isKing = pieceAtSq === PIECES.wK || pieceAtSq === PIECES.bK;
                   if (isKing && PieceCol[pieceAtSq] === GameBoard.side) {
-                    // Check if king is in check
-                    const kingSq = GameBoard.pList[PCEINDEX(pieceAtSq, 0)];
-                    if (SqAttacked(kingSq, GameBoard.side ^ 1) === BOOL.TRUE) {
+                    // Check if king is in check (sq is the king's position)
+                    if (SqAttacked(sq, GameBoard.side ^ 1) === BOOL.TRUE) {
                       // Only allow royalties that affect checking squares: E, X, Y, A, I
                       const royaltyChar = RtyChar.split('')[summonPce];
                       if (royaltyChar !== 'E' && royaltyChar !== 'X' && royaltyChar !== 'Y' && royaltyChar !== 'A' && royaltyChar !== 'I') {
