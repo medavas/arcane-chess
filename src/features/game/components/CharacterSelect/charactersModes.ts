@@ -200,7 +200,7 @@ export const modes: Record<string, GameModeType> = padModes({
   tutorial1: {
     name: 'Tutorial 1',
     white: {
-      arcana: [arcana.modsINH, arcana.sumnZ, arcana.dyadC],
+      arcana: [arcana.modsINH, arcana.modsDIV, arcana.dyadC],
       setup: 'RNBTKBNR',
     },
     black: {
@@ -215,18 +215,51 @@ export const modes: Record<string, GameModeType> = padModes({
       setup: 'RNBVKBNR',
     },
     black: {
-      arcana: [arcana.modsCON, arcana.modsTRO],
+      arcana: [arcana.modsCON, arcana.modsTRO, arcana.moriROY],
       setup: 'rnbvkbnr',
     },
   },
   tutorial3: {
     name: 'Tutorial 3',
     white: {
-      arcana: [arcana.modsORA, arcana.offrA],
+      arcana: [arcana.modsORA, arcana.moraPAW, arcana.sumnRN],
       setup: 'RSWQKWSR',
     },
     black: {
-      arcana: [arcana.modsPHA, arcana.shftP, arcana.swapADJ],
+      arcana: [arcana.modsDIM, arcana.shftP, arcana.swapADJ],
+      setup: 'rswqkwsr',
+    },
+  },
+  tutorial4: {
+    name: 'Tutorial 4',
+    white: {
+      arcana: [arcana.shftK, arcana.dyadF, arcana.sumnX],
+      setup: 'RSWQKWSR',
+    },
+    black: {
+      arcana: [arcana.sumnRF, arcana.swapADJ, arcana.modsSUR],
+      setup: 'rswqkwsr',
+    },
+  },
+  tutorial5: {
+    name: 'Tutorial 5',
+    white: {
+      arcana: [arcana.sumnV, arcana.modsSIL, arcana.modsHEX],
+      setup: 'RSWQKBNR',
+    },
+    black: {
+      arcana: [arcana.modsREA, arcana.gainDYA, arcana.modsPHA],
+      setup: 'rswvkwsr',
+    },
+  },
+  tutorial6: {
+    name: 'Tutorial 6',
+    white: {
+      arcana: [arcana.modsGLA, arcana.shftI, arcana.modsDIM],
+      setup: 'RNBVKBNR',
+    },
+    black: {
+      arcana: [arcana.sumnT, arcana.modsCON, arcana.sumnRI],
       setup: 'rswqkwsr',
     },
   },

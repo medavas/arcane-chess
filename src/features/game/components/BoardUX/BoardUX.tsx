@@ -91,8 +91,8 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         const pieceConfig = isWhitePiece
           ? whiteArcaneConfig
           : isBlackPiece
-          ? blackArcaneConfig
-          : null;
+            ? blackArcaneConfig
+            : null;
 
         // Check if this H-piece has Hemlock token and add class
         if (isHPiece && pieceConfig) {
@@ -139,7 +139,8 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           const isValkyrie = classList.includes('v-piece');
 
           // Check if piece can shift based on standard shift spells
-          if (isPawn && (pieceHasShftP || pieceHasShftI || pieceHasShftA)) {
+          // Note: Eclipse (shftI) doesn't work for pawns, so it's excluded
+          if (isPawn && (pieceHasShftP || pieceHasShftA)) {
             canShift = true;
           } else if (
             isKnight &&
@@ -227,11 +228,122 @@ export const BoardUX: React.FC<BoardUXProps> = ({
                 }
               }
             }
-          } else if (
-            isKing &&
-            (pieceHasShftK || pieceHasShftI || pieceHasShftA)
-          ) {
+          } else if (isKing && (pieceHasShftK || pieceHasShftA)) {
+            // Note: Eclipse (shftI) doesn't work for kings, so it's excluded
             canShift = true;
+          } else if (
+            !isPawn &&
+            !isKing &&
+            (pieceHasShftI || pieceHasShftA)
+          ) {
+            // Eclipse (shftI) and shftA work for all non-pawn, non-king pieces
+            // For shftI specifically, only show if Eclipse moves are available
+            if (pieceHasShftA) {
+              canShift = true;
+            } else if (pieceHasShftI) {
+              // Check if Eclipse moves are actually available
+              const transform = (pieceEl as HTMLElement).style.transform;
+              const match = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+
+              if (match) {
+                const xStr = match[1].replace('px', '').trim();
+                const yStr = match[2].replace('px', '').trim();
+                const xPx = parseFloat(xStr);
+                const yPx = parseFloat(yStr);
+
+                const boardEl = (pieceEl as HTMLElement).closest('cg-board');
+                if (boardEl) {
+                  const boardWidth = boardEl.clientWidth;
+                  const squareSize = boardWidth / 8;
+                  const file = Math.round(xPx / squareSize);
+                  const visualRank = Math.round(yPx / squareSize);
+                  const boardRank = 8 - visualRank;
+                  const sq = 21 + (boardRank - 1) * 10 + file;
+
+                  // Check for adjacent hop-over Eclipse moves (orthogonal/diagonal)
+                  const KiDir = [-11, -10, -9, -1, 1, 9, 10, 11];
+
+                  // Check if this piece type should skip adjacent hops
+                  // (Unicorn/Zebra/Wraith/Exile have overlapping natural movement)
+                  const skipAdjacentHops =
+                    classList.includes('u-piece') ||
+                    classList.includes('z-piece') ||
+                    classList.includes('w-piece') ||
+                    classList.includes('x-piece');
+
+                  let hasEclipseMove = false;
+
+                  // Check adjacent hop-over moves (unless restricted)
+                  if (!skipAdjacentHops) {
+                    for (const dir of KiDir) {
+                      const adj = sq + dir;
+                      if (adj < 21 || adj > 98) continue;
+                      const adjFile = (adj - 21) % 10;
+                      const adjRank = Math.floor((adj - 21) / 10);
+                      if (
+                        adjFile < 0 ||
+                        adjFile > 7 ||
+                        adjRank < 0 ||
+                        adjRank > 7
+                      )
+                        continue;
+
+                      // Need a piece to hop over
+                      if (GameBoard.pieces[adj] === PIECES.EMPTY) continue;
+
+                      const land = adj + dir;
+                      if (land < 21 || land > 98) continue;
+                      const landFile = (land - 21) % 10;
+                      const landRank = Math.floor((land - 21) / 10);
+                      if (
+                        landFile < 0 ||
+                        landFile > 7 ||
+                        landRank < 0 ||
+                        landRank > 7
+                      )
+                        continue;
+
+                      // Landing square must be empty
+                      if (GameBoard.pieces[land] === PIECES.EMPTY) {
+                        hasEclipseMove = true;
+                        break;
+                      }
+                    }
+                  }
+
+                  // Check cross-board (edge-wrap) Eclipse moves
+                  if (!hasEclipseMove) {
+                    const sqFile = (sq - 21) % 10;
+                    if (sqFile === 0 || sqFile === 7) {
+                      const edgeOffsets =
+                        sqFile === 0 ? [17, 7, -3] : [3, -7, -17];
+                      for (const off of edgeOffsets) {
+                        const dest = sq + off;
+                        if (dest < 21 || dest > 98) continue;
+                        const destFile = (dest - 21) % 10;
+                        const destRank = Math.floor((dest - 21) / 10);
+                        if (
+                          destFile < 0 ||
+                          destFile > 7 ||
+                          destRank < 0 ||
+                          destRank > 7
+                        )
+                          continue;
+
+                        if (GameBoard.pieces[dest] === PIECES.EMPTY) {
+                          hasEclipseMove = true;
+                          break;
+                        }
+                      }
+                    }
+                  }
+
+                  if (hasEclipseMove) {
+                    canShift = true;
+                  }
+                }
+              }
+            }
           }
 
           // Check for modifier spell effects
@@ -653,24 +765,24 @@ export const BoardUX: React.FC<BoardUXProps> = ({
   const getSelected = () => {
     return interactionState.placingPiece !== 0
       ? {
-          role: `${PceChar.split('')[
-            interactionState.placingPiece
-          ].toLowerCase()}-piece`,
-          color: interactionState.playerColor,
-        }
+        role: `${PceChar.split('')[
+          interactionState.placingPiece
+        ].toLowerCase()}-piece`,
+        color: interactionState.playerColor,
+      }
       : interactionState.placingRoyalty !== 0
-      ? {
+        ? {
           role: `r${RtyChar.split('')[
             interactionState.placingRoyalty
           ].toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }
-      : interactionState.offeringType !== ''
-      ? {
-          role: `o${interactionState.offeringType.toLowerCase()}-piece`,
-          color: interactionState.playerColor,
-        }
-      : null;
+        : interactionState.offeringType !== ''
+          ? {
+            role: `o${interactionState.offeringType.toLowerCase()}-piece`,
+            color: interactionState.playerColor,
+          }
+          : null;
   };
 
   return (
@@ -715,7 +827,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         fromPocket: false,
       }}
       events={{
-        change: () => {},
+        change: () => { },
         dropNewPiece: handleDropNewPiece,
         move: handleMove,
         select: handleSelect,

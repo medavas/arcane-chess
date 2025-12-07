@@ -74,10 +74,6 @@ export default function arcaneChess() {
     royalties,
     preset = 'CLEAR'
   ) => {
-    // Clear arcane configs at the start of each game to prevent spillover
-    Object.keys(whiteArcaneConfig).forEach((k) => delete whiteArcaneConfig[k]);
-    Object.keys(blackArcaneConfig).forEach((k) => delete blackArcaneConfig[k]);
-    
     if (debugAllSpells) {
       Object.assign(whiteArcaneConfig, whiteConfig);
       Object.assign(blackArcaneConfig, blackConfig);

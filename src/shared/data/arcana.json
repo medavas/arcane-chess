@@ -55,13 +55,21 @@
     "imagePath": "/dyadA",
     "value": 6
   },
-  "sumnP": {
-    "id": "sumnP",
-    "name": "Summon Pawn",
-    "description": "Summon a Pawn to an empty square.",
-    "type": "active",
-    "imagePath": "/sumnA",
-    "value": 3
+  "toknHER": {
+    "id": "toknHER",
+    "name": "Hermit",
+    "description": "Casts an aura of Royalty Mystic square conditions. Can't capture. Overrides Herring. Stacks with Hemlock.",
+    "type": "inherent",
+    "imagePath": "/toknHER",
+    "value": 8
+  },
+  "toknHEM": {
+    "id": "toknHEM",
+    "name": "Hemlock",
+    "description": "Invisible to your opponent. 1 up 1 over and 1 up 3 over move pattern similar to Knight, moves across the other side of the board. Overrides Herring. Stacks with Hermit.",
+    "type": "inherent",
+    "imagePath": "/toknHEM",
+    "value": 8
   },
   "sumnH": {
     "id": "sumnH",
@@ -70,6 +78,54 @@
     "type": "active",
     "imagePath": "/sumnA",
     "value": 8
+  },
+  "areaT": {
+    "id": "areaT",
+    "name": "Crusader's Battlecry",
+    "description": "Hermit casts Royalty Templar Aura.",
+    "type": "inherent",
+    "imagePath": "/areaT",
+    "value": 4
+  },
+  "areaQ": {
+    "id": "areaQ",
+    "name": "Regal Battlecry",
+    "description": "Hermit casts Royalty Queen Aura.",
+    "type": "inherent",
+    "imagePath": "/areaQ",
+    "value": 5
+  },
+  "areaE": {
+    "id": "areaE",
+    "name": "Ice Howl",
+    "description": "Hermit casts Entanglement Aura.",
+    "type": "inherent",
+    "imagePath": "/areaE",
+    "value": 6
+  },
+  "areaF": {
+    "id": "areaF",
+    "name": "Hiding Lantern",
+    "description": "Hermit casts Fog of War Aura.",
+    "type": "inherent",
+    "imagePath": "/areaF",
+    "value": 3
+  },
+  "areaN": {
+    "id": "areaN",
+    "name": "Aura of Disarmament",
+    "description": "Hermit casts Disarmament Aura.",
+    "type": "inherent",
+    "imagePath": "/areaN",
+    "value": 4
+  },
+  "sumnP": {
+    "id": "sumnP",
+    "name": "Summon Pawn",
+    "description": "Summon a Pawn to an empty square.",
+    "type": "active",
+    "imagePath": "/sumnA",
+    "value": 3
   },
   "sumnN": {
     "id": "sumnN",
@@ -270,150 +326,6 @@
     "type": "active",
     "imagePath": "/sumnRI",
     "value": 13
-  },
-  "offrA": {
-    "id": "offrA",
-    "name": "Masquerade",
-    "description": "Offer a friendly Pawn to gain a Herring summon arcana. A Herring must be captured if the move is legal.",
-    "type": "active",
-    "imagePath": "/offrA",
-    "value": 7
-  },
-  "offrB": {
-    "id": "offrB",
-    "name": "Fortification",
-    "description": "Offer a friendly Queen or Templar for 2 Rook summon arcana.",
-    "type": "active",
-    "imagePath": "/offrB",
-    "value": 2
-  },
-  "offrC": {
-    "id": "offrC",
-    "name": "Rodeo Gambit",
-    "description": "Offer a friendly Templar or Queen to gain arcana summons of the Equus Family.",
-    "type": "active",
-    "imagePath": "/offrC",
-    "value": 2
-  },
-  "offrD": {
-    "id": "offrD",
-    "name": "Siege Gambit",
-    "description": "Offer a friendly minor piece to gain a Rook summon arcana.",
-    "type": "active",
-    "imagePath": "/offrD",
-    "value": 3
-  },
-  "offrE": {
-    "id": "offrE",
-    "name": "Switching of the Guard",
-    "description": "Offer a friendly Queen or Templar to gain a summon arcana of the other one.",
-    "type": "active",
-    "imagePath": "/offrE",
-    "value": 3
-  },
-  "offrF": {
-    "id": "offrF",
-    "name": "Dimensional Apparition",
-    "description": "Offer a friendly Spectre or Wraith to gain a summon arcana of the other one.",
-    "type": "active",
-    "imagePath": "/offrF",
-    "value": 2
-  },
-  "offrG": {
-    "id": "offrG",
-    "name": "Mystify",
-    "description": "Offer a friendly Mystic to gain a Queen or Templar summon arcana.",
-    "type": "active",
-    "imagePath": "/offrG",
-    "value": 4
-  },
-  "offrH": {
-    "id": "offrH",
-    "name": "Phantom Fortress",
-    "description": "Offer a friendly Rook to gain a Spectre or Wraith summon arcana.",
-    "type": "active",
-    "imagePath": "/offrH",
-    "value": 3
-  },
-  "offrI": {
-    "id": "offrI",
-    "name": "Grave Offering",
-    "description": "Offer any friendly piece (not King) to gain a summon arcana of that piece.",
-    "type": "active",
-    "imagePath": "/offrI",
-    "value": 3
-  },
-  "offrJ": {
-    "id": "offrJ",
-    "name": "Demonic Surge",
-    "description": "Offer any friendly minor piece to gain a general dyad arcana",
-    "type": "active",
-    "imagePath": "/offrJ",
-    "value": 3
-  },
-  "offrK": {
-    "id": "offrK",
-    "name": "Energy Repurpose",
-    "description": "Offer a friendly Q, T, M, or V to gain 3 royalty arcana of the same type.",
-    "type": "active",
-    "imagePath": "/offrK",
-    "value": 4
-  },
-  "offrL": {
-    "id": "offrL",
-    "name": "Shadow Reckoning",
-    "description": "Offer a friendly Pawn to gain a Ally Translocation arcana.",
-    "type": "active",
-    "imagePath": "/offrL",
-    "value": 3
-  },
-  "offrM": {
-    "id": "offrM",
-    "name": "Valkyrie's Decision",
-    "description": "Offer a friendly Q, T, or M to gain Valkyrie Royalty, Omni Gaze, and Inheriteance arcana.",
-    "type": "active",
-    "imagePath": "/offrM",
-    "value": 6
-  },
-  "offrN": {
-    "id": "offrN",
-    "name": "Gladiator's Combo",
-    "description": "Offer a friendly Q, T, or M to gain a General Dyad, Gluttony, and Inheriteance arcana.",
-    "type": "active",
-    "imagePath": "/offrN",
-    "value": 6
-  },
-  "offrO": {
-    "id": "offrO",
-    "name": "Wandering Gambit",
-    "description": "Offer a friendly Q, T, or M to gain a Herring summon, and Hermit token",
-    "type": "active",
-    "imagePath": "/offrO",
-    "value": 5
-  },
-  "offrZ": {
-    "id": "offrZ",
-    "name": "Bellowing Recall",
-    "description": "Offer a friendly Valkyrie to gain a Banshee Summon, and a Veil and Vow Dyad arcana.",
-    "type": "active",
-    "imagePath": "/offrZ",
-    "value": 3
-  },
-  "offrQ": {
-    "id": "offrQ",
-    "name": "Combo Berserk",
-    "description": "Offer a friendly Queen or Templar to gain a Rook summon, a Warrior's Oath Dyad, Omni Gaze, and Gluttony arcana.",
-    "type": "active",
-    "imagePath": "/offrQ",
-    "value": 6
-  },
-  "offrR": {
-    "id": "offrR",
-    "name": "Fibonacci Gambit",
-    "description": "Offer a friendly Spectre or Wraith to gain 3 Entanglement, and Sixfold Silk arcana.",
-    "type": "active",
-    "imagePath": "/offrR",
-    "value": 5
   },
   "shftP": {
     "id": "shftP",
@@ -775,60 +687,148 @@
     "imagePath": "/gainALL",
     "value": 2
   },
-  "areaT": {
-    "id": "areaT",
-    "name": "Crusader's Battlecry",
-    "description": "Hermit casts Royalty Templar Aura.",
-    "type": "inherent",
-    "imagePath": "/areaT",
-    "value": 4
+  "offrA": {
+    "id": "offrA",
+    "name": "Masquerade",
+    "description": "Offer a friendly Pawn to gain a Herring summon arcana. A Herring must be captured if the move is legal.",
+    "type": "active",
+    "imagePath": "/offrA",
+    "value": 7
   },
-  "areaQ": {
-    "id": "areaQ",
-    "name": "Regal Battlecry",
-    "description": "Hermit casts Royalty Queen Aura.",
-    "type": "inherent",
-    "imagePath": "/areaQ",
-    "value": 5
+  "offrB": {
+    "id": "offrB",
+    "name": "Fortification",
+    "description": "Offer a friendly Queen or Templar for 2 Rook summon arcana.",
+    "type": "active",
+    "imagePath": "/offrB",
+    "value": 2
   },
-  "areaE": {
-    "id": "areaE",
-    "name": "Ice Howl",
-    "description": "Hermit casts Entanglement Aura.",
-    "type": "inherent",
-    "imagePath": "/areaE",
-    "value": 6
+  "offrC": {
+    "id": "offrC",
+    "name": "Rodeo Gambit",
+    "description": "Offer a friendly Templar or Queen to gain arcana summons of the Equus Family.",
+    "type": "active",
+    "imagePath": "/offrC",
+    "value": 2
   },
-  "areaF": {
-    "id": "areaF",
-    "name": "Hiding Lantern",
-    "description": "Hermit casts Fog of War Aura.",
-    "type": "inherent",
-    "imagePath": "/areaF",
+  "offrD": {
+    "id": "offrD",
+    "name": "Siege Gambit",
+    "description": "Offer a friendly minor piece to gain a Rook summon arcana.",
+    "type": "active",
+    "imagePath": "/offrD",
     "value": 3
   },
-  "areaN": {
-    "id": "areaN",
-    "name": "Aura of Disarmament",
-    "description": "Hermit casts Disarmament Aura.",
-    "type": "inherent",
-    "imagePath": "/areaN",
+  "offrE": {
+    "id": "offrE",
+    "name": "Switching of the Guard",
+    "description": "Offer a friendly Queen or Templar to gain a summon arcana of the other one.",
+    "type": "active",
+    "imagePath": "/offrE",
+    "value": 3
+  },
+  "offrF": {
+    "id": "offrF",
+    "name": "Dimensional Apparition",
+    "description": "Offer a friendly Spectre or Wraith to gain a summon arcana of the other one.",
+    "type": "active",
+    "imagePath": "/offrF",
+    "value": 2
+  },
+  "offrG": {
+    "id": "offrG",
+    "name": "Mystify",
+    "description": "Offer a friendly Mystic to gain a Queen or Templar summon arcana.",
+    "type": "active",
+    "imagePath": "/offrG",
     "value": 4
   },
-  "toknHER": {
-    "id": "toknHER",
-    "name": "Hermit",
-    "description": "Casts an aura of Royalty Mystic square conditions. Can't capture. Overrides Herring. Stacks with Hemlock.",
-    "type": "inherent",
-    "imagePath": "/toknHER",
-    "value": 8
+  "offrH": {
+    "id": "offrH",
+    "name": "Phantom Fortress",
+    "description": "Offer a friendly Rook to gain a Spectre or Wraith summon arcana.",
+    "type": "active",
+    "imagePath": "/offrH",
+    "value": 3
   },
-  "toknHEM": {
-    "id": "toknHEM",
-    "name": "Hemlock",
-    "description": "1 up 1 over and 1 up 3 over move pattern similar to Knight, moves across the other side of the board. Overrides Herring. Stacks with Hermit.",
-    "type": "inherent",
-    "imagePath": "/toknHEM",
-    "value": 8
+  "offrI": {
+    "id": "offrI",
+    "name": "Grave Offering",
+    "description": "Offer any friendly piece (not King) to gain a summon arcana of that piece.",
+    "type": "active",
+    "imagePath": "/offrI",
+    "value": 3
+  },
+  "offrJ": {
+    "id": "offrJ",
+    "name": "Demonic Surge",
+    "description": "Offer any friendly minor piece to gain a general dyad arcana",
+    "type": "active",
+    "imagePath": "/offrJ",
+    "value": 3
+  },
+  "offrK": {
+    "id": "offrK",
+    "name": "Energy Repurpose",
+    "description": "Offer a friendly Q, T, M, or V to gain 3 royalty arcana of the same type.",
+    "type": "active",
+    "imagePath": "/offrK",
+    "value": 4
+  },
+  "offrL": {
+    "id": "offrL",
+    "name": "Shadow Reckoning",
+    "description": "Offer a friendly Pawn to gain a Ally Translocation arcana.",
+    "type": "active",
+    "imagePath": "/offrL",
+    "value": 3
+  },
+  "offrM": {
+    "id": "offrM",
+    "name": "Valkyrie's Decision",
+    "description": "Offer a friendly Q, T, or M to gain Valkyrie Royalty, Omni Gaze, and Inheriteance arcana.",
+    "type": "active",
+    "imagePath": "/offrM",
+    "value": 6
+  },
+  "offrN": {
+    "id": "offrN",
+    "name": "Gladiator's Combo",
+    "description": "Offer a friendly Q, T, or M to gain a General Dyad, Gluttony, and Inheriteance arcana.",
+    "type": "active",
+    "imagePath": "/offrN",
+    "value": 6
+  },
+  "offrO": {
+    "id": "offrO",
+    "name": "Wandering Gambit",
+    "description": "Offer a friendly Q, T, or M to gain a Herring summon, and Hermit token",
+    "type": "active",
+    "imagePath": "/offrO",
+    "value": 5
+  },
+  "offrZ": {
+    "id": "offrZ",
+    "name": "Bellowing Recall",
+    "description": "Offer a friendly Valkyrie to gain a Banshee Summon, and a Veil and Vow Dyad arcana.",
+    "type": "active",
+    "imagePath": "/offrZ",
+    "value": 3
+  },
+  "offrQ": {
+    "id": "offrQ",
+    "name": "Combo Berserk",
+    "description": "Offer a friendly Queen or Templar to gain a Rook summon, a Warrior's Oath Dyad, Omni Gaze, and Gluttony arcana.",
+    "type": "active",
+    "imagePath": "/offrQ",
+    "value": 6
+  },
+  "offrR": {
+    "id": "offrR",
+    "name": "Fibonacci Gambit",
+    "description": "Offer a friendly Spectre or Wraith to gain 3 Entanglement, and Sixfold Silk arcana.",
+    "type": "active",
+    "imagePath": "/offrR",
+    "value": 5
   }
 }

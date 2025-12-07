@@ -28,7 +28,6 @@ const arcana = arcanaJson as Record<string, any>;
 export const OldArcanaSelector: React.FC<ArcanaSelectorProps> = ({
   color,
   arcaneConfig,
-  spellBook: _spellBook,
   playerColor,
   thinking,
   historyLength,
@@ -100,12 +99,13 @@ export const OldArcanaSelector: React.FC<ArcanaSelectorProps> = ({
                 </div>
                 <img
                   key={key}
-                  className={`arcane${effectiveActive ? ' is-active' : ''}${isTrojanActive
-                    ? ' trojan-active'
-                    : hoverArcane === key
+                  className={`arcane${effectiveActive ? ' is-active' : ''}${
+                    isTrojanActive
+                      ? ' trojan-active'
+                      : hoverArcane === key
                       ? ' focus'
                       : ''
-                    }`}
+                  }`}
                   src={`/assets/arcanaImages${entry.imagePath}.svg`}
                   style={{
                     opacity: isDisabled ? 0.4 : 1,
@@ -212,8 +212,9 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
           {Array.from({ length: totalProgressSegments }).map((_, index) => (
             <div
               key={index}
-              className={`new-arcana-selector__progress-segment${index < filledProgressSegments ? ' is-filled' : ''
-                }`}
+              className={`new-arcana-selector__progress-segment${
+                index < filledProgressSegments ? ' is-filled' : ''
+              }`}
             />
           ))}
         </div>
@@ -229,7 +230,10 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
 
             // Only show spells that have been unlocked (exist in arcaneConfig with value > 0)
             // or are inherent types (which are always available once granted)
-            if (!value || (typeof value === 'number' && value <= 0 && !isInherent))
+            if (
+              !value ||
+              (typeof value === 'number' && value <= 0 && !isInherent)
+            )
               return null;
 
             const isFutureSightAvailable =
@@ -256,16 +260,20 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
             const effectiveActive = active || dyadStillActive;
 
             const displayValue = typeof value === 'number' ? value : 0;
-            const isExhausted = typeof value === 'number' && value === 0 && !isInherent;
-
+            const isExhausted =
+              typeof value === 'number' && value === 0 && !isInherent;
 
             return (
               <div
-                className={`new-arcana-selector__item${effectiveActive ? ' is-active' : ''
-                  }${isTrojanActive ? ' trojan-active' : ''}${localHover === key ? ' is-hovered' : ''
-                  }${isDisabled ? ' is-disabled' : ''}${isInherent ? ' is-inherent' : ''
-                  }${isPassive ? ' is-passive' : ''}${isInstant ? ' is-instant' : ''
-                  }${isExhausted ? ' is-exhausted' : ''}`}
+                className={`new-arcana-selector__item${
+                  effectiveActive ? ' is-active' : ''
+                }${isTrojanActive ? ' trojan-active' : ''}${
+                  localHover === key ? ' is-hovered' : ''
+                }${isDisabled ? ' is-disabled' : ''}${
+                  isInherent ? ' is-inherent' : ''
+                }${isPassive ? ' is-passive' : ''}${
+                  isInstant ? ' is-instant' : ''
+                }${isExhausted ? ' is-exhausted' : ''}`}
                 key={key}
                 onClick={() => {
                   if (isDisabled || isInherent || isExhausted) return;
@@ -274,7 +282,11 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
                 onMouseEnter={() => handleHoverEnter(key)}
                 onMouseLeave={handleHoverLeave}
               >
-                <div className={`new-arcana-selector__item-count${isExhausted ? ' is-zero' : ''}`}>
+                <div
+                  className={`new-arcana-selector__item-count${
+                    isExhausted ? ' is-zero' : ''
+                  }`}
+                >
                   {isInherent ? 'INH' : displayValue}
                 </div>
                 <div className="new-arcana-selector__item-icon">
@@ -304,8 +316,9 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
           {Array.from({ length: totalProgressSegments }).map((_, index) => (
             <div
               key={index}
-              className={`new-arcana-selector__progress-segment${index < filledProgressSegments ? ' is-filled' : ''
-                }`}
+              className={`new-arcana-selector__progress-segment${
+                index < filledProgressSegments ? ' is-filled' : ''
+              }`}
             />
           ))}
         </div>
@@ -344,7 +357,10 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
 
             // Only show spells that have been unlocked (exist in arcaneConfig with value > 0)
             // or are inherent types (which are always available once granted)
-            if (!value || (typeof value === 'number' && value <= 0 && !isInherent))
+            if (
+              !value ||
+              (typeof value === 'number' && value <= 0 && !isInherent)
+            )
               return null;
 
             const isFutureSightAvailable =
@@ -371,15 +387,20 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
             const effectiveActive = active || dyadStillActive;
 
             const displayValue = typeof value === 'number' ? value : 0;
-            const isExhausted = typeof value === 'number' && value === 0 && !isInherent;
+            const isExhausted =
+              typeof value === 'number' && value === 0 && !isInherent;
 
             return (
               <div
-                className={`new-arcana-selector__item${effectiveActive ? ' is-active' : ''
-                  }${isTrojanActive ? ' trojan-active' : ''}${localHover === key ? ' is-hovered' : ''
-                  }${isDisabled ? ' is-disabled' : ''}${isInherent ? ' is-inherent' : ''
-                  }${isPassive ? ' is-passive' : ''}${isInstant ? ' is-instant' : ''
-                  }${isExhausted ? ' is-exhausted' : ''}`}
+                className={`new-arcana-selector__item${
+                  effectiveActive ? ' is-active' : ''
+                }${isTrojanActive ? ' trojan-active' : ''}${
+                  localHover === key ? ' is-hovered' : ''
+                }${isDisabled ? ' is-disabled' : ''}${
+                  isInherent ? ' is-inherent' : ''
+                }${isPassive ? ' is-passive' : ''}${
+                  isInstant ? ' is-instant' : ''
+                }${isExhausted ? ' is-exhausted' : ''}`}
                 key={key}
                 onClick={() => {
                   if (isDisabled || isInherent || isExhausted) return;
@@ -388,7 +409,11 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
                 onMouseEnter={() => handleHoverEnter(key)}
                 onMouseLeave={handleHoverLeave}
               >
-                <div className={`new-arcana-selector__item-count${isExhausted ? ' is-zero' : ''}`}>
+                <div
+                  className={`new-arcana-selector__item-count${
+                    isExhausted ? ' is-zero' : ''
+                  }`}
+                >
                   {isInherent ? 'INH' : displayValue}
                 </div>
                 <div className="new-arcana-selector__item-icon">

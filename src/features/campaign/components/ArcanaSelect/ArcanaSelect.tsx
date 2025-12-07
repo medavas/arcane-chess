@@ -38,6 +38,18 @@ interface ArcanaMap {
 
 const arcana: ArcanaMap = arcanaJson as ArcanaMap;
 
+// Helper function to extract spell category from spell ID
+const getSpellCategory = (spellId: string): string => {
+  // Match sumnR followed by another capital letter (royalty/conditions: sumnRQ, sumnRT, etc.)
+  // But NOT plain "sumnR" which is Summon Rook
+  if (/^sumnR[A-Z]/.test(spellId)) {
+    return 'sumnR';
+  }
+  // Match common prefixes: sumn, dyad, mods, offr, shft, swap, mori, mora, gain, area
+  const match = spellId.match(/^(sumn|dyad|mods|offr|shft|swap|mori|mora|gain|area)/);
+  return match ? match[1] : '';
+};
+
 export default class ArcanaSelect extends React.Component<
   ArcanaSelectProps,
   ArcanaSelectState
@@ -83,9 +95,8 @@ export default class ArcanaSelect extends React.Component<
           {spellBook.map((arcane, key) => (
             <div
               key={key}
-              className={`arcane-wrapper ${
-                key === currentSpellBookSlot ? 'active' : ''
-              }`}
+              className={`arcane-wrapper ${key === currentSpellBookSlot ? 'active' : ''
+                }`}
               onMouseEnter={() => {
                 updateHover?.(arcane);
                 this.setState({
@@ -106,11 +117,11 @@ export default class ArcanaSelect extends React.Component<
                 readOnly
                   ? undefined
                   : () => {
-                      handleToggle?.();
-                      this.setState({
-                        currentSpellBookSlot: key,
-                      });
-                    }
+                    handleToggle?.();
+                    this.setState({
+                      currentSpellBookSlot: key,
+                    });
+                  }
               }
               aria-disabled={readOnly || undefined}
             >
@@ -147,10 +158,12 @@ export default class ArcanaSelect extends React.Component<
               ) {
                 return null;
               }
+              const category = getSpellCategory(key);
+              const categoryClass = category ? `category-${category}` : '';
               return (
                 <img
                   key={key}
-                  className={`arcane ${hoverId === key ? 'focus' : ''}`}
+                  className={`arcane ${categoryClass} ${hoverId === key ? 'focus' : ''}`}
                   src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
                   style={{
                     cursor: cursorInteractive,
@@ -159,17 +172,17 @@ export default class ArcanaSelect extends React.Component<
                     readOnly
                       ? undefined
                       : () => {
-                          updateHover?.(arcaneObject);
-                          this.setState({ hoverId: key });
-                        }
+                        updateHover?.(arcaneObject);
+                        this.setState({ hoverId: key });
+                      }
                   }
                   onMouseLeave={
                     readOnly
                       ? undefined
                       : () => {
-                          updateHover?.({} as ArcanaDetail);
-                          this.setState({ hoverId: '' });
-                        }
+                        updateHover?.({} as ArcanaDetail);
+                        this.setState({ hoverId: '' });
+                      }
                   }
                   onClick={
                     readOnly ? undefined : () => this.updateSlot(arcaneObject)

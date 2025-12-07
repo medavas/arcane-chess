@@ -53,6 +53,7 @@
       flex: none;
       height: auto;
     }
+
     .arcane-wrapper {
       display: flex;
       border-radius: 8px;
@@ -72,6 +73,7 @@
       }
     }
   }
+
   .arcana-block {
     position: absolute;
     top: 0;
@@ -172,9 +174,110 @@
         border-color: rgba($B_FACT, 0.9);
         box-shadow: 0 0 16px rgba($B_LGHT, 0.8);
       }
+
+      // Category-specific border colors
+      &.category-sumn {
+        border-color: rgba(100, 200, 255, 0.6);
+
+        &:hover {
+          border-color: rgba(100, 200, 255, 1);
+          box-shadow: 0 0 12px rgba(100, 200, 255, 0.7);
+        }
+      }
+
+      &.category-sumnR {
+        border-color: rgba(255, 100, 200, 0.6);
+
+        &:hover {
+          border-color: rgba(255, 100, 200, 1);
+          box-shadow: 0 0 12px rgba(255, 100, 200, 0.7);
+        }
+      }
+
+      &.category-dyad {
+        border-color: rgba(255, 150, 100, 0.6);
+
+        &:hover {
+          border-color: rgba(255, 150, 100, 1);
+          box-shadow: 0 0 12px rgba(255, 150, 100, 0.7);
+        }
+      }
+
+      &.category-mods {
+        border-color: rgba(200, 100, 255, 0.6);
+
+        &:hover {
+          border-color: rgba(200, 100, 255, 1);
+          box-shadow: 0 0 12px rgba(200, 100, 255, 0.7);
+        }
+      }
+
+      &.category-offr {
+        border-color: rgba(255, 100, 100, 0.6);
+
+        &:hover {
+          border-color: rgba(255, 100, 100, 1);
+          box-shadow: 0 0 12px rgba(255, 100, 100, 0.7);
+        }
+      }
+
+      &.category-shft {
+        border-color: rgba(100, 255, 150, 0.6);
+
+        &:hover {
+          border-color: rgba(100, 255, 150, 1);
+          box-shadow: 0 0 12px rgba(100, 255, 150, 0.7);
+        }
+      }
+
+      &.category-swap {
+        border-color: rgba(255, 255, 100, 0.6);
+
+        &:hover {
+          border-color: rgba(255, 255, 100, 1);
+          box-shadow: 0 0 12px rgba(255, 255, 100, 0.7);
+        }
+      }
+
+      &.category-mori {
+        border-color: rgba(150, 50, 50, 0.8);
+
+        &:hover {
+          border-color: rgba(200, 80, 80, 1);
+          box-shadow: 0 0 12px rgba(200, 80, 80, 0.7);
+        }
+      }
+
+      &.category-mora {
+        border-color: rgba(50, 150, 50, 0.8);
+
+        &:hover {
+          border-color: rgba(80, 200, 80, 1);
+          box-shadow: 0 0 12px rgba(80, 200, 80, 0.7);
+        }
+      }
+
+      &.category-gain {
+        border-color: rgba(255, 200, 100, 0.6);
+
+        &:hover {
+          border-color: rgba(255, 200, 100, 1);
+          box-shadow: 0 0 12px rgba(255, 200, 100, 0.7);
+        }
+      }
+
+      &.category-area {
+        border-color: rgba(100, 255, 255, 0.6);
+
+        &:hover {
+          border-color: rgba(100, 255, 255, 1);
+          box-shadow: 0 0 12px rgba(100, 255, 255, 0.7);
+        }
+      }
     }
   }
-  .hover-arcane > * {
+
+  .hover-arcane>* {
     background-color: rgba($B_LGHT, 0.6);
     cursor: pointer;
   }
