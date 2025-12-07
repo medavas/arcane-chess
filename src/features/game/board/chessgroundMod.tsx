@@ -102,6 +102,27 @@ export class Chessground extends React.Component<IChessground> {
         config.movable = config.movable || {};
         config.movable.shiftDests = shiftSet;
       }
+      // Normalize dest keys: some callers (engine/UI) may produce origins in
+      // different casings (eg. 'Rq@' vs 'rq@'). The renderer expects keys to
+      // match the drop origin produced by `dropOrigOf(role)` (uppercase), so
+      // add normalized lowercase/uppercase entries to improve matching and
+      // ensure highlights / valid-dest rendering works regardless of casing.
+      if (maybeDests instanceof Map) {
+        const norm = new Map();
+        for (const [k, v] of maybeDests.entries()) {
+          norm.set(k, v);
+          try {
+            if (typeof k === 'string') {
+              norm.set(k.toLowerCase(), v);
+              norm.set(k.toUpperCase(), v);
+            }
+          } catch (e) {
+            // noop
+          }
+        }
+        config.movable = config.movable || {};
+        config.movable.dests = norm;
+      }
     } catch (e) {
       // noop
     }

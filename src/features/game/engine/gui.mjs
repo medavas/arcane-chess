@@ -96,10 +96,11 @@ export const validSummonMoves = (piece) => {
   const validMovesReturn = validMoves('SUMMON', '', piece);
 
   for (let move of validMovesReturn) {
-    const from =
+    const fromRaw =
       piece >= 31
         ? `R${RtyChar.split('')[piece]}@`
         : `${PceChar.split('')[piece].toUpperCase()}@`;
+    const from = fromRaw.toLowerCase();
     const to = PrMove(move, 'array')[1];
 
     if (!moveMap.has(from)) {
@@ -527,7 +528,9 @@ export function startSearch(thinkingTime, depth, engineColor) {
   // Check if forced EP is now active for the opponent (after engine's move)
   if (GameBoard.troActive === 1) {
     const opponentColor = engineColor === 'white' ? 'black' : 'white';
-    text.push(`Trojan Gambit activated - ${opponentColor} must capture via en passant!`);
+    text.push(
+      `Trojan Gambit activated - ${opponentColor} must capture via en passant!`
+    );
   }
 
   return { bestMove, bestScore, text };

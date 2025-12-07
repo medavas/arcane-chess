@@ -658,10 +658,28 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       const squareNum = prettyToSquare(key);
       let isValidSelection = false;
 
-      // Check if this square is in the valid moves
-      if (validMoves && validMoves.has(`r${char.toLowerCase()}@`)) {
-        const destinations = validMoves.get(`r${char.toLowerCase()}@`);
-        isValidSelection = destinations && destinations.includes(key);
+      // validMoves keys may come in different casings depending on engine.
+      // Normalize by scanning keys case-insensitively and matching origins
+      // that correspond to the royalty being placed.
+      if (validMoves) {
+        const originPrefix = `r${char.toLowerCase()}@`;
+        for (const [fromKey, destinations] of Array.from(validMoves.entries())) {
+          if (fromKey.toLowerCase().startsWith(originPrefix)) {
+            if (destinations && destinations.includes(key)) {
+              isValidSelection = true;
+              break;
+            }
+          }
+        }
+      }
+
+      // Debug: if still not valid, log the available keys for inspection
+      if (!isValidSelection && typeof console !== 'undefined') {
+        try {
+          const keys = validMoves ? Array.from(validMoves.keys()) : [];
+          // eslint-disable-next-line no-console
+          console.log('Summon validMoves keys:', keys, 'originPrefix:', `r${char.toLowerCase()}@`, 'selectedKey:', key);
+        } catch (e) {}
       }
 
       if (
