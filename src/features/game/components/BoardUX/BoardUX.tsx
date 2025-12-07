@@ -654,7 +654,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       }
 
       // Get valid summon moves to check if this selection is allowed
-      const validMoves = game.getSummonMoves(interactionState.placingRoyalty);
+      const validMoves = game.getSummonMoves(interactionState.placingRoyalty) as Map<string, string[]>;
       const squareNum = prettyToSquare(key);
       let isValidSelection = false;
 
@@ -679,7 +679,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           const keys = validMoves ? Array.from(validMoves.keys()) : [];
           // eslint-disable-next-line no-console
           console.log('Summon validMoves keys:', keys, 'originPrefix:', `r${char.toLowerCase()}@`, 'selectedKey:', key);
-        } catch (e) {}
+        } catch (e) { }
       }
 
       if (
