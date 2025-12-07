@@ -20,6 +20,11 @@ self.addEventListener('install', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
+  // ✅ Only handle http/https requests (ignore chrome-extension://, etc.)
+  if (!url.protocol.startsWith('http')) {
+    return;
+  }
+
   if (url.pathname.startsWith('/assets/')) {
     event.respondWith(
       caches.open(CACHE_NAME).then((cache) => {
@@ -29,26 +34,34 @@ self.addEventListener('fetch', (event) => {
           }
 
           return fetch(event.request).then((networkResponse) => {
-            cache.put(event.request, networkResponse.clone());
+            // ✅ Only cache complete responses (status 200-299, not 206 partial content)
+            if (
+              networkResponse.ok &&
+              networkResponse.status >= 200 &&
+              networkResponse.status < 300 &&
+              networkResponse.status !== 206
+            ) {
+              cache.put(event.request, networkResponse.clone());
 
-            // ✅ Check cache size and remove old items if too big
-            cache.keys().then((keys) => {
-              let totalSize = 0;
-              Promise.all(
-                keys.map((request) =>
-                  cache.match(request).then((response) => {
-                    if (response) {
-                      return response.blob().then((blob) => {
-                        totalSize += blob.size;
-                        if (totalSize > MAX_CACHE_SIZE) {
-                          cache.delete(request);
-                        }
-                      });
-                    }
-                  })
-                )
-              );
-            });
+              // ✅ Check cache size and remove old items if too big
+              cache.keys().then((keys) => {
+                let totalSize = 0;
+                Promise.all(
+                  keys.map((request) =>
+                    cache.match(request).then((response) => {
+                      if (response) {
+                        return response.blob().then((blob) => {
+                          totalSize += blob.size;
+                          if (totalSize > MAX_CACHE_SIZE) {
+                            cache.delete(request);
+                          }
+                        });
+                      }
+                    })
+                  )
+                );
+              });
+            }
 
             return networkResponse;
           });
