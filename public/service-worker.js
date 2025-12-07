@@ -1,4 +1,4 @@
-const CACHE_NAME = 'static-assets-v1';
+const CACHE_NAME = 'static-assets-v2';
 const MAX_CACHE_SIZE = 200 * 1024 * 1024; // 200MB
 
 // ✅ Install event: Pre-cache critical assets only
