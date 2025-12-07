@@ -192,13 +192,19 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
     super(props);
     const LS = getLocalStorage(this.props.auth.user.username);
 
+    // Use defaults if LS is null (for Skirmish without login)
+    const config = LS?.config || { multiplier: 80, color: 'white', clock: false };
+    const nodeScores = LS?.nodeScores || {};
+    const chapter = LS?.chapter ?? 0;
+    const difficulty = LS?.difficulty || 'novice';
+
     this.state = {
       config: {
-        multiplier: LS.config.multiplier,
-        color: LS.config.color,
+        multiplier: config.multiplier,
+        color: config.color,
         thinkingTime: 2,
         engineDepth: 1,
-        clock: LS.config.clock,
+        clock: config.clock,
         blunderVision: false,
         threatVision: false,
         checkVision: false,
@@ -217,9 +223,9 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
       engineFactionId: null,
       playerFactionId: null,
 
-      reducedScore: _.reduce(LS.nodeScores, (acc, v) => acc + v, 0),
-      chapterNum: LS.chapter + 1,
-      difficulty: LS.difficulty,
+      reducedScore: _.reduce(nodeScores, (acc, v) => acc + v, 0),
+      chapterNum: chapter + 1,
+      difficulty: difficulty,
 
       hoverId: '',
       activeTab: 'player',
@@ -544,17 +550,15 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                 {/* Tab navigation for mobile */}
                 <div className="tab-nav">
                   <button
-                    className={`tab-button ${
-                      this.state.activeTab === 'player' ? 'active' : ''
-                    }`}
+                    className={`tab-button ${this.state.activeTab === 'player' ? 'active' : ''
+                      }`}
                     onClick={() => this.setState({ activeTab: 'player' })}
                   >
                     Player
                   </button>
                   <button
-                    className={`tab-button ${
-                      this.state.activeTab === 'engine' ? 'active' : ''
-                    }`}
+                    className={`tab-button ${this.state.activeTab === 'engine' ? 'active' : ''
+                      }`}
                     onClick={() => this.setState({ activeTab: 'engine' })}
                   >
                     Engine
@@ -583,9 +587,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
             <div className="content-container">
               {/* Player Section */}
               <div
-                className={`player-section ${
-                  this.state.activeTab === 'player' ? 'active' : ''
-                }`}
+                className={`player-section ${this.state.activeTab === 'player' ? 'active' : ''
+                  }`}
               >
                 <div className="section-header">
                   <h3>Your Setup</h3>
@@ -663,9 +666,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                             onClick={() =>
                               !isLocked && this.handleFactionClick(id, 'player')
                             }
-                            aria-label={`${f.name}${
-                              isLocked ? ' (locked)' : ''
-                            }`}
+                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''
+                              }`}
                             tabIndex={isLocked ? -1 : 0}
                             style={{ ['--accent' as any]: f.color }}
                           >
@@ -682,9 +684,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
 
               {/* Engine Section */}
               <div
-                className={`engine-section ${
-                  this.state.activeTab === 'engine' ? 'active' : ''
-                }`}
+                className={`engine-section ${this.state.activeTab === 'engine' ? 'active' : ''
+                  }`}
               >
                 <div className="section-header">
                   <h3>Engine Setup</h3>
@@ -762,9 +763,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                             onClick={() =>
                               !isLocked && this.handleFactionClick(id, 'engine')
                             }
-                            aria-label={`${f.name}${
-                              isLocked ? ' (locked)' : ''
-                            }`}
+                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''
+                              }`}
                             tabIndex={isLocked ? -1 : 0}
                             style={{ ['--accent' as any]: f.color }}
                           >

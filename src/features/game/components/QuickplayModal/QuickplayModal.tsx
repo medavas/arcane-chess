@@ -94,13 +94,20 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
   constructor(props: ModalProps) {
     super(props);
     const LS = getLocalStorage(this.props.auth.user.username);
+
+    // Use defaults if LS is null (for QuickPlay without login)
+    const config = LS?.config || { multiplier: 80, color: 'white', clock: false };
+    const nodeScores = LS?.nodeScores || {};
+    const chapter = LS?.chapter ?? 0;
+    const difficulty = LS?.difficulty || 'novice';
+
     this.state = {
       config: {
-        multiplier: LS.config.multiplier,
-        color: LS.config.color,
+        multiplier: config.multiplier,
+        color: config.color,
         thinkingTime: 2,
         engineDepth: 1,
-        clock: LS.config.clock,
+        clock: config.clock,
         blunderVision: false,
         threatVision: false,
         checkVision: false,
@@ -117,14 +124,14 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       animatedValue: 0,
       targetValue: 0,
       reducedScore: _.reduce(
-        LS.nodeScores,
+        nodeScores,
         (accumulator, value) => {
           return accumulator + value;
         },
         0
       ),
-      chapterNum: LS.chapter + 1,
-      difficulty: LS.difficulty,
+      chapterNum: chapter + 1,
+      difficulty: difficulty,
       difficultyDescriptions: {
         novice:
           'NOVICE: For players looking to experiement and take their time with the new rules.',
@@ -134,7 +141,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
           'ADVANCED: Players should expect to be more patient and will not have the first move.',
         expert: 'EXPERT: Full-strength challenge for veteran players.',
       },
-      hoverDifficulty: LS.difficulty,
+      hoverDifficulty: difficulty,
       showCharacterSelect: '',
       showArmySelect: '',
       showArcanaSelect: '',

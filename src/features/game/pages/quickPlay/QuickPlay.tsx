@@ -188,7 +188,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
       playerColor: this.props.config.playerColor,
       engineColor: this.props.config.engineColor,
       hasMounted: false,
-      nodeId: getLocalStorage(this.props.auth.user.username).nodeId,
+      nodeId: getLocalStorage(this.props.auth.user.username)?.nodeId || '',
       gameOver: false,
       gameOverType: '',
       whiteSetup: this.props.config.whiteSetup,
@@ -387,22 +387,26 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
   handleVictory = (timeLeft: number | null) => {
     const LS = getLocalStorage(this.props.auth.user.username);
     audioManager.playSFX('victory');
-    setLocalStorage({
-      ...getLocalStorage(this.props.auth.user.username),
-      nodeScores: {
-        ...getLocalStorage(this.props.auth.user.username).nodeScores,
-        [this.state.nodeId]:
-          Math.abs(
-            100000 -
+
+    // Only save to localStorage if it exists
+    if (LS) {
+      setLocalStorage({
+        ...LS,
+        nodeScores: {
+          ...LS.nodeScores,
+          [this.state.nodeId]:
             Math.abs(
-              GameBoard.material[this.state.playerColor === 'white' ? 0 : 1] -
-              GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
-            )
-          ) *
-          (timeLeft || 1) *
-          LS.config.multiplier,
-      },
-    });
+              100000 -
+              Math.abs(
+                GameBoard.material[this.state.playerColor === 'white' ? 0 : 1] -
+                GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
+              )
+            ) *
+            (timeLeft || 1) *
+            (LS.config?.multiplier || 80),
+        },
+      });
+    }
     this.setState({});
   };
 
@@ -604,7 +608,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                 ? `Draw - ${this.state.gameOverType}`
                 : this.state.gameOverType
             }
-            score={LS.nodeScores[this.state.nodeId]}
+            score={LS?.nodeScores?.[this.state.nodeId]}
             type={
               this.state.gameOverType.split(' ')[1] === 'mates' &&
                 this.state.playerColor === this.state.gameOverType.split(' ')[0]
