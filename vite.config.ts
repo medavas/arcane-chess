@@ -30,6 +30,16 @@ export default ({ mode }: ConfigEnv) => {
       outDir: 'dist',
       rollupOptions: {
         external: /night-chess-noise\/noise1\/.*/,
+        output: {
+          manualChunks: {
+            // Vendor chunks
+            'vendor-react': ['react', 'react-dom', 'react-router', 'react-router-dom'],
+            'vendor-redux': ['@reduxjs/toolkit', 'react-redux', 'redux', 'redux-thunk', 'redux-persist'],
+            'vendor-socket': ['socket.io-client'],
+            'vendor-chess': ['chessgroundx'],
+            'vendor-utils': ['axios', 'lodash', 'classnames', 'immer', 'uuid'],
+          },
+        },
       },
     },
     optimizeDeps: {
