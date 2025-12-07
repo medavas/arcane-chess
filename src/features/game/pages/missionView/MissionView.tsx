@@ -40,6 +40,7 @@ import {
     whiteArcaneConfig,
     blackArcaneConfig,
     clearArcanaConfig,
+    clearAllArcanaState,
 } from 'src/features/game/engine/arcaneDefs.mjs';
 
 import { IChessgroundApi } from 'src/features/game/board/chessgroundMod';
@@ -144,6 +145,7 @@ interface State {
     engineAvatar: string;
     dialogue: string[];
     dialogueList: Record<string, string>;
+    arcanaUpdateKey: number; // Force re-render when arcana state changes
 }
 
 interface Props {
@@ -272,6 +274,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                 lose3: '',
             },
             dialogue: [],
+            arcanaUpdateKey: 0,
         };
         this.arcaneChess = () => {
             return arcaneChess();
@@ -553,6 +556,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                 theme: node.theme || 'normal',
             },
             () => {
+                clearArcanaConfig();
                 this.arcaneChess().init();
                 this.arcaneChess().startGame(
                     this.state.fen,
@@ -561,6 +565,8 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                     this.state.royalties,
                     this.state.preset
                 );
+                // Increment key to force re-render of arcana components
+                this.setState({ arcanaUpdateKey: this.state.arcanaUpdateKey + 1 });
                 if (this.state.engineColor === this.state.turn) {
                     this.engineGo();
                 }
@@ -573,7 +579,8 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         window.removeEventListener('keydown', this.handleKeyDown);
         window.removeEventListener('contextmenu', this.handleContextMenu);
         window.removeEventListener('beforeunload', this.handleBeforeUnload);
-        clearArcanaConfig();
+        // Clean up all arcana state to prevent spillover between sessions
+        clearAllArcanaState();
     }
 
     handleArcanaClick = (key: string) => this.spellHandler.handleArcanaClick(key);
@@ -727,6 +734,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                             </div>
                         </div>
                         <PlayerPanel
+                            key={`player-panel-${this.state.arcanaUpdateKey}`}
                             playerColor={this.state.playerColor}
                             engineColor={this.state.engineColor}
                             whiteFaction={this.state.whiteFaction}

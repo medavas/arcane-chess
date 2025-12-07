@@ -194,11 +194,9 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
   );
 
   // Use spellBook if it has keys, otherwise fallback to arcaneConfig
-  const sourceMap = React.useMemo(
-    () =>
-      spellBook && Object.keys(spellBook).length > 0 ? spellBook : arcaneConfig,
-    [spellBook, arcaneConfig]
-  );
+  // Don't memoize this - we need to respond to mutations of module-level objects
+  const sourceMap =
+    spellBook && Object.keys(spellBook).length > 0 ? spellBook : arcaneConfig;
 
   // Get hover spell details from shared hoverArcane prop (works for both player and opponent)
   const hoveredSpell = React.useMemo(
@@ -229,10 +227,9 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
             const isPassive = entry.type === 'passive';
             const isInstant = entry.type === 'instant';
 
-            if (
-              !spellBook &&
-              (!value || (typeof value === 'number' && value <= 0))
-            )
+            // Only show spells that have been unlocked (exist in arcaneConfig with value > 0)
+            // or are inherent types (which are always available once granted)
+            if (!value || (typeof value === 'number' && value <= 0 && !isInherent))
               return null;
 
             const isFutureSightAvailable =
@@ -345,12 +342,9 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
             const isPassive = entry.type === 'passive';
             const isInstant = entry.type === 'instant';
 
-            // If we are using spellBook, we show the item even if value is 0/undefined.
-            // If we are NOT using spellBook (fallback), we hide it if value is 0/undefined.
-            if (
-              !spellBook &&
-              (!value || (typeof value === 'number' && value <= 0))
-            )
+            // Only show spells that have been unlocked (exist in arcaneConfig with value > 0)
+            // or are inherent types (which are always available once granted)
+            if (!value || (typeof value === 'number' && value <= 0 && !isInherent))
               return null;
 
             const isFutureSightAvailable =
@@ -417,4 +411,5 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
   );
 };
 
-export const ArcanaSelector = React.memo(ArcanaSelectorComponent);
+// Don't use React.memo - we need to respond to mutations of module-level objects
+export const ArcanaSelector = ArcanaSelectorComponent;

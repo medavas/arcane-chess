@@ -29,6 +29,7 @@ import {
   whiteArcaneConfig,
   blackArcaneConfig,
   clearArcanaConfig,
+  clearAllArcanaState,
 } from 'src/features/game/engine/arcaneDefs.mjs';
 
 import { IChessgroundApi } from 'src/features/game/board/chessgroundMod';
@@ -118,6 +119,7 @@ interface State {
   engineAvatar: string;
   dialogue: string[];
   dialogueList: Record<string, string>;
+  arcanaUpdateKey: number;
 }
 
 interface Props {
@@ -244,6 +246,7 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
         lose3: '',
       },
       dialogue: [],
+      arcanaUpdateKey: 0,
     };
     this.arcaneChess = () => {
       return arcaneChess();
@@ -463,7 +466,7 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
     window.removeEventListener('keydown', this.handleKeyDown);
     window.removeEventListener('contextmenu', this.handleContextMenu);
     window.removeEventListener('beforeunload', this.handleBeforeUnload);
-    clearArcanaConfig();
+    clearAllArcanaState();
   }
 
   updateSkirmishState = (property: string, value: any) => {
@@ -526,6 +529,7 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
             isOpen={this.state.skirmishModalOpen}
             handleClose={() => {
               this.setState({ skirmishModalOpen: false }, () => {
+                clearArcanaConfig();
                 this.arcaneChess().init();
                 this.arcaneChess().startGame(
                   this.state.fen,
@@ -543,6 +547,7 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
                     blackArcana: {
                       ...blackArcaneConfig,
                     },
+                    arcanaUpdateKey: this.state.arcanaUpdateKey + 1,
                   },
                   () => {
                     if (this.state.engineColor === this.state.turn) {
@@ -715,6 +720,7 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
               </div>
             </div>
             <PlayerPanel
+              key={`player-panel-${this.state.arcanaUpdateKey}`}
               playerColor={this.state.playerColor}
               engineColor={this.state.engineColor}
               whiteFaction={this.state.whiteFaction}

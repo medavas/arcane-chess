@@ -705,6 +705,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
     window.addEventListener('contextmenu', this.handleContextMenu);
     if (!this.hasMounted && LS.chapter !== 0) {
       this.hasMounted = true;
+      clearArcanaConfig();
       this.arcaneChess().init();
       this.arcaneChess().startGame(
         this.getFen(),

@@ -53,6 +53,34 @@ export const clearArcanaConfig = () => {
   );
 };
 
+export const clearAllArcanaState = () => {
+  // Clear configs
+  Object.keys(whiteArcaneConfig).forEach(
+    (key) => delete whiteArcaneConfig[key]
+  );
+  Object.keys(blackArcaneConfig).forEach(
+    (key) => delete blackArcaneConfig[key]
+  );
+  
+  // Clear spell books
+  Object.keys(whiteArcaneSpellBook).forEach(
+    (key) => delete whiteArcaneSpellBook[key]
+  );
+  Object.keys(blackArcaneSpellBook).forEach(
+    (key) => delete blackArcaneSpellBook[key]
+  );
+  
+  // Clear tracking objects
+  grantedByKey.white = Object.create(null);
+  grantedByKey.black = Object.create(null);
+  grantedByOffering.white = Object.create(null);
+  grantedByOffering.black = Object.create(null);
+  
+  // Reset progression state
+  ArcanaProgression.resetSide('white');
+  ArcanaProgression.resetSide('black');
+};
+
 export const activateDyad = () => {
   // GameBoard.dyad = type;
 };
