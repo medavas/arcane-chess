@@ -153,9 +153,9 @@ export function AddCaptureMove(move, consume = false, capturesOnly = false) {
   // gluttony
   if (GameBoard.dyad > 0) {
     const hasGluttony =
-      (GameBoard.side === COLOURS.WHITE && (GameBoard.whiteArcane[4] & 64)) ||
-      (GameBoard.side === COLOURS.BLACK && (GameBoard.blackArcane[4] & 64));
-    
+      (GameBoard.side === COLOURS.WHITE && GameBoard.whiteArcane[4] & 64) ||
+      (GameBoard.side === COLOURS.BLACK && GameBoard.blackArcane[4] & 64);
+
     if (!hasGluttony) {
       return;
     }
@@ -163,7 +163,7 @@ export function AddCaptureMove(move, consume = false, capturesOnly = false) {
     // Check if the moving piece is allowed by the current dyad type
     const movingPiece = GameBoard.pieces[FROMSQ(move)];
     const pieceDyadValue = PieceDyad[movingPiece] || 0;
-    
+
     // If the piece's dyad value doesn't match the active dyad, block the capture
     // Note: dyadA (value 1) allows all pieces, so we need to check if dyad matches OR dyad is 1
     if (GameBoard.dyad !== 1 && (pieceDyadValue & GameBoard.dyad) === 0) {
@@ -227,7 +227,7 @@ export function AddQuietMove(move, capturesOnly) {
     } else {
       GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply + 1]] =
         GameBoard.searchHistory[
-        GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
+          GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
         ];
     }
     GameBoard.moveListStart[GameBoard.ply + 1]++;
@@ -418,7 +418,10 @@ export function AddWhitePawnQuietMove(from, to, eps, flag, capturesOnly) {
       AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.wV, flag), capturesOnly);
     }
   } else {
-    AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.EMPTY, flag), capturesOnly);
+    AddQuietMove(
+      MOVE(from, to, PIECES.EMPTY, PIECES.EMPTY, flag),
+      capturesOnly
+    );
   }
 }
 
@@ -457,7 +460,10 @@ export function AddBlackPawnQuietMove(from, to, eps, flag, capturesOnly) {
       AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.bV, flag), capturesOnly);
     }
   } else {
-    AddQuietMove(MOVE(from, to, PIECES.EMPTY, PIECES.EMPTY, flag), capturesOnly);
+    AddQuietMove(
+      MOVE(from, to, PIECES.EMPTY, PIECES.EMPTY, flag),
+      capturesOnly
+    );
   }
 }
 
@@ -559,25 +565,38 @@ export let forcedEpAvailable;
 
 export const getHerrings = (color) => {
   const herringsArr = [];
-  if (color === COLOURS.BLACK) {
-    GameBoard.pieces.forEach((piece, index) => {
-      if (piece === 15) {
-        herringsArr.push(index);
-      }
-    });
+
+  // Get the OPPONENT's arcane to check their tokens
+  // We need to know if the opponent's H-pieces are Hermit/Hemlock or base Herrings
+  const opponentArcane =
+    color === COLOURS.WHITE ? GameBoard.blackArcane : GameBoard.whiteArcane;
+
+  // Check if opponent has Hermit or Hemlock token
+  // If they do, their H-pieces are NOT herrings (don't need forced capture)
+  const opponentHasHermitToken = (opponentArcane[10] & 1) !== 0;
+  const opponentHasHemlockToken = (opponentArcane[10] & 2) !== 0;
+
+  // Only collect opponent's H-pieces as herrings if opponent does NOT have Hermit or Hemlock token
+  // When opponent has these tokens, their H-pieces become Hermit/Hemlock instead of Herring
+  if (!opponentHasHermitToken && !opponentHasHemlockToken) {
+    if (color === COLOURS.WHITE) {
+      // White needs to capture Black's H-pieces (piece 20)
+      GameBoard.pieces.forEach((piece, index) => {
+        if (piece === 20) {
+          herringsArr.push(index);
+        }
+      });
+    }
+    if (color === COLOURS.BLACK) {
+      // Black needs to capture White's H-pieces (piece 15)
+      GameBoard.pieces.forEach((piece, index) => {
+        if (piece === 15) {
+          herringsArr.push(index);
+        }
+      });
+    }
   }
-  if (color === COLOURS.WHITE) {
-    GameBoard.pieces.forEach((piece, index) => {
-      if (piece === 20) {
-        herringsArr.push(index);
-      }
-    });
-  }
-  const arcane =
-    color === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
-  if ((arcane[10] & 1) !== 0 || (arcane[10] & 2) !== 0) {
-    return [];
-  }
+
   return herringsArr;
 };
 
@@ -585,7 +604,7 @@ export const getHerrings = (color) => {
 //   21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34, 35, 36, 37, 38, 41, 42, 43,
 //   44, 45, 46, 47, 48, 51, 52, 53, 54, 55, 56, 57, 58,
 // ];
-// 
+//
 // export const blackTeleports = [
 //   71, 72, 73, 74, 75, 76, 77, 78, 81, 82, 83, 84, 85, 86, 87, 88, 91, 92, 93,
 //   94, 95, 96, 97, 98, 61, 62, 63, 64, 65, 66, 67, 68,
@@ -616,7 +635,8 @@ export function GenerateMoves(
   let hasMyriadPath = currentArcanaSide[1] & 256;
 
   let has5thDimensionSword = currentArcanaSide[4] & 262144;
-  let hasHermit = currentArcanaSide[4] & 1048576;
+  let hasHermit = (currentArcanaSide[10] & 1) !== 0; // toknHER
+  let hasHemlock = (currentArcanaSide[10] & 2) !== 0; // toknHEM
 
   let pawnCanShift = currentArcanaSide[1] & 1 || currentArcanaSide[1] & 256;
   let equusCanShift = currentArcanaSide[1] & 2 || currentArcanaSide[1] & 256;
@@ -628,7 +648,8 @@ export function GenerateMoves(
   const herringArray = getHerrings(GameBoard.side);
 
   // note might need to revisit for computer having a herring
-  if (forcedMoves && !hasHermit) {
+  // Don't force capture if player has Hermit OR Hemlock token
+  if (forcedMoves && !hasHermit && !hasHemlock) {
     const herringsAttacked = () => {
       const tempHerrings = [];
       _.forEach(herringArray, (herringSq) => {
@@ -811,7 +832,7 @@ export function GenerateMoves(
           if (
             i === j ||
             GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][i]] ===
-            GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
+              GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
           ) {
             continue;
           }
@@ -860,22 +881,22 @@ export function GenerateMoves(
     //   const arcanaOK =
     //     (side === COLOURS.WHITE && GameBoard.whiteArcane[1] & 16) ||
     //     (side === COLOURS.BLACK && GameBoard.blackArcane[1] & 16);
-    // 
+    //
     //   if (arcanaOK) {
     //     const teleportSquares =
     //       side === COLOURS.WHITE ? whiteTeleports : blackTeleports;
-    // 
+    //
     //     // Allowed pieces by side: N, U, Z, B, R
     //     const allowedPieces =
     //       side === COLOURS.WHITE
     //         ? [PIECES.wN, PIECES.wU, PIECES.wZ, PIECES.wB, PIECES.wR]
     //         : [PIECES.bN, PIECES.bU, PIECES.bZ, PIECES.bB, PIECES.bR];
-    // 
+    //
     //     for (const pce of allowedPieces) {
     //       const count = GameBoard.pceNum[pce] || 0;
     //       for (let idx = 0; idx < count; idx++) {
     //         const fromSq = GameBoard.pList[PCEINDEX(pce, idx)];
-    // 
+    //
     //         for (const toSq of teleportSquares) {
     //           if (GameBoard.pieces[toSq] === PIECES.EMPTY) {
     //             AddQuietMove(
@@ -889,7 +910,7 @@ export function GenerateMoves(
     //     return;
     //   }
     // }
-    // 
+    //
     // if (type2 === 'TELEPORT') return;
 
     // OFFERINGS
@@ -897,7 +918,11 @@ export function GenerateMoves(
     let offeringPce = LoopPcePrime[offeringIndex];
     let offeringSymbol = LoopPcePrimeSymbols[offeringIndex++];
 
-    if (!herrings.length && !forcedEpAvailable && (type === 'OFFERING' || type === 'COMP')) {
+    if (
+      !herrings.length &&
+      !forcedEpAvailable &&
+      (type === 'OFFERING' || type === 'COMP')
+    ) {
       while (offeringPce !== 0) {
         let offeringArcanaSide =
           GameBoard.side === COLOURS.WHITE
@@ -1230,7 +1255,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.whiteArcane[3]
                 ) {
                   if (
@@ -1273,7 +1298,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.blackArcane[3]
                 ) {
                   if (
@@ -1649,7 +1674,11 @@ export function GenerateMoves(
 
     // WARNING, this will only work in a vanilla setup, no extra rooks
     if (!activeWhiteForcedEpCapture) {
-      if (GameBoard.castlePerm & CASTLEBIT.WKCA && !herrings.length && GameBoard.pieces[SQUARES.E1] === PIECES.wK) {
+      if (
+        GameBoard.castlePerm & CASTLEBIT.WKCA &&
+        !herrings.length &&
+        GameBoard.pieces[SQUARES.E1] === PIECES.wK
+      ) {
         if (GameBoard.blackArcane[4] & 8) {
           // todo remove
         } else {
@@ -1677,7 +1706,11 @@ export function GenerateMoves(
         }
       }
 
-      if (GameBoard.castlePerm & CASTLEBIT.WQCA && !herrings.length && GameBoard.pieces[SQUARES.E1] === PIECES.wK) {
+      if (
+        GameBoard.castlePerm & CASTLEBIT.WQCA &&
+        !herrings.length &&
+        GameBoard.pieces[SQUARES.E1] === PIECES.wK
+      ) {
         if (GameBoard.blackArcane[4] & 8) {
           // randomize plus castle remove
         } else {

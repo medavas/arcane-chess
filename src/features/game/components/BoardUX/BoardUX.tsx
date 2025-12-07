@@ -20,14 +20,12 @@ import {
   GameBoard,
   outputFenOfCurrentPosition,
 } from 'src/features/game/engine/board.mjs';
-import { CheckAndSet, CheckResult } from 'src/features/game/engine/gui.mjs';
 import { PrMove } from 'src/features/game/engine/io.mjs';
 import { audioManager } from 'src/shared/utils/audio/AudioManager';
 import {
   whiteArcaneConfig,
   blackArcaneConfig,
 } from 'src/features/game/engine/arcaneDefs.mjs';
-import _ from 'lodash';
 
 interface BoardUXProps {
   game: any; // arcaneChess instance
@@ -87,9 +85,24 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         const classList = pieceEl.className;
         const isWhitePiece = classList.includes('white');
         const isBlackPiece = classList.includes('black');
+        const isHPiece = classList.includes('h-piece');
 
         // Determine which config to use based on piece color
-        const pieceConfig = isWhitePiece ? whiteArcaneConfig : (isBlackPiece ? blackArcaneConfig : null);
+        const pieceConfig = isWhitePiece
+          ? whiteArcaneConfig
+          : isBlackPiece
+          ? blackArcaneConfig
+          : null;
+
+        // Check if this H-piece has Hemlock token and add class
+        if (isHPiece && pieceConfig) {
+          const hasHemlockToken = ((pieceConfig as any)['toknHEM'] || 0) > 0;
+          if (hasHemlockToken) {
+            pieceEl.classList.add('is-hemlock');
+          } else {
+            pieceEl.classList.remove('is-hemlock');
+          }
+        }
 
         let canShift = false;
         let forceRed = false; // For spells that always make donut red
@@ -114,7 +127,10 @@ export const BoardUX: React.FC<BoardUXProps> = ({
 
           // Piece type checks
           const isPawn = classList.includes('p-piece');
-          const isKnight = classList.includes('n-piece') || classList.includes('z-piece') || classList.includes('u-piece');
+          const isKnight =
+            classList.includes('n-piece') ||
+            classList.includes('z-piece') ||
+            classList.includes('u-piece');
           const isBishop = classList.includes('b-piece');
           const isRook = classList.includes('r-piece');
           const isSpectre = classList.includes('s-piece');
@@ -125,13 +141,25 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           // Check if piece can shift based on standard shift spells
           if (isPawn && (pieceHasShftP || pieceHasShftI || pieceHasShftA)) {
             canShift = true;
-          } else if (isKnight && (pieceHasShftN || pieceHasShftI || pieceHasShftA)) {
+          } else if (
+            isKnight &&
+            (pieceHasShftN || pieceHasShftI || pieceHasShftA)
+          ) {
             canShift = true;
-          } else if (isBishop && (pieceHasShftB || pieceHasShftI || pieceHasShftA)) {
+          } else if (
+            isBishop &&
+            (pieceHasShftB || pieceHasShftI || pieceHasShftA)
+          ) {
             canShift = true;
-          } else if (isRook && (pieceHasShftR || pieceHasShftI || pieceHasShftA)) {
+          } else if (
+            isRook &&
+            (pieceHasShftR || pieceHasShftI || pieceHasShftA)
+          ) {
             canShift = true;
-          } else if ((isSpectre || isWraith) && (pieceHasShftG || pieceHasShftI || pieceHasShftA)) {
+          } else if (
+            (isSpectre || isWraith) &&
+            (pieceHasShftG || pieceHasShftI || pieceHasShftA)
+          ) {
             // For shftI and shftA, always show (they work universally)
             if (pieceHasShftI || pieceHasShftA) {
               canShift = true;
@@ -169,12 +197,23 @@ export const BoardUX: React.FC<BoardUXProps> = ({
                     if (targetSq >= 21 && targetSq <= 98) {
                       const targetFile = (targetSq - 21) % 10;
                       const targetRank = Math.floor((targetSq - 21) / 10);
-                      if (targetFile >= 0 && targetFile <= 7 && targetRank >= 0 && targetRank <= 7) {
+                      if (
+                        targetFile >= 0 &&
+                        targetFile <= 7 &&
+                        targetRank >= 0 &&
+                        targetRank <= 7
+                      ) {
                         const targetPiece = GameBoard.pieces[targetSq];
                         // Check if square is empty or contains enemy
-                        if (targetPiece === PIECES.EMPTY ||
-                          (isWhitePiece && targetPiece >= 7 && targetPiece <= 30) ||
-                          (isBlackPiece && ((targetPiece >= 1 && targetPiece <= 6) || (targetPiece >= 13 && targetPiece <= 28)))) {
+                        if (
+                          targetPiece === PIECES.EMPTY ||
+                          (isWhitePiece &&
+                            targetPiece >= 7 &&
+                            targetPiece <= 30) ||
+                          (isBlackPiece &&
+                            ((targetPiece >= 1 && targetPiece <= 6) ||
+                              (targetPiece >= 13 && targetPiece <= 28)))
+                        ) {
                           hasShiftMove = true;
                           break;
                         }
@@ -188,7 +227,10 @@ export const BoardUX: React.FC<BoardUXProps> = ({
                 }
               }
             }
-          } else if (isKing && (pieceHasShftK || pieceHasShftI || pieceHasShftA)) {
+          } else if (
+            isKing &&
+            (pieceHasShftK || pieceHasShftI || pieceHasShftA)
+          ) {
             canShift = true;
           }
 
@@ -228,8 +270,10 @@ export const BoardUX: React.FC<BoardUXProps> = ({
 
                   // Show donut if both squares are empty (can surge)
                   // OR if there's a blocking piece and player has aetherstep (can jump)
-                  if ((oneAhead === PIECES.EMPTY && twoAhead === PIECES.EMPTY) ||
-                    (oneAhead !== PIECES.EMPTY && hasModsAET)) {
+                  if (
+                    (oneAhead === PIECES.EMPTY && twoAhead === PIECES.EMPTY) ||
+                    (oneAhead !== PIECES.EMPTY && hasModsAET)
+                  ) {
                     canShift = true;
                     forceRed = true;
                   }
@@ -240,8 +284,10 @@ export const BoardUX: React.FC<BoardUXProps> = ({
 
                   // Show donut if both squares are empty (can surge)
                   // OR if there's a blocking piece and player has aetherstep (can jump)
-                  if ((oneAhead === PIECES.EMPTY && twoAhead === PIECES.EMPTY) ||
-                    (oneAhead !== PIECES.EMPTY && hasModsAET)) {
+                  if (
+                    (oneAhead === PIECES.EMPTY && twoAhead === PIECES.EMPTY) ||
+                    (oneAhead !== PIECES.EMPTY && hasModsAET)
+                  ) {
                     canShift = true;
                     forceRed = true;
                   }
@@ -279,20 +325,28 @@ export const BoardUX: React.FC<BoardUXProps> = ({
                 const boardRank = 8 - visualRank;
                 const sq = 21 + (boardRank - 1) * 10 + file;
 
-
                 if (isWhitePiece && (boardRank === 2 || boardRank === 3)) {
                   // White pawns on board rank 2 or 3 (starting positions)
                   const blocking = GameBoard.pieces[sq + 10];
                   const destination = GameBoard.pieces[sq + 20];
-                  if (blocking !== PIECES.EMPTY && destination === PIECES.EMPTY) {
+                  if (
+                    blocking !== PIECES.EMPTY &&
+                    destination === PIECES.EMPTY
+                  ) {
                     canShift = true;
                     blockRed = true; // Aetherstep is never red (5D sword doesn't apply)
                   }
-                } else if (isBlackPiece && (boardRank === 7 || boardRank === 6)) {
+                } else if (
+                  isBlackPiece &&
+                  (boardRank === 7 || boardRank === 6)
+                ) {
                   // Black pawns on board rank 7 or 6 (starting positions)
                   const blocking = GameBoard.pieces[sq - 10];
                   const destination = GameBoard.pieces[sq - 20];
-                  if (blocking !== PIECES.EMPTY && destination === PIECES.EMPTY) {
+                  if (
+                    blocking !== PIECES.EMPTY &&
+                    destination === PIECES.EMPTY
+                  ) {
                     canShift = true;
                     blockRed = true; // Aetherstep is never red (5D sword doesn't apply)
                   }
@@ -599,24 +653,24 @@ export const BoardUX: React.FC<BoardUXProps> = ({
   const getSelected = () => {
     return interactionState.placingPiece !== 0
       ? {
-        role: `${PceChar.split('')[
-          interactionState.placingPiece
-        ].toLowerCase()}-piece`,
-        color: interactionState.playerColor,
-      }
+          role: `${PceChar.split('')[
+            interactionState.placingPiece
+          ].toLowerCase()}-piece`,
+          color: interactionState.playerColor,
+        }
       : interactionState.placingRoyalty !== 0
-        ? {
+      ? {
           role: `r${RtyChar.split('')[
             interactionState.placingRoyalty
           ].toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }
-        : interactionState.offeringType !== ''
-          ? {
-            role: `o${interactionState.offeringType.toLowerCase()}-piece`,
-            color: interactionState.playerColor,
-          }
-          : null;
+      : interactionState.offeringType !== ''
+      ? {
+          role: `o${interactionState.offeringType.toLowerCase()}-piece`,
+          color: interactionState.playerColor,
+        }
+      : null;
   };
 
   return (
@@ -661,7 +715,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         fromPocket: false,
       }}
       events={{
-        change: () => { },
+        change: () => {},
         dropNewPiece: handleDropNewPiece,
         move: handleMove,
         select: handleSelect,

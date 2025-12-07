@@ -121,3 +121,16 @@
 .x-piece.black.gamma {
   background-image: url('/assets/images/pieces/tactorius/gamma/bX.svg');
 }
+
+// Hide opponent's hemlock pieces (h-piece with is-hemlock class)
+// When board is oriented for white, hide black hemlock pieces (opponent)
+.cg-wrap.orientation-white piece.h-piece.black.gamma.is-hemlock,
+.orientation-white .h-piece.black.gamma.is-hemlock {
+  display: none !important;
+}
+
+// When board is oriented for black, hide white hemlock pieces (opponent)
+.cg-wrap.orientation-black piece.h-piece.white.gamma.is-hemlock,
+.orientation-black .h-piece.white.gamma.is-hemlock {
+  display: none !important;
+}

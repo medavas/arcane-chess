@@ -116,8 +116,9 @@ export class UnwrappedDashboard extends React.Component<
 
     return (
       <div
-        className={`dashboard ${this.state.fadeIn ? 'fade-in' : ''} ${this.state.fadeOut ? 'fade-out' : ''
-          }`}
+        className={`dashboard ${this.state.fadeIn ? 'fade-in' : ''} ${
+          this.state.fadeOut ? 'fade-out' : ''
+        }`}
         ref={this.rootRef}
       >
         <div className={`fade-overlay ${this.state.fadeOut ? 'active' : ''}`} />
@@ -356,8 +357,9 @@ export class UnwrappedDashboard extends React.Component<
                   The Hermit casts an aura of square conditions around it.
                 </li>
                 <li>
-                  The Hemlock has a far reaching move pattern - like a super
-                  Knight. It can hop to the other side of the board too!
+                  The Hemlock is an invisible unit, don&apos;t lose track of it!
+                  It has a far reaching move pattern - like a super Knight. It
+                  can hop to the other side of the board too!
                 </li>
                 <li>
                   Bulletproof - when this is active you can now check or
@@ -369,8 +371,8 @@ export class UnwrappedDashboard extends React.Component<
                   square may not make any captures
                 </li>
                 <li>
-                  Hexlash - when certain friendly units are captured, the
-                  square gains entanglement conditon
+                  Hexlash - when certain friendly units are captured, the square
+                  gains entanglement conditon
                 </li>
                 <li>
                   Glare - any enemy piece a Rook attacks gains Disarmament

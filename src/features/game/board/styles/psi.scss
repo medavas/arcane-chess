@@ -121,3 +121,16 @@
 .x-piece.black.psi {
   background-image: url('/assets/images/pieces/tactorius/psi/bX.svg');
 }
+
+// Hide opponent's hemlock pieces (h-piece with is-hemlock class)
+// When board is oriented for white, hide black hemlock pieces (opponent)
+.cg-wrap.orientation-white piece.h-piece.black.psi.is-hemlock,
+.orientation-white .h-piece.black.psi.is-hemlock {
+  display: none !important;
+}
+
+// When board is oriented for black, hide white hemlock pieces (opponent)
+.cg-wrap.orientation-black piece.h-piece.white.psi.is-hemlock,
+.orientation-black .h-piece.white.psi.is-hemlock {
+  display: none !important;
+}
