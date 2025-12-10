@@ -5,7 +5,9 @@
     "description": "No arcane selected here. Click to choose one.",
     "type": "",
     "imagePath": "/empty",
-    "value": 0
+    "value": 0,
+    "related": [],
+    "tier": ""
   },
   "dyadA": {
     "id": "dyadA",
@@ -13,7 +15,9 @@
     "description": "Make two moves, no capturing.",
     "type": "active",
     "imagePath": "/dyadA",
-    "value": 7
+    "value": 7,
+    "related": [],
+    "tier": "Advanced"
   },
   "dyadB": {
     "id": "dyadB",
@@ -21,7 +25,9 @@
     "description": "Make two moves, no capturing (Pawn, Herring).",
     "type": "active",
     "imagePath": "/dyadA",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "dyadC": {
     "id": "dyadC",
@@ -29,7 +35,9 @@
     "description": "Make two moves, no capturing (Bishop, Knight, Zebra, Unicorn, Rook).",
     "type": "active",
     "imagePath": "/dyadA",
-    "value": 6
+    "value": 6,
+    "related": [],
+    "tier": "Advanced"
   },
   "dyadD": {
     "id": "dyadD",
@@ -37,7 +45,9 @@
     "description": "Make two moves, no capturing (Spectre, Wraith).",
     "type": "active",
     "imagePath": "/dyadA",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "dyadE": {
     "id": "dyadE",
@@ -45,7 +55,9 @@
     "description": "Make two moves, no capturing (Mystic, Templar, Queen).",
     "type": "active",
     "imagePath": "/dyadA",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "dyadF": {
     "id": "dyadF",
@@ -53,7 +65,9 @@
     "description": "Make two moves, no capturing (Valkyrie, King).",
     "type": "active",
     "imagePath": "/dyadA",
-    "value": 6
+    "value": 6,
+    "related": [],
+    "tier": "Advanced"
   },
   "toknHER": {
     "id": "toknHER",
@@ -61,7 +75,9 @@
     "description": "Casts an aura of Royalty Mystic square conditions. Can't capture. Overrides Herring. Stacks with Hemlock.",
     "type": "inherent",
     "imagePath": "/toknHER",
-    "value": 8
+    "value": 8,
+    "related": [],
+    "tier": "Elite"
   },
   "toknHEM": {
     "id": "toknHEM",
@@ -69,7 +85,9 @@
     "description": "Invisible to your opponent. 1 up 1 over and 1 up 3 over move pattern similar to Knight, moves across the other side of the board. Overrides Herring. Stacks with Hermit.",
     "type": "inherent",
     "imagePath": "/toknHEM",
-    "value": 8
+    "value": 8,
+    "related": [],
+    "tier": "Elite"
   },
   "sumnH": {
     "id": "sumnH",
@@ -77,7 +95,9 @@
     "description": "Summon a Herring to an empty square. A Herring must be captured if the move is legal.",
     "type": "active",
     "imagePath": "/sumnA",
-    "value": 8
+    "value": 8,
+    "related": [],
+    "tier": "Elite"
   },
   "areaT": {
     "id": "areaT",
@@ -85,7 +105,9 @@
     "description": "Hermit casts Royalty Templar Aura.",
     "type": "inherent",
     "imagePath": "/areaT",
-    "value": 4
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
   "areaQ": {
     "id": "areaQ",
@@ -93,7 +115,9 @@
     "description": "Hermit casts Royalty Queen Aura.",
     "type": "inherent",
     "imagePath": "/areaQ",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "areaE": {
     "id": "areaE",
@@ -101,7 +125,9 @@
     "description": "Hermit casts Entanglement Aura.",
     "type": "inherent",
     "imagePath": "/areaE",
-    "value": 6
+    "value": 6,
+    "related": [],
+    "tier": "Advanced"
   },
   "areaF": {
     "id": "areaF",
@@ -109,7 +135,9 @@
     "description": "Hermit casts Fog of War Aura.",
     "type": "inherent",
     "imagePath": "/areaF",
-    "value": 3
+    "value": 3,
+    "related": [],
+    "tier": "Basic"
   },
   "areaN": {
     "id": "areaN",
@@ -117,7 +145,9 @@
     "description": "Hermit casts Disarmament Aura.",
     "type": "inherent",
     "imagePath": "/areaN",
-    "value": 4
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
   "sumnP": {
     "id": "sumnP",
@@ -125,7 +155,9 @@
     "description": "Summon a Pawn to an empty square.",
     "type": "active",
     "imagePath": "/sumnA",
-    "value": 3
+    "value": 3,
+    "related": [],
+    "tier": "Basic"
   },
   "sumnN": {
     "id": "sumnN",
@@ -133,7 +165,9 @@
     "description": "Summon a Knight to an empty square.",
     "type": "active",
     "imagePath": "/sumnA",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "sumnZ": {
     "id": "sumnZ",
@@ -141,7 +175,9 @@
     "description": "Summon a Zebra to an empty square.",
     "type": "active",
     "imagePath": "/sumnA",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "sumnU": {
     "id": "sumnU",
@@ -149,7 +185,9 @@
     "description": "Summon a Unicorn to an empty square.",
     "type": "active",
     "imagePath": "/sumnA",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "sumnB": {
     "id": "sumnB",
@@ -157,7 +195,9 @@
     "description": "Summon a Bishop to an empty square.",
     "type": "active",
     "imagePath": "/sumnA",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "sumnR": {
     "id": "sumnR",
@@ -165,7 +205,9 @@
     "description": "Summon a Rook to an empty square.",
     "type": "active",
     "imagePath": "/sumnA",
-    "value": 7
+    "value": 7,
+    "related": [],
+    "tier": "Advanced"
   },
   "sumnS": {
     "id": "sumnS",
@@ -173,7 +215,9 @@
     "description": "Summon a Spectre to an empty square.",
     "type": "active",
     "imagePath": "/sumnA",
-    "value": 9
+    "value": 9,
+    "related": [],
+    "tier": "Elite"
   },
   "sumnW": {
     "id": "sumnW",
@@ -181,7 +225,9 @@
     "description": "Summon a Wraith to an empty square.",
     "type": "active",
     "imagePath": "/sumnA",
-    "value": 9
+    "value": 9,
+    "related": [],
+    "tier": "Elite"
   },
   "sumnQ": {
     "id": "sumnQ",
@@ -189,7 +235,9 @@
     "description": "Summon a Queen to an empty square.",
     "type": "active",
     "imagePath": "/sumnA",
-    "value": 11
+    "value": 11,
+    "related": [],
+    "tier": "Legendary"
   },
   "sumnT": {
     "id": "sumnT",
@@ -197,7 +245,9 @@
     "description": "Summon a Templar to an empty square.",
     "type": "active",
     "imagePath": "/sumnA",
-    "value": 11
+    "value": 11,
+    "related": [],
+    "tier": "Legendary"
   },
   "sumnM": {
     "id": "sumnM",
@@ -205,7 +255,9 @@
     "description": "Summon a Mystic to an empty square.",
     "type": "active",
     "imagePath": "/sumnA",
-    "value": 10
+    "value": 10,
+    "related": [],
+    "tier": "Elite"
   },
   "sumnV": {
     "id": "sumnV",
@@ -213,7 +265,9 @@
     "description": "Summon a Valkyrie to an empty square.",
     "type": "active",
     "imagePath": "/sumnA",
-    "value": 16
+    "value": 16,
+    "related": [],
+    "tier": "Legendary"
   },
   "sumnX": {
     "id": "sumnX",
@@ -221,7 +275,9 @@
     "description": "Summon an Exile to an empty square. An Exile is a neutral piece that cannot be moved or captured.",
     "type": "active",
     "imagePath": "/sumnX",
-    "value": 7
+    "value": 7,
+    "related": [],
+    "tier": "Advanced"
   },
   "sumnRQ": {
     "id": "sumnRQ",
@@ -229,7 +285,9 @@
     "description": "Summon a Queen Royalty condition to a square for 4 turns. Pieces on this square move like a Queen.",
     "type": "active",
     "imagePath": "/royalty",
-    "value": 7
+    "value": 7,
+    "related": [],
+    "tier": "Advanced"
   },
   "sumnRT": {
     "id": "sumnRT",
@@ -237,7 +295,9 @@
     "description": "Summon a Templar Royalty condition to a square for 4 turns. Pieces on this square move like a Templar.",
     "type": "active",
     "imagePath": "/royalty",
-    "value": 7
+    "value": 7,
+    "related": [],
+    "tier": "Advanced"
   },
   "sumnRM": {
     "id": "sumnRM",
@@ -245,7 +305,9 @@
     "description": "Summon a Mystic Royalty condition to a square for 4 turns. Pieces on this square move like a Mystic.",
     "type": "active",
     "imagePath": "/royalty",
-    "value": 6
+    "value": 6,
+    "related": [],
+    "tier": "Advanced"
   },
   "sumnRV": {
     "id": "sumnRV",
@@ -253,7 +315,9 @@
     "description": "Summon a Valkyrie Royalty condition to a square for 4 turns. Pieces on this square move like a Valkyrie.",
     "type": "active",
     "imagePath": "/royalty",
-    "value": 12
+    "value": 12,
+    "related": [],
+    "tier": "Legendary"
   },
   "sumnRE": {
     "id": "sumnRE",
@@ -261,7 +325,9 @@
     "description": "Summon an Entanglement condition to a square for 4 turns. Pieces on this square cannot move.",
     "type": "active",
     "imagePath": "/sumnRE",
-    "value": 6
+    "value": 6,
+    "related": [],
+    "tier": "Advanced"
   },
   "sumnRN": {
     "id": "sumnRN",
@@ -269,7 +335,9 @@
     "description": "Summon a square condition where the piece on the target square may not make any capture moves.",
     "type": "active",
     "imagePath": "/sumnRN",
-    "value": 4
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
   "sumnRY": {
     "id": "sumnRY",
@@ -277,7 +345,9 @@
     "description": "Select a square, all squares along that file have entanglement for 4 turns.",
     "type": "active",
     "imagePath": "/sumnRY",
-    "value": 6
+    "value": 6,
+    "related": [],
+    "tier": "Advanced"
   },
   "sumnRZ": {
     "id": "sumnRZ",
@@ -285,7 +355,9 @@
     "description": "Select a square, all squares along that rank have entanglement for 4 turns.",
     "type": "active",
     "imagePath": "/sumnRZ",
-    "value": 4
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
   "sumnRA": {
     "id": "sumnRA",
@@ -293,7 +365,9 @@
     "description": "Place a 3x3 block, all squares in that block have entanglement for 4 turns.",
     "type": "active",
     "imagePath": "/sumnRA",
-    "value": 8
+    "value": 8,
+    "related": [],
+    "tier": "Elite"
   },
   "sumnRF": {
     "id": "sumnRF",
@@ -301,7 +375,9 @@
     "description": "Summon a 3x3 area with fog of war.",
     "type": "active",
     "imagePath": "/sumnRF",
-    "value": 3
+    "value": 3,
+    "related": [],
+    "tier": "Basic"
   },
   "sumnRG": {
     "id": "sumnRG",
@@ -309,7 +385,9 @@
     "description": "Summon a 5x5 area with fog of war.",
     "type": "active",
     "imagePath": "/sumnRG",
-    "value": 4
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
   "sumnRH": {
     "id": "sumnRH",
@@ -317,7 +395,9 @@
     "description": "Summon a 5x5 grid of alternating entanglement and fog of war.",
     "type": "active",
     "imagePath": "/sumnRH",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "sumnRI": {
     "id": "sumnRI",
@@ -325,7 +405,9 @@
     "description": "Summon a 3x3 grid containing all the royal square conditions.",
     "type": "active",
     "imagePath": "/sumnRI",
-    "value": 13
+    "value": 13,
+    "related": [],
+    "tier": "Legendary"
   },
   "shftP": {
     "id": "shftP",
@@ -333,7 +415,9 @@
     "description": "Move a Pawn one square backwards, left, or right, no capturing.",
     "type": "passive",
     "imagePath": "/shftP",
-    "value": 4
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
   "shftN": {
     "id": "shftN",
@@ -341,7 +425,9 @@
     "description": "Move a Knight, Zebra, or Unicorn one square in any orthogonal or diagonal direction, no capturing.",
     "type": "passive",
     "imagePath": "/shftN",
-    "value": 4
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
   "shftB": {
     "id": "shftB",
@@ -349,7 +435,9 @@
     "description": "Move a Bishop one square in any orthogonal direction, no capturing.",
     "type": "passive",
     "imagePath": "/shftB",
-    "value": 2
+    "value": 2,
+    "related": [],
+    "tier": "Basic"
   },
   "shftR": {
     "id": "shftR",
@@ -357,7 +445,9 @@
     "description": "Move a Rook one square in any diagonal direction, no capturing.",
     "type": "passive",
     "imagePath": "/shftR",
-    "value": 2
+    "value": 2,
+    "related": [],
+    "tier": "Basic"
   },
   "shftG": {
     "id": "shftG",
@@ -365,7 +455,9 @@
     "description": "Spectre and Wraith gain the other's moveset, no capturing.",
     "type": "passive",
     "imagePath": "/shftG",
-    "value": 9
+    "value": 9,
+    "related": [],
+    "tier": "Elite"
   },
   "shftK": {
     "id": "shftK",
@@ -373,7 +465,9 @@
     "description": "Your King can move and capture in the 5x5 ring... and check an opposing King that does not have Shogun.",
     "type": "passive",
     "imagePath": "/shftK",
-    "value": 10
+    "value": 10,
+    "related": [],
+    "tier": "Elite"
   },
   "shftI": {
     "id": "shftI",
@@ -381,7 +475,9 @@
     "description": "A piece may hop over an adjacent piece to the next square in the same direction, no capturing. If that same piece is on the A or H file, it may hop to the opposite side of the board.",
     "type": "passive",
     "imagePath": "/shftI",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "shftA": {
     "id": "shftA",
@@ -389,7 +485,9 @@
     "description": "Make any type of shift move, no capturing. Used prior to other shift types.",
     "type": "passive",
     "imagePath": "/shftA",
-    "value": 18
+    "value": 18,
+    "related": [],
+    "tier": "Legendary"
   },
   "swapDEP": {
     "id": "swapDEP",
@@ -397,7 +495,9 @@
     "description": "Swap the positions of a friendly minor or major piece (no P, H, V, K).",
     "type": "active",
     "imagePath": "/swapDEP",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "swapADJ": {
     "id": "swapADJ",
@@ -405,7 +505,9 @@
     "description": "Swap the positions of any orthogonally adjacent pieces, no Pawn promotions or swaping just your opponent's pieces. Use at your own risk.",
     "type": "active",
     "imagePath": "/swapADJ",
-    "value": 4
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
   "modsCON": {
     "id": "modsCON",
@@ -413,7 +515,9 @@
     "description": "Capture any friendly piece.",
     "type": "passive",
     "imagePath": "/modsCON",
-    "value": 4
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
   "modsREA": {
     "id": "modsREA",
@@ -421,7 +525,9 @@
     "description": "Friendly Valkyries gain the Queen moveset, friendly Wraiths gain the Bishop moveset.",
     "type": "inherent",
     "imagePath": "/modsREA",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "modsEXT": {
     "id": "modsEXT",
@@ -429,7 +535,9 @@
     "description": "You may summon amongst the whole board.",
     "type": "inherent",
     "imagePath": "/modsEXT",
-    "value": 8
+    "value": 8,
+    "related": [],
+    "tier": "Elite"
   },
   "modsFUG": {
     "id": "modsFUG",
@@ -437,7 +545,9 @@
     "description": "Castle while in or through check.",
     "type": "inherent",
     "imagePath": "/modsFUG",
-    "value": 3
+    "value": 3,
+    "related": [],
+    "tier": "Basic"
   },
   "modsTRO": {
     "id": "modsTRO",
@@ -445,7 +555,9 @@
     "description": "If your opponent can legally capture you via en passant, they must.",
     "type": "inherent",
     "imagePath": "/modsTRO",
-    "value": 3
+    "value": 3,
+    "related": [],
+    "tier": "Basic"
   },
   "modsINH": {
     "id": "modsINH",
@@ -453,7 +565,9 @@
     "description": "Friendly Pawns promote one rank early.",
     "type": "inherent",
     "imagePath": "/modsINH",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "modsSUS": {
     "id": "modsSUS",
@@ -461,7 +575,9 @@
     "description": "Prevent any captures for 3 turns.",
     "type": "active",
     "imagePath": "/modsSUS",
-    "value": 7
+    "value": 7,
+    "related": [],
+    "tier": "Advanced"
   },
   "modsPHA": {
     "id": "modsPHA",
@@ -469,7 +585,9 @@
     "description": "Your pieces become invisible to your opponent for 3 turns.",
     "type": "active",
     "imagePath": "/modsPHA",
-    "value": 7
+    "value": 7,
+    "related": [],
+    "tier": "Advanced"
   },
   "modsFUT": {
     "id": "modsFUT",
@@ -477,7 +595,9 @@
     "description": "Undo the last 2 moves.",
     "type": "active",
     "imagePath": "/modsFUT",
-    "value": 2
+    "value": 2,
+    "related": [],
+    "tier": "Basic"
   },
   "modsIMP": {
     "id": "modsIMP",
@@ -485,7 +605,9 @@
     "description": "The engine gives you a hint for the best move, from sqaure only.",
     "type": "active",
     "imagePath": "/modsIMP",
-    "value": 2
+    "value": 2,
+    "related": [],
+    "tier": "Basic"
   },
   "modsORA": {
     "id": "modsORA",
@@ -493,7 +615,9 @@
     "description": "The engine gives you a hint for the best move, from and to square.",
     "type": "active",
     "imagePath": "/modsORA",
-    "value": 3
+    "value": 3,
+    "related": [],
+    "tier": "Basic"
   },
   "modsTEM": {
     "id": "modsTEM",
@@ -501,7 +625,9 @@
     "description": "Get engine's best calculate line of moves after 3 seconds of thinking time.",
     "type": "active",
     "imagePath": "/modsTEM",
-    "value": 4
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
   "modsGLI": {
     "id": "modsGLI",
@@ -509,7 +635,9 @@
     "description": "The next engine move is randomized.",
     "type": "active",
     "imagePath": "/modsGLI",
-    "value": 10
+    "value": 10,
+    "related": [],
+    "tier": "Elite"
   },
   "modsAET": {
     "id": "modsAET",
@@ -517,7 +645,9 @@
     "description": "Friendly Pawns may can step through a piece on their first turn.",
     "type": "inherent",
     "imagePath": "/modsAET",
-    "value": 2
+    "value": 2,
+    "related": [],
+    "tier": "Basic"
   },
   "modsSUR": {
     "id": "modsSUR",
@@ -525,7 +655,9 @@
     "description": "Friendly Pawns can capture on the first-turn, 2-square move.",
     "type": "passive",
     "imagePath": "/modsSUR",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "modsGLU": {
     "id": "modsGLU",
@@ -533,7 +665,9 @@
     "description": "You may capture pieces during dyad moves.",
     "type": "inherent",
     "imagePath": "/modsGLU",
-    "value": 9
+    "value": 9,
+    "related": [],
+    "tier": "Elite"
   },
   "modsSIL": {
     "id": "modsSIL",
@@ -541,15 +675,19 @@
     "description": "You may capture entangled pieces.",
     "type": "inherent",
     "imagePath": "/modsSIL",
-    "value": 9
+    "value": 9,
+    "related": [],
+    "tier": "Elite"
   },
   "modsBAN": {
     "id": "modsBAN",
     "name": "The Banshee",
-    "description": "Spectre move pattern is extended to the 7x7 square, non-capture moves only.",
+    "description": "Spectre move pattern is extended to the 7x7 square, non-capture moves only. Cannot wield 5D Sword.",
     "type": "inherent",
     "imagePath": "/modsBAN",
-    "value": 6
+    "value": 6,
+    "related": [],
+    "tier": "Advanced"
   },
   "modsDIM": {
     "id": "modsDIM",
@@ -557,7 +695,9 @@
     "description": "Capture pieces on shift moves. Hermits and Hemlocks may capture.",
     "type": "inherent",
     "imagePath": "/modsDIM",
-    "value": 9
+    "value": 9,
+    "related": [],
+    "tier": "Elite"
   },
   "modsDIV": {
     "id": "modsDIV",
@@ -565,7 +705,9 @@
     "description": "Friendly Pawn automatically promote to a Valkyrie with Iron Reach.",
     "type": "passive",
     "imagePath": "/modsDIV",
-    "value": 3
+    "value": 3,
+    "related": [],
+    "tier": "Basic"
   },
   "modsHEX": {
     "id": "modsHEX",
@@ -573,7 +715,9 @@
     "description": "When a Bishop, Knight, Zebra, Unicorn, Rook, Wraith, or Spectre is captured, the capturing piece becomes frozen.",
     "type": "passive",
     "imagePath": "/modsHEX",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "modsGLA": {
     "id": "modsGLA",
@@ -581,7 +725,9 @@
     "description": "Any opponent piece attacked by a friendly Rook has Disarmament.",
     "type": "inherent",
     "imagePath": "/modsGLA",
-    "value": 7
+    "value": 7,
+    "related": [],
+    "tier": "Advanced"
   },
   "moriDYA": {
     "id": "moriDYA",
@@ -589,7 +735,9 @@
     "description": "On any of your piece death you gain a dyad all",
     "type": "inherent",
     "imagePath": "/moriDYA",
-    "value": 10
+    "value": 10,
+    "related": [],
+    "tier": "Elite"
   },
   "moriROY": {
     "id": "moriROY",
@@ -597,7 +745,9 @@
     "description": "On your QTMV death you gain a royalty vanguard",
     "type": "inherent",
     "imagePath": "/moriROY",
-    "value": 8
+    "value": 8,
+    "related": [],
+    "tier": "Elite"
   },
   "moriPAW": {
     "id": "moriPAW",
@@ -605,7 +755,9 @@
     "description": "On any of your pawn death you gain a dyad all",
     "type": "inherent",
     "imagePath": "/moriPAW",
-    "value": 12
+    "value": 12,
+    "related": [],
+    "tier": "Legendary"
   },
   "moriNOR": {
     "id": "moriNOR",
@@ -613,7 +765,9 @@
     "description": "On any of your piece death, you get a summon of that piece",
     "type": "inherent",
     "imagePath": "/moriNOR",
-    "value": 9
+    "value": 9,
+    "related": [],
+    "tier": "Elite"
   },
   "moriMAN": {
     "id": "moriMAN",
@@ -621,7 +775,9 @@
     "description": "On any of your piece death, gain 2 arcana charge tempo.",
     "type": "inherent",
     "imagePath": "/moriMAN",
-    "value": 2
+    "value": 2,
+    "related": [],
+    "tier": "Basic"
   },
   "moraDYA": {
     "id": "moraDYA",
@@ -629,7 +785,9 @@
     "description": "On any of your opponent piece death you gain a dyad all",
     "type": "inherent",
     "imagePath": "/moraDYA",
-    "value": 10
+    "value": 10,
+    "related": [],
+    "tier": "Elite"
   },
   "moraROY": {
     "id": "moraROY",
@@ -637,7 +795,9 @@
     "description": "On opponent's QTMV death you gain a royalty vanguard",
     "type": "inherent",
     "imagePath": "/moraROY",
-    "value": 8
+    "value": 8,
+    "related": [],
+    "tier": "Elite"
   },
   "moraPAW": {
     "id": "moraPAW",
@@ -645,7 +805,9 @@
     "description": "On any of your opponent pawn death you gain a dyad all",
     "type": "inherent",
     "imagePath": "/moraPAW",
-    "value": 12
+    "value": 12,
+    "related": [],
+    "tier": "Legendary"
   },
   "moraNOR": {
     "id": "moraNOR",
@@ -653,7 +815,9 @@
     "description": "On any of your opponent piece death, you get a summon of that piece",
     "type": "inherent",
     "imagePath": "/moraNOR",
-    "value": 9
+    "value": 9,
+    "related": [],
+    "tier": "Elite"
   },
   "moraMAN": {
     "id": "moraMAN",
@@ -661,7 +825,9 @@
     "description": "On any of your opponent's piece death, gain 2 arcana charge tempo.",
     "type": "inherent",
     "imagePath": "/moraMAN",
-    "value": 2
+    "value": 2,
+    "related": [],
+    "tier": "Basic"
   },
   "gainDYA": {
     "id": "gainDYA",
@@ -669,7 +835,9 @@
     "description": "When a friendly Bishop, Knight, Zebra, or Unicorn reaches the opposite side of the board, you gain a Dyad.",
     "type": "passive",
     "imagePath": "/gainALL",
-    "value": 4
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
   "gainVAL": {
     "id": "gainVAL",
@@ -677,7 +845,9 @@
     "description": "When a friendly Bishop, Knight, Zebra, or Unicorn reaches the opposite side of the board, you gain a Royalty Valkyrie Summon.",
     "type": "passive",
     "imagePath": "/gainALL",
-    "value": 5
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
   "gainPAW": {
     "id": "gainPAW",
@@ -685,150 +855,168 @@
     "description": "When a friendly Bishop, Knight, Zebra, or Unicorn reaches the opposite side of the board, you gain a Pawn Summon.",
     "type": "passive",
     "imagePath": "/gainALL",
-    "value": 2
+    "value": 2,
+    "related": [],
+    "tier": "Basic"
   },
-  "offrA": {
-    "id": "offrA",
-    "name": "Masquerade",
-    "description": "Offer a friendly Pawn to gain a Herring summon arcana. A Herring must be captured if the move is legal.",
-    "type": "active",
-    "imagePath": "/offrA",
-    "value": 7
+  "modsREI": {
+    "id": "modsREI",
+    "name": "Reincarnate",
+    "description": "Any friendly pieces captured with Consume come back to you as a summon arcane.",
+    "type": "passive",
+    "imagePath": "/modsREI",
+    "value": 6,
+    "related": [],
+    "tier": "Advanced"
   },
-  "offrB": {
-    "id": "offrB",
-    "name": "Fortification",
-    "description": "Offer a friendly Queen or Templar for 2 Rook summon arcana.",
+  "modsHUR": {
+    "id": "modsHUR",
+    "name": "Hurricane",
+    "description": "Shift all pieces one square to either the left or right, until a legal position is exists. Pieces on the edge of the board wrap around to the opposite side.",
     "type": "active",
-    "imagePath": "/offrB",
-    "value": 2
+    "imagePath": "/modsHUR",
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
-  "offrC": {
-    "id": "offrC",
-    "name": "Rodeo Gambit",
-    "description": "Offer a friendly Templar or Queen to gain arcana summons of the Equus Family.",
+  "modsEVO": {
+    "id": "modsEVO",
+    "name": "Evolution",
+    "description": "After your next piece lands on a square, it upgrades to the next piece in the sequence: Pawn -> NZUB -> Rook -> Ghost -> Mystic -> TQ -> Valkyrie.",
     "type": "active",
-    "imagePath": "/offrC",
-    "value": 2
+    "imagePath": "/modsEVO",
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
-  "offrD": {
-    "id": "offrD",
-    "name": "Siege Gambit",
-    "description": "Offer a friendly minor piece to gain a Rook summon arcana.",
-    "type": "active",
-    "imagePath": "/offrD",
-    "value": 3
+  "modsMAG": {
+    "id": "modsMAG",
+    "name": "Magnet",
+    "description": "Pick a square. Pieces within 2-4 squares of the selected square are moved toward that square if possible.",
+    "type": "passive",
+    "imagePath": "/modsMAG",
+    "value": 3,
+    "related": [],
+    "tier": "Basic"
   },
-  "offrE": {
-    "id": "offrE",
-    "name": "Switching of the Guard",
-    "description": "Offer a friendly Queen or Templar to gain a summon arcana of the other one.",
-    "type": "active",
-    "imagePath": "/offrE",
-    "value": 3
+  "modsBLA": {
+    "id": "modsBLA",
+    "name": "Black Hole",
+    "description": "Pick a square. Pieces within 2-7 squares of the selected square are moved toward that square if possible.",
+    "type": "passive",
+    "imagePath": "/modsBLA",
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
-  "offrF": {
-    "id": "offrF",
-    "name": "Dimensional Apparition",
-    "description": "Offer a friendly Spectre or Wraith to gain a summon arcana of the other one.",
+  "modsRED": {
+    "id": "modsBLI",
+    "name": "Blinding Mist",
+    "description": "Reduce the scope of enemy slider patterns (Rook / Bishop) from 7 to 5 for 5 turns.",
     "type": "active",
-    "imagePath": "/offrF",
-    "value": 2
+    "imagePath": "/modsBLI",
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
-  "offrG": {
-    "id": "offrG",
-    "name": "Mystify",
-    "description": "Offer a friendly Mystic to gain a Queen or Templar summon arcana.",
-    "type": "active",
-    "imagePath": "/offrG",
-    "value": 4
+  "modsDOA": {
+    "id": "modsDOA",
+    "name": "Doppleganger Basic",
+    "description": "At the start of the game, this spell is replaced by a random basic spell.",
+    "type": "passive",
+    "imagePath": "/modsDOA",
+    "value": 3,
+    "related": [],
+    "tier": "Basic"
   },
-  "offrH": {
-    "id": "offrH",
-    "name": "Phantom Fortress",
-    "description": "Offer a friendly Rook to gain a Spectre or Wraith summon arcana.",
-    "type": "active",
-    "imagePath": "/offrH",
-    "value": 3
+  "modsDOB": {
+    "id": "modsDOB",
+    "name": "Doppleganger Advanced",
+    "description": "At the start of the game, this spell is replaced by a random advanced spell.",
+    "type": "passive",
+    "imagePath": "/modsDOB",
+    "value": 6,
+    "related": [],
+    "tier": "Advanced"
   },
-  "offrI": {
-    "id": "offrI",
-    "name": "Grave Offering",
-    "description": "Offer any friendly piece (not King) to gain a summon arcana of that piece.",
-    "type": "active",
-    "imagePath": "/offrI",
-    "value": 3
+  "modsDOC": {
+    "id": "modsDOC",
+    "name": "Doppleganger Elite",
+    "description": "At the start of the game, this spell is replaced by a random elite spell.",
+    "type": "passive",
+    "imagePath": "/modsDOC",
+    "value": 9,
+    "related": [],
+    "tier": "Elite"
   },
-  "offrJ": {
-    "id": "offrJ",
-    "name": "Demonic Surge",
-    "description": "Offer any friendly minor piece to gain a general dyad arcana",
-    "type": "active",
-    "imagePath": "/offrJ",
-    "value": 3
+  "modsDOD": {
+    "id": "modsDOD",
+    "name": "Doppleganger Legendary",
+    "description": "At the start of the game, this spell is replaced by a random legendary spell.",
+    "type": "passive",
+    "imagePath": "/modsDOD",
+    "value": 12,
+    "related": [],
+    "tier": "Legendary"
   },
-  "offrK": {
-    "id": "offrK",
-    "name": "Energy Repurpose",
-    "description": "Offer a friendly Q, T, M, or V to gain 3 royalty arcana of the same type.",
-    "type": "active",
-    "imagePath": "/offrK",
-    "value": 4
+  "modsTRA": {
+    "id": "modsTRA",
+    "name": "Trample",
+    "description": "Use your turn to eliminate an opponent's piece that is attacked by an Equus.",
+    "type": "passive",
+    "imagePath": "/modsTRA",
+    "value": 10,
+    "related": [],
+    "tier": "Elite"
   },
-  "offrL": {
-    "id": "offrL",
-    "name": "Shadow Reckoning",
-    "description": "Offer a friendly Pawn to gain a Ally Translocation arcana.",
-    "type": "active",
-    "imagePath": "/offrL",
-    "value": 3
+  "modsCHE": {
+    "id": "modsCOM",
+    "name": "Combo Berserker",
+    "description": "Every 5 checks you give your opponent's King, you gain a Dyad.",
+    "type": "passive",
+    "imagePath": "/modsCOM",
+    "value": 8,
+    "related": [],
+    "tier": "Elite"
   },
-  "offrM": {
-    "id": "offrM",
-    "name": "Valkyrie's Decision",
-    "description": "Offer a friendly Q, T, or M to gain Valkyrie Royalty, Omni Gaze, and Inheriteance arcana.",
-    "type": "active",
-    "imagePath": "/offrM",
-    "value": 6
+  "modsBOU": {
+    "id": "modsMIR",
+    "name": "Mirror Strike",
+    "description": "Friendly Bishops (not all Bishop move patterns) reflect off of the wall once.",
+    "type": "inherent",
+    "imagePath": "/modsMIR",
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   },
-  "offrN": {
-    "id": "offrN",
-    "name": "Gladiator's Combo",
-    "description": "Offer a friendly Q, T, or M to gain a General Dyad, Gluttony, and Inheriteance arcana.",
-    "type": "active",
-    "imagePath": "/offrN",
-    "value": 6
+  "gainPIN": {
+    "id": "gainPIN",
+    "name": "Pin Gain",
+    "description": "Achieve a pin, gain a dyad.",
+    "type": "passive",
+    "imagePath": "/gainPIN",
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
-  "offrO": {
-    "id": "offrO",
-    "name": "Wandering Gambit",
-    "description": "Offer a friendly Q, T, or M to gain a Herring summon, and Hermit token",
-    "type": "active",
-    "imagePath": "/offrO",
-    "value": 5
+  "gainFOR": {
+    "id": "gainFOR",
+    "name": "Force Gain",
+    "description": "Achieve a fork, gain a dyad.",
+    "type": "passive",
+    "imagePath": "/gainFOR",
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   },
-  "offrZ": {
-    "id": "offrZ",
-    "name": "Bellowing Recall",
-    "description": "Offer a friendly Valkyrie to gain a Banshee Summon, and a Veil and Vow Dyad arcana.",
-    "type": "active",
-    "imagePath": "/offrZ",
-    "value": 3
-  },
-  "offrQ": {
-    "id": "offrQ",
-    "name": "Combo Berserk",
-    "description": "Offer a friendly Queen or Templar to gain a Rook summon, a Warrior's Oath Dyad, Omni Gaze, and Gluttony arcana.",
-    "type": "active",
-    "imagePath": "/offrQ",
-    "value": 6
-  },
-  "offrR": {
-    "id": "offrR",
-    "name": "Fibonacci Gambit",
-    "description": "Offer a friendly Spectre or Wraith to gain 3 Entanglement, and Sixfold Silk arcana.",
-    "type": "active",
-    "imagePath": "/offrR",
-    "value": 5
+  "gainOUT": {
+    "id": "gainOUT",
+    "name": "Outer Gain",
+    "description": "Achieve an outpost with a minor piece or Rook, gain a dyad.",
+    "type": "passive",
+    "imagePath": "/gainOUT",
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
   }
 }

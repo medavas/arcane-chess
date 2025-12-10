@@ -91,8 +91,8 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         const pieceConfig = isWhitePiece
           ? whiteArcaneConfig
           : isBlackPiece
-            ? blackArcaneConfig
-            : null;
+          ? blackArcaneConfig
+          : null;
 
         // Check if this H-piece has Hemlock token and add class
         if (isHPiece && pieceConfig) {
@@ -231,11 +231,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           } else if (isKing && (pieceHasShftK || pieceHasShftA)) {
             // Note: Eclipse (shftI) doesn't work for kings, so it's excluded
             canShift = true;
-          } else if (
-            !isPawn &&
-            !isKing &&
-            (pieceHasShftI || pieceHasShftA)
-          ) {
+          } else if (!isPawn && !isKing && (pieceHasShftI || pieceHasShftA)) {
             // Eclipse (shftI) and shftA work for all non-pawn, non-king pieces
             // For shftI specifically, only show if Eclipse moves are available
             if (pieceHasShftA) {
@@ -654,7 +650,9 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       }
 
       // Get valid summon moves to check if this selection is allowed
-      const validMoves = game.getSummonMoves(interactionState.placingRoyalty) as Map<string, string[]>;
+      const validMoves = game.getSummonMoves(
+        interactionState.placingRoyalty
+      ) as Map<string, string[]>;
       const squareNum = prettyToSquare(key);
       let isValidSelection = false;
 
@@ -663,7 +661,9 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       // that correspond to the royalty being placed.
       if (validMoves) {
         const originPrefix = `r${char.toLowerCase()}@`;
-        for (const [fromKey, destinations] of Array.from(validMoves.entries())) {
+        for (const [fromKey, destinations] of Array.from(
+          validMoves.entries()
+        )) {
           if (fromKey.toLowerCase().startsWith(originPrefix)) {
             if (destinations && destinations.includes(key)) {
               isValidSelection = true;
@@ -678,15 +678,20 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         try {
           const keys = validMoves ? Array.from(validMoves.keys()) : [];
           // eslint-disable-next-line no-console
-          console.log('Summon validMoves keys:', keys, 'originPrefix:', `r${char.toLowerCase()}@`, 'selectedKey:', key);
-        } catch (e) { }
+          console.log(
+            'Summon validMoves keys:',
+            keys,
+            'originPrefix:',
+            `r${char.toLowerCase()}@`,
+            'selectedKey:',
+            key
+          );
+        } catch (e) {}
       }
 
       if (
-        ((GameBoard.side === COLOURS.WHITE &&
-          squareNum < whiteLimit) ||
-          (GameBoard.side === COLOURS.BLACK &&
-            squareNum > blackLimit)) &&
+        ((GameBoard.side === COLOURS.WHITE && squareNum < whiteLimit) ||
+          (GameBoard.side === COLOURS.BLACK && squareNum > blackLimit)) &&
         GameBoard.pieces[squareNum] !== PIECES.EMPTY &&
         isValidSelection
       ) {
@@ -796,24 +801,24 @@ export const BoardUX: React.FC<BoardUXProps> = ({
   const getSelected = () => {
     return interactionState.placingPiece !== 0
       ? {
-        role: `${PceChar.split('')[
-          interactionState.placingPiece
-        ].toLowerCase()}-piece`,
-        color: interactionState.playerColor,
-      }
+          role: `${PceChar.split('')[
+            interactionState.placingPiece
+          ].toLowerCase()}-piece`,
+          color: interactionState.playerColor,
+        }
       : interactionState.placingRoyalty !== 0
-        ? {
+      ? {
           role: `r${RtyChar.split('')[
             interactionState.placingRoyalty
           ].toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }
-        : interactionState.offeringType !== ''
-          ? {
-            role: `o${interactionState.offeringType.toLowerCase()}-piece`,
-            color: interactionState.playerColor,
-          }
-          : null;
+      : interactionState.offeringType !== ''
+      ? {
+          role: `o${interactionState.offeringType.toLowerCase()}-piece`,
+          color: interactionState.playerColor,
+        }
+      : null;
   };
 
   return (
@@ -858,7 +863,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         fromPocket: false,
       }}
       events={{
-        change: () => { },
+        change: () => {},
         dropNewPiece: handleDropNewPiece,
         move: handleMove,
         select: handleSelect,
