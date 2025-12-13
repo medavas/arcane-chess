@@ -6,7 +6,6 @@ function getPowerByKey(key) {
   return arcanaData[key]?.value ?? 0;
 }
 
-
 export const whiteArcaneConfig = {};
 export const blackArcaneConfig = {};
 
@@ -14,7 +13,10 @@ export const whiteArcaneSpellBook = {};
 export const blackArcaneSpellBook = {};
 
 const grantedByKey = { white: Object.create(null), black: Object.create(null) };
-const grantedByOffering = { white: Object.create(null), black: Object.create(null) };
+const grantedByOffering = {
+  white: Object.create(null),
+  black: Object.create(null),
+};
 
 export const setWhiteArcana = (pool) => {
   Object.keys(whiteArcaneSpellBook).forEach(
@@ -61,7 +63,7 @@ export const clearAllArcanaState = () => {
   Object.keys(blackArcaneConfig).forEach(
     (key) => delete blackArcaneConfig[key]
   );
-  
+
   // Clear spell books
   Object.keys(whiteArcaneSpellBook).forEach(
     (key) => delete whiteArcaneSpellBook[key]
@@ -69,17 +71,26 @@ export const clearAllArcanaState = () => {
   Object.keys(blackArcaneSpellBook).forEach(
     (key) => delete blackArcaneSpellBook[key]
   );
-  
+
   // Clear tracking objects
   grantedByKey.white = Object.create(null);
   grantedByKey.black = Object.create(null);
   grantedByOffering.white = Object.create(null);
   grantedByOffering.black = Object.create(null);
-  
+
   // Reset progression state
   ArcanaProgression.resetSide('white');
   ArcanaProgression.resetSide('black');
 };
+
+// Optional UI callback to notify the React layer that arcana state changed.
+let arcanaUpdateCallback = null;
+export function registerArcanaUpdateCallback(cb) {
+  arcanaUpdateCallback = cb;
+}
+export function unregisterArcanaUpdateCallback() {
+  arcanaUpdateCallback = null;
+}
 
 export const activateDyad = () => {
   // GameBoard.dyad = type;
@@ -234,16 +245,18 @@ export const varVars = {
 // Glare: Configure which pieces can cast Glare (apply Disarmament to attacked squares)
 // By default, only Rooks cast Glare. You can add other pieces here.
 export const GLARE_CASTER_PIECES = {
-  white: [PIECES.wR],  // White Rooks
-  black: [PIECES.bR],  // Black Rooks
+  white: [PIECES.wR], // White Rooks
+  black: [PIECES.bR], // Black Rooks
 };
 
 // Helper function to check if a piece can cast Glare
 export function canCastGlare(piece, side) {
-  const casters = side === 'white' || side === 0 ? GLARE_CASTER_PIECES.white : GLARE_CASTER_PIECES.black;
+  const casters =
+    side === 'white' || side === 0
+      ? GLARE_CASTER_PIECES.white
+      : GLARE_CASTER_PIECES.black;
   return casters.includes(piece);
 }
-
 
 // unneeded / depoerecated
 export const POWERS = (config) => {
@@ -257,14 +270,13 @@ export const POWERS = (config) => {
   );
 };
 
-
-
 function sideKey(x) {
   return x === 0 || x === 'white' ? 'white' : 'black';
 }
 
 export function incLiveArcana(side, key, delta = 1) {
-  const spellBook = side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
+  const spellBook =
+    side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
   const live = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
   const cap = spellBook[key] | 0;
   const cur = live[key] | 0;
@@ -275,31 +287,43 @@ export function incLiveArcana(side, key, delta = 1) {
 }
 
 export function offerGrant(side, key, qty = 1) {
-  const spellBook = side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
+  const spellBook =
+    side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
   const live = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
-  const offeringTracker = side === 'white' ? grantedByOffering.white : grantedByOffering.black;
+  const offeringTracker =
+    side === 'white' ? grantedByOffering.white : grantedByOffering.black;
 
   const curLive = live[key] | 0;
   const curCap = spellBook[key] | 0;
 
   if (isStackingKey(key)) {
+    // Raise the spellBook cap FIRST so incLiveArcana can cap against the new limit
     const targetCap = Math.max(curCap, curLive + qty);
     spellBook[key] = targetCap;
     incLiveArcana(side, key, +qty);
     // Track that this key was granted by an offering
     offeringTracker[key] = (offeringTracker[key] | 0) + qty;
   } else {
+    // For non-stacking, ensure spellBook is at least 1 so incLiveArcana can grant 1
     spellBook[key] = Math.max(curCap, 1);
     incLiveArcana(side, key, curLive >= 1 ? 0 : +1);
     // Track that this key was granted by an offering
     if (curLive < 1) offeringTracker[key] = 1;
   }
+  // notify UI if registered
+  try {
+    if (typeof arcanaUpdateCallback === 'function') arcanaUpdateCallback();
+  } catch (e) {
+    console.warn(e);
+  }
 }
 
 export function offerRevert(side, key, qty = 1) {
-  const spellBook = side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
+  const spellBook =
+    side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
   const live = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
-  const offeringTracker = side === 'white' ? grantedByOffering.white : grantedByOffering.black;
+  const offeringTracker =
+    side === 'white' ? grantedByOffering.white : grantedByOffering.black;
 
   if (isStackingKey(key)) {
     incLiveArcana(side, key, -qty);
@@ -313,6 +337,12 @@ export function offerRevert(side, key, qty = 1) {
     spellBook[key] = Math.max(live[key] | 0, 0);
     // Remove from offering tracker
     if (offeringTracker[key]) delete offeringTracker[key];
+  }
+  // notify UI if registered
+  try {
+    if (typeof arcanaUpdateCallback === 'function') arcanaUpdateCallback();
+  } catch (e) {
+    console.warn(e);
   }
 }
 
@@ -346,12 +376,14 @@ function isStackingKey(key) {
 }
 
 function remainingFor(side, key) {
-  const spellBook = side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
+  const spellBook =
+    side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
   const live = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
   return (spellBook[key] | 0) - (live[key] | 0);
 }
 function universeFor(side) {
-  const spellBook = side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
+  const spellBook =
+    side === 'white' ? whiteArcaneSpellBook : blackArcaneSpellBook;
   return Object.keys(spellBook).filter((k) => (spellBook[k] | 0) > 0);
 }
 
@@ -387,16 +419,22 @@ const ArcanaProgression = (() => {
   // Core—choose one key to grant based on tier & remaining capacity
   function grantOne(s) {
     const t = tier(s);
-    const offeringTracker = s === 'white' ? grantedByOffering.white : grantedByOffering.black;
+    const offeringTracker =
+      s === 'white' ? grantedByOffering.white : grantedByOffering.black;
 
     // Exclude keys that were granted by offerings from progression grants
     let pool = universeFor(s).filter(
-      (k) => (getPowerByKey(k) || 1) <= t && remainingFor(s, k) > 0 && !offeringTracker[k]
+      (k) =>
+        (getPowerByKey(k) || 1) <= t &&
+        remainingFor(s, k) > 0 &&
+        !offeringTracker[k]
     );
 
     // If nothing fits current tier, fall back to the smallest POWER_BY_KEY that still has remaining
     if (!pool.length) {
-      const all = universeFor(s).filter((k) => remainingFor(s, k) > 0 && !offeringTracker[k]);
+      const all = universeFor(s).filter(
+        (k) => remainingFor(s, k) > 0 && !offeringTracker[k]
+      );
       if (!all.length) return null;
       let minP = Infinity;
       for (const k of all) {
@@ -674,19 +712,22 @@ export function applyGainRewards(context, keys) {
       offerGrant(context.side, 'dyadA', 1);
       gifts.push('dyadA');
       // Consume the gain spell
-      const cfg = context.side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+      const cfg =
+        context.side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
       cfg[key] = (cfg[key] || 0) - 1;
     } else if (key === 'gainVAL') {
       offerGrant(context.side, 'sumnRV', 1);
       gifts.push('sumnRV');
       // Consume the gain spell
-      const cfg = context.side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+      const cfg =
+        context.side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
       cfg[key] = (cfg[key] || 0) - 1;
     } else if (key === 'gainPAW') {
       offerGrant(context.side, 'sumnP', 1);
       gifts.push('sumnP');
       // Consume the gain spell
-      const cfg = context.side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+      const cfg =
+        context.side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
       cfg[key] = (cfg[key] || 0) - 1;
     }
   }

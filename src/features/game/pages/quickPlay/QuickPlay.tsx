@@ -30,6 +30,8 @@ import {
   blackArcaneConfig,
   clearArcanaConfig,
   clearAllArcanaState,
+  registerArcanaUpdateCallback,
+  unregisterArcanaUpdateCallback,
 } from 'src/features/game/engine/arcaneDefs.mjs';
 
 import { IChessgroundApi } from 'src/features/game/board/chessgroundMod';
@@ -397,10 +399,14 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
           [this.state.nodeId]:
             Math.abs(
               100000 -
-              Math.abs(
-                GameBoard.material[this.state.playerColor === 'white' ? 0 : 1] -
-                GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
-              )
+                Math.abs(
+                  GameBoard.material[
+                    this.state.playerColor === 'white' ? 0 : 1
+                  ] -
+                    GameBoard.material[
+                      this.state.playerColor === 'white' ? 1 : 0
+                    ]
+                )
             ) *
             (timeLeft || 1) *
             (LS.config?.multiplier || 80),
@@ -470,6 +476,10 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
     window.addEventListener('contextmenu', this.handleContextMenu);
     window.addEventListener('beforeunload', this.handleBeforeUnload);
     if (!this.hasMounted) this.hasMounted = true;
+    // Register callback so UI updates when arcana is granted/reverted by engine
+    registerArcanaUpdateCallback(() => {
+      this.setState({ arcanaUpdateKey: this.state.arcanaUpdateKey + 1 });
+    });
   }
 
   componentWillUnmount() {
@@ -477,6 +487,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
     window.removeEventListener('contextmenu', this.handleContextMenu);
     window.removeEventListener('beforeunload', this.handleBeforeUnload);
     clearAllArcanaState();
+    unregisterArcanaUpdateCallback();
   }
 
   updateQuickPlayState = (property: string, value: any) => {
@@ -583,8 +594,9 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                   } else {
                     value =
                       pieces[
-                      `${this.state.playerColor === 'white' ? 'w' : 'b'
-                      }${value}`
+                        `${
+                          this.state.playerColor === 'white' ? 'w' : 'b'
+                        }${value}`
                       ];
                   }
                 }
@@ -611,18 +623,18 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
             score={LS?.nodeScores?.[this.state.nodeId]}
             type={
               this.state.gameOverType.split(' ')[1] === 'mates' &&
-                this.state.playerColor === this.state.gameOverType.split(' ')[0]
+              this.state.playerColor === this.state.gameOverType.split(' ')[0]
                 ? 'victory-qp'
                 : [
-                  'stalemate',
-                  '3-fold repetition',
-                  'insufficient material',
-                  'fifty move rule',
-                ].some((drawType) =>
-                  this.state.gameOverType.toLowerCase().includes(drawType)
-                )
-                  ? 'draw-qp'
-                  : 'defeat-qp'
+                    'stalemate',
+                    '3-fold repetition',
+                    'insufficient material',
+                    'fifty move rule',
+                  ].some((drawType) =>
+                    this.state.gameOverType.toLowerCase().includes(drawType)
+                  )
+                ? 'draw-qp'
+                : 'defeat-qp'
             }
           />
           <PromotionModal

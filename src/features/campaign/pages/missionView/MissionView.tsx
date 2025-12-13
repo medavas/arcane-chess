@@ -39,6 +39,8 @@ import {
   whiteArcaneConfig,
   blackArcaneConfig,
   clearArcanaConfig,
+  registerArcanaUpdateCallback,
+  unregisterArcanaUpdateCallback,
 } from 'src/features/game/engine/arcaneDefs.mjs';
 
 import { IChessgroundApi } from 'src/features/game/board/chessgroundMod';
@@ -260,24 +262,24 @@ class UnwrappedMissionView extends React.Component<Props, State> {
       playerInc:
         getLocalStorage(this.props.auth.user.username).config.color === 'white'
           ? booksMap[
-            `book${getLocalStorage(this.props.auth.user.username).chapter}`
-          ]?.[getLocalStorage(this.props.auth.user.username).nodeId]
-            .time[0][1]
+              `book${getLocalStorage(this.props.auth.user.username).chapter}`
+            ]?.[getLocalStorage(this.props.auth.user.username).nodeId]
+              .time[0][1]
           : booksMap[
-            `book${getLocalStorage(this.props.auth.user.username).chapter}`
-          ]?.[getLocalStorage(this.props.auth.user.username).nodeId]
-            .time[1][1],
+              `book${getLocalStorage(this.props.auth.user.username).chapter}`
+            ]?.[getLocalStorage(this.props.auth.user.username).nodeId]
+              .time[1][1],
       timeLeft: null,
       playerClock:
         getLocalStorage(this.props.auth.user.username).config.clock === false
           ? null
           : getLocalStorage(this.props.auth.user.username).config.color ===
             'white'
-            ? booksMap[
+          ? booksMap[
               `book${getLocalStorage(this.props.auth.user.username).chapter}`
             ]?.[getLocalStorage(this.props.auth.user.username).nodeId]
               .time[0][0]
-            : booksMap[
+          : booksMap[
               `book${getLocalStorage(this.props.auth.user.username).chapter}`
             ]?.[getLocalStorage(this.props.auth.user.username).nodeId]
               .time[1][0],
@@ -293,7 +295,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         ]?.[getLocalStorage(this.props.auth.user.username).nodeId]?.panels[
           'panel-1'
         ]?.turn ||
-          getLocalStorage(this.props.auth.user.username).config.color === 'white'
+        getLocalStorage(this.props.auth.user.username).config.color === 'white'
           ? 'black'
           : 'white',
       hasMounted: false,
@@ -330,20 +332,20 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         LS.config.color === 'white'
           ? this.hasMissionArcana
             ? booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
-              .whiteArcane
+                .whiteArcane
             : LS.inventory
           : // black should always be engine arcana
-          booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
-            .blackArcane,
+            booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
+              .blackArcane,
       blackArcana:
         LS.config.color === 'black'
           ? this.hasMissionArcana
             ? booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
-              .whiteArcane
+                .whiteArcane
             : LS.inventory
           : // black should always be engine arcana
-          booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
-            .blackArcane,
+            booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`]?.panels['panel-1']
+              .blackArcane,
       placingPiece: 0,
       swapType: '',
       isTeleport: false,
@@ -374,14 +376,16 @@ class UnwrappedMissionView extends React.Component<Props, State> {
       promotionModalOpen: false,
       placingPromotion:
         getLocalStorage(this.props.auth.user.username).config.autopromotion ===
-          'Select'
+        'Select'
           ? 0
           : pieces[
-          `${getLocalStorage(this.props.auth.user.username).config.color[0]
-          }${getLocalStorage(this.props.auth.user.username).config
-            .autopromotion
-          }`
-          ],
+              `${
+                getLocalStorage(this.props.auth.user.username).config.color[0]
+              }${
+                getLocalStorage(this.props.auth.user.username).config
+                  .autopromotion
+              }`
+            ],
       hint: '',
       theme: booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`].theme,
       hideCompletedPage:
@@ -565,7 +569,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         [this.state.nodeId]:
           Math.abs(
             GameBoard.material[this.state.playerColor === 'white' ? 0 : 1] -
-            GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
+              GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
           ) *
           (timeLeft || 1) *
           LS.config.multiplier,
@@ -638,8 +642,9 @@ class UnwrappedMissionView extends React.Component<Props, State> {
     return new Promise((resolve) => {
       if (this.arcaneChess().hasDivineReckoning()) {
         // Auto-promote to Valkyrie when Divine Reckoning is active
-        const valkyriePiece = `${this.state.playerColor === 'white' ? 'w' : 'b'
-          }V`;
+        const valkyriePiece = `${
+          this.state.playerColor === 'white' ? 'w' : 'b'
+        }V`;
         this.setState({ placingPromotion: pieces[valkyriePiece] }, () => {
           callback(this.state.placingPromotion!);
           resolve();
@@ -686,6 +691,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
   componentWillUnmount(): void {
     window.removeEventListener('keydown', this.handleKeyDown);
     window.removeEventListener('contextmenu', this.handleContextMenu);
+    unregisterArcanaUpdateCallback();
   }
 
   componentDidUpdate() {
@@ -703,6 +709,10 @@ class UnwrappedMissionView extends React.Component<Props, State> {
     const LS = getLocalStorage(this.props.auth.user.username);
     window.addEventListener('keydown', this.handleKeyDown);
     window.addEventListener('contextmenu', this.handleContextMenu);
+    // Register callback so UI updates when arcana is granted/reverted by engine
+    registerArcanaUpdateCallback(() => {
+      this.setState({ arcanaUpdateKey: this.state.arcanaUpdateKey + 1 });
+    });
     if (!this.hasMounted && LS.chapter !== 0) {
       this.hasMounted = true;
       clearArcanaConfig();
@@ -749,7 +759,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
     const playerWins =
       this.state.gameOverType.split(' ')[1] === 'mates' &&
       getLocalStorage(this.props.auth.user.username).config.color ===
-      this.state.gameOverType.split(' ')[0];
+        this.state.gameOverType.split(' ')[0];
 
     // Check if game ended in a draw
     const isDraw = [
@@ -857,9 +867,10 @@ class UnwrappedMissionView extends React.Component<Props, State> {
               handleClose={() => this.setState({ gameOver: false })}
               // modalType={this.state.endScenario}
               message={`${isDraw ? 'Draw - ' : ''}${this.state.gameOverType} 
-                ${playerWins
-                  ? this.state.victoryMessage
-                  : isDraw
+                ${
+                  playerWins
+                    ? this.state.victoryMessage
+                    : isDraw
                     ? 'The game ended in a draw.'
                     : this.state.defeatMessage
                 }`}
@@ -1127,9 +1138,9 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                         (this.state.playerColor === 'white'
                           ? whiteArcaneConfig
                           : blackArcaneConfig) as Record<
-                            string,
-                            number | string | undefined
-                          >
+                          string,
+                          number | string | undefined
+                        >
                       }
                       playerColor={this.state.playerColor}
                       thinking={this.state.thinking}

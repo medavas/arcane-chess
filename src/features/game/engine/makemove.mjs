@@ -24,6 +24,8 @@ import {
 import {
   whiteArcaneConfig,
   blackArcaneConfig,
+  whiteArcaneSpellBook,
+  blackArcaneSpellBook,
   ArcanaProgression,
   offerGrant,
   offerRevert,
@@ -906,10 +908,29 @@ export function MakeMove(move, moveType = '') {
   }
 
   if (TOSQ(move) > 0 && isConsumeFlag(move) && !isShift(move)) {
-    (side === COLOURS.WHITE
-      ? whiteArcaneConfig
-      : blackArcaneConfig
-    ).modsCON -= 1;
+    const consumingConfig =
+      side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+    consumingConfig.modsCON -= 1;
+
+    // modsREI: Reincarnate
+    // When Consume captures an opponent piece, grant the capturer a summon of that piece type.
+    if (
+      (consumingConfig.modsREI || 0) > 0 &&
+      targetPieceAtTo !== PIECES.EMPTY &&
+      commit
+    ) {
+      const victimCol = PieceCol[targetPieceAtTo];
+      const isFriendlyPiece =
+        victimCol === side && targetPieceAtTo !== PIECES.EMPTY;
+      if (isFriendlyPiece) {
+        const sumnKey = `sumn${PceChar.charAt(targetPieceAtTo).toUpperCase()}`;
+        const playerSide = side === COLOURS.WHITE ? 'white' : 'black';
+        offerGrant(playerSide, sumnKey, 1);
+        h.modsREIConsumed = true;
+        h.modsREIGift = sumnKey;
+        h.modsREISide = playerSide;
+      }
+    }
   }
 
   if (TOSQ(move) > 0 && isSummon(move)) {
@@ -1203,7 +1224,10 @@ export function MakeMove(move, moveType = '') {
     // Special case for offrI (Grave Offering, index 13): grant summon of offered piece
     const isGraveOffering = promoted === 13;
 
-    if (isGraveOffering || (Array.isArray(offeringNumbers) && offeringNumbers.length > 0)) {
+    if (
+      isGraveOffering ||
+      (Array.isArray(offeringNumbers) && offeringNumbers.length > 0)
+    ) {
       const offerSymbol = OFFER_CHARS[promoted];
       const offrKey = `offr${offerSymbol}`;
       const have = arcaneConfig[offrKey] ?? 0;
@@ -1478,6 +1502,14 @@ export function TakeMove(wasDyadMove = false) {
       ? whiteArcaneConfig
       : blackArcaneConfig
     ).modsCON += 1;
+
+    // Revert modsREI: Reincarnate
+    if (h && h.modsREIConsumed && h.modsREIGift && h.modsREISide) {
+      offerRevert(h.modsREISide, h.modsREIGift, 1);
+      h.modsREIConsumed = undefined;
+      h.modsREIGift = undefined;
+      h.modsREISide = undefined;
+    }
   }
 
   if (move & MFLAGEP) {
@@ -1580,7 +1612,8 @@ export function TakeMove(wasDyadMove = false) {
       ClearPiece(from);
       // Determine the original pawn color from the promoted piece color
       const promotedPieceColor = PieceCol[promoEpsilon];
-      const originalPawn = promotedPieceColor === COLOURS.WHITE ? PIECES.wP : PIECES.bP;
+      const originalPawn =
+        promotedPieceColor === COLOURS.WHITE ? PIECES.wP : PIECES.bP;
       AddPiece(from, originalPawn);
 
       try {

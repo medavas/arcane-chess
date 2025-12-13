@@ -863,7 +863,7 @@
     "id": "modsREI",
     "name": "Reincarnate",
     "description": "Any friendly pieces captured with Consume come back to you as a summon arcane.",
-    "type": "passive",
+    "type": "inherent",
     "imagePath": "/modsREI",
     "value": 6,
     "related": [],

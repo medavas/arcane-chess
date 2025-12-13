@@ -193,10 +193,17 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
     [progress.pct]
   );
 
-  // Use spellBook if it has keys, otherwise fallback to arcaneConfig
-  // Don't memoize this - we need to respond to mutations of module-level objects
-  const sourceMap =
-    spellBook && Object.keys(spellBook).length > 0 ? spellBook : arcaneConfig;
+  // Create a stable list of keys that are present in either the static spellBook
+  // (granted/unlocked spells) or the live arcaneConfig (current charges).
+  // Using the union prevents a single grant (e.g. on capture) from hiding
+  // the rest of the player's unlocked spells when spellBook temporarily
+  // contains only the granted key.
+  const sourceKeys = React.useMemo(() => {
+    const aKeys = arcaneConfig ? Object.keys(arcaneConfig) : [];
+    const bKeys = spellBook ? Object.keys(spellBook) : [];
+    const set = new Set<string>([...aKeys, ...bKeys]);
+    return Array.from(set);
+  }, [arcaneConfig, spellBook]);
 
   // Get hover spell details from shared hoverArcane prop (works for both player and opponent)
   const hoveredSpell = React.useMemo(
@@ -219,7 +226,7 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
           ))}
         </div>
         <div className="new-arcana-selector__grid new-arcana-selector__grid--horizontal">
-          {_.map(sourceMap, (_ignoredValue, key: string) => {
+          {sourceKeys.map((key: string) => {
             const entry = arcana[key];
             if (!entry) return null;
 
@@ -344,7 +351,7 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
       <div className="new-arcana-selector__grid-container">
         <div className="new-arcana-selector__grid">
           {/* Arcana Select - 2 column vertically scrollable grid */}
-          {_.map(sourceMap, (_ignoredValue, key: string) => {
+          {sourceKeys.map((key: string) => {
             const entry = arcana[key];
             if (!entry) return null;
 
