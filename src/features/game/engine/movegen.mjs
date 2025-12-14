@@ -69,7 +69,7 @@ import {
 import { MakeMove, TakeMove } from './makemove';
 import { validMoves } from './gui.mjs';
 
-const EPSILON_MYRIAD_CONST = 30;
+
 
 const MvvLvaValue = [
   0, 100, 500, 600, 700, 1200, 1400, 100, 500, 600, 700, 1200, 1400, 300, 900,
@@ -227,7 +227,7 @@ export function AddQuietMove(move, capturesOnly) {
     } else {
       GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply + 1]] =
         GameBoard.searchHistory[
-          GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
+        GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
         ];
     }
     GameBoard.moveListStart[GameBoard.ply + 1]++;
@@ -632,18 +632,18 @@ export function GenerateMoves(
 
   let currentArcanaSide =
     GameBoard.side === 0 ? GameBoard.whiteArcane : GameBoard.blackArcane;
-  let hasMyriadPath = currentArcanaSide[1] & 256;
+
 
   let has5thDimensionSword = currentArcanaSide[4] & 262144;
   let hasHermit = (currentArcanaSide[10] & 1) !== 0; // toknHER
   let hasHemlock = (currentArcanaSide[10] & 2) !== 0; // toknHEM
 
-  let pawnCanShift = currentArcanaSide[1] & 1 || currentArcanaSide[1] & 256;
-  let equusCanShift = currentArcanaSide[1] & 2 || currentArcanaSide[1] & 256;
-  let bishopCanShift = currentArcanaSide[1] & 4 || currentArcanaSide[1] & 256;
-  let rookCanShift = currentArcanaSide[1] & 8 || currentArcanaSide[1] & 256;
-  let ghostCanShift = currentArcanaSide[1] & 32 || currentArcanaSide[1] & 256;
-  let kingCanShift = currentArcanaSide[1] & 512 || currentArcanaSide[1] & 256;
+  let pawnCanShift = currentArcanaSide[1] & 1;
+  let equusCanShift = currentArcanaSide[1] & 2;
+  let bishopCanShift = currentArcanaSide[1] & 4;
+  let rookCanShift = currentArcanaSide[1] & 8;
+  let ghostCanShift = currentArcanaSide[1] & 32;
+  let kingCanShift = currentArcanaSide[1] & 512;
 
   const herringArray = getHerrings(GameBoard.side);
 
@@ -832,7 +832,7 @@ export function GenerateMoves(
           if (
             i === j ||
             GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][i]] ===
-              GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
+            GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
           ) {
             continue;
           }
@@ -1255,7 +1255,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.whiteArcane[3]
                 ) {
                   if (
@@ -1318,7 +1318,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.blackArcane[3]
                 ) {
                   if (
@@ -1445,7 +1445,7 @@ export function GenerateMoves(
             AddWhitePawnQuietMove(
               sq,
               sq - 1,
-              hasMyriadPath ? 30 : 1,
+              1,
               MFLAGSHFT,
               capturesOnly
             );
@@ -1459,7 +1459,7 @@ export function GenerateMoves(
               sq,
               sq - 1,
               GameBoard.pieces[sq - 1],
-              hasMyriadPath ? 30 : 1,
+              1,
               MFLAGSHFT,
               capturesOnly
             );
@@ -1469,7 +1469,7 @@ export function GenerateMoves(
             AddWhitePawnQuietMove(
               sq,
               sq + 1,
-              hasMyriadPath ? 30 : 1,
+              1,
               MFLAGSHFT,
               capturesOnly
             );
@@ -1483,7 +1483,7 @@ export function GenerateMoves(
               sq,
               sq + 1,
               GameBoard.pieces[sq + 1],
-              hasMyriadPath ? 30 : 1,
+              1,
               MFLAGSHFT,
               capturesOnly
             );
@@ -1493,7 +1493,7 @@ export function GenerateMoves(
             AddWhitePawnQuietMove(
               sq,
               sq - 10,
-              hasMyriadPath ? 30 : 1,
+              1,
               MFLAGSHFT,
               capturesOnly
             );
@@ -1507,7 +1507,7 @@ export function GenerateMoves(
               sq,
               sq - 10,
               GameBoard.pieces[sq - 10],
-              hasMyriadPath ? 30 : 1,
+              1,
               MFLAGSHFT,
               capturesOnly
             );
@@ -1832,7 +1832,7 @@ export function GenerateMoves(
             AddBlackPawnQuietMove(
               sq,
               sq - 1,
-              hasMyriadPath ? 30 : 7,
+              7,
               MFLAGSHFT,
               capturesOnly
             );
@@ -1846,7 +1846,7 @@ export function GenerateMoves(
               sq,
               sq - 1,
               GameBoard.pieces[sq - 1],
-              hasMyriadPath ? 30 : 7,
+              7,
               MFLAGSHFT,
               capturesOnly
             );
@@ -1856,7 +1856,7 @@ export function GenerateMoves(
             AddBlackPawnQuietMove(
               sq,
               sq + 1,
-              hasMyriadPath ? 30 : 7,
+              7,
               MFLAGSHFT,
               capturesOnly
             );
@@ -1870,7 +1870,7 @@ export function GenerateMoves(
               sq,
               sq + 1,
               GameBoard.pieces[sq + 1],
-              hasMyriadPath ? 30 : 7,
+              7,
               MFLAGSHFT,
               capturesOnly
             );
@@ -1880,7 +1880,7 @@ export function GenerateMoves(
             AddBlackPawnQuietMove(
               sq,
               sq + 10,
-              hasMyriadPath ? 30 : 7,
+              7,
               MFLAGSHFT,
               capturesOnly
             );
@@ -1894,7 +1894,7 @@ export function GenerateMoves(
               sq,
               sq + 10,
               GameBoard.pieces[sq + 10],
-              hasMyriadPath ? 30 : 7,
+              7,
               MFLAGSHFT,
               capturesOnly
             );
@@ -2684,51 +2684,6 @@ export function GenerateMoves(
 
         const canQuiet = !capturesOnly && !herrings.length;
 
-        // Myriad behaviour: if the Myriad path (arcane bit 256) is active but
-        // there is also at least one more specific shift available for this
-        // piece, prefer the specific spell (use the piece id) and only use the
-        // EPSILON_MYRIAD_CONST when Myriad is the only available shift.
-        const hasMyriadPath = (currentArcanaSide[1] & 256) !== 0;
-
-        // Determine if there is a specific (non-Myriad) shift available for
-        // this exact piece. We must ignore the Myriad bit when checking
-        // specific availability so that a Myriad-only grant doesn't get
-        // mistaken for a specific shift.
-        const cs = currentArcanaSide[1];
-        const specificEquus = (cs & 2) !== 0;
-        const specificGhost = (cs & 32) !== 0;
-        const specificHerring = (cs & 64) !== 0;
-        const specificKing = (cs & 512) !== 0;
-        const banSAvailable = (currentArcanaSide[4] & 2097152) !== 0;
-
-        let pieceHasSpecificShift = false;
-        if (
-          specificEquus &&
-          (pce === PIECES.wN ||
-            pce === PIECES.wZ ||
-            pce === PIECES.wU ||
-            pce === PIECES.bN ||
-            pce === PIECES.bZ ||
-            pce === PIECES.bU)
-        )
-          pieceHasSpecificShift = true;
-        if (specificGhost && (pce === PIECES.wS || pce === PIECES.bS))
-          pieceHasSpecificShift = true;
-        if (specificGhost && (pce === PIECES.wW || pce === PIECES.bW))
-          pieceHasSpecificShift = true;
-        if (specificHerring && (pce === PIECES.wH || pce === PIECES.bH))
-          pieceHasSpecificShift = true;
-        if (banSAvailable && (pce === PIECES.wS || pce === PIECES.bS))
-          pieceHasSpecificShift = true;
-        if (specificKing && (pce === PIECES.wK || pce === PIECES.bK))
-          pieceHasSpecificShift = true;
-
-        const useMyriadPiece = hasMyriadPath && !pieceHasSpecificShift;
-
-        // for eclipse
-        // how to add move
-        // captured === 31
-
         const runShift = (dirCount, getDir, canCapture = true) => {
           for (let i = 0; i < dirCount; i++) {
             const targetSq = sq + getDir(i);
@@ -2749,10 +2704,7 @@ export function GenerateMoves(
                     sq,
                     targetSq,
                     PIECES.EMPTY,
-                    // If useMyriadPiece is true then Myriad is the only shift
-                    // available for this piece; otherwise prefer the specific
-                    // piece id so that specific spells get consumed first.
-                    !useMyriadPiece ? pce : EPSILON_MYRIAD_CONST,
+                    pce,
                     MFLAGSHFT
                   ),
                   capturesOnly
@@ -2774,10 +2726,7 @@ export function GenerateMoves(
                   sq,
                   targetSq,
                   targetPiece,
-                  // Same decision as for quiet shifts: prefer specific spell
-                  // unless Myriad is the only available shift for this piece.
-                  // EXCEPTION: Hermit/Hemlock (H-Unit) always uses specific ID to avoid Myriad consumption
-                  !useMyriadPiece || isHUnit ? pce : EPSILON_MYRIAD_CONST,
+                  pce,
                   MFLAGSHFT
                 ),
                 false,
@@ -2879,7 +2828,7 @@ export function GenerateMoves(
     // Prevent Eclipse's adjacent-hop from applying to Unicorn/Zebra,
     // but still allow the cross-board (edge-wrap) Eclipse for them.
     const hasShftIBit = (currentArcanaSide[1] & POWERBIT.shftI) !== 0;
-    const hasMyriad = (currentArcanaSide[1] & 256) !== 0;
+    const hasMyriad = false;
 
     for (let sqIter = 21; sqIter <= 98; sqIter++) {
       if (SQOFFBOARD(sqIter) === BOOL.TRUE) continue;
@@ -2929,8 +2878,8 @@ export function GenerateMoves(
       if ((cs & 512) !== 0 && (mover === PIECES.wK || mover === PIECES.bK))
         pieceHasSpecific = true;
 
-      // If neither shftI nor Myriad-without-specific is available, skip entirely.
-      if (!hasShftIBit && !(hasMyriad && !pieceHasSpecific)) continue;
+      // If shftI is not available skip entirely.
+      if (!hasShftIBit) continue;
 
       const canQuiet = !capturesOnly && !herrings.length;
 
@@ -2964,11 +2913,10 @@ export function GenerateMoves(
 
           if (herrings.length && !_.includes(herrings, land)) continue;
 
-          // choose what to consume: specific shift > shftI > Myriad > mover
+          // choose what to consume: specific shift > shftI > mover
           let promotedForMove;
           if (pieceHasSpecific) promotedForMove = mover;
-          else if (hasShftIBit) promotedForMove = 31; // your Eclipse token
-          else if (hasMyriad) promotedForMove = EPSILON_MYRIAD_CONST;
+          else if (hasShftIBit) promotedForMove = 31;
           else promotedForMove = mover;
 
           if (canQuiet) {
@@ -2994,7 +2942,6 @@ export function GenerateMoves(
           let promotedForEdge;
           if (pieceHasSpecific) promotedForEdge = mover;
           else if (hasShftIBit) promotedForEdge = 31;
-          else if (hasMyriad) promotedForEdge = EPSILON_MYRIAD_CONST;
           else promotedForEdge = mover;
 
           AddQuietMove(
@@ -3152,22 +3099,6 @@ export function GenerateMoves(
             GameBoard.dyad === 1 ||
             GameBoard.dyad === dyad;
 
-          // Decide whether to consume Myriad or a specific shift for sliders.
-          // We must only prefer specific shifts when the SIDE actually has the
-          // corresponding specific shift (exclude the Myriad bit when
-          // determining "specific" availability). This prevents a Myriad-only
-          // grant from being treated as a specific shift.
-          const cs = currentArcanaSide[1];
-          const hasMyriadPathSlider = (cs & 256) !== 0;
-          const specificBishop = (cs & 4) !== 0;
-          const specificRook = (cs & 8) !== 0;
-          const specificShiftAvailableForMover =
-            (specificBishop &&
-              (moverPce === PIECES.wB || moverPce === PIECES.bB)) ||
-            (specificRook &&
-              (moverPce === PIECES.wR || moverPce === PIECES.bR));
-          const useMyriadForSlider =
-            hasMyriadPathSlider && !specificShiftAvailableForMover;
 
           if (moverPce === PIECES.wR || moverPce === PIECES.bR) {
             if (SQOFFBOARD(shft_t_R_sq) === BOOL.FALSE) {
@@ -3183,8 +3114,7 @@ export function GenerateMoves(
                     sq,
                     shft_t_R_sq,
                     PIECES.EMPTY,
-                    // prefer specific shift unless Myriad is the only option
-                    useMyriadForSlider ? EPSILON_MYRIAD_CONST : pce,
+                    pce,
                     MFLAGSHFT
                   ),
                   capturesOnly
@@ -3206,7 +3136,7 @@ export function GenerateMoves(
                     sq,
                     shft_t_R_sq,
                     rTargetPce,
-                    useMyriadForSlider ? EPSILON_MYRIAD_CONST : pce,
+                    pce,
                     MFLAGSHFT
                   ),
                   false,
@@ -3231,7 +3161,7 @@ export function GenerateMoves(
                     sq,
                     shft_t_B_sq,
                     GameBoard.pieces[shft_t_B_sq],
-                    useMyriadForSlider ? EPSILON_MYRIAD_CONST : pce,
+                    pce,
                     MFLAGSHFT
                   ),
                   capturesOnly
@@ -3253,7 +3183,7 @@ export function GenerateMoves(
                     sq,
                     shft_t_B_sq,
                     GameBoard.pieces[shft_t_B_sq],
-                    useMyriadForSlider ? EPSILON_MYRIAD_CONST : pce,
+                    pce,
                     MFLAGSHFT
                   ),
                   false,

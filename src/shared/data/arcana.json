@@ -871,8 +871,8 @@
   },
   "modsEVO": {
     "id": "modsEVO",
-    "name": "Evolution",
-    "description": "After your next piece lands on a square, it upgrades to the next piece in the sequence: Pawn -> NZUB -> Rook -> Ghost -> Mystic -> TQ -> Valkyrie.",
+    "name": "Berserking Evolution",
+    "description": "When a piece captures, it evolves: Pawn → Knight (ZUB), Rook → Wraith (S), Mystic → Queen (T) → Valkyrie.",
     "type": "active",
     "imagePath": "/modsEVO",
     "value": 5,

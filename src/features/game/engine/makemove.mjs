@@ -62,8 +62,7 @@ const royaltyIndexMapRestructure = [
 // cap 30 = capturable exile
 // cap 31 = teleport
 // const TELEPORT_CONST = 31;
-// eps 30 = myriad
-const EPSILON_MYRIAD_CONST = 30;
+
 // eps 31 = eclipse
 const ECLIPSE_CONST = 31;
 
@@ -298,8 +297,7 @@ function shiftKeyFromMove(move, moverPiece) {
     case PIECES.wK:
     case PIECES.bK:
       return 'shftK';
-    case EPSILON_MYRIAD_CONST:
-      return 'shftA';
+
     case ECLIPSE_CONST:
       return 'shftI';
     default:

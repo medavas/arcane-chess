@@ -171,7 +171,6 @@ export const POWERBIT = {
   shftG: 32,
   // shftH: 64,
   shftI: 128,
-  shftA: 256,
   shftK: 512,
 
   // 2 active 2
@@ -192,8 +191,8 @@ export const POWERBIT = {
   modsDIV: 1024, //              divine reckoning
   modsTRO: 2048, // inherent     // trojan horse
   modsREI: 4096, // inherent     . reincarnet for cons and offr
-  modsSOV: 8192, // passive      sovereign (summon pieces have square conditions - deprecate?
-  modsDOP: 16384, // passive     doppleganger
+  modsEVO: 8192, // passive      berserking evolution
+  modsDOP: 16384, // passive     dep - break out to where offer was
   modsMAG: 32768, // active      magnet
   modsBLA: 65536, // active      black hole
   modsSUR: 131072, // passive    pawn surge
@@ -227,6 +226,7 @@ export const POWERBIT = {
   areaQ: 8,
   areaE: 16,
   areaN: 32,
+  // wildcard that lets you change?
 
   // 9 gain passive 3
   gainDYA: 1,
