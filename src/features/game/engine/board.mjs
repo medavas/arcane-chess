@@ -369,9 +369,9 @@ export function PrintPieceLists() {
     for (pceNum = 0; pceNum < GameBoard.pceNum[piece]; pceNum++) {
       console.log(
         'Piece ' +
-        PceChar[piece] +
-        ' on ' +
-        PrSq(GameBoard.pList[PCEINDEX(piece, pceNum)])
+          PceChar[piece] +
+          ' on ' +
+          PrSq(GameBoard.pList[PCEINDEX(piece, pceNum)])
       );
     }
   }
@@ -722,7 +722,7 @@ export let InCheck = () => {
 export let currentArcanaSide =
   GameBoard.side === 0 ? GameBoard.whiteArcane : GameBoard.blackArcane;
 export let has5thDimensionSword = currentArcanaSide[4] & 262144;
-export let hasHermit = currentArcanaSide[10] & 1;  // toknHER
+export let hasHermit = currentArcanaSide[10] & 1; // toknHER
 
 export let pawnCanShift =
   currentArcanaSide[1] & 1 || currentArcanaSide[1] & 256;
@@ -782,8 +782,8 @@ export function SqAttacked(sq, side) {
     side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;
 
   const has5th = (arc[4] & 262144) !== 0;
-  const hasHerm = (arc[10] & 1) !== 0;  // toknHER
-  const hasHeml = (arc[10] & 2) !== 0;  // toknHEM
+  const hasHerm = (arc[10] & 1) !== 0; // toknHER
+  const hasHeml = (arc[10] & 2) !== 0; // toknHEM
 
   const pawnShift = arc[1] & 1 || arc[1] & 256;
   const equusShift = arc[1] & 2 || arc[1] & 256;
@@ -812,7 +812,11 @@ export function SqAttacked(sq, side) {
     has5th;
 
   const hasHermitShiftAttack = (p) =>
-    herringShift && PieceHerring[p] === BOOL.TRUE && has5th && hasHerm && !hasHeml;
+    herringShift &&
+    PieceHerring[p] === BOOL.TRUE &&
+    has5th &&
+    hasHerm &&
+    !hasHeml;
 
   const hasHemlockShiftAttack = (p) =>
     herringShift && PieceHerring[p] === BOOL.TRUE && hasHeml && !hasHerm;

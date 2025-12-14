@@ -598,7 +598,7 @@ export function startSearch(thinkingTime, depth, engineColor) {
     engineArcana.modsEVO > 0
   ) {
     if (bestScore > 200 || bestScore < -200) {
-      if (Math.random() > 0.9) {
+      if (Math.random() > 0.95) {
         GameBoard.evo = 1;
         GameBoard.evoClock = 0;
         GameBoard.evoOwner = colorInt === COLOURS.WHITE ? 'white' : 'black';

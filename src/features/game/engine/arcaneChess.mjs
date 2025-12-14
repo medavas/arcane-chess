@@ -37,11 +37,12 @@ import {
   blackArcaneSpellBook,
   setWhiteArcana,
   setBlackArcana,
+  triggerArcanaUpdateCallback,
   POWERBIT,
   ArcanaProgression,
 } from './arcaneDefs.mjs';
 import { COLOURS, PIECES, prettyToSquare, FILES, PCEINDEX } from './defs.mjs';
-import { MakeMove, TakeMove, MovePiece, AddPiece } from './makemove.mjs';
+import { MakeMove, TakeMove } from './makemove.mjs';
 import { PrSq } from './io';
 
 export default function arcaneChess() {
@@ -75,8 +76,18 @@ export default function arcaneChess() {
     preset = 'CLEAR'
   ) => {
     if (debugAllSpells) {
+      // In debug mode, populate both config and spellBook and trigger callback
+      Object.keys(whiteArcaneSpellBook).forEach(
+        (k) => delete whiteArcaneSpellBook[k]
+      );
+      Object.keys(blackArcaneSpellBook).forEach(
+        (k) => delete blackArcaneSpellBook[k]
+      );
+      Object.assign(whiteArcaneSpellBook, whiteConfig);
+      Object.assign(blackArcaneSpellBook, blackConfig);
       Object.assign(whiteArcaneConfig, whiteConfig);
       Object.assign(blackArcaneConfig, blackConfig);
+      triggerArcanaUpdateCallback();
     } else {
       // Set how often arcana is granted
       ArcanaProgression.setEvery(6);
@@ -87,6 +98,8 @@ export default function arcaneChess() {
       setBlackArcana({
         ...blackConfig,
       });
+      // In prod mode, don't initialize the config - let progression grant spells as moves are made
+      // The spellBook is populated above and will be the pool from which progression grants
     }
 
     _.forEach(royalties, (value, key) => {
@@ -261,8 +274,12 @@ export default function arcaneChess() {
         const pieceOnH = GameBoard.pieces[hFileSq];
 
         // Skip this rank if either square has a king
-        if (pieceOnA === PIECES.wK || pieceOnA === PIECES.bK ||
-            pieceOnH === PIECES.wK || pieceOnH === PIECES.bK) {
+        if (
+          pieceOnA === PIECES.wK ||
+          pieceOnA === PIECES.bK ||
+          pieceOnH === PIECES.wK ||
+          pieceOnH === PIECES.bK
+        ) {
           continue;
         }
 
@@ -291,7 +308,8 @@ export default function arcaneChess() {
       }
 
       // Switch turns
-      GameBoard.side = GameBoard.side === COLOURS.WHITE ? COLOURS.BLACK : COLOURS.WHITE;
+      GameBoard.side =
+        GameBoard.side === COLOURS.WHITE ? COLOURS.BLACK : COLOURS.WHITE;
     },
     engineSuggestion: async (playerColor, level) => {
       const playerArcana =

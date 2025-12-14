@@ -38,15 +38,18 @@ export interface SpellHandlerCallbacks {
   getChessgroundRef: () => React.RefObject<any>;
   getSpellState: () => SpellState;
   updateSpellState: (updates: Partial<SpellState>) => void;
-  updateHistory: (updates: {
-    historyPly?: number;
-    history?: (string | string[])[];
-    fen?: string;
-    fenHistory?: string[];
-    lastMoveHistory?: string[][];
-    futureSightAvailable?: boolean;
-    turn?: string;
-  }, callback?: () => void) => void;
+  updateHistory: (
+    updates: {
+      historyPly?: number;
+      history?: (string | string[])[];
+      fen?: string;
+      fenHistory?: string[];
+      lastMoveHistory?: string[][];
+      futureSightAvailable?: boolean;
+      turn?: string;
+    },
+    callback?: () => void
+  ) => void;
   addDialogue: (message: string) => void;
   activateGlitch: () => void;
   setThinking: (thinking: boolean) => void;
@@ -375,23 +378,28 @@ export class SpellHandler {
         `${playerColor} used Flank Inversion — A and H files swapped!`
       );
       // Since GameBoard.side is toggled in swapFilePieces, just update historyPly
-      this.callbacks.updateHistory({
-        historyPly: this.callbacks.getHistoryPly() + 1,
-        history: [
-          ...this.callbacks.getHistory().slice(0, this.callbacks.getHistoryPly()),
-          'FI',
-        ],
-        fen: outputFenOfCurrentPosition(),
-        fenHistory: [
-          ...this.callbacks.getFenHistory(),
-          outputFenOfCurrentPosition(),
-        ],
-      } as any, () => {
-        // Trigger engine move if it's the engine's turn
-        if (this.callbacks.getEngineColor() === this.callbacks.getTurn()) {
-          this.callbacks.engineGo();
+      this.callbacks.updateHistory(
+        {
+          historyPly: this.callbacks.getHistoryPly() + 1,
+          history: [
+            ...this.callbacks
+              .getHistory()
+              .slice(0, this.callbacks.getHistoryPly()),
+            'FI',
+          ],
+          fen: outputFenOfCurrentPosition(),
+          fenHistory: [
+            ...this.callbacks.getFenHistory(),
+            outputFenOfCurrentPosition(),
+          ],
+        } as any,
+        () => {
+          // Trigger engine move if it's the engine's turn
+          if (this.callbacks.getEngineColor() === this.callbacks.getTurn()) {
+            this.callbacks.engineGo();
+          }
         }
-      });
+      );
       return;
     }
 

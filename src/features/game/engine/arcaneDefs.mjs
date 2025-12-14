@@ -29,6 +29,7 @@ export const setWhiteArcana = (pool) => {
   grantedByKey.white = Object.create(null);
   grantedByOffering.white = Object.create(null);
   ArcanaProgression.resetSide('white');
+  triggerArcanaUpdateCallback();
   return whiteArcaneSpellBook;
 };
 
@@ -43,6 +44,7 @@ export const setBlackArcana = (pool) => {
   grantedByKey.black = Object.create(null);
   grantedByOffering.black = Object.create(null);
   ArcanaProgression.resetSide('black');
+  triggerArcanaUpdateCallback();
   return blackArcaneSpellBook;
 };
 

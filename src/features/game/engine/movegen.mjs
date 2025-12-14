@@ -69,8 +69,6 @@ import {
 import { MakeMove, TakeMove } from './makemove';
 import { validMoves } from './gui.mjs';
 
-
-
 const MvvLvaValue = [
   0, 100, 500, 600, 700, 1200, 1400, 100, 500, 600, 700, 1200, 1400, 300, 900,
   1000, 1100, 1000, 1300, 900, 1000, 1100, 1000, 1300, 400, 300, 400, 300, 800,
@@ -227,7 +225,7 @@ export function AddQuietMove(move, capturesOnly) {
     } else {
       GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply + 1]] =
         GameBoard.searchHistory[
-        GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
+          GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
         ];
     }
     GameBoard.moveListStart[GameBoard.ply + 1]++;
@@ -633,7 +631,6 @@ export function GenerateMoves(
   let currentArcanaSide =
     GameBoard.side === 0 ? GameBoard.whiteArcane : GameBoard.blackArcane;
 
-
   let has5thDimensionSword = currentArcanaSide[4] & 262144;
   let hasHermit = (currentArcanaSide[10] & 1) !== 0; // toknHER
   let hasHemlock = (currentArcanaSide[10] & 2) !== 0; // toknHEM
@@ -832,7 +829,7 @@ export function GenerateMoves(
           if (
             i === j ||
             GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][i]] ===
-            GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
+              GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
           ) {
             continue;
           }
@@ -1255,7 +1252,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.whiteArcane[3]
                 ) {
                   if (
@@ -1318,7 +1315,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.blackArcane[3]
                 ) {
                   if (
@@ -1442,13 +1439,7 @@ export function GenerateMoves(
         // note WHITE PAWN SHIFTS
         if (pawnCanShift) {
           if (GameBoard.pieces[sq - 1] === PIECES.EMPTY) {
-            AddWhitePawnQuietMove(
-              sq,
-              sq - 1,
-              1,
-              MFLAGSHFT,
-              capturesOnly
-            );
+            AddWhitePawnQuietMove(sq, sq - 1, 1, MFLAGSHFT, capturesOnly);
           }
           if (
             has5thDimensionSword &&
@@ -1466,13 +1457,7 @@ export function GenerateMoves(
           }
 
           if (GameBoard.pieces[sq + 1] === PIECES.EMPTY) {
-            AddWhitePawnQuietMove(
-              sq,
-              sq + 1,
-              1,
-              MFLAGSHFT,
-              capturesOnly
-            );
+            AddWhitePawnQuietMove(sq, sq + 1, 1, MFLAGSHFT, capturesOnly);
           }
           if (
             has5thDimensionSword &&
@@ -1490,13 +1475,7 @@ export function GenerateMoves(
           }
 
           if (GameBoard.pieces[sq - 10] === PIECES.EMPTY) {
-            AddWhitePawnQuietMove(
-              sq,
-              sq - 10,
-              1,
-              MFLAGSHFT,
-              capturesOnly
-            );
+            AddWhitePawnQuietMove(sq, sq - 10, 1, MFLAGSHFT, capturesOnly);
           }
           if (
             has5thDimensionSword &&
@@ -1829,13 +1808,7 @@ export function GenerateMoves(
         // note BLACK PAWN SHIFTS
         if (pawnCanShift) {
           if (GameBoard.pieces[sq - 1] === PIECES.EMPTY) {
-            AddBlackPawnQuietMove(
-              sq,
-              sq - 1,
-              7,
-              MFLAGSHFT,
-              capturesOnly
-            );
+            AddBlackPawnQuietMove(sq, sq - 1, 7, MFLAGSHFT, capturesOnly);
           }
           if (
             has5thDimensionSword &&
@@ -1853,13 +1826,7 @@ export function GenerateMoves(
           }
 
           if (GameBoard.pieces[sq + 1] === PIECES.EMPTY) {
-            AddBlackPawnQuietMove(
-              sq,
-              sq + 1,
-              7,
-              MFLAGSHFT,
-              capturesOnly
-            );
+            AddBlackPawnQuietMove(sq, sq + 1, 7, MFLAGSHFT, capturesOnly);
           }
           if (
             has5thDimensionSword &&
@@ -1877,13 +1844,7 @@ export function GenerateMoves(
           }
 
           if (GameBoard.pieces[sq + 10] === PIECES.EMPTY) {
-            AddBlackPawnQuietMove(
-              sq,
-              sq + 10,
-              7,
-              MFLAGSHFT,
-              capturesOnly
-            );
+            AddBlackPawnQuietMove(sq, sq + 10, 7, MFLAGSHFT, capturesOnly);
           }
           if (
             has5thDimensionSword &&
@@ -2700,13 +2661,7 @@ export function GenerateMoves(
             if (targetPiece === PIECES.EMPTY) {
               if (canQuiet && herringAllowed) {
                 AddQuietMove(
-                  MOVE(
-                    sq,
-                    targetSq,
-                    PIECES.EMPTY,
-                    pce,
-                    MFLAGSHFT
-                  ),
+                  MOVE(sq, targetSq, PIECES.EMPTY, pce, MFLAGSHFT),
                   capturesOnly
                 );
               }
@@ -2722,13 +2677,7 @@ export function GenerateMoves(
               herringAllowed
             ) {
               AddCaptureMove(
-                MOVE(
-                  sq,
-                  targetSq,
-                  targetPiece,
-                  pce,
-                  MFLAGSHFT
-                ),
+                MOVE(sq, targetSq, targetPiece, pce, MFLAGSHFT),
                 false,
                 capturesOnly
               );
@@ -2828,7 +2777,6 @@ export function GenerateMoves(
     // Prevent Eclipse's adjacent-hop from applying to Unicorn/Zebra,
     // but still allow the cross-board (edge-wrap) Eclipse for them.
     const hasShftIBit = (currentArcanaSide[1] & POWERBIT.shftI) !== 0;
-    const hasMyriad = false;
 
     for (let sqIter = 21; sqIter <= 98; sqIter++) {
       if (SQOFFBOARD(sqIter) === BOOL.TRUE) continue;
@@ -3099,7 +3047,6 @@ export function GenerateMoves(
             GameBoard.dyad === 1 ||
             GameBoard.dyad === dyad;
 
-
           if (moverPce === PIECES.wR || moverPce === PIECES.bR) {
             if (SQOFFBOARD(shft_t_R_sq) === BOOL.FALSE) {
               // quiet shift (side-aware, no duplicate branches)
@@ -3110,13 +3057,7 @@ export function GenerateMoves(
                 rookCanShift
               ) {
                 AddQuietMove(
-                  MOVE(
-                    sq,
-                    shft_t_R_sq,
-                    PIECES.EMPTY,
-                    pce,
-                    MFLAGSHFT
-                  ),
+                  MOVE(sq, shft_t_R_sq, PIECES.EMPTY, pce, MFLAGSHFT),
                   capturesOnly
                 );
               }
@@ -3132,13 +3073,7 @@ export function GenerateMoves(
                 (!herrings.length || _.includes(herrings, shft_t_R_sq))
               ) {
                 AddCaptureMove(
-                  MOVE(
-                    sq,
-                    shft_t_R_sq,
-                    rTargetPce,
-                    pce,
-                    MFLAGSHFT
-                  ),
+                  MOVE(sq, shft_t_R_sq, rTargetPce, pce, MFLAGSHFT),
                   false,
                   capturesOnly
                 );

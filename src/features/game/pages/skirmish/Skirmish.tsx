@@ -289,7 +289,8 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
         isEvoActive: this.state.isEvoActive,
       }),
       updateSpellState: (updates) => this.setState(updates as any),
-      updateHistory: (updates, callback) => this.setState(updates as any, callback),
+      updateHistory: (updates, callback) =>
+        this.setState(updates as any, callback),
       addDialogue: (message) =>
         this.setState((prev) => ({ dialogue: [...prev.dialogue, message] })),
       activateGlitch: () => this.setState({ glitchActive: true }),
@@ -665,6 +666,7 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
                   ? this.arcaneChess().getDyadOwner()
                   : undefined
               }
+              arcanaUpdateKey={this.state.arcanaUpdateKey}
               onSpellClick={this.handleArcanaClick}
               onHover={this.toggleHover}
               isArcaneActive={this.isArcaneActive}

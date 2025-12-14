@@ -24,6 +24,7 @@ interface OpponentPanelProps {
   historyLength: number;
   dyadName: string;
   dyadOwner: string | undefined;
+  arcanaUpdateKey?: number; // Force re-render when arcana data changes
   onSpellClick: (key: string) => void;
   onHover: (arcane: string) => void;
   isArcaneActive: (key: string, color?: string) => boolean;
@@ -45,6 +46,7 @@ export const OpponentPanel: React.FC<OpponentPanelProps> = ({
   historyLength,
   dyadName,
   dyadOwner,
+  arcanaUpdateKey,
   onSpellClick,
   onHover,
   isArcaneActive,
@@ -79,6 +81,7 @@ export const OpponentPanel: React.FC<OpponentPanelProps> = ({
             engineColor={engineColor}
             dyadName={dyadName}
             dyadOwner={dyadOwner}
+            arcanaUpdateKey={arcanaUpdateKey}
             trojanGambitExists={trojanActive}
             onSpellClick={onSpellClick}
             onHover={onHover}

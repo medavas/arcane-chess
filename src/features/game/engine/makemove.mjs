@@ -24,8 +24,6 @@ import {
 import {
   whiteArcaneConfig,
   blackArcaneConfig,
-  whiteArcaneSpellBook,
-  blackArcaneSpellBook,
   ArcanaProgression,
   offerGrant,
   offerRevert,
@@ -790,8 +788,13 @@ export function MakeMove(move, moveType = '') {
     const hasGluttony = cfg.modsGLU > 0;
     const isCaptureMove = captured !== PIECES.EMPTY;
     const canEvolve = !isCaptureMove || (isCaptureMove && hasGluttony);
-    
-    if (GameBoard.evo > 0 && commit && movedPiece !== PIECES.EMPTY && canEvolve) {
+
+    if (
+      GameBoard.evo > 0 &&
+      commit &&
+      movedPiece !== PIECES.EMPTY &&
+      canEvolve
+    ) {
       let evolvedPiece = PIECES.EMPTY;
 
       // Map each piece to its evolved form
@@ -800,7 +803,11 @@ export function MakeMove(move, moveType = '') {
           evolvedPiece = PIECES.wN;
         } else if (movedPiece === PIECES.wN) {
           evolvedPiece = PIECES.wR;
-        } else if (movedPiece === PIECES.wZ || movedPiece === PIECES.wU || movedPiece === PIECES.wB) {
+        } else if (
+          movedPiece === PIECES.wZ ||
+          movedPiece === PIECES.wU ||
+          movedPiece === PIECES.wB
+        ) {
           evolvedPiece = PIECES.wR;
         } else if (movedPiece === PIECES.wR) {
           evolvedPiece = PIECES.wW;
@@ -817,7 +824,11 @@ export function MakeMove(move, moveType = '') {
           evolvedPiece = PIECES.bN;
         } else if (movedPiece === PIECES.bN) {
           evolvedPiece = PIECES.bR;
-        } else if (movedPiece === PIECES.bZ || movedPiece === PIECES.bU || movedPiece === PIECES.bB) {
+        } else if (
+          movedPiece === PIECES.bZ ||
+          movedPiece === PIECES.bU ||
+          movedPiece === PIECES.bB
+        ) {
           evolvedPiece = PIECES.bR;
         } else if (movedPiece === PIECES.bR) {
           evolvedPiece = PIECES.bW;
@@ -1386,7 +1397,10 @@ export function MakeMove(move, moveType = '') {
   trimHistory(moveType === 'userMove');
 
   // Handle side switching and special move mechanics (dyad, evo)
-  if ((moveType === 'userMove' || moveType === 'commit') && GameBoard.dyad > 0) {
+  if (
+    (moveType === 'userMove' || moveType === 'commit') &&
+    GameBoard.dyad > 0
+  ) {
     GameBoard.dyadClock++;
     if (GameBoard.dyadClock >= 2) {
       const owner =
@@ -1404,7 +1418,10 @@ export function MakeMove(move, moveType = '') {
       GameBoard.side ^= 1;
       HASH_SIDE();
     }
-  } else if ((moveType === 'userMove' || moveType === 'commit') && GameBoard.evo > 0) {
+  } else if (
+    (moveType === 'userMove' || moveType === 'commit') &&
+    GameBoard.evo > 0
+  ) {
     // Evolution consumes after this move
     GameBoard.evo = 0;
     GameBoard.evoClock = 0;

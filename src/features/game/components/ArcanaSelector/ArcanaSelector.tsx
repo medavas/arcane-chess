@@ -17,6 +17,7 @@ interface ArcanaSelectorProps {
   dyadName: string;
   dyadOwner: string | undefined;
   trojanGambitExists: boolean;
+  arcanaUpdateKey?: number; // Force re-render when arcana data changes
   onSpellClick: (key: string) => void;
   onHover: (key: string) => void;
   isArcaneActive: (key: string, color?: string) => boolean;
@@ -144,6 +145,7 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
   dyadName,
   dyadOwner,
   trojanGambitExists,
+  arcanaUpdateKey,
   onSpellClick,
   onHover,
   isArcaneActive,
@@ -203,7 +205,7 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
     const bKeys = spellBook ? Object.keys(spellBook) : [];
     const set = new Set<string>([...aKeys, ...bKeys]);
     return Array.from(set);
-  }, [arcaneConfig, spellBook]);
+  }, [arcaneConfig, spellBook, arcanaUpdateKey]);
 
   // Get hover spell details from shared hoverArcane prop (works for both player and opponent)
   const hoveredSpell = React.useMemo(
@@ -230,17 +232,14 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
             const entry = arcana[key];
             if (!entry) return null;
 
-            const value = arcaneConfig[key];
+            // For opponent variant, only show spells that have been granted (in arcaneConfig)
+            const liveValue = arcaneConfig[key];
             const isInherent = entry.type === 'inherent';
             const isPassive = entry.type === 'passive';
             const isInstant = entry.type === 'instant';
 
-            // Only show spells that have been unlocked (exist in arcaneConfig with value > 0)
-            // or are inherent types (which are always available once granted)
-            if (
-              !value ||
-              (typeof value === 'number' && value <= 0 && !isInherent)
-            )
+            // Only show spells that have been granted to the opponent (in arcaneConfig with value > 0)
+            if (!liveValue || (typeof liveValue === 'number' && liveValue <= 0 && !isInherent))
               return null;
 
             const isFutureSightAvailable =
@@ -266,9 +265,9 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
             const isTrojanActive = trojanGambitExists && key === 'modsTRO';
             const effectiveActive = active || dyadStillActive;
 
-            const displayValue = typeof value === 'number' ? value : 0;
+            const displayValue = typeof liveValue === 'number' ? liveValue : 0;
             const isExhausted =
-              typeof value === 'number' && value === 0 && !isInherent;
+              typeof liveValue === 'number' && liveValue === 0 && !isInherent;
 
             return (
               <div
