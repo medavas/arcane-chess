@@ -239,7 +239,10 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
             const isInstant = entry.type === 'instant';
 
             // Only show spells that have been granted to the opponent (in arcaneConfig with value > 0)
-            if (!liveValue || (typeof liveValue === 'number' && liveValue <= 0 && !isInherent))
+            if (
+              !liveValue ||
+              (typeof liveValue === 'number' && liveValue <= 0 && !isInherent)
+            )
               return null;
 
             const isFutureSightAvailable =

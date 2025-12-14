@@ -378,6 +378,7 @@ export class SpellHandler {
         `${playerColor} used Flank Inversion — A and H files swapped!`
       );
       // Since GameBoard.side is toggled in swapFilePieces, just update historyPly
+      const nextTurn = playerColor === 'white' ? 'black' : 'white';
       this.callbacks.updateHistory(
         {
           historyPly: this.callbacks.getHistoryPly() + 1,
@@ -392,6 +393,7 @@ export class SpellHandler {
             ...this.callbacks.getFenHistory(),
             outputFenOfCurrentPosition(),
           ],
+          turn: nextTurn,
         } as any,
         () => {
           // Trigger engine move if it's the engine's turn

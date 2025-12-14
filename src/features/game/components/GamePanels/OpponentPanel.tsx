@@ -64,9 +64,9 @@ export const OpponentPanel: React.FC<OpponentPanelProps> = ({
               (engineColor === 'white'
                 ? whiteArcaneConfig
                 : blackArcaneConfig) as Record<
-                  string,
-                  number | string | undefined
-                >
+                string,
+                number | string | undefined
+              >
             }
             spellBook={
               (engineColor === 'white'
