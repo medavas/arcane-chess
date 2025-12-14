@@ -215,6 +215,7 @@ interface State {
   dialogue: string[];
   glitchActive: boolean;
   glitchQueued: boolean;
+  isEvoActive: boolean;
   arcanaUpdateKey: number;
 }
 
@@ -403,6 +404,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
       dialogueList: {},
       glitchActive: false,
       glitchQueued: false,
+      isEvoActive: false,
       arcanaUpdateKey: 0,
     };
 
@@ -439,6 +441,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         normalMovesOnly: this.state.normalMovesOnly,
         hoverArcane: this.state.hoverArcane,
         glitchQueued: this.state.glitchQueued,
+        isEvoActive: this.state.isEvoActive,
       }),
       updateSpellState: (updates) => this.setState(updates as any),
       updateHistory: (updates, callback) =>

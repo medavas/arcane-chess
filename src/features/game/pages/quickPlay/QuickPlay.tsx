@@ -119,6 +119,7 @@ interface State {
   futureSightAvailable: boolean;
   glitchActive: boolean;
   glitchQueued: boolean;
+  isEvoActive: boolean;
   engineAvatar: string;
   dialogue: string[];
   dialogueList: Record<string, string>;
@@ -239,6 +240,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
       futureSightAvailable: true,
       glitchActive: false,
       glitchQueued: false,
+      isEvoActive: false,
       engineAvatar: 'normal',
       dialogueList: {
         win1: '',
@@ -285,6 +287,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
         normalMovesOnly: this.state.normalMovesOnly,
         hoverArcane: this.state.hoverArcane,
         glitchQueued: this.state.glitchQueued,
+        isEvoActive: this.state.isEvoActive,
       }),
       updateSpellState: (updates) => this.setState(updates as any),
       updateHistory: (updates, callback) => this.setState(updates as any, callback),

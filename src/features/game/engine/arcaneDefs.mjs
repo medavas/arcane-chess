@@ -91,6 +91,13 @@ export function registerArcanaUpdateCallback(cb) {
 export function unregisterArcanaUpdateCallback() {
   arcanaUpdateCallback = null;
 }
+export function triggerArcanaUpdateCallback() {
+  try {
+    if (typeof arcanaUpdateCallback === 'function') arcanaUpdateCallback();
+  } catch (e) {
+    console.warn(e);
+  }
+}
 
 export const activateDyad = () => {
   // GameBoard.dyad = type;
@@ -256,6 +263,23 @@ export function canCastGlare(piece, side) {
       ? GLARE_CASTER_PIECES.white
       : GLARE_CASTER_PIECES.black;
   return casters.includes(piece);
+}
+
+// Helper function to check if a piece can be evolved
+export function canEvolve(piece) {
+  // Check if this piece can be evolved
+  // White pieces: wP, wR, wM, wQ
+  // Black pieces: bP, bR, bM, bQ
+  return (
+    piece === PIECES.wP ||
+    piece === PIECES.wR ||
+    piece === PIECES.wM ||
+    piece === PIECES.wQ ||
+    piece === PIECES.bP ||
+    piece === PIECES.bR ||
+    piece === PIECES.bM ||
+    piece === PIECES.bQ
+  );
 }
 
 // unneeded / depoerecated

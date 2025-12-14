@@ -200,11 +200,17 @@ export const modes: Record<string, GameModeType> = padModes({
   hermitHemlock: {
     name: 'Hermit vs. Hemlock',
     white: {
-      arcana: [arcana.sumnH, arcana.toknHER, arcana.modsSUS],
+      arcana: [
+        arcana.sumnH,
+        arcana.toknHER,
+        arcana.modsSUS,
+        arcana.modsEVO,
+        arcana.modsFLA,
+      ],
       setup: 'RNBTKBNR',
     },
     black: {
-      arcana: [arcana.sumnH, arcana.toknHEM, arcana.swapADJ],
+      arcana: [arcana.sumnH, arcana.toknHEM, arcana.swapADJ, arcana.modsEVO],
       setup: 'rnbmkbnr',
     },
   },

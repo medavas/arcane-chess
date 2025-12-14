@@ -173,6 +173,10 @@ GameBoard.dyad = 0;
 GameBoard.dyadMax = [2, 2];
 GameBoard.dyadClock = 0;
 
+GameBoard.evo = 0;
+GameBoard.evoClock = 0;
+GameBoard.evoOwner = undefined;
+
 GameBoard.pass = false;
 
 GameBoard.posKey = 0;

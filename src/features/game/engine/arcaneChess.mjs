@@ -129,6 +129,18 @@ export default function arcaneChess() {
     GameBoard.dyadOwner = undefined;
   };
 
+  const activateEvo = () => {
+    GameBoard.evo = 1;
+    GameBoard.evoClock = 0;
+    GameBoard.evoOwner = GameBoard.side === COLOURS.WHITE ? 'white' : 'black';
+  };
+
+  const deactivateEvo = () => {
+    GameBoard.evo = 0;
+    GameBoard.evoClock = 0;
+    GameBoard.evoOwner = undefined;
+  };
+
   return {
     // filesRanksBoard: () => InitFilesRanksBrd(),
     init: () => init(),
@@ -149,6 +161,8 @@ export default function arcaneChess() {
     },
     activateDyad: (type) => activateDyad(type),
     deactivateDyad: () => deactivateDyad(),
+    activateEvo: () => activateEvo(),
+    deactivateEvo: () => deactivateEvo(),
     getGroundMoves: (type2 = '') => {
       return validGroundMoves('', type2);
     },

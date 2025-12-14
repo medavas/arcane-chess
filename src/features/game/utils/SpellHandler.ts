@@ -19,6 +19,7 @@ export interface SpellState {
   normalMovesOnly: boolean;
   hoverArcane: string;
   glitchQueued: boolean;
+  isEvoActive: boolean;
 }
 
 export interface SpellHandlerCallbacks {
@@ -86,6 +87,12 @@ export class SpellHandler {
           arcane.deactivateDyad();
         }
       }
+
+      if (state.isEvoActive) {
+        if (typeof arcane.deactivateEvo === 'function') {
+          arcane.deactivateEvo();
+        }
+      }
     } catch (e) {
       console.warn(e);
     }
@@ -102,6 +109,7 @@ export class SpellHandler {
       normalMovesOnly: false,
       hoverArcane: '',
       glitchQueued: false,
+      isEvoActive: false,
     });
   };
 
@@ -335,6 +343,28 @@ export class SpellHandler {
       return;
     }
 
+    // === EVO ===
+    if (key === 'modsEVO') {
+      const state = this.callbacks.getSpellState();
+      // Toggle evo active state (like glitch, will apply on next move)
+      if (state.isEvoActive) {
+        if (typeof arcane.deactivateEvo === 'function') {
+          arcane.deactivateEvo();
+        }
+        this.callbacks.updateSpellState({
+          isEvoActive: false,
+        });
+      } else {
+        if (typeof arcane.activateEvo === 'function') {
+          arcane.activateEvo();
+        }
+        this.callbacks.updateSpellState({
+          isEvoActive: true,
+        });
+      }
+      return;
+    }
+
     // === SPELL: Flank Inversion ===
     if (key === 'modsFLA') {
       audioManager.playSFX('spell');
@@ -424,6 +454,10 @@ export class SpellHandler {
 
     if (key === 'modsGLI') {
       return state.glitchQueued;
+    }
+
+    if (key === 'modsEVO') {
+      return state.isEvoActive;
     }
 
     if (key.includes('dyad')) {

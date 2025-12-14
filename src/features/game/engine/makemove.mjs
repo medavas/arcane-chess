@@ -35,6 +35,7 @@ import {
   applyGainRewards,
   POWERBIT,
   canCastGlare,
+  triggerArcanaUpdateCallback,
 } from './arcaneDefs';
 import {
   COLOURS,
@@ -59,10 +60,13 @@ const royaltyIndexMapRestructure = [
   0, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
 ];
 
+// CAPTURED extra validated move types by engine:
 // cap 30 = capturable exile
 // cap 31 = teleport
 // const TELEPORT_CONST = 31;
 
+// PROMOTED extra validated move types by engine:
+// 30 is available
 // eps 31 = eclipse
 const ECLIPSE_CONST = 31;
 
@@ -466,6 +470,14 @@ export function MakeMove(move, moveType = '') {
   const commit = moveType === 'userMove' || moveType === 'commit';
   const consume = isConsumeFlag(move);
 
+  // modsEVO: Block captures unless modsGLU is active
+  if (GameBoard.evo > 0 && captured !== PIECES.EMPTY) {
+    const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+    if (cfg.modsGLU === undefined || cfg.modsGLU <= 0) {
+      return BOOL.FALSE;
+    }
+  }
+
   let promoEpsilon = !isShift(move) ? pieceEpsilon : PIECES.EMPTY;
 
   const sumnCap = getSumnCaptureForRoyalty(move, captured);
@@ -486,6 +498,9 @@ export function MakeMove(move, moveType = '') {
   h.dyad = GameBoard.dyad;
   h.dyadClock = GameBoard.dyadClock;
   h.dyadOwner = GameBoard.dyadOwner;
+  h.evo = GameBoard.evo;
+  h.evoClock = GameBoard.evoClock;
+  h.evoOwner = GameBoard.evoOwner;
 
   const getWhiteKingRookPos = _.lastIndexOf(GameBoard.pieces, 4);
   const getWhiteQueenRookPos = _.indexOf(GameBoard.pieces, 4, 22);
@@ -765,6 +780,67 @@ export function MakeMove(move, moveType = '') {
       (consume && !isShift(move)))
   ) {
     MovePiece(from, to);
+
+    // modsEVO: Berserking Evolution
+    // Pawn → Knight → Rook; Zebra/Unicorn/Bishop → Rook → Wraith
+    // Wraith/Spectre → Queen → Valkyrie; Mystic/Templar → Valkyrie
+    // No captures during evolution (unless modsGLU is active)
+    const movedPiece = GameBoard.pieces[to];
+    const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+    const hasGluttony = cfg.modsGLU > 0;
+    const isCaptureMove = captured !== PIECES.EMPTY;
+    const canEvolve = !isCaptureMove || (isCaptureMove && hasGluttony);
+    
+    if (GameBoard.evo > 0 && commit && movedPiece !== PIECES.EMPTY && canEvolve) {
+      let evolvedPiece = PIECES.EMPTY;
+
+      // Map each piece to its evolved form
+      if (side === COLOURS.WHITE) {
+        if (movedPiece === PIECES.wP) {
+          evolvedPiece = PIECES.wN;
+        } else if (movedPiece === PIECES.wN) {
+          evolvedPiece = PIECES.wR;
+        } else if (movedPiece === PIECES.wZ || movedPiece === PIECES.wU || movedPiece === PIECES.wB) {
+          evolvedPiece = PIECES.wR;
+        } else if (movedPiece === PIECES.wR) {
+          evolvedPiece = PIECES.wW;
+        } else if (movedPiece === PIECES.wW || movedPiece === PIECES.wS) {
+          evolvedPiece = PIECES.wQ;
+        } else if (movedPiece === PIECES.wM || movedPiece === PIECES.wT) {
+          evolvedPiece = PIECES.wV;
+        } else if (movedPiece === PIECES.wQ) {
+          evolvedPiece = PIECES.wV;
+        }
+      } else {
+        // Black side
+        if (movedPiece === PIECES.bP) {
+          evolvedPiece = PIECES.bN;
+        } else if (movedPiece === PIECES.bN) {
+          evolvedPiece = PIECES.bR;
+        } else if (movedPiece === PIECES.bZ || movedPiece === PIECES.bU || movedPiece === PIECES.bB) {
+          evolvedPiece = PIECES.bR;
+        } else if (movedPiece === PIECES.bR) {
+          evolvedPiece = PIECES.bW;
+        } else if (movedPiece === PIECES.bW || movedPiece === PIECES.bS) {
+          evolvedPiece = PIECES.bQ;
+        } else if (movedPiece === PIECES.bM || movedPiece === PIECES.bT) {
+          evolvedPiece = PIECES.bV;
+        } else if (movedPiece === PIECES.bQ) {
+          evolvedPiece = PIECES.bV;
+        }
+      }
+
+      // Apply evolution if a valid transformation is defined
+      if (evolvedPiece !== PIECES.EMPTY) {
+        ClearPiece(to);
+        AddPiece(to, evolvedPiece);
+        h.modsEVOPiece = movedPiece;
+        h.modsEVOEvolved = evolvedPiece;
+        cfg.modsEVO -= 1;
+        // Notify UI that arcana count changed
+        triggerArcanaUpdateCallback();
+      }
+    }
 
     // Hermit AoE: Apply royalty effect to surrounding squares
     const isHermitPiece = moverPiece === PIECES.wH || moverPiece === PIECES.bH;
@@ -1309,10 +1385,8 @@ export function MakeMove(move, moveType = '') {
 
   trimHistory(moveType === 'userMove');
 
-  if (
-    (moveType === 'userMove' || moveType === 'commit') &&
-    GameBoard.dyad > 0
-  ) {
+  // Handle side switching and special move mechanics (dyad, evo)
+  if ((moveType === 'userMove' || moveType === 'commit') && GameBoard.dyad > 0) {
     GameBoard.dyadClock++;
     if (GameBoard.dyadClock >= 2) {
       const owner =
@@ -1330,6 +1404,13 @@ export function MakeMove(move, moveType = '') {
       GameBoard.side ^= 1;
       HASH_SIDE();
     }
+  } else if ((moveType === 'userMove' || moveType === 'commit') && GameBoard.evo > 0) {
+    // Evolution consumes after this move
+    GameBoard.evo = 0;
+    GameBoard.evoClock = 0;
+    GameBoard.evoOwner = undefined;
+    GameBoard.side ^= 1;
+    HASH_SIDE();
   } else {
     GameBoard.side ^= 1;
     HASH_SIDE();
@@ -1382,6 +1463,9 @@ export function TakeMove(wasDyadMove = false) {
   GameBoard.dyad = GameBoard.history[GameBoard.hisPly].dyad;
   GameBoard.dyadClock = GameBoard.history[GameBoard.hisPly].dyadClock;
   GameBoard.dyadOwner = GameBoard.history[GameBoard.hisPly].dyadOwner;
+  GameBoard.evo = GameBoard.history[GameBoard.hisPly].evo;
+  GameBoard.evoClock = GameBoard.history[GameBoard.hisPly].evoClock;
+  GameBoard.evoOwner = GameBoard.history[GameBoard.hisPly].evoOwner;
 
   if (wasDyadMove) {
     if (GameBoard.dyadClock > 0) {
@@ -1595,6 +1679,22 @@ export function TakeMove(wasDyadMove = false) {
         victimSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
       victimConfig.modsHEX += 1;
       h.modsHEXConsumed = undefined;
+    }
+
+    // Revert modsEVO: Berserking Evolution
+    if (h && h.modsEVOPiece && h.modsEVOEvolved) {
+      const cfg =
+        GameBoard.side === COLOURS.WHITE
+          ? whiteArcaneConfig
+          : blackArcaneConfig;
+      const to = TOSQ(move);
+      if (to > 0 && GameBoard.pieces[to] === h.modsEVOEvolved) {
+        ClearPiece(to);
+        AddPiece(to, h.modsEVOPiece);
+        cfg.modsEVO += 1;
+        h.modsEVOPiece = undefined;
+        h.modsEVOEvolved = undefined;
+      }
     }
   }
 

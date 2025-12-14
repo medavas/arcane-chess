@@ -98,6 +98,7 @@ interface State {
   isDyadMove: boolean;
   normalMovesOnly: boolean;
   glitchQueued: boolean;
+  isEvoActive: boolean;
   selectedSide: string;
   hoverArcane: string;
   royalties: {
@@ -222,6 +223,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
       isDyadMove: false,
       normalMovesOnly: false,
       glitchQueued: false,
+      isEvoActive: false,
       selectedSide: LS.config.playerColor,
       hoverArcane: '',
       royalties: {},
@@ -278,6 +280,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         normalMovesOnly: this.state.normalMovesOnly,
         hoverArcane: this.state.hoverArcane,
         glitchQueued: this.state.glitchQueued,
+        isEvoActive: this.state.isEvoActive,
       }),
       updateSpellState: (updates) => this.setState(updates as any),
       updateHistory: (updates, callback) => this.setState(updates as any, callback),

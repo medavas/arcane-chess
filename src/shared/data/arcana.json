@@ -12,7 +12,7 @@
   "dyadA": {
     "id": "dyadA",
     "name": "Dyad",
-    "description": "Make two moves, no capturing.",
+    "description": "Make two moves, no capturing. Combines with Evolution.",
     "type": "active",
     "imagePath": "/dyadA",
     "value": 7,
@@ -22,7 +22,7 @@
   "dyadB": {
     "id": "dyadB",
     "name": "Step and Shadow Dyad",
-    "description": "Make two moves, no capturing (Pawn, Herring).",
+    "description": "Make two moves, no capturing (Pawn, Herring). Combines with Evolution.",
     "type": "active",
     "imagePath": "/dyadA",
     "value": 5,
@@ -32,7 +32,7 @@
   "dyadC": {
     "id": "dyadC",
     "name": "Warrior's Oath Dyad",
-    "description": "Make two moves, no capturing (Bishop, Knight, Zebra, Unicorn, Rook).",
+    "description": "Make two moves, no capturing (Bishop, Knight, Zebra, Unicorn, Rook). Combines with Evolution.",
     "type": "active",
     "imagePath": "/dyadA",
     "value": 6,
@@ -42,7 +42,7 @@
   "dyadD": {
     "id": "dyadD",
     "name": "Veil and Vow Dyad",
-    "description": "Make two moves, no capturing (Spectre, Wraith).",
+    "description": "Make two moves, no capturing (Spectre, Wraith). Combines with Evolution.",
     "type": "active",
     "imagePath": "/dyadA",
     "value": 5,
@@ -52,7 +52,7 @@
   "dyadE": {
     "id": "dyadE",
     "name": "Judgement Dyad",
-    "description": "Make two moves, no capturing (Mystic, Templar, Queen).",
+    "description": "Make two moves, no capturing (Mystic, Templar, Queen). Combines with Evolution.",
     "type": "active",
     "imagePath": "/dyadA",
     "value": 5,
@@ -652,7 +652,7 @@
   "modsGLU": {
     "id": "modsGLU",
     "name": "Gluttony",
-    "description": "You may capture pieces during dyad moves.",
+    "description": "You may capture pieces during dyad and evolution moves.",
     "type": "inherent",
     "imagePath": "/modsGLU",
     "value": 9,
@@ -872,7 +872,7 @@
   "modsEVO": {
     "id": "modsEVO",
     "name": "Berserking Evolution",
-    "description": "When a piece captures, it evolves: Pawn → Knight (ZUB), Rook → Wraith (S), Mystic → Queen (T) → Valkyrie.",
+    "description": "Click to activate. Non-capture moves evolve pieces: P→N→R, ZUB→R→W, WS→Q→V, MT→V. Combines with Dyad.",
     "type": "active",
     "imagePath": "/modsEVO",
     "value": 5,

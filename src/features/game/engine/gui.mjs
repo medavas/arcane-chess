@@ -592,6 +592,26 @@ export function startSearch(thinkingTime, depth, engineColor) {
     }
   }
 
+  if (
+    _.some(_.keys(engineArcana), (key) => key === 'modsEVO') &&
+    GameBoard.evo <= 0 &&
+    engineArcana.modsEVO > 0
+  ) {
+    if (bestScore > 200 || bestScore < -200) {
+      if (Math.random() > 0.9) {
+        GameBoard.evo = 1;
+        GameBoard.evoClock = 0;
+        GameBoard.evoOwner = colorInt === COLOURS.WHITE ? 'white' : 'black';
+        if (colorInt === COLOURS.WHITE) {
+          whiteArcaneConfig.modsEVO -= 1;
+        } else {
+          blackArcaneConfig.modsEVO -= 1;
+        }
+        text.push(`${engineColor} used Berserking Evolution!`);
+      }
+    }
+  }
+
   MakeMove(bestMove, 'commit');
   CheckAndSet();
 
