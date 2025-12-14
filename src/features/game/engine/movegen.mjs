@@ -73,7 +73,7 @@ const EPSILON_MYRIAD_CONST = 30;
 
 const MvvLvaValue = [
   0, 100, 500, 600, 700, 1200, 1400, 100, 500, 600, 700, 1200, 1400, 300, 900,
-  200, 1100, 1000, 1300, 900, 200, 1100, 1000, 1300, 400, 300, 400, 300, 800,
+  1000, 1100, 1000, 1300, 900, 1000, 1100, 1000, 1300, 400, 300, 400, 300, 800,
   800, 300,
 ];
 const MvvLvaScores = new Array(31 * 31);
@@ -227,7 +227,7 @@ export function AddQuietMove(move, capturesOnly) {
     } else {
       GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply + 1]] =
         GameBoard.searchHistory[
-        GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
+          GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
         ];
     }
     GameBoard.moveListStart[GameBoard.ply + 1]++;
@@ -832,7 +832,7 @@ export function GenerateMoves(
           if (
             i === j ||
             GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][i]] ===
-            GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
+              GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
           ) {
             continue;
           }
@@ -1255,7 +1255,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.whiteArcane[3]
                 ) {
                   if (
@@ -1270,13 +1270,20 @@ export function GenerateMoves(
                   }
                   // Check if trying to place royalty on a king in check
                   const pieceAtSq = GameBoard.pieces[sq];
-                  const isKing = pieceAtSq === PIECES.wK || pieceAtSq === PIECES.bK;
+                  const isKing =
+                    pieceAtSq === PIECES.wK || pieceAtSq === PIECES.bK;
                   if (isKing && PieceCol[pieceAtSq] === GameBoard.side) {
                     // Check if king is in check (sq is the king's position)
                     if (SqAttacked(sq, GameBoard.side ^ 1) === BOOL.TRUE) {
                       // Only allow royalties that affect checking squares: E, X, Y, A, I
                       const royaltyChar = RtyChar.split('')[summonPce];
-                      if (royaltyChar !== 'E' && royaltyChar !== 'X' && royaltyChar !== 'Y' && royaltyChar !== 'A' && royaltyChar !== 'I') {
+                      if (
+                        royaltyChar !== 'E' &&
+                        royaltyChar !== 'X' &&
+                        royaltyChar !== 'Y' &&
+                        royaltyChar !== 'A' &&
+                        royaltyChar !== 'I'
+                      ) {
                         continue;
                       }
                     }
@@ -1311,7 +1318,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.blackArcane[3]
                 ) {
                   if (
@@ -1326,13 +1333,20 @@ export function GenerateMoves(
                   }
                   // Check if trying to place royalty on a king in check
                   const pieceAtSq = GameBoard.pieces[sq];
-                  const isKing = pieceAtSq === PIECES.wK || pieceAtSq === PIECES.bK;
+                  const isKing =
+                    pieceAtSq === PIECES.wK || pieceAtSq === PIECES.bK;
                   if (isKing && PieceCol[pieceAtSq] === GameBoard.side) {
                     // Check if king is in check (sq is the king's position)
                     if (SqAttacked(sq, GameBoard.side ^ 1) === BOOL.TRUE) {
                       // Only allow royalties that affect checking squares: E, X, Y, A, I
                       const royaltyChar = RtyChar.split('')[summonPce];
-                      if (royaltyChar !== 'E' && royaltyChar !== 'X' && royaltyChar !== 'Y' && royaltyChar !== 'A' && royaltyChar !== 'I') {
+                      if (
+                        royaltyChar !== 'E' &&
+                        royaltyChar !== 'X' &&
+                        royaltyChar !== 'Y' &&
+                        royaltyChar !== 'A' &&
+                        royaltyChar !== 'I'
+                      ) {
                         continue;
                       }
                     }
@@ -2806,9 +2820,9 @@ export function GenerateMoves(
                   );
                 }
               }
-              // CAPTURE with 5D Sword only
+              // CAPTURE: Allow with 5D Sword OR if this is a Hemlock piece
               else if (
-                has5thDimensionSword &&
+                (has5thDimensionSword || isHemlock) &&
                 PieceCol[targetPiece] !== side &&
                 herringAllowed
               ) {

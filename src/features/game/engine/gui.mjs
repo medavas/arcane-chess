@@ -26,6 +26,7 @@ import {
   Kings,
   PceChar,
   RtyChar,
+  FILES,
 } from './defs';
 import { PrMove, ParseMove, PrSq } from './io';
 import { SqAttacked } from './board.mjs';
@@ -484,7 +485,7 @@ export function startSearch(thinkingTime, depth, engineColor) {
     engineArcana.modsPHA > 0
   ) {
     if (bestScore > 500 || bestScore < -500) {
-      if (Math.random() > 0.15) {
+      if (Math.random() > 0.95) {
         GameBoard.invisibility[colorInt] = 6;
         if (colorInt === COLOURS.WHITE) {
           whiteArcaneConfig.modsPHA -= 1;
@@ -502,7 +503,7 @@ export function startSearch(thinkingTime, depth, engineColor) {
     GameBoard.invisibility[colorInt] <= 0
   ) {
     if (bestScore < -900) {
-      if (Math.random() > 0.15) {
+      if (Math.random() > 0.95) {
         // GameBoard.suspend = 6;
         if (colorInt === COLOURS.WHITE) {
           whiteArcaneConfig.modsSUS -= 1;
@@ -518,6 +519,75 @@ export function startSearch(thinkingTime, depth, engineColor) {
         MakeMove(bestMove, 'commit');
         CheckAndSet();
         return { bestMove, bestScore, text };
+      }
+    }
+  }
+
+  if (
+    _.some(_.keys(engineArcana), (key) => key === 'modsFLA') &&
+    engineArcana.modsFLA > 0
+  ) {
+    if (bestScore > 300 || bestScore < -300) {
+      if (Math.random() > 0.95) {
+        if (colorInt === COLOURS.WHITE) {
+          whiteArcaneConfig.modsFLA -= 1;
+        } else {
+          blackArcaneConfig.modsFLA -= 1;
+        }
+
+        // Perform the flank inversion
+        for (let rank = 0; rank < 8; rank++) {
+          const aFileSq = 21 + FILES.FILE_A + rank * 10;
+          const hFileSq = 21 + FILES.FILE_H + rank * 10;
+
+          const pieceOnA = GameBoard.pieces[aFileSq];
+          const pieceOnH = GameBoard.pieces[hFileSq];
+
+          // Skip this rank if either square has a king
+          if (
+            pieceOnA === PIECES.wK ||
+            pieceOnA === PIECES.bK ||
+            pieceOnH === PIECES.wK ||
+            pieceOnH === PIECES.bK
+          ) {
+            continue;
+          }
+
+          // Simple swap
+          GameBoard.pieces[aFileSq] = pieceOnH;
+          GameBoard.pieces[hFileSq] = pieceOnA;
+
+          // Update piece lists if pieces exist
+          if (pieceOnH !== PIECES.EMPTY) {
+            for (let index = 0; index < GameBoard.pceNum[pieceOnH]; index++) {
+              if (GameBoard.pList[PCEINDEX(pieceOnH, index)] === hFileSq) {
+                GameBoard.pList[PCEINDEX(pieceOnH, index)] = aFileSq;
+                break;
+              }
+            }
+          }
+
+          if (pieceOnA !== PIECES.EMPTY) {
+            for (let index = 0; index < GameBoard.pceNum[pieceOnA]; index++) {
+              if (GameBoard.pList[PCEINDEX(pieceOnA, index)] === aFileSq) {
+                GameBoard.pList[PCEINDEX(pieceOnA, index)] = hFileSq;
+                break;
+              }
+            }
+          }
+        }
+
+        // Switch turns - Flank Inversion consumes the entire turn
+        GameBoard.side =
+          GameBoard.side === COLOURS.WHITE ? COLOURS.BLACK : COLOURS.WHITE;
+
+        text.push(
+          `${engineColor} used Flank Inversion - A and H files swapped!`
+        );
+
+        CheckAndSet();
+        // Return without making a move - the turn passes to opponent
+        return { bestMove: NOMOVE, bestScore, text };
       }
     }
   }

@@ -203,7 +203,7 @@ export const POWERBIT = {
   modsBAN: 2097152, // inherent  // banshee
   modsGLA: 4194304, // inherent  // glare - rook attacks apply disarmament
   modsZ: 8388608, // passive     // .
-  modsHUR: 16777216, // passive  // hurricane
+  modsFLA: 16777216, // passive  // hurricane
   modsHEX: 33554432, // passive  // hexlash
 
   // 6 on your piece death 4

@@ -40,8 +40,8 @@ import {
   POWERBIT,
   ArcanaProgression,
 } from './arcaneDefs.mjs';
-import { COLOURS, PIECES, prettyToSquare } from './defs.mjs';
-import { MakeMove, TakeMove } from './makemove.mjs';
+import { COLOURS, PIECES, prettyToSquare, FILES, PCEINDEX } from './defs.mjs';
+import { MakeMove, TakeMove, MovePiece, AddPiece } from './makemove.mjs';
 import { PrSq } from './io';
 
 export default function arcaneChess() {
@@ -229,6 +229,55 @@ export default function arcaneChess() {
         playerColor === 'white' ? whiteArcaneConfig : blackArcaneConfig;
       playerArcana.modsSUS -= 1;
       GameBoard.suspend = 6;
+    },
+    swapFilePieces: (playerColor) => {
+      const playerArcana =
+        playerColor === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+      playerArcana.modsFLA -= 1;
+
+      // Swap all pieces on A file (FILE_A = 0) with H file (FILE_H = 7)
+      // The board uses 120-square representation, valid squares are 21-98
+      // Iterate through all ranks (0-7), swap pieces between A and H files
+      for (let rank = 0; rank < 8; rank++) {
+        // Calculate square indices: 21 + file + rank * 10
+        const aFileSq = 21 + FILES.FILE_A + rank * 10;
+        const hFileSq = 21 + FILES.FILE_H + rank * 10;
+
+        const pieceOnA = GameBoard.pieces[aFileSq];
+        const pieceOnH = GameBoard.pieces[hFileSq];
+
+        // Skip this rank if either square has a king
+        if (pieceOnA === PIECES.wK || pieceOnA === PIECES.bK ||
+            pieceOnH === PIECES.wK || pieceOnH === PIECES.bK) {
+          continue;
+        }
+
+        // Simple swap: store both pieces, clear both squares, place them on opposite sides
+        GameBoard.pieces[aFileSq] = pieceOnH;
+        GameBoard.pieces[hFileSq] = pieceOnA;
+
+        // Update piece lists if pieces exist
+        if (pieceOnH !== PIECES.EMPTY) {
+          for (let index = 0; index < GameBoard.pceNum[pieceOnH]; index++) {
+            if (GameBoard.pList[PCEINDEX(pieceOnH, index)] === hFileSq) {
+              GameBoard.pList[PCEINDEX(pieceOnH, index)] = aFileSq;
+              break;
+            }
+          }
+        }
+
+        if (pieceOnA !== PIECES.EMPTY) {
+          for (let index = 0; index < GameBoard.pceNum[pieceOnA]; index++) {
+            if (GameBoard.pList[PCEINDEX(pieceOnA, index)] === aFileSq) {
+              GameBoard.pList[PCEINDEX(pieceOnA, index)] = hFileSq;
+              break;
+            }
+          }
+        }
+      }
+
+      // Switch turns
+      GameBoard.side = GameBoard.side === COLOURS.WHITE ? COLOURS.BLACK : COLOURS.WHITE;
     },
     engineSuggestion: async (playerColor, level) => {
       const playerArcana =

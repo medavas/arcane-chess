@@ -264,7 +264,9 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
       getArcaneChess: () => this.arcaneChess(),
       getPlayerColor: () => this.state.playerColor,
       getSelectedSide: () => this.state.selectedSide,
+      getTurn: () => this.state.turn,
       getThinking: () => this.state.thinking,
+      getEngineColor: () => this.state.engineColor,
       getFutureSightAvailable: () => this.state.futureSightAvailable,
       getHistory: () => this.state.history,
       getHistoryPly: () => this.state.historyPly,
@@ -284,11 +286,12 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
         glitchQueued: this.state.glitchQueued,
       }),
       updateSpellState: (updates) => this.setState(updates as any),
-      updateHistory: (updates) => this.setState(updates as any),
+      updateHistory: (updates, callback) => this.setState(updates as any, callback),
       addDialogue: (message) =>
         this.setState((prev) => ({ dialogue: [...prev.dialogue, message] })),
       activateGlitch: () => this.setState({ glitchActive: true }),
       setThinking: (thinking) => this.setState({ thinking }),
+      engineGo: () => this.engineGo(),
     });
 
     this.gameEngineHandler = new GameEngineHandler({

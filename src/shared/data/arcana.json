@@ -255,9 +255,9 @@
     "description": "Summon a Mystic to an empty square.",
     "type": "active",
     "imagePath": "/sumnA",
-    "value": 10,
+    "value": 11,
     "related": [],
-    "tier": "Elite"
+    "tier": "Legendary"
   },
   "sumnV": {
     "id": "sumnV",
@@ -465,9 +465,9 @@
     "description": "Your King can move and capture in the 5x5 ring... and check an opposing King that does not have Shogun.",
     "type": "passive",
     "imagePath": "/shftK",
-    "value": 10,
+    "value": 11,
     "related": [],
-    "tier": "Elite"
+    "tier": "Legendary"
   },
   "shftI": {
     "id": "shftI",
@@ -478,16 +478,6 @@
     "value": 5,
     "related": [],
     "tier": "Advanced"
-  },
-  "shftA": {
-    "id": "shftA",
-    "name": "Myriad Path",
-    "description": "Make any type of shift move, no capturing. Used prior to other shift types.",
-    "type": "passive",
-    "imagePath": "/shftA",
-    "value": 18,
-    "related": [],
-    "tier": "Legendary"
   },
   "swapDEP": {
     "id": "swapDEP",
@@ -869,12 +859,12 @@
     "related": [],
     "tier": "Advanced"
   },
-  "modsHUR": {
-    "id": "modsHUR",
-    "name": "Hurricane",
-    "description": "Shift all pieces one square to either the left or right, until a legal position is exists. Pieces on the edge of the board wrap around to the opposite side.",
+  "modsFLA": {
+    "id": "modsFLA",
+    "name": "Flank Inversion",
+    "description": "Swap all the pieces on the A file with the H file. Kings cannot be swapped.",
     "type": "active",
-    "imagePath": "/modsHUR",
+    "imagePath": "/modsFLA",
     "value": 4,
     "related": [],
     "tier": "Basic"
@@ -885,9 +875,9 @@
     "description": "After your next piece lands on a square, it upgrades to the next piece in the sequence: Pawn -> NZUB -> Rook -> Ghost -> Mystic -> TQ -> Valkyrie.",
     "type": "active",
     "imagePath": "/modsEVO",
-    "value": 4,
+    "value": 5,
     "related": [],
-    "tier": "Basic"
+    "tier": "Advanced"
   },
   "modsMAG": {
     "id": "modsMAG",
@@ -909,7 +899,7 @@
     "related": [],
     "tier": "Basic"
   },
-  "modsRED": {
+  "modsBLI": {
     "id": "modsBLI",
     "name": "Blinding Mist",
     "description": "Reduce the scope of enemy slider patterns (Rook / Bishop) from 7 to 5 for 5 turns.",
@@ -969,7 +959,7 @@
     "related": [],
     "tier": "Elite"
   },
-  "modsCHE": {
+  "modsCOM": {
     "id": "modsCOM",
     "name": "Combo Berserker",
     "description": "Every 5 checks you give your opponent's King, you gain a Dyad.",
@@ -979,7 +969,7 @@
     "related": [],
     "tier": "Elite"
   },
-  "modsBOU": {
+  "modsMIR": {
     "id": "modsMIR",
     "name": "Mirror Strike",
     "description": "Friendly Bishops (not all Bishop move patterns) reflect off of the wall once.",

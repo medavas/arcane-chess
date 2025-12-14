@@ -25,6 +25,8 @@ export interface SpellHandlerCallbacks {
   getArcaneChess: () => any;
   getPlayerColor: () => string;
   getSelectedSide: () => string;
+  getTurn: () => string;
+  getEngineColor: () => string;
   getThinking: () => boolean;
   getFutureSightAvailable: () => boolean;
   getHistory: () => (string | string[])[];
@@ -37,14 +39,17 @@ export interface SpellHandlerCallbacks {
   updateSpellState: (updates: Partial<SpellState>) => void;
   updateHistory: (updates: {
     historyPly?: number;
+    history?: (string | string[])[];
     fen?: string;
     fenHistory?: string[];
     lastMoveHistory?: string[][];
     futureSightAvailable?: boolean;
-  }) => void;
+    turn?: string;
+  }, callback?: () => void) => void;
   addDialogue: (message: string) => void;
   activateGlitch: () => void;
   setThinking: (thinking: boolean) => void;
+  engineGo: () => void;
 }
 
 export class SpellHandler {
@@ -326,6 +331,36 @@ export class SpellHandler {
       // Toggle glitch queued state (like dyad/summon spells)
       this.callbacks.updateSpellState({
         glitchQueued: !state.glitchQueued,
+      });
+      return;
+    }
+
+    // === SPELL: Flank Inversion ===
+    if (key === 'modsFLA') {
+      audioManager.playSFX('spell');
+      arcane.swapFilePieces(playerColor);
+      arcane.parseCurrentFen();
+      arcane.generatePlayableOptions();
+      this.callbacks.addDialogue(
+        `${playerColor} used Flank Inversion — A and H files swapped!`
+      );
+      // Since GameBoard.side is toggled in swapFilePieces, just update historyPly
+      this.callbacks.updateHistory({
+        historyPly: this.callbacks.getHistoryPly() + 1,
+        history: [
+          ...this.callbacks.getHistory().slice(0, this.callbacks.getHistoryPly()),
+          'FI',
+        ],
+        fen: outputFenOfCurrentPosition(),
+        fenHistory: [
+          ...this.callbacks.getFenHistory(),
+          outputFenOfCurrentPosition(),
+        ],
+      } as any, () => {
+        // Trigger engine move if it's the engine's turn
+        if (this.callbacks.getEngineColor() === this.callbacks.getTurn()) {
+          this.callbacks.engineGo();
+        }
       });
       return;
     }
