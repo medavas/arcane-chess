@@ -200,9 +200,9 @@ export const PlayerPanel: React.FC<PlayerPanelProps> = ({
               (playerColor === 'white'
                 ? whiteArcaneConfig
                 : blackArcaneConfig) as Record<
-                  string,
-                  number | string | undefined
-                >
+                string,
+                number | string | undefined
+              >
             }
             spellBook={
               (playerColor === 'white'

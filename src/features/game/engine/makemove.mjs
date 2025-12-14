@@ -847,9 +847,13 @@ export function MakeMove(move, moveType = '') {
         AddPiece(to, evolvedPiece);
         h.modsEVOPiece = movedPiece;
         h.modsEVOEvolved = evolvedPiece;
-        cfg.modsEVO -= 1;
-        // Notify UI that arcana count changed
-        triggerArcanaUpdateCallback();
+        // Only decrement modsEVO if it hasn't been pre-decremented by engine
+        // Engine pre-decrements modsEVO when moveType='commit' and engine decided to use evo
+        // So only decrement here for player moves (moveType='userMove')
+        if (moveType === 'userMove') {
+          cfg.modsEVO -= 1;
+          triggerArcanaUpdateCallback();
+        }
       }
     }
 
@@ -1419,10 +1423,32 @@ export function MakeMove(move, moveType = '') {
       HASH_SIDE();
     }
   } else if (
-    (moveType === 'userMove' || moveType === 'commit') &&
+    moveType === 'userMove' &&
     GameBoard.evo > 0
   ) {
-    // Evolution consumes after this move
+    // Player move with Evolution active: consume modsEVO
+    // Decrement modsEVO if it hasn't been decremented already (when evolution happened)
+    if (!h.modsEVOPiece) {
+      const evoOwnerIsWhite = GameBoard.evoOwner === 'white';
+      const evoConfig = evoOwnerIsWhite ? whiteArcaneConfig : blackArcaneConfig;
+      if (evoConfig && evoConfig.modsEVO > 0) {
+        evoConfig.modsEVO -= 1;
+        // Mark that modsEVO was decremented for non-evolution case
+        h.modsEVOConsumed = true;
+        triggerArcanaUpdateCallback();
+      }
+    }
+    GameBoard.evo = 0;
+    GameBoard.evoClock = 0;
+    GameBoard.evoOwner = undefined;
+    GameBoard.side ^= 1;
+    HASH_SIDE();
+  } else if (
+    moveType === 'commit' &&
+    GameBoard.evo > 0
+  ) {
+    // Non-player move (e.g., engine) with Evolution active
+    // Note: Engine already decrements modsEVO before calling MakeMove
     GameBoard.evo = 0;
     GameBoard.evoClock = 0;
     GameBoard.evoOwner = undefined;
@@ -1712,6 +1738,19 @@ export function TakeMove(wasDyadMove = false) {
         h.modsEVOPiece = undefined;
         h.modsEVOEvolved = undefined;
       }
+    }
+    // Revert modsEVO for non-evolution case (player move without evolution)
+    if (h && h.modsEVOConsumed) {
+      const evoOwnerSide = GameBoard.side === COLOURS.WHITE ? 1 : 0;
+      const evoConfig =
+        evoOwnerSide === COLOURS.WHITE
+          ? whiteArcaneConfig
+          : blackArcaneConfig;
+      if (evoConfig && evoConfig.modsEVO !== undefined) {
+        evoConfig.modsEVO += 1;
+        triggerArcanaUpdateCallback();
+      }
+      h.modsEVOConsumed = undefined;
     }
   }
 

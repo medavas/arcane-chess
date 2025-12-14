@@ -262,26 +262,41 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
 
             const isDyad = key.startsWith('dyad');
             const isEvo = key === 'modsEVO';
+            const isActiveType = entry.type === 'active';
 
-            // Check if ANY spell is active for this color
-            const anySpellActiveForThisColor = 
+            // Check if THIS specific spell is currently active using the isArcaneActive function
+            const isThisSpellActive = isArcaneActive(key, color);
+
+            // Check if ANY active spell is currently active
+            const hasActiveSpellActive =
               (isDyadActive && dyadOwner === color) ||
               (isEvoActive && dyadOwner === color) ||
-              (placingPiece > 0) ||
-              (swapType !== '') ||
-              (placingRoyalty > 0) ||
-              (offeringType !== '');
+              placingPiece > 0 ||
+              swapType !== '' ||
+              placingRoyalty > 0 ||
+              offeringType !== '';
 
+            // Determine if this specific spell should be disabled
             const isDisabled =
               playerColor !== color ||
               thinking ||
               (trojanGambitExists && !isDyad) ||
               (!isFutureSightAvailable && key === 'modsFUT') ||
-              // Block other spells when ANY spell is active, unless clicking to deactivate the same spell
-              (anySpellActiveForThisColor && !isDyad && !isEvo) ||
-              // Dyad blocks evo and vice versa
-              (isDyad && isEvoActive && dyadOwner === color) ||
-              (isEvo && isDyadActive && dyadOwner === color);
+              // When a dyad is active, darken OTHER dyads and all non-evo active spells
+              (isDyadActive &&
+                dyadOwner === color &&
+                isDyad &&
+                key !== dyadName) ||
+              (isDyadActive && dyadOwner === color && !isDyad && !isEvo) ||
+              // When modsEVO is active, darken other dyads and all non-evo active spells
+              (isEvoActive && dyadOwner === color && isDyad) ||
+              (isEvoActive && dyadOwner === color && !isDyad && !isEvo) ||
+              // When any other active spell is active, darken OTHER active type spells (but not this one if it's active)
+              (hasActiveSpellActive &&
+                isActiveType &&
+                !isThisSpellActive &&
+                !isDyad &&
+                !isEvo);
 
             const active = isArcaneActive(key, color);
 
@@ -404,26 +419,41 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
 
             const isDyad = key.startsWith('dyad');
             const isEvo = key === 'modsEVO';
+            const isActiveType = entry.type === 'active';
 
-            // Check if ANY spell is active for this color
-            const anySpellActiveForThisColor = 
+            // Check if THIS specific spell is currently active using the isArcaneActive function
+            const isThisSpellActive = isArcaneActive(key, color);
+
+            // Check if ANY active spell is currently active
+            const hasActiveSpellActive =
               (isDyadActive && dyadOwner === color) ||
               (isEvoActive && dyadOwner === color) ||
-              (placingPiece > 0) ||
-              (swapType !== '') ||
-              (placingRoyalty > 0) ||
-              (offeringType !== '');
+              placingPiece > 0 ||
+              swapType !== '' ||
+              placingRoyalty > 0 ||
+              offeringType !== '';
 
+            // Determine if this specific spell should be disabled
             const isDisabled =
               playerColor !== color ||
               thinking ||
               (trojanGambitExists && !isDyad) ||
               (!isFutureSightAvailable && key === 'modsFUT') ||
-              // Block other spells when ANY spell is active, unless clicking to deactivate the same spell
-              (anySpellActiveForThisColor && !isDyad && !isEvo) ||
-              // Dyad blocks evo and vice versa
-              (isDyad && isEvoActive && dyadOwner === color) ||
-              (isEvo && isDyadActive && dyadOwner === color);
+              // When a dyad is active, darken OTHER dyads and all non-evo active spells
+              (isDyadActive &&
+                dyadOwner === color &&
+                isDyad &&
+                key !== dyadName) ||
+              (isDyadActive && dyadOwner === color && !isDyad && !isEvo) ||
+              // When modsEVO is active, darken other dyads and all non-evo active spells
+              (isEvoActive && dyadOwner === color && isDyad) ||
+              (isEvoActive && dyadOwner === color && !isDyad && !isEvo) ||
+              // When any other active spell is active, darken OTHER active type spells (but not this one if it's active)
+              (hasActiveSpellActive &&
+                isActiveType &&
+                !isThisSpellActive &&
+                !isDyad &&
+                !isEvo);
 
             const active = isArcaneActive(key, color);
 

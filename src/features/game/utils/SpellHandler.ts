@@ -128,29 +128,28 @@ export class SpellHandler {
 
     // === BLOCK OTHER SPELLS WHEN ANY SPELL IS ACTIVE ===
     // User must deactivate the spell first to use another one
-    const anySpellCurrentlyActive = (
+    const anySpellCurrentlyActive =
       state.placingPiece > 0 ||
       state.swapType !== '' ||
       state.placingRoyalty > 0 ||
       state.offeringType !== '' ||
       state.isDyadMove === true ||
-      state.isEvoActive === true
-    );
+      state.isEvoActive === true;
 
     // Check if trying to activate a different spell (allow toggling off same spell)
     const isDyadActive = state.isDyadMove;
     const isEvoActive = state.isEvoActive;
     const isSameDyadSpell = isDyadActive && key.startsWith('dyad');
     const isSameEvoSpell = isEvoActive && key === 'modsEVO';
-    const isSamePlacingSpell = (
+    const isSamePlacingSpell =
       (state.placingPiece > 0 && key.startsWith('sumn')) ||
       (state.swapType !== '' && key.startsWith('swap')) ||
       (state.placingRoyalty > 0 && key.startsWith('sumn')) ||
-      (state.offeringType !== '' && key.startsWith('offr'))
-    );
+      (state.offeringType !== '' && key.startsWith('offr'));
 
     // If a spell is active and trying to activate a DIFFERENT spell, block it
-    const isDifferentSpell = !isSameDyadSpell && !isSameEvoSpell && !isSamePlacingSpell;
+    const isDifferentSpell =
+      !isSameDyadSpell && !isSameEvoSpell && !isSamePlacingSpell;
     if (anySpellCurrentlyActive && isDifferentSpell && key !== 'deactivate') {
       return;
     }
@@ -160,7 +159,7 @@ export class SpellHandler {
       return;
     }
 
-    // Block Dyad if Evo is active  
+    // Block Dyad if Evo is active
     if (key.startsWith('dyad') && state.isEvoActive) {
       return;
     }
