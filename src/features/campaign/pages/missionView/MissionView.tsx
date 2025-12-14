@@ -922,6 +922,12 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                     ? this.arcaneChess().getDyadOwner()
                     : undefined
                 }
+                isDyadActive={this.state.isDyadMove}
+                isEvoActive={this.state.isEvoActive}
+                placingPiece={this.state.placingPiece}
+                swapType={this.state.swapType}
+                placingRoyalty={this.state.placingRoyalty}
+                offeringType={this.state.offeringType}
                 onSpellClick={this.handleArcanaClick}
                 onHover={this.toggleHover}
                 isArcaneActive={this.isArcaneActive}
@@ -1171,6 +1177,12 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                       trojanGambitExists={this.arcaneChess().getIfTrojanGambitExists(
                         this.state.engineColor
                       )}
+                      isDyadActive={this.state.isDyadMove}
+                      isEvoActive={this.state.isEvoActive}
+                      placingPiece={this.state.placingPiece}
+                      swapType={this.state.swapType}
+                      placingRoyalty={this.state.placingRoyalty}
+                      offeringType={this.state.offeringType}
                       onSpellClick={this.handleArcanaClick}
                       onHover={this.toggleHover}
                       isArcaneActive={this.isArcaneActive}

@@ -71,7 +71,8 @@ export class SpellHandler {
       // state.isTeleport === true ||
       state.placingRoyalty > 0 ||
       state.offeringType !== '' ||
-      state.isDyadMove === true
+      state.isDyadMove === true ||
+      state.isEvoActive === true
     );
   };
 
@@ -123,11 +124,50 @@ export class SpellHandler {
   handleArcanaClick = (key: string): void => {
     const playerColor = this.callbacks.getPlayerColor();
     const arcane = this.callbacks.getArcaneChess();
+    let state = this.callbacks.getSpellState();
+
+    // === BLOCK OTHER SPELLS WHEN ANY SPELL IS ACTIVE ===
+    // User must deactivate the spell first to use another one
+    const anySpellCurrentlyActive = (
+      state.placingPiece > 0 ||
+      state.swapType !== '' ||
+      state.placingRoyalty > 0 ||
+      state.offeringType !== '' ||
+      state.isDyadMove === true ||
+      state.isEvoActive === true
+    );
+
+    // Check if trying to activate a different spell (allow toggling off same spell)
+    const isDyadActive = state.isDyadMove;
+    const isEvoActive = state.isEvoActive;
+    const isSameDyadSpell = isDyadActive && key.startsWith('dyad');
+    const isSameEvoSpell = isEvoActive && key === 'modsEVO';
+    const isSamePlacingSpell = (
+      (state.placingPiece > 0 && key.startsWith('sumn')) ||
+      (state.swapType !== '' && key.startsWith('swap')) ||
+      (state.placingRoyalty > 0 && key.startsWith('sumn')) ||
+      (state.offeringType !== '' && key.startsWith('offr'))
+    );
+
+    // If a spell is active and trying to activate a DIFFERENT spell, block it
+    const isDifferentSpell = !isSameDyadSpell && !isSameEvoSpell && !isSamePlacingSpell;
+    if (anySpellCurrentlyActive && isDifferentSpell && key !== 'deactivate') {
+      return;
+    }
+
+    // Block Evo if Dyad is active
+    if (key === 'modsEVO' && state.isDyadMove) {
+      return;
+    }
+
+    // Block Dyad if Evo is active  
+    if (key.startsWith('dyad') && state.isEvoActive) {
+      return;
+    }
 
     // === SUMMONS ===
     if (key.startsWith('sumn')) {
       // Check BEFORE clearing state
-      const state = this.callbacks.getSpellState();
       const dyadClock = arcane.getDyadClock();
 
       // Block summons during dyad
@@ -148,7 +188,8 @@ export class SpellHandler {
       isDyadMove: false,
     });
 
-    const state = this.callbacks.getSpellState();
+    // Get updated state after clearing previous selections
+    state = this.callbacks.getSpellState();
 
     // === SUMMONS ===
     if (key.startsWith('sumn')) {

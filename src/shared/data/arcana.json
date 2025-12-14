@@ -12,7 +12,7 @@
   "dyadA": {
     "id": "dyadA",
     "name": "Dyad",
-    "description": "Make two moves, no capturing. Combines with Evolution.",
+    "description": "Make two moves, no capturing.",
     "type": "active",
     "imagePath": "/dyadA",
     "value": 7,
@@ -872,7 +872,7 @@
   "modsEVO": {
     "id": "modsEVO",
     "name": "Berserking Evolution",
-    "description": "Click to activate. Non-capture moves evolve pieces: P→N→R, ZUB→R→W, WS→Q→V, MT→V. Combines with Dyad.",
+    "description": "Click to activate. Non-capture moves evolve pieces: P→N→R, ZUB→R→W, WS→Q→V, MT→V.",
     "type": "active",
     "imagePath": "/modsEVO",
     "value": 5,

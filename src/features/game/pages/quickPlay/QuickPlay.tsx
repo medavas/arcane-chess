@@ -680,6 +680,12 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                   : undefined
               }
               arcanaUpdateKey={this.state.arcanaUpdateKey}
+              isDyadActive={this.state.isDyadMove}
+              isEvoActive={this.state.isEvoActive}
+              placingPiece={this.state.placingPiece}
+              swapType={this.state.swapType}
+              placingRoyalty={this.state.placingRoyalty}
+              offeringType={this.state.offeringType}
               onSpellClick={this.handleArcanaClick}
               onHover={this.toggleHover}
               isArcaneActive={this.isArcaneActive}
@@ -788,6 +794,12 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                   : undefined
               }
               trojanActive={trojanActivePlayer}
+              isDyadActive={this.state.isDyadMove}
+              isEvoActive={this.state.isEvoActive}
+              placingPiece={this.state.placingPiece}
+              swapType={this.state.swapType}
+              placingRoyalty={this.state.placingRoyalty}
+              offeringType={this.state.offeringType}
               onSpellClick={this.handleArcanaClick}
               onHover={this.toggleHover}
               isArcaneActive={this.isArcaneActive}

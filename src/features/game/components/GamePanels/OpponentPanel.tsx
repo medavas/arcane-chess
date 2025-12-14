@@ -24,6 +24,12 @@ interface OpponentPanelProps {
   historyLength: number;
   dyadName: string;
   dyadOwner: string | undefined;
+  isDyadActive: boolean; // Is a dyad currently active?
+  isEvoActive: boolean; // Is evo currently active?
+  placingPiece?: number; // Summons active
+  swapType?: string; // Swap active
+  placingRoyalty?: number; // Royalty summon active
+  offeringType?: string; // Offering active
   arcanaUpdateKey?: number; // Force re-render when arcana data changes
   onSpellClick: (key: string) => void;
   onHover: (arcane: string) => void;
@@ -46,6 +52,12 @@ export const OpponentPanel: React.FC<OpponentPanelProps> = ({
   historyLength,
   dyadName,
   dyadOwner,
+  isDyadActive,
+  isEvoActive,
+  placingPiece = 0,
+  swapType = '',
+  placingRoyalty = 0,
+  offeringType = '',
   arcanaUpdateKey,
   onSpellClick,
   onHover,
@@ -83,6 +95,12 @@ export const OpponentPanel: React.FC<OpponentPanelProps> = ({
             dyadOwner={dyadOwner}
             arcanaUpdateKey={arcanaUpdateKey}
             trojanGambitExists={trojanActive}
+            isDyadActive={isDyadActive}
+            isEvoActive={isEvoActive}
+            placingPiece={placingPiece}
+            swapType={swapType}
+            placingRoyalty={placingRoyalty}
+            offeringType={offeringType}
             onSpellClick={onSpellClick}
             onHover={onHover}
             isArcaneActive={isArcaneActive}

@@ -28,6 +28,12 @@ interface PlayerPanelProps {
   dyadName: string;
   dyadOwner: string | undefined;
   trojanActive: boolean;
+  isDyadActive: boolean; // Is a dyad currently active?
+  isEvoActive: boolean; // Is evo currently active?
+  placingPiece?: number; // Summons active
+  swapType?: string; // Swap active
+  placingRoyalty?: number; // Royalty summon active
+  offeringType?: string; // Offering active
   onSpellClick: (key: string) => void;
   onHover: (arcane: string) => void;
   isArcaneActive: (key: string, color?: string) => boolean;
@@ -61,6 +67,12 @@ export const PlayerPanel: React.FC<PlayerPanelProps> = ({
   dyadName,
   dyadOwner,
   trojanActive,
+  isDyadActive,
+  isEvoActive,
+  placingPiece = 0,
+  swapType = '',
+  placingRoyalty = 0,
+  offeringType = '',
   onSpellClick,
   onHover,
   isArcaneActive,
@@ -206,6 +218,12 @@ export const PlayerPanel: React.FC<PlayerPanelProps> = ({
             dyadName={dyadName}
             dyadOwner={dyadOwner}
             trojanGambitExists={trojanActive}
+            isDyadActive={isDyadActive}
+            isEvoActive={isEvoActive}
+            placingPiece={placingPiece}
+            swapType={swapType}
+            placingRoyalty={placingRoyalty}
+            offeringType={offeringType}
             onSpellClick={onSpellClick}
             onHover={onHover}
             isArcaneActive={isArcaneActive}

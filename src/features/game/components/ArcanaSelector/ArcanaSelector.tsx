@@ -17,6 +17,12 @@ interface ArcanaSelectorProps {
   dyadName: string;
   dyadOwner: string | undefined;
   trojanGambitExists: boolean;
+  isDyadActive?: boolean; // Is a dyad currently active?
+  isEvoActive?: boolean; // Is evo currently active?
+  placingPiece?: number; // Summons active
+  swapType?: string; // Swap active
+  placingRoyalty?: number; // Royalty summon active
+  offeringType?: string; // Offering active
   arcanaUpdateKey?: number; // Force re-render when arcana data changes
   onSpellClick: (key: string) => void;
   onHover: (key: string) => void;
@@ -145,6 +151,12 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
   dyadName,
   dyadOwner,
   trojanGambitExists,
+  isDyadActive = false,
+  isEvoActive = false,
+  placingPiece = 0,
+  swapType = '',
+  placingRoyalty = 0,
+  offeringType = '',
   arcanaUpdateKey,
   onSpellClick,
   onHover,
@@ -249,12 +261,27 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
               historyLength >= 4 && futureSightAvailable;
 
             const isDyad = key.startsWith('dyad');
+            const isEvo = key === 'modsEVO';
+
+            // Check if ANY spell is active for this color
+            const anySpellActiveForThisColor = 
+              (isDyadActive && dyadOwner === color) ||
+              (isEvoActive && dyadOwner === color) ||
+              (placingPiece > 0) ||
+              (swapType !== '') ||
+              (placingRoyalty > 0) ||
+              (offeringType !== '');
 
             const isDisabled =
               playerColor !== color ||
               thinking ||
               (trojanGambitExists && !isDyad) ||
-              (!isFutureSightAvailable && key === 'modsFUT');
+              (!isFutureSightAvailable && key === 'modsFUT') ||
+              // Block other spells when ANY spell is active, unless clicking to deactivate the same spell
+              (anySpellActiveForThisColor && !isDyad && !isEvo) ||
+              // Dyad blocks evo and vice versa
+              (isDyad && isEvoActive && dyadOwner === color) ||
+              (isEvo && isDyadActive && dyadOwner === color);
 
             const active = isArcaneActive(key, color);
 
@@ -376,12 +403,27 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
               historyLength >= 4 && futureSightAvailable;
 
             const isDyad = key.startsWith('dyad');
+            const isEvo = key === 'modsEVO';
+
+            // Check if ANY spell is active for this color
+            const anySpellActiveForThisColor = 
+              (isDyadActive && dyadOwner === color) ||
+              (isEvoActive && dyadOwner === color) ||
+              (placingPiece > 0) ||
+              (swapType !== '') ||
+              (placingRoyalty > 0) ||
+              (offeringType !== '');
 
             const isDisabled =
               playerColor !== color ||
               thinking ||
               (trojanGambitExists && !isDyad) ||
-              (!isFutureSightAvailable && key === 'modsFUT');
+              (!isFutureSightAvailable && key === 'modsFUT') ||
+              // Block other spells when ANY spell is active, unless clicking to deactivate the same spell
+              (anySpellActiveForThisColor && !isDyad && !isEvo) ||
+              // Dyad blocks evo and vice versa
+              (isDyad && isEvoActive && dyadOwner === color) ||
+              (isEvo && isDyadActive && dyadOwner === color);
 
             const active = isArcaneActive(key, color);
 
