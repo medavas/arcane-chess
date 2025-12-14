@@ -215,6 +215,7 @@ interface State {
   dialogue: string[];
   glitchActive: boolean;
   glitchQueued: boolean;
+  arcanaUpdateKey: number;
 }
 
 interface Props {
@@ -398,11 +399,13 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`].diagWinLose.victory,
       defeatMessage:
         booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`].diagWinLose.defeat,
-      dialogueList: booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`].diagWinLose,
       dialogue: [],
+      dialogueList: {},
       glitchActive: false,
       glitchQueued: false,
+      arcanaUpdateKey: 0,
     };
+
     this.arcaneChess = () => {
       return arcaneChess();
     };
@@ -438,7 +441,8 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         glitchQueued: this.state.glitchQueued,
       }),
       updateSpellState: (updates) => this.setState(updates as any),
-      updateHistory: (updates, callback) => this.setState(updates as any, callback),
+      updateHistory: (updates, callback) =>
+        this.setState(updates as any, callback),
       addDialogue: (message) =>
         this.setState((prev) => ({ dialogue: [...prev.dialogue, message] })),
       activateGlitch: () => this.setState({ glitchActive: true }),
