@@ -24,6 +24,8 @@ import {
 import {
   whiteArcaneConfig,
   blackArcaneConfig,
+  whiteArcaneSpellBook,
+  blackArcaneSpellBook,
   ArcanaProgression,
   offerGrant,
   offerRevert,
@@ -782,6 +784,7 @@ export function MakeMove(move, moveType = '') {
     // modsEVO: Berserking Evolution
     // Pawn → Knight → Rook; Zebra/Unicorn/Bishop → Rook → Wraith
     // Wraith/Spectre → Queen → Valkyrie; Mystic/Templar → Valkyrie
+    // Spectre/Unicorn → Hermit (when modsEVOSupply active) → Queen
     // No captures during evolution (unless modsGLU is active)
     const movedPiece = GameBoard.pieces[to];
     const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
@@ -803,15 +806,15 @@ export function MakeMove(move, moveType = '') {
           evolvedPiece = PIECES.wN;
         } else if (movedPiece === PIECES.wN) {
           evolvedPiece = PIECES.wR;
-        } else if (
-          movedPiece === PIECES.wZ ||
-          movedPiece === PIECES.wU ||
-          movedPiece === PIECES.wB
-        ) {
+        } else if (movedPiece === PIECES.wZ || movedPiece === PIECES.wB) {
           evolvedPiece = PIECES.wR;
+        } else if (movedPiece === PIECES.wU || movedPiece === PIECES.wS) {
+          evolvedPiece = PIECES.wH;
         } else if (movedPiece === PIECES.wR) {
           evolvedPiece = PIECES.wW;
-        } else if (movedPiece === PIECES.wW || movedPiece === PIECES.wS) {
+        } else if (movedPiece === PIECES.wW) {
+          evolvedPiece = PIECES.wQ;
+        } else if (movedPiece === PIECES.wH) {
           evolvedPiece = PIECES.wQ;
         } else if (movedPiece === PIECES.wM || movedPiece === PIECES.wT) {
           evolvedPiece = PIECES.wV;
@@ -824,15 +827,15 @@ export function MakeMove(move, moveType = '') {
           evolvedPiece = PIECES.bN;
         } else if (movedPiece === PIECES.bN) {
           evolvedPiece = PIECES.bR;
-        } else if (
-          movedPiece === PIECES.bZ ||
-          movedPiece === PIECES.bU ||
-          movedPiece === PIECES.bB
-        ) {
+        } else if (movedPiece === PIECES.bZ || movedPiece === PIECES.bB) {
           evolvedPiece = PIECES.bR;
+        } else if (movedPiece === PIECES.bU || movedPiece === PIECES.bS) {
+          evolvedPiece = PIECES.bH;
         } else if (movedPiece === PIECES.bR) {
           evolvedPiece = PIECES.bW;
-        } else if (movedPiece === PIECES.bW || movedPiece === PIECES.bS) {
+        } else if (movedPiece === PIECES.bW) {
+          evolvedPiece = PIECES.bQ;
+        } else if (movedPiece === PIECES.bH) {
           evolvedPiece = PIECES.bQ;
         } else if (movedPiece === PIECES.bM || movedPiece === PIECES.bT) {
           evolvedPiece = PIECES.bV;
@@ -852,6 +855,8 @@ export function MakeMove(move, moveType = '') {
         // So only decrement here for player moves (moveType='userMove')
         if (moveType === 'userMove') {
           cfg.modsEVO -= 1;
+          const spellBook = side === COLOURS.WHITE ? whiteArcaneSpellBook : blackArcaneSpellBook;
+          spellBook.modsEVO = Math.max(0, (spellBook.modsEVO ?? 0) - 1);
           triggerArcanaUpdateCallback();
         }
       }
@@ -1282,17 +1287,24 @@ export function MakeMove(move, moveType = '') {
 
   {
     const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+    const spellBook = side === COLOURS.WHITE ? whiteArcaneSpellBook : blackArcaneSpellBook;
     const sKey = sumnKeyFromMove(move);
     if (sKey && commit) {
       cfg[sKey] = (cfg[sKey] ?? 0) - 1;
+      spellBook[sKey] = Math.max(0, (spellBook[sKey] ?? 0) - 1);
       h.spellKey = sKey;
       h.spellCfg = cfg;
+      h.spellBook = spellBook;
+      triggerArcanaUpdateCallback();
     }
     const shKey = shiftKeyFromMove(move, moverPiece);
     if (shKey && commit) {
       cfg[shKey] = (cfg[shKey] ?? 0) - 1;
+      spellBook[shKey] = Math.max(0, (spellBook[shKey] ?? 0) - 1);
       h.shiftKey = shKey;
       h.shiftCfg = cfg;
+      h.shiftBook = spellBook;
+      triggerArcanaUpdateCallback();
     }
   }
 
@@ -1431,8 +1443,10 @@ export function MakeMove(move, moveType = '') {
     if (!h.modsEVOPiece) {
       const evoOwnerIsWhite = GameBoard.evoOwner === 'white';
       const evoConfig = evoOwnerIsWhite ? whiteArcaneConfig : blackArcaneConfig;
+      const evoBook = evoOwnerIsWhite ? whiteArcaneSpellBook : blackArcaneSpellBook;
       if (evoConfig && evoConfig.modsEVO > 0) {
         evoConfig.modsEVO -= 1;
+        evoBook.modsEVO = Math.max(0, (evoBook.modsEVO ?? 0) - 1);
         // Mark that modsEVO was decremented for non-evolution case
         h.modsEVOConsumed = true;
         triggerArcanaUpdateCallback();
@@ -1564,13 +1578,23 @@ export function TakeMove(wasDyadMove = false) {
     const h = GameBoard.history[GameBoard.hisPly];
     if (h.spellKey && h.spellCfg) {
       h.spellCfg[h.spellKey] = (h.spellCfg[h.spellKey] ?? 0) + 1;
+      if (h.spellBook) {
+        h.spellBook[h.spellKey] = (h.spellBook[h.spellKey] ?? 0) + 1;
+      }
+      triggerArcanaUpdateCallback();
       h.spellKey = undefined;
       h.spellCfg = undefined;
+      h.spellBook = undefined;
     }
     if (h.shiftKey && h.shiftCfg) {
       h.shiftCfg[h.shiftKey] = (h.shiftCfg[h.shiftKey] ?? 0) + 1;
+      if (h.shiftBook) {
+        h.shiftBook[h.shiftKey] = (h.shiftBook[h.shiftKey] ?? 0) + 1;
+      }
+      triggerArcanaUpdateCallback();
       h.shiftKey = undefined;
       h.shiftCfg = undefined;
+      h.shiftBook = undefined;
     }
   }
 

@@ -280,6 +280,8 @@ export class GameEngineHandler {
                     // Activate glitch if it was queued
                     glitchActive: prevState.glitchQueued,
                     glitchQueued: false,
+                    // Deactivate evo UI state if evo mode is no longer active
+                    isEvoActive: GameBoard.evo > 0,
                 };
             },
             () => {
