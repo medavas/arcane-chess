@@ -520,7 +520,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
 
     if (interactionState.isDyadMove) {
       game.generatePlayableOptions();
-      game.parseCurrentFen();
+      // DON'T call parseCurrentFen here - it resets hisPly and internal state
       const dests = game.getGroundMoves();
       if (dests.size === 0) {
         game.takeBackHalfDyad();
@@ -532,18 +532,18 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         return;
       }
       audioManager.playSFX('fire');
+      // Store first dyad move info and update board position (but not history)
       onGameStateChange({
-        history: [...((gameState as any).history || []), PrMove(parsed)],
-        fen: outputFenOfCurrentPosition(),
-        fenHistory: [
-          ...((gameState as any).fenHistory || []),
-          outputFenOfCurrentPosition(),
-        ],
-        lastMoveHistory: [
-          ...((gameState as any).lastMoveHistory || []),
-          [orig, dest],
-        ],
+        isDyadMove: false,
+        normalMovesOnly: true,
+        dyadFirstMove: {
+          notation: PrMove(parsed),
+          lastMove: [orig, dest]
+        },
+        dyadStartPly: game.getEnginePly(),
+        fen: outputFenOfCurrentPosition(), // Update visual board
       });
+      return; // Don't proceed to call onMove yet
     } else {
       if (PROMOTED(parsed) > 0 || parsed & MFLAGCNSM || parsed & MFLAGSHFT) {
         audioManager.playSFX('fire');
@@ -574,9 +574,15 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           console.log('invalid move');
         }
         if (interactionState.isDyadMove) {
+          // Store first dyad move and record engine ply
           onGameStateChange({
             isDyadMove: false,
             normalMovesOnly: true,
+            dyadFirstMove: {
+              notation: PrMove(parsed),
+              lastMove: [orig, dest]
+            },
+            dyadStartPly: game.getEnginePly()
           });
         } else {
           onMove(parsed, orig, dest);
@@ -587,10 +593,16 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         console.log('invalid move');
       }
       if (interactionState.isDyadMove) {
-        onGameStateChange({
-          isDyadMove: false,
-          normalMovesOnly: true,
-        });
+          // Store first dyad move and record engine ply  
+          onGameStateChange({
+            isDyadMove: false,
+            normalMovesOnly: true,
+            dyadFirstMove: {
+              notation: PrMove(parsed),
+              lastMove: [orig, dest]
+            },
+            dyadStartPly: game.getEnginePly()
+          });
       } else {
         onMove(parsed, orig, dest);
       }

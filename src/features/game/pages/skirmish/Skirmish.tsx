@@ -119,6 +119,8 @@ interface State {
   glitchActive: boolean;
   glitchQueued: boolean;
   isEvoActive: boolean;
+  dyadFirstMove: { notation: string; lastMove: string[] } | null;
+  dyadStartPly: number;
   engineAvatar: string;
   dialogue: string[];
   dialogueList: Record<string, string>;
@@ -241,6 +243,8 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
       glitchQueued: false,
       isEvoActive: false,
       engineAvatar: 'normal',
+      dyadFirstMove: null,
+      dyadStartPly: -1,
       dialogueList: {
         win1: '',
         win2: '',

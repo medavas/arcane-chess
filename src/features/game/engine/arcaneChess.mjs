@@ -350,6 +350,9 @@ export default function arcaneChess() {
     takeBackHalfDyad: () => {
       TakeMove(true);
     },
+    getEnginePly: () => {
+      return GameBoard.hisPly;
+    },
     takeBackMove: (ply, side, history) => {
       if (side === 'white') {
         whiteArcaneConfig.modsFUT -= 1;

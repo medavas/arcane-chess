@@ -126,6 +126,12 @@ export class SpellHandler {
     const arcane = this.callbacks.getArcaneChess();
     let state = this.callbacks.getSpellState();
 
+    // === BLOCK SPELLS WHEN normalMovesOnly IS TRUE (e.g., during dyad second move) ===
+    // Only allow deactivating or canceling the current dyad
+    if (state.normalMovesOnly && !key.startsWith('dyad') && key !== 'deactivate') {
+      return;
+    }
+
     // === BLOCK OTHER SPELLS WHEN ANY SPELL IS ACTIVE ===
     // User must deactivate the spell first to use another one
     const anySpellCurrentlyActive =
@@ -335,7 +341,8 @@ export class SpellHandler {
         });
       } else {
         arcane.activateDyad(key);
-        arcane.parseCurrentFen();
+        // Don't call parseCurrentFen() here - it resets the internal ply counter
+        // The board state is already correct, we just need to generate moves
         arcane.generatePlayableOptions();
         const dests = arcane.getGroundMoves();
         if (dests.size === 0) {

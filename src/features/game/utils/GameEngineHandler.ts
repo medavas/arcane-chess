@@ -214,7 +214,7 @@ export class GameEngineHandler {
         );
     };
 
-    normalMoveStateAndEngineGo = (parsed: number, orig: string, dest: string) => {
+    normalMoveStateAndEngineGo = (parsed: number, orig: string, dest: string, skipEngine: boolean = false) => {
         const state = this.callbacks.getState();
         const arcaneChess = this.callbacks.getArcaneChess();
         const char = RtyChar.split('')[state.placingRoyalty];
@@ -226,23 +226,42 @@ export class GameEngineHandler {
 
         this.callbacks.setState(
             (prevState: any) => {
-                // Slice history to the current ply to allow branching/overwriting future
-                const newHistory = prevState.history.slice(0, prevState.historyPly);
-                newHistory.push(PrMove(parsed));
+                // Check if this is the second move of a dyad (first move info was stored)
+                const isDyadSecondMove = prevState.dyadFirstMove !== null && prevState.dyadFirstMove !== undefined;
+                
+                // For dyad second move: combine both moves with '-' separator
+                let newHistory, newFenHistory, newLastMoveHistory;
+                
+                if (isDyadSecondMove) {
+                    // Combine dyad moves: "move1-move2"
+                    const combinedMove = `${prevState.dyadFirstMove.notation}-${PrMove(parsed)}`;
+                    
+                    // Always append to existing history (don't slice since first move didn't increment ply)
+                    newHistory = [...prevState.history, combinedMove];
+                    newFenHistory = [...prevState.fenHistory, outputFenOfCurrentPosition()];
+                    newLastMoveHistory = [...prevState.lastMoveHistory, [...prevState.dyadFirstMove.lastMove, orig, dest]];
+                } else {
+                    // Normal move (not dyad): slice history to allow branching
+                    newHistory = [...prevState.history.slice(0, prevState.historyPly), PrMove(parsed)];
+                    newFenHistory = [...prevState.fenHistory.slice(0, prevState.historyPly + 1), outputFenOfCurrentPosition()];
+                    newLastMoveHistory = prevState.historyPly < prevState.lastMoveHistory.length
+                        ? prevState.lastMoveHistory.map((moves: any, index: number) =>
+                            index === prevState.historyPly
+                                ? [...moves, orig, dest]
+                                : moves
+                        )
+                        : [...prevState.lastMoveHistory, [orig, dest]];
+                }
 
                 return {
                     historyPly: prevState.historyPly + 1,
                     history: newHistory,
                     fen: outputFenOfCurrentPosition(),
-                    fenHistory: [...prevState.fenHistory.slice(0, prevState.historyPly + 1), outputFenOfCurrentPosition()],
-                    lastMoveHistory:
-                        prevState.historyPly < prevState.lastMoveHistory.length
-                            ? prevState.lastMoveHistory.map((moves: any, index: number) =>
-                                index === prevState.historyPly
-                                    ? [...moves, orig, dest]
-                                    : moves
-                            )
-                            : [...prevState.lastMoveHistory, [orig, dest]],
+                    fenHistory: newFenHistory,
+                    lastMoveHistory: newLastMoveHistory,
+                    dyadFirstMove: null,
+                    dyadStartPly: -1,
+                    dyadFirstMove: null,
                     placingPiece: 0,
                     placingRoyalty: 0,
                     placingPromotion: 0,
@@ -305,7 +324,7 @@ export class GameEngineHandler {
                         }
                     );
                     return;
-                } else {
+                } else if (!skipEngine) {
                     this.engineGo();
                 }
             }
