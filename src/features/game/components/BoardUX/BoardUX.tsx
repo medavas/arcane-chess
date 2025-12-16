@@ -91,8 +91,8 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         const pieceConfig = isWhitePiece
           ? whiteArcaneConfig
           : isBlackPiece
-          ? blackArcaneConfig
-          : null;
+            ? blackArcaneConfig
+            : null;
 
         // Check if this H-piece has Hemlock token and add class
         if (isHPiece && pieceConfig) {
@@ -593,16 +593,16 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         console.log('invalid move');
       }
       if (interactionState.isDyadMove) {
-          // Store first dyad move and record engine ply  
-          onGameStateChange({
-            isDyadMove: false,
-            normalMovesOnly: true,
-            dyadFirstMove: {
-              notation: PrMove(parsed),
-              lastMove: [orig, dest]
-            },
-            dyadStartPly: game.getEnginePly()
-          });
+        // Store first dyad move and record engine ply  
+        onGameStateChange({
+          isDyadMove: false,
+          normalMovesOnly: true,
+          dyadFirstMove: {
+            notation: PrMove(parsed),
+            lastMove: [orig, dest]
+          },
+          dyadStartPly: game.getEnginePly()
+        });
       } else {
         onMove(parsed, orig, dest);
       }
@@ -631,7 +631,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         audioManager.playSFX('freeze');
       }
       if (!PrMove(parsed)) {
-        console.log('invalid move', PrMove(parsed), piece);
+        // console.log('invalid move', PrMove(parsed), piece);
       }
 
       onMove(parsed, 'a0', key); // Using 'a0' as placeholder for drop origin
@@ -698,7 +698,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
             'selectedKey:',
             key
           );
-        } catch (e) {}
+        } catch (e) { }
       }
 
       if (
@@ -780,6 +780,24 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           offeringType: interactionState.offeringType,
         });
       }
+    } else if (interactionState.magnetType !== '') {
+      const dests = game.getMagnetMoves(interactionState.magnetType);
+      if (dests.has(`m${interactionState.magnetType}@`) &&
+        dests.get(`m${interactionState.magnetType}@`).includes(key)) {
+        if (forwardedRef && 'current' in forwardedRef && forwardedRef.current) {
+          forwardedRef.current.setAutoShapes([]);
+        }
+        const { parsed } = game.makeUserMove(key, key, 0, interactionState.magnetType, 0);
+        audioManager.playSFX('spell');
+
+
+        onMove(parsed, 'a0', key);
+        onGameStateChange({ magnetType: '' });
+      } else {
+        onGameStateChange({
+          magnetType: interactionState.magnetType,
+        });
+      }
     }
   };
 
@@ -788,18 +806,22 @@ export const BoardUX: React.FC<BoardUXProps> = ({
     let dests;
     if (interactionState.placingPiece === 0) {
       if (interactionState.placingRoyalty === 0) {
-        if (interactionState.swapType === '') {
-          if (interactionState.offeringType === '') {
-            if (interactionState.isTeleport) {
-              dests = game.getGroundMoves('TELEPORT');
+        if (interactionState.magnetType === '') {
+          if (interactionState.swapType === '') {
+            if (interactionState.offeringType === '') {
+              if (interactionState.isTeleport) {
+                dests = game.getGroundMoves('TELEPORT');
+              } else {
+                dests = game.getGroundMoves();
+              }
             } else {
-              dests = game.getGroundMoves();
+              dests = game.getOfferingMoves(interactionState.offeringType);
             }
           } else {
-            dests = game.getOfferingMoves(interactionState.offeringType);
+            dests = game.getSwapMoves(interactionState.swapType);
           }
         } else {
-          dests = game.getSwapMoves(interactionState.swapType);
+          dests = game.getMagnetMoves(interactionState.magnetType);
         }
       } else {
         dests = game.getSummonMoves(interactionState.placingRoyalty);
@@ -813,24 +835,29 @@ export const BoardUX: React.FC<BoardUXProps> = ({
   const getSelected = () => {
     return interactionState.placingPiece !== 0
       ? {
-          role: `${PceChar.split('')[
-            interactionState.placingPiece
-          ].toLowerCase()}-piece`,
-          color: interactionState.playerColor,
-        }
+        role: `${PceChar.split('')[
+          interactionState.placingPiece
+        ].toLowerCase()}-piece`,
+        color: interactionState.playerColor,
+      }
       : interactionState.placingRoyalty !== 0
-      ? {
+        ? {
           role: `r${RtyChar.split('')[
             interactionState.placingRoyalty
           ].toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }
-      : interactionState.offeringType !== ''
-      ? {
-          role: `o${interactionState.offeringType.toLowerCase()}-piece`,
-          color: interactionState.playerColor,
-        }
-      : null;
+        : interactionState.offeringType !== ''
+          ? {
+            role: `o${interactionState.offeringType.toLowerCase()}-piece`,
+            color: interactionState.playerColor,
+          }
+          : interactionState.magnetType !== ''
+            ? {
+              role: `m${interactionState.magnetType.toLowerCase()}-piece`,
+              color: interactionState.playerColor,
+            }
+            : null;
   };
 
   return (
@@ -875,7 +902,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         fromPocket: false,
       }}
       events={{
-        change: () => {},
+        change: () => { },
         dropNewPiece: handleDropNewPiece,
         move: handleMove,
         select: handleSelect,

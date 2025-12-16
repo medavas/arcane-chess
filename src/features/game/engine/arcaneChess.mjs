@@ -24,6 +24,7 @@ import {
   validGroundMoves,
   validSummonMoves,
   validOfferingMoves,
+  validMagnetMoves,
   MakeUserMove,
   PreSearch,
   engineSuggestion,
@@ -184,6 +185,9 @@ export default function arcaneChess() {
     },
     getOfferingMoves: (type) => {
       return validOfferingMoves(type);
+    },
+    getMagnetMoves: (magnetType) => {
+      return validMagnetMoves(magnetType);
     },
     getSwapMoves: (swapType) => {
       return validGroundMoves('', swapType);

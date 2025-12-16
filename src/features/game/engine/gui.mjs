@@ -30,7 +30,12 @@ import {
 } from './defs';
 import { PrMove, ParseMove, PrSq } from './io';
 import { SqAttacked } from './board.mjs';
-import { blackArcaneConfig, whiteArcaneConfig, blackArcaneSpellBook, whiteArcaneSpellBook } from './arcaneDefs.mjs';
+import {
+  blackArcaneConfig,
+  whiteArcaneConfig,
+  blackArcaneSpellBook,
+  whiteArcaneSpellBook,
+} from './arcaneDefs.mjs';
 
 export function validGroundMoves(summon = '', swap = '') {
   const moveMap = new Map();
@@ -123,6 +128,28 @@ export const validOfferingMoves = (userSummonPceRty) => {
     }
     moveMap.get(from).push(to);
   }
+  return moveMap;
+};
+
+export const validMagnetMoves = (magnetType) => {
+  const moveMap = new Map();
+  // Pass magnetType as the summon parameter to trigger MAGNET generation
+  const validMovesReturn = validMoves(magnetType, '', 0);
+  console.log(
+    '[validMagnetMoves] magnetType:',
+    magnetType,
+    'validMoves count:',
+    validMovesReturn.length
+  );
+  for (let move of validMovesReturn) {
+    const from = `m${magnetType}@`;
+    const to = PrSq(FROMSQ(move));
+    if (!moveMap.has(from)) {
+      moveMap.set(from, []);
+    }
+    moveMap.get(from).push(to);
+  }
+  console.log('[validMagnetMoves] moveMap:', Array.from(moveMap.entries()));
   return moveMap;
 };
 
@@ -604,10 +631,16 @@ export function startSearch(thinkingTime, depth, engineColor) {
         GameBoard.evoOwner = colorInt === COLOURS.WHITE ? 'white' : 'black';
         if (colorInt === COLOURS.WHITE) {
           whiteArcaneConfig.modsEVO -= 1;
-          whiteArcaneSpellBook.modsEVO = Math.max(0, (whiteArcaneSpellBook.modsEVO ?? 0) - 1);
+          whiteArcaneSpellBook.modsEVO = Math.max(
+            0,
+            (whiteArcaneSpellBook.modsEVO ?? 0) - 1
+          );
         } else {
           blackArcaneConfig.modsEVO -= 1;
-          blackArcaneSpellBook.modsEVO = Math.max(0, (blackArcaneSpellBook.modsEVO ?? 0) - 1);
+          blackArcaneSpellBook.modsEVO = Math.max(
+            0,
+            (blackArcaneSpellBook.modsEVO ?? 0) - 1
+          );
         }
         text.push(`${engineColor} used Berserking Evolution!`);
       }

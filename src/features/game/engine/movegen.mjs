@@ -225,7 +225,7 @@ export function AddQuietMove(move, capturesOnly) {
     } else {
       GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply + 1]] =
         GameBoard.searchHistory[
-          GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
+        GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
         ];
     }
     GameBoard.moveListStart[GameBoard.ply + 1]++;
@@ -829,7 +829,7 @@ export function GenerateMoves(
           if (
             i === j ||
             GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][i]] ===
-              GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
+            GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
           ) {
             continue;
           }
@@ -1165,6 +1165,30 @@ export function GenerateMoves(
 
     if (type === 'OFFERING') return;
 
+    // MAGNET / BLACK HOLE
+    if (!herrings.length && !forcedEpAvailable && (type === 'modsMAG' || type === 'modsBLA')) {
+      const magnetType = type; // 'modsMAG' or 'modsBLA'
+      const hasModsMAG = (GameBoard.side === COLOURS.WHITE && GameBoard.whiteArcane[4] & 32768) ||
+        (GameBoard.side === COLOURS.BLACK && GameBoard.blackArcane[4] & 32768);
+      const hasModsBLA = (GameBoard.side === COLOURS.WHITE && GameBoard.whiteArcane[4] & 65536) ||
+        (GameBoard.side === COLOURS.BLACK && GameBoard.blackArcane[4] & 65536);
+
+      if ((magnetType === 'modsMAG' && hasModsMAG) || (magnetType === 'modsBLA' && hasModsBLA)) {
+        // Allow selecting any square on the board as magnet target
+        for (let sq = 21; sq <= 98; sq++) {
+          if (SQOFFBOARD(sq) === BOOL.FALSE) {
+            // Magnet: cap=31, prom=0
+            // Black Hole: cap=0, prom=30
+            const cap = magnetType === 'modsMAG' ? 31 : 0;
+            const prom = magnetType === 'modsBLA' ? 30 : 0;
+            addSummonMove(MOVE(sq, 0, cap, prom, 0));
+          }
+        }
+      }
+    }
+
+    if (type === 'modsMAG' || type === 'modsBLA') return;
+
     // SUMMONS
     let summonIndex = loopSummonIndex[GameBoard.side];
     let summonPce = loopSummon[summonIndex];
@@ -1252,7 +1276,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.whiteArcane[3]
                 ) {
                   if (
@@ -1315,7 +1339,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.blackArcane[3]
                 ) {
                   if (

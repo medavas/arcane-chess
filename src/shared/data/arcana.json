@@ -882,8 +882,8 @@
   "modsMAG": {
     "id": "modsMAG",
     "name": "Magnet",
-    "description": "Pick a square. Pieces within 2-4 squares of the selected square are moved toward that square if possible.",
-    "type": "passive",
+    "description": "Pick a square. Pieces exactly 2-3 squares away in orthogonal directions are moved one square toward that square if not blocked.",
+    "type": "active",
     "imagePath": "/modsMAG",
     "value": 3,
     "related": [],
@@ -892,8 +892,8 @@
   "modsBLA": {
     "id": "modsBLA",
     "name": "Black Hole",
-    "description": "Pick a square. Pieces within 2-7 squares of the selected square are moved toward that square if possible.",
-    "type": "passive",
+    "description": "Pick a square. Pieces exactly 2-7 squares away in orthogonal directions are moved one square toward that square if not blocked.",
+    "type": "active",
     "imagePath": "/modsBLA",
     "value": 4,
     "related": [],

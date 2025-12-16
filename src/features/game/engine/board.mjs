@@ -369,9 +369,9 @@ export function PrintPieceLists() {
     for (pceNum = 0; pceNum < GameBoard.pceNum[piece]; pceNum++) {
       console.log(
         'Piece ' +
-          PceChar[piece] +
-          ' on ' +
-          PrSq(GameBoard.pList[PCEINDEX(piece, pceNum)])
+        PceChar[piece] +
+        ' on ' +
+        PrSq(GameBoard.pList[PCEINDEX(piece, pceNum)])
       );
     }
   }
@@ -683,6 +683,40 @@ export function ParseFen(fen, resetBoard = true) {
     //   'fen[fenCnt]:' + fen[fenCnt] + ' File:' + file + ' Rank:' + rank
     // );
     GameBoard.enPas = FR2SQ(file, rank);
+  }
+
+  // Parse remaining FEN fields: halfmove clock and fullmove number
+  // Skip to the next space after en passant square
+  while (fenCnt < fen.length && fen[fenCnt] !== ' ') {
+    fenCnt++;
+  }
+  fenCnt++; // Skip the space
+
+  // Parse halfmove clock (fifty move counter)
+  if (fenCnt < fen.length) {
+    let halfmoveStr = '';
+    while (fenCnt < fen.length && fen[fenCnt] !== ' ') {
+      halfmoveStr += fen[fenCnt];
+      fenCnt++;
+    }
+    GameBoard.fiftyMove = parseInt(halfmoveStr) || 0;
+    fenCnt++; // Skip the space
+  }
+
+  // Parse fullmove number and convert to hisPly
+  if (fenCnt < fen.length) {
+    let fullmoveStr = '';
+    while (fenCnt < fen.length && fen[fenCnt] !== ' ') {
+      fullmoveStr += fen[fenCnt];
+      fenCnt++;
+    }
+    const fullmove = parseInt(fullmoveStr) || 1;
+    // Convert fullmove number to hisPly
+    // hisPly = (fullmove - 1) * 2 + (side === BLACK ? 1 : 0)
+    GameBoard.hisPly = (fullmove - 1) * 2;
+    if (GameBoard.side === COLOURS.BLACK) {
+      GameBoard.hisPly++;
+    }
   }
 
   GameBoard.fenHistory = [fen];

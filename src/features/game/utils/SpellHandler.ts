@@ -20,6 +20,7 @@ export interface SpellState {
   hoverArcane: string;
   glitchQueued: boolean;
   isEvoActive: boolean;
+  magnetType: string; // '' | 'modsMAG' | 'modsBLA'
 }
 
 export interface SpellHandlerCallbacks {
@@ -72,7 +73,8 @@ export class SpellHandler {
       state.placingRoyalty > 0 ||
       state.offeringType !== '' ||
       state.isDyadMove === true ||
-      state.isEvoActive === true
+      state.isEvoActive === true ||
+      state.magnetType !== ''
     );
   };
 
@@ -114,6 +116,7 @@ export class SpellHandler {
       hoverArcane: '',
       glitchQueued: false,
       isEvoActive: false,
+      magnetType: '',
     });
   };
 
@@ -140,13 +143,16 @@ export class SpellHandler {
       state.placingRoyalty > 0 ||
       state.offeringType !== '' ||
       state.isDyadMove === true ||
-      state.isEvoActive === true;
+      state.isEvoActive === true ||
+      state.magnetType !== '';
 
     // Check if trying to activate a different spell (allow toggling off same spell)
     const isDyadActive = state.isDyadMove;
     const isEvoActive = state.isEvoActive;
+    const isMagnetActive = state.magnetType !== '';
     const isSameDyadSpell = isDyadActive && key.startsWith('dyad');
     const isSameEvoSpell = isEvoActive && key === 'modsEVO';
+    const isSameMagnetSpell = isMagnetActive && (key === 'modsMAG' || key === 'modsBLA');
     const isSamePlacingSpell =
       (state.placingPiece > 0 && key.startsWith('sumn')) ||
       (state.swapType !== '' && key.startsWith('swap')) ||
@@ -155,7 +161,7 @@ export class SpellHandler {
 
     // If a spell is active and trying to activate a DIFFERENT spell, block it
     const isDifferentSpell =
-      !isSameDyadSpell && !isSameEvoSpell && !isSamePlacingSpell;
+      !isSameDyadSpell && !isSameEvoSpell && !isSamePlacingSpell && !isSameMagnetSpell;
     if (anySpellCurrentlyActive && isDifferentSpell && key !== 'deactivate') {
       return;
     }
@@ -189,6 +195,7 @@ export class SpellHandler {
       placingRoyalty: 0,
       swapType: '',
       offeringType: '',
+      magnetType: '',
       // isTeleport: false,
       isDyadMove: false,
     });
@@ -393,6 +400,23 @@ export class SpellHandler {
       return;
     }
 
+    // === MAGNET / BLACK HOLE ===
+    if (key === 'modsMAG' || key === 'modsBLA') {
+      const dyadClock = arcane.getDyadClock();
+      if (dyadClock > 0 || state.isDyadMove) return;
+
+      // Block if forced EP is active
+      if (arcane.isForcedEnPassantActive && arcane.isForcedEnPassantActive()) {
+        return;
+      }
+
+      // Toggle magnet type
+      this.callbacks.updateSpellState({
+        magnetType: state.magnetType === key ? '' : key,
+      });
+      return;
+    }
+
     // === EVO ===
     if (key === 'modsEVO') {
       const state = this.callbacks.getSpellState();
@@ -515,6 +539,10 @@ export class SpellHandler {
 
     if (key === 'modsEVO') {
       return state.isEvoActive;
+    }
+
+    if (key === 'modsMAG' || key === 'modsBLA') {
+      return state.magnetType === key;
     }
 
     if (key.includes('dyad')) {

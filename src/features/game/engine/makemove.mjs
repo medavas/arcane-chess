@@ -62,12 +62,11 @@ const royaltyIndexMapRestructure = [
 
 // CAPTURED extra validated move types by engine:
 // cap 30 = capturable exile
-// cap 31 = teleport
-// const TELEPORT_CONST = 31;
+// cap 31 =  magnet
 
 // PROMOTED extra validated move types by engine:
-// 30 is available
-// eps 31 = eclipse
+// prom 30 = black hole
+// prom 31 = eclipse
 const ECLIPSE_CONST = 31;
 
 const HISTORY_CAP_PLY = 128;
@@ -469,6 +468,63 @@ export function MakeMove(move, moveType = '') {
 
   const commit = moveType === 'userMove' || moveType === 'commit';
   const consume = isConsumeFlag(move);
+
+  // MAGNET / BLACK HOLE SPELL
+  // Magnet: captured=31, Black Hole: promoted=30
+  if (captured === 31 || pieceEpsilon === 30) {
+    const targetSq = from; // The square user selected
+    const isMagnet = captured === 31;
+    const maxRange = isMagnet ? 3 : 7;
+    const minRange = 2;
+
+    // Initialize history entry (needed for undo)
+    const h = GameBoard.history[GameBoard.hisPly];
+    h.posKey = GameBoard.posKey;
+    h.move = move;
+    h.fiftyMove = GameBoard.fiftyMove;
+    h.enPas = GameBoard.enPas;
+    h.castlePerm = GameBoard.castlePerm;
+    h.magnetMoves = [];
+
+    // Only actually pull pieces on committed moves (not during validation)
+    if (commit) {
+      // Check 4 orthogonal directions from target and pull pieces
+      const directions = [-10, 10, -1, 1]; // N, S, W, E
+      for (const dir of directions) {
+        for (let dist = minRange; dist <= maxRange; dist++) {
+          const sq = targetSq + (dir * dist);
+          if (SQOFFBOARD(sq) === BOOL.TRUE) break;
+
+          const piece = GameBoard.pieces[sq];
+          if (piece !== PIECES.EMPTY) {
+            const newSq = sq - dir; // One square closer to target
+            if (GameBoard.pieces[newSq] === PIECES.EMPTY && newSq !== targetSq) {
+              MovePiece(sq, newSq);
+              h.magnetMoves.push({ from: sq, to: newSq });
+            }
+          }
+        }
+      }
+
+      // Decrement spell uses
+      const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+      if (isMagnet) {
+        cfg.modsMAG -= 1;
+      } else {
+        cfg.modsBLA -= 1;
+      }
+    }
+
+    // Increment history counters
+    GameBoard.hisPly++;
+    GameBoard.ply++;
+
+    // Toggle side
+    GameBoard.side ^= 1;
+    HASH_SIDE();
+
+    return BOOL.TRUE;
+  }
 
   // modsEVO: Block captures unless modsGLU is active
   if (GameBoard.evo > 0 && captured !== PIECES.EMPTY) {
@@ -1517,6 +1573,38 @@ export function TakeMove(wasDyadMove = false) {
   if (GameBoard.hisPly > 0) GameBoard.hisPly--;
   if (GameBoard.ply > 0) GameBoard.ply--;
 
+  let move = GameBoard.history[GameBoard.hisPly].move;
+  let from = FROMSQ(move);
+  let to = TOSQ(move);
+  let captured = CAPTURED(move);
+  let promoted = PROMOTED(move);
+
+
+  // Undo MAGNET / BLACK HOLE piece movements
+  if (captured === 31 || promoted === 30) {
+    const h = GameBoard.history[GameBoard.hisPly];
+
+    // Undo side toggle
+    GameBoard.side ^= 1;
+    HASH_SIDE();
+
+    // Undo the piece movements in reverse order
+    if (h.magnetMoves && h.magnetMoves.length > 0) {
+      for (let i = h.magnetMoves.length - 1; i >= 0; i--) {
+        const { from: originalFrom, to: movedTo } = h.magnetMoves[i];
+        MovePiece(movedTo, originalFrom);
+      }
+    }
+
+    // Restore state
+    GameBoard.posKey = h.posKey;
+    GameBoard.fiftyMove = h.fiftyMove;
+    GameBoard.enPas = h.enPas;
+    GameBoard.castlePerm = h.castlePerm;
+
+    return;
+  }
+
   GameBoard.dyad = GameBoard.history[GameBoard.hisPly].dyad;
   GameBoard.dyadClock = GameBoard.history[GameBoard.hisPly].dyadClock;
   GameBoard.dyadOwner = GameBoard.history[GameBoard.hisPly].dyadOwner;
@@ -1562,11 +1650,11 @@ export function TakeMove(wasDyadMove = false) {
     GameBoard.checksGiven[GameBoard.side]--;
   }
 
-  let move = GameBoard.history[GameBoard.hisPly].move;
-  let from = FROMSQ(move);
-  let to = TOSQ(move);
-  let captured = CAPTURED(move);
-  let pieceEpsilon = PROMOTED(move);
+  move = GameBoard.history[GameBoard.hisPly].move;
+  from = FROMSQ(move);
+  to = TOSQ(move);
+  const capturedPiece = CAPTURED(move);
+  const pieceEpsilon = PROMOTED(move);
 
   const consume = isConsumeFlag(move);
 
@@ -1803,12 +1891,10 @@ export function TakeMove(wasDyadMove = false) {
             if (GameBoard.side === COLOURS.WHITE) {
               whiteArcaneConfig.modsDIV += 1;
               whiteArcaneConfig.modsREA -= 1;
-              console.log(whiteArcaneConfig);
             }
             if (GameBoard.side === COLOURS.BLACK) {
               blackArcaneConfig.modsDIV += 1;
               blackArcaneConfig.modsREA -= 1;
-              console.log(blackArcaneConfig);
             }
             h.modsDIVConsumed = undefined;
           }

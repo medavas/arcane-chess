@@ -160,8 +160,19 @@ export function PrMove(move, returnType) {
         PrSq(TOSQ(move));
     }
   }
+  // magnet / black hole
+  if (TOSQ(move) === 0 && (CAPTURED(move) === 31 || PROMOTED(move) === 30)) {
+    const isMagnet = CAPTURED(move) === 31;
+    MvStr = (isMagnet ? 'magnet@' : 'blackhole@') + PrSq(FROMSQ(move));
+  }
   // offering
-  if (TOSQ(move) === 0 && CAPTURED(move) > 0 && PROMOTED(move) > 0) {
+  if (
+    TOSQ(move) === 0 &&
+    CAPTURED(move) > 0 &&
+    PROMOTED(move) > 0 &&
+    CAPTURED(move) !== 31 &&
+    PROMOTED(move) !== 30
+  ) {
     MvStr =
       'o' +
       '.ABCDEEFFGGHHIJKKKKLMNOOOZZQR'.split('')[PROMOTED(move)] +
@@ -316,13 +327,13 @@ export function PrintMoveList() {
     move = GameBoard.moveList[index];
     console.log(
       'IMove:' +
-        num +
-        ':(' +
-        index +
-        '):' +
-        PrMove(move) +
-        ' Score:' +
-        GameBoard.moveScores[index]
+      num +
+      ':(' +
+      index +
+      '):' +
+      PrMove(move) +
+      ' Score:' +
+      GameBoard.moveScores[index]
     );
     num++;
   }
@@ -337,12 +348,16 @@ export function ParseMove(
   swapType = '',
   royaltyEpsilon = PIECES.EMPTY
 ) {
-  const arcaneType =
-    to === null
+  // Check if this is a magnet/black hole spell
+  const isMagnetType = swapType === 'modsMAG' || swapType === 'modsBLA';
+
+  const arcaneType = isMagnetType
+    ? swapType // Use the magnet type directly
+    : to === null
       ? 'OFFERING'
       : (pieceEpsilon > 0 && from === null) || royaltyEpsilon > 0
-      ? 'SUMMON'
-      : 'COMP';
+        ? 'SUMMON'
+        : 'COMP';
 
   const royaltyOrPieceSummon =
     royaltyEpsilon !== 0 ? royaltyEpsilon : pieceEpsilon;
@@ -350,7 +365,7 @@ export function ParseMove(
     true,
     false,
     arcaneType,
-    swapType,
+    isMagnetType ? '' : swapType,
     royaltyOrPieceSummon
   );
 
@@ -372,9 +387,18 @@ export function ParseMove(
     } else if (
       (from === 0 && TOSQ(Move) === prettyToSquare(to)) ||
       (FROMSQ(Move) === prettyToSquare(from) &&
-        TOSQ(Move) === prettyToSquare(to))
+        TOSQ(Move) === prettyToSquare(to)) ||
+      // For magnet/black hole, TOSQ is 0, match by FROMSQ only
+      (isMagnetType && FROMSQ(Move) === prettyToSquare(from) && TOSQ(Move) === 0)
     ) {
-      if (TOSQ(Move) === 0 && CAPTURED(Move) > 0) {
+      // Magnet has cap=31, Black Hole has prom=30
+      if (
+        TOSQ(Move) === 0 &&
+        (CAPTURED(Move) === 31 || PROMOTED(Move) === 30)
+      ) {
+        found = BOOL.TRUE;
+        break;
+      } else if (TOSQ(Move) === 0 && CAPTURED(Move) > 0) {
         found = BOOL.TRUE;
         break;
       } else if (isInitPromotion(Move) && PROMOTED(Move) === PIECES.EMPTY) {
