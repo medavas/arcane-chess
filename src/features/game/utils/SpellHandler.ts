@@ -20,7 +20,7 @@ export interface SpellState {
   hoverArcane: string;
   glitchQueued: boolean;
   isEvoActive: boolean;
-  magnetType: string; // '' | 'modsMAG' | 'modsBLA'
+  magnetType: string; // '' | 'modsMAG'
 }
 
 export interface SpellHandlerCallbacks {
@@ -152,7 +152,7 @@ export class SpellHandler {
     const isMagnetActive = state.magnetType !== '';
     const isSameDyadSpell = isDyadActive && key.startsWith('dyad');
     const isSameEvoSpell = isEvoActive && key === 'modsEVO';
-    const isSameMagnetSpell = isMagnetActive && (key === 'modsMAG' || key === 'modsBLA');
+    const isSameMagnetSpell = isMagnetActive && key === 'modsMAG';
     const isSamePlacingSpell =
       (state.placingPiece > 0 && key.startsWith('sumn')) ||
       (state.swapType !== '' && key.startsWith('swap')) ||
@@ -400,8 +400,8 @@ export class SpellHandler {
       return;
     }
 
-    // === MAGNET / BLACK HOLE ===
-    if (key === 'modsMAG' || key === 'modsBLA') {
+    // === MAGNET ===
+    if (key === 'modsMAG') {
       const dyadClock = arcane.getDyadClock();
       if (dyadClock > 0 || state.isDyadMove) return;
 
@@ -541,7 +541,7 @@ export class SpellHandler {
       return state.isEvoActive;
     }
 
-    if (key === 'modsMAG' || key === 'modsBLA') {
+    if (key === 'modsMAG') {
       return state.magnetType === key;
     }
 

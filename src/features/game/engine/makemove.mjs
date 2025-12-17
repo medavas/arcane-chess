@@ -469,12 +469,11 @@ export function MakeMove(move, moveType = '') {
   const commit = moveType === 'userMove' || moveType === 'commit';
   const consume = isConsumeFlag(move);
 
-  // MAGNET / BLACK HOLE SPELL
-  // Magnet: captured=31, Black Hole: promoted=30
-  if (captured === 31 || pieceEpsilon === 30) {
+  // MAGNET SPELL (with black hole behavior)
+  // Magnet: captured=31
+  if (captured === 31) {
     const targetSq = from; // The square user selected
-    const isMagnet = captured === 31;
-    const maxRange = isMagnet ? 3 : 7;
+    const maxRange = 7; // Black hole range
     const minRange = 2;
 
     // Initialize history entry (needed for undo)
@@ -508,11 +507,7 @@ export function MakeMove(move, moveType = '') {
 
       // Decrement spell uses
       const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
-      if (isMagnet) {
-        cfg.modsMAG -= 1;
-      } else {
-        cfg.modsBLA -= 1;
-      }
+      cfg.modsMAG -= 1;
     }
 
     // Increment history counters

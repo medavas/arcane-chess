@@ -1165,29 +1165,23 @@ export function GenerateMoves(
 
     if (type === 'OFFERING') return;
 
-    // MAGNET / BLACK HOLE
-    if (!herrings.length && !forcedEpAvailable && (type === 'modsMAG' || type === 'modsBLA')) {
-      const magnetType = type; // 'modsMAG' or 'modsBLA'
+    // MAGNET (with black hole behavior)
+    if (!herrings.length && !forcedEpAvailable && type === 'modsMAG') {
       const hasModsMAG = (GameBoard.side === COLOURS.WHITE && GameBoard.whiteArcane[4] & 32768) ||
         (GameBoard.side === COLOURS.BLACK && GameBoard.blackArcane[4] & 32768);
-      const hasModsBLA = (GameBoard.side === COLOURS.WHITE && GameBoard.whiteArcane[4] & 65536) ||
-        (GameBoard.side === COLOURS.BLACK && GameBoard.blackArcane[4] & 65536);
 
-      if ((magnetType === 'modsMAG' && hasModsMAG) || (magnetType === 'modsBLA' && hasModsBLA)) {
+      if (hasModsMAG) {
         // Allow selecting any square on the board as magnet target
         for (let sq = 21; sq <= 98; sq++) {
           if (SQOFFBOARD(sq) === BOOL.FALSE) {
-            // Magnet: cap=31, prom=0
-            // Black Hole: cap=0, prom=30
-            const cap = magnetType === 'modsMAG' ? 31 : 0;
-            const prom = magnetType === 'modsBLA' ? 30 : 0;
-            addSummonMove(MOVE(sq, 0, cap, prom, 0));
+            // Magnet with black hole behavior: cap=31, prom=0
+            addSummonMove(MOVE(sq, 0, 31, 0, 0));
           }
         }
       }
     }
 
-    if (type === 'modsMAG' || type === 'modsBLA') return;
+    if (type === 'modsMAG') return;
 
     // SUMMONS
     let summonIndex = loopSummonIndex[GameBoard.side];

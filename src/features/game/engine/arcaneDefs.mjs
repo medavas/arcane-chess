@@ -203,7 +203,7 @@ export const POWERBIT = {
   modsEVO: 8192, // passive      berserking evolution
   modsDOP: 16384, // passive     dep - break out to where offer was
   modsMAG: 32768, // active      magnet
-  modsBLA: 65536, // active      black hole
+  // modsBLA: 65536, // active      deprecated - black hole
   modsSUR: 131072, // passive    pawn surge
   modsDIM: 262144, // passive    5th dimension sword
   // modsHER: 524288, // passive    hermit

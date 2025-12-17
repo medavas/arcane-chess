@@ -349,7 +349,7 @@ export function ParseMove(
   royaltyEpsilon = PIECES.EMPTY
 ) {
   // Check if this is a magnet/black hole spell
-  const isMagnetType = swapType === 'modsMAG' || swapType === 'modsBLA';
+  const isMagnetType = swapType === 'modsMAG';
 
   const arcaneType = isMagnetType
     ? swapType // Use the magnet type directly

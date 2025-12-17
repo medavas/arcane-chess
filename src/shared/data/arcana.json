@@ -885,16 +885,6 @@
     "description": "Pick a square. Pieces exactly 2-3 squares away in orthogonal directions are moved one square toward that square if not blocked.",
     "type": "active",
     "imagePath": "/modsMAG",
-    "value": 3,
-    "related": [],
-    "tier": "Basic"
-  },
-  "modsBLA": {
-    "id": "modsBLA",
-    "name": "Black Hole",
-    "description": "Pick a square. Pieces exactly 2-7 squares away in orthogonal directions are moved one square toward that square if not blocked.",
-    "type": "active",
-    "imagePath": "/modsBLA",
     "value": 4,
     "related": [],
     "tier": "Basic"
@@ -952,7 +942,7 @@
   "modsTRA": {
     "id": "modsTRA",
     "name": "Trample",
-    "description": "Use your turn to eliminate an opponent's piece that is attacked by an Equus.",
+    "description": "Use your turn to eliminate an opponent's piece that is attacked by a friendly Equus (Knight, Zebra, Unicorn). Equus stays in place.",
     "type": "passive",
     "imagePath": "/modsTRA",
     "value": 10,
