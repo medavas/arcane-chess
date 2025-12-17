@@ -135,12 +135,6 @@ export const validMagnetMoves = (magnetType) => {
   const moveMap = new Map();
   // Pass magnetType as the summon parameter to trigger MAGNET generation
   const validMovesReturn = validMoves(magnetType, '', 0);
-  console.log(
-    '[validMagnetMoves] magnetType:',
-    magnetType,
-    'validMoves count:',
-    validMovesReturn.length
-  );
   for (let move of validMovesReturn) {
     const from = `m${magnetType}@`;
     const to = PrSq(FROMSQ(move));
@@ -149,7 +143,6 @@ export const validMagnetMoves = (magnetType) => {
     }
     moveMap.get(from).push(to);
   }
-  console.log('[validMagnetMoves] moveMap:', Array.from(moveMap.entries()));
   return moveMap;
 };
 
@@ -625,7 +618,7 @@ export function startSearch(thinkingTime, depth, engineColor) {
     engineArcana.modsEVO > 0
   ) {
     if (bestScore > 200 || bestScore < -200) {
-      if (Math.random() > 0.95) {
+      if (Math.random() > 0.5) {
         GameBoard.evo = 1;
         GameBoard.evoClock = 0;
         GameBoard.evoOwner = colorInt === COLOURS.WHITE ? 'white' : 'black';

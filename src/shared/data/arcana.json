@@ -22,7 +22,7 @@
   "dyadB": {
     "id": "dyadB",
     "name": "Step and Shadow Dyad",
-    "description": "Make two moves, no capturing (Pawn, Herring). Combines with Evolution.",
+    "description": "Make two moves, no capturing (Pawn, Herring).",
     "type": "active",
     "imagePath": "/dyadA",
     "value": 5,
@@ -32,7 +32,7 @@
   "dyadC": {
     "id": "dyadC",
     "name": "Warrior's Oath Dyad",
-    "description": "Make two moves, no capturing (Bishop, Knight, Zebra, Unicorn, Rook). Combines with Evolution.",
+    "description": "Make two moves, no capturing (Bishop, Knight, Zebra, Unicorn, Rook).",
     "type": "active",
     "imagePath": "/dyadA",
     "value": 6,
@@ -42,7 +42,7 @@
   "dyadD": {
     "id": "dyadD",
     "name": "Veil and Vow Dyad",
-    "description": "Make two moves, no capturing (Spectre, Wraith). Combines with Evolution.",
+    "description": "Make two moves, no capturing (Spectre, Wraith).",
     "type": "active",
     "imagePath": "/dyadA",
     "value": 5,
@@ -52,7 +52,7 @@
   "dyadE": {
     "id": "dyadE",
     "name": "Judgement Dyad",
-    "description": "Make two moves, no capturing (Mystic, Templar, Queen). Combines with Evolution.",
+    "description": "Make two moves, no capturing (Mystic, Templar, Queen).",
     "type": "active",
     "imagePath": "/dyadA",
     "value": 5,
@@ -652,7 +652,7 @@
   "modsGLU": {
     "id": "modsGLU",
     "name": "Gluttony",
-    "description": "You may capture pieces during dyad and evolution moves.",
+    "description": "You may capture pieces during dyad moves.",
     "type": "inherent",
     "imagePath": "/modsGLU",
     "value": 9,
@@ -872,7 +872,7 @@
   "modsEVO": {
     "id": "modsEVO",
     "name": "Berserking Evolution",
-    "description": "Click to activate. Non-capture moves evolve pieces: P→N→R, ZUB→R→W, WS→Q→V, MT→V.",
+    "description": "Click to activate. All moves (including captures) evolve pieces while active: P→N→R, ZUB→R→W, WSH→Q→V, MT→V.",
     "type": "active",
     "imagePath": "/modsEVO",
     "value": 5,

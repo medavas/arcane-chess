@@ -150,6 +150,19 @@ export default function arcaneChess() {
   };
 
   const deactivateEvo = () => {
+    // Only decrement if evolution was actually used (at least one move made)
+    if (GameBoard.evo > 0 && GameBoard.evoOwner && GameBoard.evoClock > 0) {
+      const ownerIsWhite = GameBoard.evoOwner === 'white';
+      const config = ownerIsWhite ? whiteArcaneConfig : blackArcaneConfig;
+      const spellBook = ownerIsWhite ? whiteArcaneSpellBook : blackArcaneSpellBook;
+
+      if (config.modsEVO > 0) {
+        config.modsEVO -= 1;
+        spellBook.modsEVO = Math.max(0, (spellBook.modsEVO ?? 0) - 1);
+        triggerArcanaUpdateCallback();
+      }
+    }
+
     GameBoard.evo = 0;
     GameBoard.evoClock = 0;
     GameBoard.evoOwner = undefined;

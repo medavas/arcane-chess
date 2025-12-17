@@ -526,14 +526,6 @@ export function MakeMove(move, moveType = '') {
     return BOOL.TRUE;
   }
 
-  // modsEVO: Block captures unless modsGLU is active
-  if (GameBoard.evo > 0 && captured !== PIECES.EMPTY) {
-    const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
-    if (cfg.modsGLU === undefined || cfg.modsGLU <= 0) {
-      return BOOL.FALSE;
-    }
-  }
-
   let promoEpsilon = !isShift(move) ? pieceEpsilon : PIECES.EMPTY;
 
   const sumnCap = getSumnCaptureForRoyalty(move, captured);
@@ -841,18 +833,15 @@ export function MakeMove(move, moveType = '') {
     // Pawn → Knight → Rook; Zebra/Unicorn/Bishop → Rook → Wraith
     // Wraith/Spectre → Queen → Valkyrie; Mystic/Templar → Valkyrie
     // Spectre/Unicorn → Hermit (when modsEVOSupply active) → Queen
-    // No captures during evolution (unless modsGLU is active)
+    // Evolution triggers on all moves while active
+    // Captures are blocked unless Gluttony (modsGLU) is active
     const movedPiece = GameBoard.pieces[to];
     const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
-    const hasGluttony = cfg.modsGLU > 0;
-    const isCaptureMove = captured !== PIECES.EMPTY;
-    const canEvolve = !isCaptureMove || (isCaptureMove && hasGluttony);
 
     if (
       GameBoard.evo > 0 &&
       commit &&
-      movedPiece !== PIECES.EMPTY &&
-      canEvolve
+      movedPiece !== PIECES.EMPTY
     ) {
       let evolvedPiece = PIECES.EMPTY;
 
@@ -906,15 +895,10 @@ export function MakeMove(move, moveType = '') {
         AddPiece(to, evolvedPiece);
         h.modsEVOPiece = movedPiece;
         h.modsEVOEvolved = evolvedPiece;
-        // Only decrement modsEVO if it hasn't been pre-decremented by engine
-        // Engine pre-decrements modsEVO when moveType='commit' and engine decided to use evo
-        // So only decrement here for player moves (moveType='userMove')
-        if (moveType === 'userMove') {
-          cfg.modsEVO -= 1;
-          const spellBook = side === COLOURS.WHITE ? whiteArcaneSpellBook : blackArcaneSpellBook;
-          spellBook.modsEVO = Math.max(0, (spellBook.modsEVO ?? 0) - 1);
-          triggerArcanaUpdateCallback();
-        }
+        // Increment evoClock to track that evolution was used
+        GameBoard.evoClock += 1;
+        // Note: modsEVO is already decremented when evolution is activated
+        // (both engine in gui.mjs and player in arcaneChess.mjs activateEvo)
       }
     }
 
@@ -1508,17 +1492,38 @@ export function MakeMove(move, moveType = '') {
         triggerArcanaUpdateCallback();
       }
     }
-    GameBoard.evo = 0;
-    GameBoard.evoClock = 0;
-    GameBoard.evoOwner = undefined;
+
+    // Clear evolution if turn is switching to opponent
+    // Evolution should only persist across the owner's consecutive moves
+    if (GameBoard.evo > 0 && GameBoard.evoOwner) {
+      const nextSideIsWhite = (side ^ 1) === COLOURS.WHITE;
+      const nextSideColor = nextSideIsWhite ? 'white' : 'black';
+
+      // If the next side is NOT the owner, clear evolution and decrement spell
+      if (nextSideColor !== GameBoard.evoOwner) {
+        const ownerIsWhite = GameBoard.evoOwner === 'white';
+        const config = ownerIsWhite ? whiteArcaneConfig : blackArcaneConfig;
+        const spellBook = ownerIsWhite ? whiteArcaneSpellBook : blackArcaneSpellBook;
+
+        if (config.modsEVO > 0) {
+          config.modsEVO -= 1;
+          spellBook.modsEVO = Math.max(0, (spellBook.modsEVO ?? 0) - 1);
+          triggerArcanaUpdateCallback();
+        }
+
+        GameBoard.evo = 0;
+        GameBoard.evoClock = 0;
+        GameBoard.evoOwner = undefined;
+      }
+    }
+
     GameBoard.side ^= 1;
     HASH_SIDE();
   } else if (
     moveType === 'commit' &&
     GameBoard.evo > 0
   ) {
-    // Non-player move (e.g., engine) with Evolution active
-    // Note: Engine already decrements modsEVO before calling MakeMove
+    // Non-player move (e.g., engine) with Evolution active - clear after use
     GameBoard.evo = 0;
     GameBoard.evoClock = 0;
     GameBoard.evoOwner = undefined;
