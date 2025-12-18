@@ -53,6 +53,7 @@ interface BoardUXProps {
     isDyadMove?: boolean;
     magnetType?: string;
     trampleType?: string;
+    trampleSelected?: string;
   };
   onGameStateChange: (newState: any) => void;
   onGameOver: (result: any) => void;
@@ -512,6 +513,15 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       forwardedRef.current.setAutoShapes([]);
     }
 
+    // Handle trample moves via drag
+    if (interactionState.trampleType !== '') {
+      const { parsed } = game.makeUserMove(orig, dest, 0, interactionState.trampleType, 0);
+      audioManager.playSFX('spell');
+      onMove(parsed, orig, dest);
+      onGameStateChange({ trampleType: '', trampleSelected: undefined });
+      return;
+    }
+
     const { parsed, isInitPromotion = false } = game.makeUserMove(
       orig,
       dest,
@@ -801,40 +811,22 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         });
       }
     } else if (interactionState.trampleType !== '') {
-      // For trample, user needs to either:
-      // 1. Click an Equus piece that can trample (shows valid trample targets)
-      // 2. Click/drag from Equus to target piece to trample
+      // For trample: click an Equus piece to select it, then click or drag to trample target
       const dests = game.getTrampleMoves(interactionState.trampleType);
       
-      // Check if clicked square has valid trample targets
-      if (dests.has(key) && dests.get(key).length > 0) {
-        // Valid Equus piece clicked - just update state to keep it selected
+      // Check if clicked square has valid trample targets (it's an Equus piece)
+      if (dests.has(key) && dests.get(key)!.length > 0) {
+        // Valid Equus piece clicked - select it (Chessground will show destinations)
         onGameStateChange({
           trampleType: interactionState.trampleType,
+          trampleSelected: key,
         });
       } else {
-        // Check if this is a valid trample target from any Equus
-        let trampleFound = false;
-        for (const [from, targets] of dests.entries()) {
-          if (targets.includes(key)) {
-            // Valid trample move
-            if (forwardedRef && 'current' in forwardedRef && forwardedRef.current) {
-              forwardedRef.current.setAutoShapes([]);
-            }
-            const { parsed } = game.makeUserMove(from, key, 0, interactionState.trampleType, 0);
-            audioManager.playSFX('spell');
-            onMove(parsed, from, key);
-            onGameStateChange({ trampleType: '' });
-            trampleFound = true;
-            break;
-          }
-        }
-        if (!trampleFound) {
-          // Invalid click - keep trample mode active
-          onGameStateChange({
-            trampleType: interactionState.trampleType,
-          });
-        }
+        // Clicked somewhere else - deselect but keep trample mode active
+        onGameStateChange({
+          trampleType: interactionState.trampleType,
+          trampleSelected: undefined,
+        });
       }
     }
   };
@@ -943,6 +935,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         dests: getDests(),
         events: {},
       }}
+      selected={interactionState.trampleSelected}
       selectable={{
         enabled: true,
         selected: getSelected(),

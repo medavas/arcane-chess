@@ -877,7 +877,7 @@ export function GenerateMoves(
     if (type2 === 'ADJ' || type2 === 'DEP') return;
 
     // TRAMPLE - Generate trample moves for Equus pieces (Knight, Zebra, Unicorn)
-    if (!herrings.length && !forcedEpAvailable && (type === 'modsTRA' || type === 'COMP')) {
+    if (!herrings.length && !forcedEpAvailable && type === 'modsTRA') {
       const hasTrample = currentArcanaSide[4] & 67108864; // modsTRA bit
       
       if (hasTrample) {

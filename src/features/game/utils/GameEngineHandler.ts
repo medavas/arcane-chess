@@ -290,6 +290,8 @@ export class GameEngineHandler {
           normalMovesOnly: false,
           swapType: '',
           magnetType: '',
+          trampleType: '',
+          trampleSelected: undefined,
           isTeleport: false,
           offeringType: '',
           dialogue: [], // Clear dialogue when player makes a move

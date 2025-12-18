@@ -343,13 +343,13 @@ export function PrintMoveList() {
     move = GameBoard.moveList[index];
     console.log(
       'IMove:' +
-      num +
-      ':(' +
-      index +
-      '):' +
-      PrMove(move) +
-      ' Score:' +
-      GameBoard.moveScores[index]
+        num +
+        ':(' +
+        index +
+        '):' +
+        PrMove(move) +
+        ' Score:' +
+        GameBoard.moveScores[index]
     );
     num++;
   }
@@ -364,16 +364,19 @@ export function ParseMove(
   swapType = '',
   royaltyEpsilon = PIECES.EMPTY
 ) {
-  // Check if this is a magnet/black hole spell
+  // Check if this is a magnet/black hole spell or trample
   const isMagnetType = swapType === 'modsMAG';
+  const isTrampleType = swapType === 'modsTRA';
 
   const arcaneType = isMagnetType
     ? swapType // Use the magnet type directly
+    : isTrampleType
+    ? swapType // Use the trample type directly
     : to === null
-      ? 'OFFERING'
-      : (pieceEpsilon > 0 && from === null) || royaltyEpsilon > 0
-        ? 'SUMMON'
-        : 'COMP';
+    ? 'OFFERING'
+    : (pieceEpsilon > 0 && from === null) || royaltyEpsilon > 0
+    ? 'SUMMON'
+    : 'COMP';
 
   const royaltyOrPieceSummon =
     royaltyEpsilon !== 0 ? royaltyEpsilon : pieceEpsilon;
@@ -381,7 +384,7 @@ export function ParseMove(
     true,
     false,
     arcaneType,
-    isMagnetType ? '' : swapType,
+    isMagnetType || isTrampleType ? '' : swapType,
     royaltyOrPieceSummon
   );
 
@@ -405,13 +408,12 @@ export function ParseMove(
       (FROMSQ(Move) === prettyToSquare(from) &&
         TOSQ(Move) === prettyToSquare(to)) ||
       // For magnet/black hole, TOSQ is 0, match by FROMSQ only
-      (isMagnetType && FROMSQ(Move) === prettyToSquare(from) && TOSQ(Move) === 0)
+      (isMagnetType &&
+        FROMSQ(Move) === prettyToSquare(from) &&
+        TOSQ(Move) === 0)
     ) {
-      // Magnet has cap=31, Black Hole has prom=30
-      if (
-        TOSQ(Move) === 0 &&
-        (CAPTURED(Move) === 31 || PROMOTED(Move) === 30)
-      ) {
+      // Magnet: cap=31, TOSQ=0; Black Hole: prom=30, TOSQ=0
+      if (isMagnetType && TOSQ(Move) === 0 && CAPTURED(Move) === 31) {
         found = BOOL.TRUE;
         break;
       } else if (TOSQ(Move) === 0 && CAPTURED(Move) > 0) {
@@ -426,6 +428,10 @@ export function ParseMove(
           break;
         }
         continue;
+      } else if (isTrampleType && PROMOTED(Move) === 30 && TOSQ(Move) > 0) {
+        // Trample moves: PROMOTED = 30, TOSQ > 0 (target square), CAPTURED > 0
+        found = BOOL.TRUE;
+        break;
       } else if (Move & MFLAGSUMN) {
         if (pieceEpsilon !== PIECES.EMPTY) {
           found = BOOL.TRUE;

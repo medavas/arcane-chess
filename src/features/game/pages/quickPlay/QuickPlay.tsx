@@ -103,6 +103,7 @@ interface State {
   placingRoyalty: number;
   magnetType: string;
   trampleType: string;
+  trampleSelected?: string;
   offeringType: string;
   isDyadMove: boolean;
   normalMovesOnly: boolean;
@@ -228,6 +229,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
       placingRoyalty: 0,
       magnetType: '',
       trampleType: '',
+      trampleSelected: undefined,
       offeringType: '',
       isDyadMove: false,
       normalMovesOnly: false,
