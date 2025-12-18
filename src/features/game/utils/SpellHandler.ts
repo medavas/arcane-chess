@@ -21,6 +21,7 @@ export interface SpellState {
   glitchQueued: boolean;
   isEvoActive: boolean;
   magnetType: string; // '' | 'modsMAG'
+  trampleType: string; // '' | 'modsTRA'
 }
 
 export interface SpellHandlerCallbacks {
@@ -74,7 +75,8 @@ export class SpellHandler {
       state.offeringType !== '' ||
       state.isDyadMove === true ||
       state.isEvoActive === true ||
-      state.magnetType !== ''
+      state.magnetType !== '' ||
+      state.trampleType !== ''
     );
   };
 
@@ -117,6 +119,7 @@ export class SpellHandler {
       glitchQueued: false,
       isEvoActive: false,
       magnetType: '',
+      trampleType: '',
     });
   };
 
@@ -144,15 +147,18 @@ export class SpellHandler {
       state.offeringType !== '' ||
       state.isDyadMove === true ||
       state.isEvoActive === true ||
-      state.magnetType !== '';
+      state.magnetType !== '' ||
+      state.trampleType !== '';
 
     // Check if trying to activate a different spell (allow toggling off same spell)
     const isDyadActive = state.isDyadMove;
     const isEvoActive = state.isEvoActive;
     const isMagnetActive = state.magnetType !== '';
+    const isTrampleActive = state.trampleType !== '';
     const isSameDyadSpell = isDyadActive && key.startsWith('dyad');
     const isSameEvoSpell = isEvoActive && key === 'modsEVO';
     const isSameMagnetSpell = isMagnetActive && key === 'modsMAG';
+    const isSameTrampleSpell = isTrampleActive && key === 'modsTRA';
     const isSamePlacingSpell =
       (state.placingPiece > 0 && key.startsWith('sumn')) ||
       (state.swapType !== '' && key.startsWith('swap')) ||
@@ -161,7 +167,7 @@ export class SpellHandler {
 
     // If a spell is active and trying to activate a DIFFERENT spell, block it
     const isDifferentSpell =
-      !isSameDyadSpell && !isSameEvoSpell && !isSamePlacingSpell && !isSameMagnetSpell;
+      !isSameDyadSpell && !isSameEvoSpell && !isSamePlacingSpell && !isSameMagnetSpell && !isSameTrampleSpell;
     if (anySpellCurrentlyActive && isDifferentSpell && key !== 'deactivate') {
       return;
     }
@@ -196,6 +202,7 @@ export class SpellHandler {
       swapType: '',
       offeringType: '',
       magnetType: '',
+      trampleType: '',
       // isTeleport: false,
       isDyadMove: false,
     });
@@ -417,6 +424,23 @@ export class SpellHandler {
       return;
     }
 
+    // === TRAMPLE ===
+    if (key === 'modsTRA') {
+      const dyadClock = arcane.getDyadClock();
+      if (dyadClock > 0 || state.isDyadMove) return;
+
+      // Block if forced EP is active
+      if (arcane.isForcedEnPassantActive && arcane.isForcedEnPassantActive()) {
+        return;
+      }
+
+      // Toggle trample type
+      this.callbacks.updateSpellState({
+        trampleType: state.trampleType === key ? '' : key,
+      });
+      return;
+    }
+
     // === EVO ===
     if (key === 'modsEVO') {
       const state = this.callbacks.getSpellState();
@@ -543,6 +567,10 @@ export class SpellHandler {
 
     if (key === 'modsMAG') {
       return state.magnetType === key;
+    }
+
+    if (key === 'modsTRA') {
+      return state.trampleType === key;
     }
 
     if (key.includes('dyad')) {

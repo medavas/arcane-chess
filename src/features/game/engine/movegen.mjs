@@ -28,6 +28,9 @@ import {
   SQUARES,
   PieceCol,
   PieceKing,
+  PieceKnight,
+  PieceZebra,
+  PieceUnicorn,
   PieceDyad,
   LoopNonSlideDyad,
   LoopNonSlidePce,
@@ -872,6 +875,49 @@ export function GenerateMoves(
     }
 
     if (type2 === 'ADJ' || type2 === 'DEP') return;
+
+    // TRAMPLE - Generate trample moves for Equus pieces (Knight, Zebra, Unicorn)
+    if (!herrings.length && !forcedEpAvailable && (type === 'modsTRA' || type === 'COMP')) {
+      const hasTrample = currentArcanaSide[4] & 67108864; // modsTRA bit
+      
+      if (hasTrample) {
+        const equusPieces = GameBoard.side === COLOURS.WHITE
+          ? [PIECES.wN, PIECES.wZ, PIECES.wU]
+          : [PIECES.bN, PIECES.bZ, PIECES.bU];
+        
+        for (const pce of equusPieces) {
+          const count = GameBoard.pceNum[pce] || 0;
+          for (let idx = 0; idx < count; idx++) {
+            const sq = GameBoard.pList[PCEINDEX(pce, idx)];
+            
+            // Check all knight-move directions
+            for (let index = 0; index < 8; index++) {
+              const dir = KnDir[index];
+              const t_sq = sq + dir;
+              
+              if (SQOFFBOARD(t_sq) === BOOL.TRUE) continue;
+              if (t_sq < 0 || t_sq > 119) continue;
+              
+              const targetPiece = GameBoard.pieces[t_sq];
+              if (targetPiece === PIECES.EMPTY) continue;
+              
+              const targetPieceColor = PieceCol[targetPiece];
+              if (targetPieceColor === GameBoard.side || targetPieceColor === COLOURS.BOTH) continue;
+              
+              // Add trample move: piece stays at sq, but eliminates target at t_sq
+              // Using PROMOTED arg of 30 to mark this as a trample move
+              AddCaptureMove(
+                MOVE(sq, t_sq, targetPiece, 30, 0),
+                false,
+                capturesOnly
+              );
+            }
+          }
+        }
+      }
+    }
+    
+    if (type === 'modsTRA') return;
 
     // if (!herrings.length && !forcedEpAvailable && (type2 === 'TELEPORT' || type2 === 'COMP')) {
     //   const side = GameBoard.side;

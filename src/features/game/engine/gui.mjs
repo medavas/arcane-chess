@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { GameBoard, FROMSQ, MFLAGSHFT, MFLAGCA } from './board';
+import { GameBoard, FROMSQ, TOSQ, MFLAGSHFT, MFLAGCA } from './board';
 import {
   generatePlayableOptions,
   GenerateMoves,
@@ -138,6 +138,21 @@ export const validMagnetMoves = (magnetType) => {
   for (let move of validMovesReturn) {
     const from = `m${magnetType}@`;
     const to = PrSq(FROMSQ(move));
+    if (!moveMap.has(from)) {
+      moveMap.set(from, []);
+    }
+    moveMap.get(from).push(to);
+  }
+  return moveMap;
+};
+
+export const validTrampleMoves = (trampleType) => {
+  const moveMap = new Map();
+  // Pass trampleType as the summon parameter to trigger TRAMPLE generation
+  const validMovesReturn = validMoves(trampleType, '', 0);
+  for (let move of validMovesReturn) {
+    const from = PrSq(FROMSQ(move));
+    const to = PrSq(TOSQ(move));
     if (!moveMap.has(from)) {
       moveMap.set(from, []);
     }
@@ -618,7 +633,7 @@ export function startSearch(thinkingTime, depth, engineColor) {
     engineArcana.modsEVO > 0
   ) {
     if (bestScore > 200 || bestScore < -200) {
-      if (Math.random() > 0.5) {
+      if (Math.random() > 0.95) {
         GameBoard.evo = 1;
         GameBoard.evoClock = 0;
         GameBoard.evoOwner = colorInt === COLOURS.WHITE ? 'white' : 'black';

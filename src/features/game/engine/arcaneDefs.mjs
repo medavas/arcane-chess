@@ -213,6 +213,7 @@ export const POWERBIT = {
   modsZ: 8388608, // passive     // .
   modsFLA: 16777216, // passive  // hurricane
   modsHEX: 33554432, // passive  // hexlash
+  modsTRA: 67108864, // active   // trample - equus eliminates attacked piece without moving
 
   // 6 on your piece death 4
   moriDYA: 1, // inherent

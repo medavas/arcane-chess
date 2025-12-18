@@ -102,6 +102,7 @@ interface State {
   isTeleport: boolean;
   placingRoyalty: number;
   magnetType: string;
+  trampleType: string;
   offeringType: string;
   isDyadMove: boolean;
   normalMovesOnly: boolean;
@@ -226,6 +227,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
       isTeleport: false,
       placingRoyalty: 0,
       magnetType: '',
+      trampleType: '',
       offeringType: '',
       isDyadMove: false,
       normalMovesOnly: false,
@@ -291,6 +293,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
         glitchQueued: this.state.glitchQueued,
         isEvoActive: this.state.isEvoActive,
         magnetType: this.state.magnetType,
+        trampleType: this.state.trampleType,
       }),
       updateSpellState: (updates) => this.setState(updates as any),
       updateHistory: (updates, callback) =>
@@ -734,6 +737,7 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
                     placingPromotion: this.state.placingPromotion,
                     isDyadMove: this.state.isDyadMove,
                     magnetType: this.state.magnetType,
+                    trampleType: this.state.trampleType,
                   }}
                   onGameStateChange={(newState) => this.setState(newState)}
                   onGameOver={(result) => {

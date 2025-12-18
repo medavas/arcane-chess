@@ -116,6 +116,22 @@ export function PrMove(move, returnType) {
       FileChar[ft] +
       RankChar[rt];
   }
+  // trample capture (promoted === 30)
+  if (
+    TOSQ(move) !== 0 &&
+    CAPTURED(move) > 0 &&
+    pieceEpsilon === 30 &&
+    !(move & MFLAGSWAP)
+  ) {
+    MvStr =
+      getPceChar(GameBoard.pieces[FROMSQ(move)]) +
+      FileChar[ff] +
+      RankChar[rf] +
+      '$' +
+      getPceChar(CAPTURED(move)) +
+      FileChar[ft] +
+      RankChar[rt];
+  }
   // consume capture
   if (TOSQ(move) !== 0 && move & MFLAGCNSM && pieceEpsilon !== 0) {
     MvStr =

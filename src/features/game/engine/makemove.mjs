@@ -697,6 +697,25 @@ export function MakeMove(move, moveType = '') {
     // targetPieceAtTo !== TELEPORT_CONST &&
     (PieceCol[targetPieceAtTo] !== side || consume);
 
+  // TRAMPLE MOVE: Piece stays in place, target is eliminated
+  // Marked with PROMOTED === 30 and TOSQ > 0
+  const isTrampleMove = to > 0 && captured > 0 && pieceEpsilon === 30;
+
+  if (isTrampleMove) {
+    const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+    // Remove the piece at the target square (it's trampled)
+    ClearPiece(to);
+    
+    // Decrement modsTRA spell usage
+    if (commit) {
+      cfg.modsTRA = (cfg.modsTRA ?? 0) - 1;
+      triggerArcanaUpdateCallback();
+    }
+
+    GameBoard.fiftyMove = 0;
+    // Note: Piece at 'from' stays in place (no MovePiece call)
+  }
+
   if (isNormalCapture) {
     const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
     ClearPiece(to);
@@ -815,6 +834,7 @@ export function MakeMove(move, moveType = '') {
   if (
     (move & MFLAGSUMN) === 0 &&
     TOSQ(move) > 0 &&
+    !isTrampleMove && // Trample: piece stays in place
     // (TOSQ(move) > 0 || CAPTURED(move) === TELEPORT_CONST) &&
     (ARCANEFLAG(move) === 0 ||
       isShift(move) ||
@@ -1581,7 +1601,8 @@ export function TakeMove(wasDyadMove = false) {
 
 
   // Undo MAGNET / BLACK HOLE piece movements
-  if (captured === 31 || promoted === 30) {
+  // Note: Black hole has promoted=30 AND to=0, trample has promoted=30 AND to>0
+  if (captured === 31 || (promoted === 30 && to === 0)) {
     const h = GameBoard.history[GameBoard.hisPly];
 
     // Undo side toggle
@@ -1788,7 +1809,11 @@ export function TakeMove(wasDyadMove = false) {
       (move & MFLAGPS) !== 0 ||
       (consume && !isShift(move)))
   ) {
-    MovePiece(to, from);
+    // Skip MovePiece for trample moves (pieceEpsilon === 30)
+    const isTrampleMove = to > 0 && captured > 0 && pieceEpsilon === 30;
+    if (!isTrampleMove) {
+      MovePiece(to, from);
+    }
 
     // Hermit AoE: Restore AoE when undoing move
     // Logic is handled by restoreRoyaltyMapsFrom(h) which restores the tracker state.
@@ -1803,6 +1828,7 @@ export function TakeMove(wasDyadMove = false) {
   ) {
     AddPiece(to, captured);
     const h = GameBoard.history[GameBoard.hisPly];
+    
     if (h && h.moriMana) {
       const { side, steps, keys = [] } = h.moriMana;
       const cfg = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;

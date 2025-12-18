@@ -943,7 +943,7 @@
     "id": "modsTRA",
     "name": "Trample",
     "description": "Use your turn to eliminate an opponent's piece that is attacked by a friendly Equus (Knight, Zebra, Unicorn). Equus stays in place.",
-    "type": "passive",
+    "type": "active",
     "imagePath": "/modsTRA",
     "value": 10,
     "related": [],

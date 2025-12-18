@@ -51,6 +51,8 @@ interface BoardUXProps {
     playerColor: string;
     placingPromotion?: number;
     isDyadMove?: boolean;
+    magnetType?: string;
+    trampleType?: string;
   };
   onGameStateChange: (newState: any) => void;
   onGameOver: (result: any) => void;
@@ -798,6 +800,42 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           magnetType: interactionState.magnetType,
         });
       }
+    } else if (interactionState.trampleType !== '') {
+      // For trample, user needs to either:
+      // 1. Click an Equus piece that can trample (shows valid trample targets)
+      // 2. Click/drag from Equus to target piece to trample
+      const dests = game.getTrampleMoves(interactionState.trampleType);
+      
+      // Check if clicked square has valid trample targets
+      if (dests.has(key) && dests.get(key).length > 0) {
+        // Valid Equus piece clicked - just update state to keep it selected
+        onGameStateChange({
+          trampleType: interactionState.trampleType,
+        });
+      } else {
+        // Check if this is a valid trample target from any Equus
+        let trampleFound = false;
+        for (const [from, targets] of dests.entries()) {
+          if (targets.includes(key)) {
+            // Valid trample move
+            if (forwardedRef && 'current' in forwardedRef && forwardedRef.current) {
+              forwardedRef.current.setAutoShapes([]);
+            }
+            const { parsed } = game.makeUserMove(from, key, 0, interactionState.trampleType, 0);
+            audioManager.playSFX('spell');
+            onMove(parsed, from, key);
+            onGameStateChange({ trampleType: '' });
+            trampleFound = true;
+            break;
+          }
+        }
+        if (!trampleFound) {
+          // Invalid click - keep trample mode active
+          onGameStateChange({
+            trampleType: interactionState.trampleType,
+          });
+        }
+      }
     }
   };
 
@@ -806,22 +844,26 @@ export const BoardUX: React.FC<BoardUXProps> = ({
     let dests;
     if (interactionState.placingPiece === 0) {
       if (interactionState.placingRoyalty === 0) {
-        if (interactionState.magnetType === '') {
-          if (interactionState.swapType === '') {
-            if (interactionState.offeringType === '') {
-              if (interactionState.isTeleport) {
-                dests = game.getGroundMoves('TELEPORT');
+        if (interactionState.trampleType === '' || !interactionState.trampleType) {
+          if (interactionState.magnetType === '') {
+            if (interactionState.swapType === '') {
+              if (interactionState.offeringType === '') {
+                if (interactionState.isTeleport) {
+                  dests = game.getGroundMoves('TELEPORT');
+                } else {
+                  dests = game.getGroundMoves();
+                }
               } else {
-                dests = game.getGroundMoves();
+                dests = game.getOfferingMoves(interactionState.offeringType);
               }
             } else {
-              dests = game.getOfferingMoves(interactionState.offeringType);
+              dests = game.getSwapMoves(interactionState.swapType);
             }
           } else {
-            dests = game.getSwapMoves(interactionState.swapType);
+            dests = game.getMagnetMoves(interactionState.magnetType);
           }
         } else {
-          dests = game.getMagnetMoves(interactionState.magnetType);
+          dests = game.getTrampleMoves(interactionState.trampleType);
         }
       } else {
         dests = game.getSummonMoves(interactionState.placingRoyalty);
@@ -857,7 +899,12 @@ export const BoardUX: React.FC<BoardUXProps> = ({
               role: `m${interactionState.magnetType.toLowerCase()}-piece`,
               color: interactionState.playerColor,
             }
-            : null;
+            : interactionState.trampleType !== ''
+              ? {
+                role: `t${interactionState.trampleType.toLowerCase()}-piece`,
+                color: interactionState.playerColor,
+              }
+              : null;
   };
 
   return (
