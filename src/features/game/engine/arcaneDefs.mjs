@@ -201,7 +201,7 @@ export const POWERBIT = {
   modsTRO: 2048, // inherent     // trojan horse
   modsREI: 4096, // inherent     . reincarnet for cons and offr
   modsEVO: 8192, // passive      berserking evolution
-  modsDOP: 16384, // passive     dep - break out to where offer was
+  modsRED: 16384, // passive     blinding mist - reduce slider scope
   modsMAG: 32768, // active      magnet
   // modsBLA: 65536, // active      deprecated - black hole
   modsSUR: 131072, // passive    pawn surge

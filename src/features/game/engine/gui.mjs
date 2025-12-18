@@ -516,7 +516,7 @@ export function startSearch(thinkingTime, depth, engineColor) {
         } else {
           blackArcaneConfig.modsPHA -= 1;
         }
-        text.push(`${engineColor} used phantom mist!`);
+        text.push(`${engineColor} used Phantom Mist!`);
       }
     }
   }
@@ -543,6 +543,26 @@ export function startSearch(thinkingTime, depth, engineColor) {
         MakeMove(bestMove, 'commit');
         CheckAndSet();
         return { bestMove, bestScore, text };
+      }
+    }
+  }
+
+  if (
+    _.some(_.keys(engineArcana), (key) => key === 'modsRED') &&
+    GameBoard.mist[colorInt] <= 0 &&
+    engineArcana.modsRED > 0
+  ) {
+    if (bestScore > 200 || bestScore < -200) {
+      if (Math.random() > 0.5) {
+        const opponentColorInt =
+          colorInt === COLOURS.WHITE ? COLOURS.BLACK : COLOURS.WHITE;
+        GameBoard.mist[opponentColorInt] = 8;
+        if (colorInt === COLOURS.WHITE) {
+          whiteArcaneConfig.modsRED -= 1;
+        } else {
+          blackArcaneConfig.modsRED -= 1;
+        }
+        text.push(`${engineColor} used Reduction! Slider scope reduced!`);
       }
     }
   }

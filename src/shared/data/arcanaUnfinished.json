@@ -910,11 +910,11 @@
     "tier": "Basic"
   },
   "modsRED": {
-    "id": "modsBLI",
+    "id": "modsRED",
     "name": "Blinding Mist",
     "description": "Reduce the scope of enemy slider patterns (Rook / Bishop) from 7 to 5 for 5 turns.",
     "type": "active",
-    "imagePath": "/modsBLI",
+    "imagePath": "/modsRED",
     "value": 4,
     "related": [],
     "tier": "Basic"

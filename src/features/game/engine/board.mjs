@@ -164,6 +164,7 @@ GameBoard.preset;
 
 GameBoard.suspend = 0; // += not =
 GameBoard.invisibility = [0, 0];
+GameBoard.mist = [0, 0];
 
 GameBoard.xCheckLimit = [0, 0];
 GameBoard.checksGiven = [0, 0];
@@ -369,9 +370,9 @@ export function PrintPieceLists() {
     for (pceNum = 0; pceNum < GameBoard.pceNum[piece]; pceNum++) {
       console.log(
         'Piece ' +
-        PceChar[piece] +
-        ' on ' +
-        PrSq(GameBoard.pList[PCEINDEX(piece, pceNum)])
+          PceChar[piece] +
+          ' on ' +
+          PrSq(GameBoard.pList[PCEINDEX(piece, pceNum)])
       );
     }
   }
@@ -446,6 +447,7 @@ export function ResetBoard() {
 
   // GameBoard.suspend = 0; // += not =
   // GameBoard.invisibility = [0, 0];
+  // GameBoard.mist = [0, 0];
 
   // GameBoard.xCheckLimit = [0, 0];
   // GameBoard.checks = [0, 0];

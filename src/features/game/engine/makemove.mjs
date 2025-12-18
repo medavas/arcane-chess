@@ -491,13 +491,16 @@ export function MakeMove(move, moveType = '') {
       const directions = [-10, 10, -1, 1]; // N, S, W, E
       for (const dir of directions) {
         for (let dist = minRange; dist <= maxRange; dist++) {
-          const sq = targetSq + (dir * dist);
+          const sq = targetSq + dir * dist;
           if (SQOFFBOARD(sq) === BOOL.TRUE) break;
 
           const piece = GameBoard.pieces[sq];
           if (piece !== PIECES.EMPTY) {
             const newSq = sq - dir; // One square closer to target
-            if (GameBoard.pieces[newSq] === PIECES.EMPTY && newSq !== targetSq) {
+            if (
+              GameBoard.pieces[newSq] === PIECES.EMPTY &&
+              newSq !== targetSq
+            ) {
               MovePiece(sq, newSq);
               h.magnetMoves.push({ from: sq, to: newSq });
             }
@@ -506,7 +509,8 @@ export function MakeMove(move, moveType = '') {
       }
 
       // Decrement spell uses
-      const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+      const cfg =
+        side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
       cfg.modsMAG -= 1;
     }
 
@@ -648,9 +652,19 @@ export function MakeMove(move, moveType = '') {
   if (GameBoard.enPas !== SQUARES.NO_SQ) HASH_EP();
   HASH_CA();
 
-  GameBoard.invisibility[0] -= 1;
-  GameBoard.invisibility[1] -= 1;
-  GameBoard.suspend -= 1;
+  // Only decrement timers on committed moves (not during search)
+  const isCommittedMove = moveType === 'userMove' || moveType === 'commit';
+  if (isCommittedMove) {
+    GameBoard.invisibility[0] -= 1;
+    GameBoard.invisibility[1] -= 1;
+    GameBoard.mist[0] -= 1;
+    GameBoard.mist[1] -= 1;
+    GameBoard.suspend -= 1;
+
+    // Prevent mist timer from going below 0
+    if (GameBoard.mist[0] < 0) GameBoard.mist[0] = 0;
+    if (GameBoard.mist[1] < 0) GameBoard.mist[1] = 0;
+  }
 
   snapshotRoyaltyMapsTo(h);
   decAllRoyaltyMaps();
@@ -660,6 +674,7 @@ export function MakeMove(move, moveType = '') {
   h.fiftyMove = GameBoard.fiftyMove;
   h.enPas = GameBoard.enPas;
   h.castlePerm = GameBoard.castlePerm;
+  h.wasCommitted = isCommittedMove; // Store whether timers were decremented
 
   GameBoard.castlePerm &= CastlePerm[from];
   GameBoard.castlePerm &= CastlePerm[to];
@@ -705,7 +720,7 @@ export function MakeMove(move, moveType = '') {
     const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
     // Remove the piece at the target square (it's trampled)
     ClearPiece(to);
-    
+
     // Decrement modsTRA spell usage
     if (commit) {
       cfg.modsTRA = (cfg.modsTRA ?? 0) - 1;
@@ -853,11 +868,7 @@ export function MakeMove(move, moveType = '') {
     const movedPiece = GameBoard.pieces[to];
     const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
 
-    if (
-      GameBoard.evo > 0 &&
-      commit &&
-      movedPiece !== PIECES.EMPTY
-    ) {
+    if (GameBoard.evo > 0 && commit && movedPiece !== PIECES.EMPTY) {
       let evolvedPiece = PIECES.EMPTY;
 
       // Map each piece to its evolved form
@@ -1332,8 +1343,10 @@ export function MakeMove(move, moveType = '') {
     AddPiece(to, fromPiece);
     const swapType = pieceEpsilon;
     if (commit) {
-      const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
-      const spellBook = side === COLOURS.WHITE ? whiteArcaneSpellBook : blackArcaneSpellBook;
+      const cfg =
+        side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+      const spellBook =
+        side === COLOURS.WHITE ? whiteArcaneSpellBook : blackArcaneSpellBook;
       let swapKey = null;
       if (swapType === ARCANE_BIT_VALUES.DEP) {
         swapKey = 'swapDEP';
@@ -1353,7 +1366,8 @@ export function MakeMove(move, moveType = '') {
 
   {
     const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
-    const spellBook = side === COLOURS.WHITE ? whiteArcaneSpellBook : blackArcaneSpellBook;
+    const spellBook =
+      side === COLOURS.WHITE ? whiteArcaneSpellBook : blackArcaneSpellBook;
     const sKey = sumnKeyFromMove(move);
     if (sKey && commit) {
       cfg[sKey] = (cfg[sKey] ?? 0) - 1;
@@ -1500,16 +1514,15 @@ export function MakeMove(move, moveType = '') {
       GameBoard.side ^= 1;
       HASH_SIDE();
     }
-  } else if (
-    moveType === 'userMove' &&
-    GameBoard.evo > 0
-  ) {
+  } else if (moveType === 'userMove' && GameBoard.evo > 0) {
     // Player move with Evolution active: consume modsEVO
     // Decrement modsEVO if it hasn't been decremented already (when evolution happened)
     if (!h.modsEVOPiece) {
       const evoOwnerIsWhite = GameBoard.evoOwner === 'white';
       const evoConfig = evoOwnerIsWhite ? whiteArcaneConfig : blackArcaneConfig;
-      const evoBook = evoOwnerIsWhite ? whiteArcaneSpellBook : blackArcaneSpellBook;
+      const evoBook = evoOwnerIsWhite
+        ? whiteArcaneSpellBook
+        : blackArcaneSpellBook;
       if (evoConfig && evoConfig.modsEVO > 0) {
         evoConfig.modsEVO -= 1;
         evoBook.modsEVO = Math.max(0, (evoBook.modsEVO ?? 0) - 1);
@@ -1529,7 +1542,9 @@ export function MakeMove(move, moveType = '') {
       if (nextSideColor !== GameBoard.evoOwner) {
         const ownerIsWhite = GameBoard.evoOwner === 'white';
         const config = ownerIsWhite ? whiteArcaneConfig : blackArcaneConfig;
-        const spellBook = ownerIsWhite ? whiteArcaneSpellBook : blackArcaneSpellBook;
+        const spellBook = ownerIsWhite
+          ? whiteArcaneSpellBook
+          : blackArcaneSpellBook;
 
         if (config.modsEVO > 0) {
           config.modsEVO -= 1;
@@ -1545,10 +1560,7 @@ export function MakeMove(move, moveType = '') {
 
     GameBoard.side ^= 1;
     HASH_SIDE();
-  } else if (
-    moveType === 'commit' &&
-    GameBoard.evo > 0
-  ) {
+  } else if (moveType === 'commit' && GameBoard.evo > 0) {
     // Non-player move (e.g., engine) with Evolution active - clear after use
     GameBoard.evo = 0;
     GameBoard.evoClock = 0;
@@ -1609,7 +1621,6 @@ export function TakeMove(wasDyadMove = false) {
   let to = TOSQ(move);
   let captured = CAPTURED(move);
   let promoted = PROMOTED(move);
-
 
   // Undo MAGNET / BLACK HOLE piece movements
   // Note: Black hole has promoted=30 AND to=0, trample has promoted=30 AND to>0
@@ -1728,15 +1739,22 @@ export function TakeMove(wasDyadMove = false) {
   if (GameBoard.enPas !== SQUARES.NO_SQ) HASH_EP();
   HASH_CA();
 
-  GameBoard.invisibility[0] += 1;
-  GameBoard.invisibility[1] += 1;
-  GameBoard.suspend += 1;
-
-  if (GameBoard.suspend > 6) GameBoard.suspend = 0;
-  if (GameBoard.invisibility[0] > 6) GameBoard.invisibility[0] = 0;
-  if (GameBoard.invisibility[1] > 6) GameBoard.invisibility[1] = 0;
-
   const h = GameBoard.history[GameBoard.hisPly];
+
+  // Only increment timers if the move being undone had decremented them
+  if (h && h.wasCommitted) {
+    GameBoard.invisibility[0] += 1;
+    GameBoard.invisibility[1] += 1;
+    GameBoard.mist[0] += 1;
+    GameBoard.mist[1] += 1;
+    GameBoard.suspend += 1;
+
+    if (GameBoard.suspend > 6) GameBoard.suspend = 0;
+    if (GameBoard.invisibility[0] > 6) GameBoard.invisibility[0] = 0;
+    if (GameBoard.invisibility[1] > 6) GameBoard.invisibility[1] = 0;
+    if (GameBoard.mist[0] > 5) GameBoard.mist[0] = 0;
+    if (GameBoard.mist[1] > 5) GameBoard.mist[1] = 0;
+  }
 
   restoreRoyaltyMapsFrom(h);
 
@@ -1839,7 +1857,7 @@ export function TakeMove(wasDyadMove = false) {
   ) {
     AddPiece(to, captured);
     const h = GameBoard.history[GameBoard.hisPly];
-    
+
     if (h && h.moriMana) {
       const { side, steps, keys = [] } = h.moriMana;
       const cfg = side === 'white' ? whiteArcaneConfig : blackArcaneConfig;
@@ -1892,9 +1910,7 @@ export function TakeMove(wasDyadMove = false) {
     if (h && h.modsEVOConsumed) {
       const evoOwnerSide = GameBoard.side === COLOURS.WHITE ? 1 : 0;
       const evoConfig =
-        evoOwnerSide === COLOURS.WHITE
-          ? whiteArcaneConfig
-          : blackArcaneConfig;
+        evoOwnerSide === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
       if (evoConfig && evoConfig.modsEVO !== undefined) {
         evoConfig.modsEVO += 1;
         triggerArcanaUpdateCallback();

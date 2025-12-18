@@ -134,7 +134,11 @@ export class SpellHandler {
 
     // === BLOCK SPELLS WHEN normalMovesOnly IS TRUE (e.g., during dyad second move) ===
     // Only allow deactivating or canceling the current dyad
-    if (state.normalMovesOnly && !key.startsWith('dyad') && key !== 'deactivate') {
+    if (
+      state.normalMovesOnly &&
+      !key.startsWith('dyad') &&
+      key !== 'deactivate'
+    ) {
       return;
     }
 
@@ -167,7 +171,11 @@ export class SpellHandler {
 
     // If a spell is active and trying to activate a DIFFERENT spell, block it
     const isDifferentSpell =
-      !isSameDyadSpell && !isSameEvoSpell && !isSamePlacingSpell && !isSameMagnetSpell && !isSameTrampleSpell;
+      !isSameDyadSpell &&
+      !isSameEvoSpell &&
+      !isSamePlacingSpell &&
+      !isSameMagnetSpell &&
+      !isSameTrampleSpell;
     if (anySpellCurrentlyActive && isDifferentSpell && key !== 'deactivate') {
       return;
     }
@@ -270,6 +278,18 @@ export class SpellHandler {
       arcane.useBulletproof(playerColor);
       this.callbacks.addDialogue(
         `${playerColor} used Bulletproof — No captures for 3 turns!`
+      );
+      return;
+    }
+
+    // === SPELL: Blinding Mist ===
+    if (key === 'modsRED') {
+      const colorInt = playerColor === 'white' ? 0 : 1;
+      if (GameBoard.mist[colorInt] > 0) return;
+      audioManager.playSFX('freeze');
+      arcane.useBlindingMist(playerColor);
+      this.callbacks.addDialogue(
+        `${playerColor} used Blinding Mist — Enemy slider scope reduced to 3 for 5 turns!`
       );
       return;
     }

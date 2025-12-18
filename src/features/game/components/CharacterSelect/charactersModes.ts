@@ -216,7 +216,7 @@ export const modes: Record<string, GameModeType> = padModes({
         arcana.toknHEM,
         arcana.swapADJ,
         arcana.modsEVO,
-        arcana.modsTRA,
+        arcana.modsRED,
       ],
       setup: 'rnbmkbnr',
     },

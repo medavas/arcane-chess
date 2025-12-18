@@ -231,7 +231,7 @@ export function AddQuietMove(move, capturesOnly) {
     } else {
       GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply + 1]] =
         GameBoard.searchHistory[
-        GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
+          GameBoard.pieces[FROMSQ(move)] * BRD_SQ_NUM + TOSQ(move)
         ];
     }
     GameBoard.moveListStart[GameBoard.ply + 1]++;
@@ -835,7 +835,7 @@ export function GenerateMoves(
           if (
             i === j ||
             GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][i]] ===
-            GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
+              GameBoard.pieces[NZUBRMTQSWSQS[GameBoard.side][j]]
           ) {
             continue;
           }
@@ -880,41 +880,50 @@ export function GenerateMoves(
     if (type2 === 'ADJ' || type2 === 'DEP') return;
 
     // TRAMPLE - Generate trample moves for Equus pieces (Knight, Zebra, Unicorn)
-    if (!herrings.length && !forcedEpAvailable && (type === 'modsTRA' || type === 'COMP')) {
+    if (
+      !herrings.length &&
+      !forcedEpAvailable &&
+      (type === 'modsTRA' || type === 'COMP')
+    ) {
       const hasTrample = currentArcanaSide[4] & 67108864; // modsTRA bit
-      
+
       if (hasTrample) {
-        const equusPieces = GameBoard.side === COLOURS.WHITE
-          ? [
-              { piece: PIECES.wN, dirs: KnDir },
-              { piece: PIECES.wZ, dirs: ZeDir },
-              { piece: PIECES.wU, dirs: UnDir }
-            ]
-          : [
-              { piece: PIECES.bN, dirs: KnDir },
-              { piece: PIECES.bZ, dirs: ZeDir },
-              { piece: PIECES.bU, dirs: UnDir }
-            ];
-        
+        const equusPieces =
+          GameBoard.side === COLOURS.WHITE
+            ? [
+                { piece: PIECES.wN, dirs: KnDir },
+                { piece: PIECES.wZ, dirs: ZeDir },
+                { piece: PIECES.wU, dirs: UnDir },
+              ]
+            : [
+                { piece: PIECES.bN, dirs: KnDir },
+                { piece: PIECES.bZ, dirs: ZeDir },
+                { piece: PIECES.bU, dirs: UnDir },
+              ];
+
         for (const { piece: pce, dirs } of equusPieces) {
           const count = GameBoard.pceNum[pce] || 0;
           for (let idx = 0; idx < count; idx++) {
             const sq = GameBoard.pList[PCEINDEX(pce, idx)];
-            
+
             // Check all directions for this piece type
             for (let index = 0; index < dirs.length; index++) {
               const dir = dirs[index];
               const t_sq = sq + dir;
-              
+
               if (SQOFFBOARD(t_sq) === BOOL.TRUE) continue;
               if (t_sq < 0 || t_sq > 119) continue;
-              
+
               const targetPiece = GameBoard.pieces[t_sq];
               if (targetPiece === PIECES.EMPTY) continue;
-              
+
               const targetPieceColor = PieceCol[targetPiece];
-              if (targetPieceColor === GameBoard.side || targetPieceColor === COLOURS.BOTH) continue;
-              
+              if (
+                targetPieceColor === GameBoard.side ||
+                targetPieceColor === COLOURS.BOTH
+              )
+                continue;
+
               // Add trample move: piece stays at sq, but eliminates target at t_sq
               // Using PROMOTED arg of 30 to mark this as a trample move
               AddCaptureMove(
@@ -927,7 +936,7 @@ export function GenerateMoves(
         }
       }
     }
-    
+
     if (type === 'modsTRA' || type === 'COMP') {
       if (type === 'modsTRA') return;
     }
@@ -1226,7 +1235,9 @@ export function GenerateMoves(
 
     // MAGNET (with black hole behavior)
     if (!herrings.length && !forcedEpAvailable && type === 'modsMAG') {
-      const hasModsMAG = (GameBoard.side === COLOURS.WHITE && GameBoard.whiteArcane[4] & 32768) ||
+      const hasModsMAG =
+        (GameBoard.side === COLOURS.WHITE &&
+          GameBoard.whiteArcane[4] & 32768) ||
         (GameBoard.side === COLOURS.BLACK && GameBoard.blackArcane[4] & 32768);
 
       if (hasModsMAG) {
@@ -1329,7 +1340,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.whiteArcane[3]
                 ) {
                   if (
@@ -1392,7 +1403,7 @@ export function GenerateMoves(
                     type !== 'SUMMON') &&
                   summonFlag >= 16384 &&
                   summonFlag ===
-                  POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
+                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.blackArcane[3]
                 ) {
                   if (
@@ -2407,10 +2418,17 @@ export function GenerateMoves(
         dir = PceDir[royaltySliders[i]][index];
         t_sq = sq + dir;
 
+        // Check if current side has modsRED (Blinding Mist) active on them
+        const hasBlindingMist = GameBoard.mist[GameBoard.side] > 0;
+        const maxSliderDist = hasBlindingMist ? 3 : 7;
+        let sliderDistance = 0;
+
         while (
           SQOFFBOARD(t_sq) === BOOL.FALSE &&
-          GameBoard.pieces[t_sq] !== undefined
+          GameBoard.pieces[t_sq] !== undefined &&
+          sliderDistance < maxSliderDist
         ) {
+          sliderDistance++;
           // Check if we encountered a piece
           if (GameBoard.pieces[t_sq] !== PIECES.EMPTY) {
             // note ROYALTY SLIDERS CAPTURES
@@ -3048,10 +3066,17 @@ export function GenerateMoves(
             shft_t_R_sq = sq + bDir;
           }
 
+          // Check if current side has modsRED (Blinding Mist) active on them
+          const hasBlindingMist = GameBoard.mist[GameBoard.side] > 0;
+          const maxSliderDist = hasBlindingMist ? 3 : 7;
+          let sliderDistance = 0;
+
           while (
             SQOFFBOARD(t_sq) === BOOL.FALSE &&
-            GameBoard.pieces[t_sq] !== undefined
+            GameBoard.pieces[t_sq] !== undefined &&
+            sliderDistance < maxSliderDist
           ) {
+            sliderDistance++;
             // note SLIDERS CAPTURES
             if (GameBoard.pieces[t_sq] !== PIECES.EMPTY) {
               if (

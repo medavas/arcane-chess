@@ -155,7 +155,9 @@ export default function arcaneChess() {
     if (GameBoard.evo > 0 && GameBoard.evoOwner && GameBoard.evoClock > 0) {
       const ownerIsWhite = GameBoard.evoOwner === 'white';
       const config = ownerIsWhite ? whiteArcaneConfig : blackArcaneConfig;
-      const spellBook = ownerIsWhite ? whiteArcaneSpellBook : blackArcaneSpellBook;
+      const spellBook = ownerIsWhite
+        ? whiteArcaneSpellBook
+        : blackArcaneSpellBook;
 
       if (config.modsEVO > 0) {
         config.modsEVO -= 1;
@@ -277,6 +279,14 @@ export default function arcaneChess() {
         playerColor === 'white' ? whiteArcaneConfig : blackArcaneConfig;
       playerArcana.modsSUS -= 1;
       GameBoard.suspend = 6;
+    },
+    useBlindingMist: (playerColor) => {
+      const playerArcana =
+        playerColor === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+      const opponentColorInt =
+        playerColor === 'white' ? COLOURS.BLACK : COLOURS.WHITE;
+      playerArcana.modsRED -= 1;
+      GameBoard.mist[opponentColorInt] = 8;
     },
     swapFilePieces: (playerColor) => {
       const playerArcana =
