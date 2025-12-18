@@ -94,8 +94,8 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         const pieceConfig = isWhitePiece
           ? whiteArcaneConfig
           : isBlackPiece
-            ? blackArcaneConfig
-            : null;
+          ? blackArcaneConfig
+          : null;
 
         // Check if this H-piece has Hemlock token and add class
         if (isHPiece && pieceConfig) {
@@ -504,6 +504,16 @@ export const BoardUX: React.FC<BoardUXProps> = ({
     return () => clearTimeout(timeoutId);
   }, [gameState.fen, whiteArcaneConfig, blackArcaneConfig]);
 
+  // Sync trampleSelected changes back to parent component
+  React.useEffect(() => {
+    if (interactionState.trampleType && interactionState.trampleSelected !== gameState.trampleSelected) {
+      onGameStateChange({
+        trampleType: interactionState.trampleType,
+        trampleSelected: interactionState.trampleSelected,
+      });
+    }
+  }, [interactionState.trampleSelected, interactionState.trampleType]);
+
   const handleMove = (orig: string, dest: string) => {
     const swapOrTeleport = interactionState.isTeleport
       ? 'TELEPORT'
@@ -515,7 +525,13 @@ export const BoardUX: React.FC<BoardUXProps> = ({
 
     // Handle trample moves via drag
     if (interactionState.trampleType !== '') {
-      const { parsed } = game.makeUserMove(orig, dest, 0, interactionState.trampleType, 0);
+      const { parsed } = game.makeUserMove(
+        orig,
+        dest,
+        0,
+        interactionState.trampleType,
+        0
+      );
       audioManager.playSFX('spell');
       onMove(parsed, orig, dest);
       onGameStateChange({ trampleType: '', trampleSelected: undefined });
@@ -550,7 +566,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         normalMovesOnly: true,
         dyadFirstMove: {
           notation: PrMove(parsed),
-          lastMove: [orig, dest]
+          lastMove: [orig, dest],
         },
         dyadStartPly: game.getEnginePly(),
         fen: outputFenOfCurrentPosition(), // Update visual board
@@ -592,9 +608,9 @@ export const BoardUX: React.FC<BoardUXProps> = ({
             normalMovesOnly: true,
             dyadFirstMove: {
               notation: PrMove(parsed),
-              lastMove: [orig, dest]
+              lastMove: [orig, dest],
             },
-            dyadStartPly: game.getEnginePly()
+            dyadStartPly: game.getEnginePly(),
           });
         } else {
           onMove(parsed, orig, dest);
@@ -605,15 +621,15 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         console.log('invalid move');
       }
       if (interactionState.isDyadMove) {
-        // Store first dyad move and record engine ply  
+        // Store first dyad move and record engine ply
         onGameStateChange({
           isDyadMove: false,
           normalMovesOnly: true,
           dyadFirstMove: {
             notation: PrMove(parsed),
-            lastMove: [orig, dest]
+            lastMove: [orig, dest],
           },
-          dyadStartPly: game.getEnginePly()
+          dyadStartPly: game.getEnginePly(),
         });
       } else {
         onMove(parsed, orig, dest);
@@ -710,7 +726,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
             'selectedKey:',
             key
           );
-        } catch (e) { }
+        } catch (e) {}
       }
 
       if (
@@ -794,14 +810,21 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       }
     } else if (interactionState.magnetType !== '') {
       const dests = game.getMagnetMoves(interactionState.magnetType);
-      if (dests.has(`m${interactionState.magnetType}@`) &&
-        dests.get(`m${interactionState.magnetType}@`).includes(key)) {
+      if (
+        dests.has(`m${interactionState.magnetType}@`) &&
+        dests.get(`m${interactionState.magnetType}@`).includes(key)
+      ) {
         if (forwardedRef && 'current' in forwardedRef && forwardedRef.current) {
           forwardedRef.current.setAutoShapes([]);
         }
-        const { parsed } = game.makeUserMove(key, key, 0, interactionState.magnetType, 0);
+        const { parsed } = game.makeUserMove(
+          key,
+          key,
+          0,
+          interactionState.magnetType,
+          0
+        );
         audioManager.playSFX('spell');
-
 
         onMove(parsed, 'a0', key);
         onGameStateChange({ magnetType: '' });
@@ -813,20 +836,49 @@ export const BoardUX: React.FC<BoardUXProps> = ({
     } else if (interactionState.trampleType !== '') {
       // For trample: click an Equus piece to select it, then click or drag to trample target
       const dests = game.getTrampleMoves(interactionState.trampleType);
-      
+
+      // Check if a piece is already selected and this click is on a valid destination
+      if (
+        interactionState.trampleSelected &&
+        dests.has(interactionState.trampleSelected)
+      ) {
+        const validDests = dests.get(interactionState.trampleSelected);
+        if (validDests && validDests.includes(key)) {
+          // Execute the trample move
+          if (
+            forwardedRef &&
+            'current' in forwardedRef &&
+            forwardedRef.current
+          ) {
+            forwardedRef.current.setAutoShapes([]);
+          }
+          const { parsed } = game.makeUserMove(
+            interactionState.trampleSelected,
+            key,
+            0,
+            interactionState.trampleType,
+            0
+          );
+          audioManager.playSFX('spell');
+          onMove(parsed, interactionState.trampleSelected, key);
+          onGameStateChange({ trampleType: '', trampleSelected: undefined });
+          return;
+        }
+      }
+
       // Check if clicked square has valid trample targets (it's an Equus piece)
       if (dests.has(key) && dests.get(key)!.length > 0) {
         // Valid Equus piece clicked - select it (Chessground will show destinations)
-        onGameStateChange({
-          trampleType: interactionState.trampleType,
+        setInteractionState((prev) => ({
+          ...prev,
           trampleSelected: key,
-        });
+        }));
       } else {
         // Clicked somewhere else - deselect but keep trample mode active
-        onGameStateChange({
-          trampleType: interactionState.trampleType,
+        setInteractionState((prev) => ({
+          ...prev,
           trampleSelected: undefined,
-        });
+        }));
       }
     }
   };
@@ -836,7 +888,10 @@ export const BoardUX: React.FC<BoardUXProps> = ({
     let dests;
     if (interactionState.placingPiece === 0) {
       if (interactionState.placingRoyalty === 0) {
-        if (interactionState.trampleType === '' || !interactionState.trampleType) {
+        if (
+          interactionState.trampleType === '' ||
+          !interactionState.trampleType
+        ) {
           if (interactionState.magnetType === '') {
             if (interactionState.swapType === '') {
               if (interactionState.offeringType === '') {
@@ -855,7 +910,28 @@ export const BoardUX: React.FC<BoardUXProps> = ({
             dests = game.getMagnetMoves(interactionState.magnetType);
           }
         } else {
-          dests = game.getTrampleMoves(interactionState.trampleType);
+          // For trample: only show moves if a piece is selected
+          if (interactionState.trampleSelected) {
+            const allTrampleMoves = game.getTrampleMoves(
+              interactionState.trampleType
+            );
+            const selectedDests = allTrampleMoves.get(
+              interactionState.trampleSelected
+            );
+            if (selectedDests && selectedDests.length > 0) {
+              const filteredDests = new Map();
+              filteredDests.set(
+                interactionState.trampleSelected,
+                selectedDests
+              );
+              dests = filteredDests;
+            } else {
+              dests = new Map(); // No valid moves for selected piece
+            }
+          } else {
+            // No piece selected yet - show all trample pieces as clickable
+            dests = game.getTrampleMoves(interactionState.trampleType);
+          }
         }
       } else {
         dests = game.getSummonMoves(interactionState.placingRoyalty);
@@ -869,34 +945,34 @@ export const BoardUX: React.FC<BoardUXProps> = ({
   const getSelected = () => {
     return interactionState.placingPiece !== 0
       ? {
-        role: `${PceChar.split('')[
-          interactionState.placingPiece
-        ].toLowerCase()}-piece`,
-        color: interactionState.playerColor,
-      }
+          role: `${PceChar.split('')[
+            interactionState.placingPiece
+          ].toLowerCase()}-piece`,
+          color: interactionState.playerColor,
+        }
       : interactionState.placingRoyalty !== 0
-        ? {
+      ? {
           role: `r${RtyChar.split('')[
             interactionState.placingRoyalty
           ].toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }
-        : interactionState.offeringType !== ''
-          ? {
-            role: `o${interactionState.offeringType.toLowerCase()}-piece`,
-            color: interactionState.playerColor,
-          }
-          : interactionState.magnetType !== ''
-            ? {
-              role: `m${interactionState.magnetType.toLowerCase()}-piece`,
-              color: interactionState.playerColor,
-            }
-            : interactionState.trampleType !== ''
-              ? {
-                role: `t${interactionState.trampleType.toLowerCase()}-piece`,
-                color: interactionState.playerColor,
-              }
-              : null;
+      : interactionState.offeringType !== ''
+      ? {
+          role: `o${interactionState.offeringType.toLowerCase()}-piece`,
+          color: interactionState.playerColor,
+        }
+      : interactionState.magnetType !== ''
+      ? {
+          role: `m${interactionState.magnetType.toLowerCase()}-piece`,
+          color: interactionState.playerColor,
+        }
+      : interactionState.trampleType !== ''
+      ? {
+          role: `t${interactionState.trampleType.toLowerCase()}-piece`,
+          color: interactionState.playerColor,
+        }
+      : null;
   };
 
   return (
@@ -942,7 +1018,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         fromPocket: false,
       }}
       events={{
-        change: () => { },
+        change: () => {},
         dropNewPiece: handleDropNewPiece,
         move: handleMove,
         select: handleSelect,

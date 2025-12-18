@@ -147,18 +147,7 @@ export const validMagnetMoves = (magnetType) => {
 };
 
 export const validTrampleMoves = (trampleType) => {
-  const moveMap = new Map();
-  // Pass trampleType as the summon parameter to trigger TRAMPLE generation
-  const validMovesReturn = validMoves(trampleType, '', 0);
-  for (let move of validMovesReturn) {
-    const from = PrSq(FROMSQ(move));
-    const to = PrSq(TOSQ(move));
-    if (!moveMap.has(from)) {
-      moveMap.set(from, []);
-    }
-    moveMap.get(from).push(to);
-  }
-  return moveMap;
+  return validGroundMoves(trampleType, '');
 };
 
 export function validMoves(

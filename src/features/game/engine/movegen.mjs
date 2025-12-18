@@ -54,6 +54,8 @@ import {
   HerShftDir,
   HemlockHopA,
   BanDirSp,
+  ZeDir,
+  UnDir,
   // BanDirWr,
   PCEINDEX,
   NOMOVE,
@@ -71,6 +73,7 @@ import {
 } from './defs';
 import { MakeMove, TakeMove } from './makemove';
 import { validMoves } from './gui.mjs';
+import { PrSq } from './io.mjs';
 
 const MvvLvaValue = [
   0, 100, 500, 600, 700, 1200, 1400, 100, 500, 600, 700, 1200, 1400, 300, 900,
@@ -877,22 +880,30 @@ export function GenerateMoves(
     if (type2 === 'ADJ' || type2 === 'DEP') return;
 
     // TRAMPLE - Generate trample moves for Equus pieces (Knight, Zebra, Unicorn)
-    if (!herrings.length && !forcedEpAvailable && type === 'modsTRA') {
+    if (!herrings.length && !forcedEpAvailable && (type === 'modsTRA' || type === 'COMP')) {
       const hasTrample = currentArcanaSide[4] & 67108864; // modsTRA bit
       
       if (hasTrample) {
         const equusPieces = GameBoard.side === COLOURS.WHITE
-          ? [PIECES.wN, PIECES.wZ, PIECES.wU]
-          : [PIECES.bN, PIECES.bZ, PIECES.bU];
+          ? [
+              { piece: PIECES.wN, dirs: KnDir },
+              { piece: PIECES.wZ, dirs: ZeDir },
+              { piece: PIECES.wU, dirs: UnDir }
+            ]
+          : [
+              { piece: PIECES.bN, dirs: KnDir },
+              { piece: PIECES.bZ, dirs: ZeDir },
+              { piece: PIECES.bU, dirs: UnDir }
+            ];
         
-        for (const pce of equusPieces) {
+        for (const { piece: pce, dirs } of equusPieces) {
           const count = GameBoard.pceNum[pce] || 0;
           for (let idx = 0; idx < count; idx++) {
             const sq = GameBoard.pList[PCEINDEX(pce, idx)];
             
-            // Check all knight-move directions
-            for (let index = 0; index < 8; index++) {
-              const dir = KnDir[index];
+            // Check all directions for this piece type
+            for (let index = 0; index < dirs.length; index++) {
+              const dir = dirs[index];
               const t_sq = sq + dir;
               
               if (SQOFFBOARD(t_sq) === BOOL.TRUE) continue;
@@ -917,7 +928,9 @@ export function GenerateMoves(
       }
     }
     
-    if (type === 'modsTRA') return;
+    if (type === 'modsTRA' || type === 'COMP') {
+      if (type === 'modsTRA') return;
+    }
 
     // if (!herrings.length && !forcedEpAvailable && (type2 === 'TELEPORT' || type2 === 'COMP')) {
     //   const side = GameBoard.side;
