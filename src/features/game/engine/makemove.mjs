@@ -1331,12 +1331,23 @@ export function MakeMove(move, moveType = '') {
     MovePiece(to, from);
     AddPiece(to, fromPiece);
     const swapType = pieceEpsilon;
-    if (GameBoard.side === COLOURS.WHITE) {
-      if (swapType === ARCANE_BIT_VALUES.DEP) whiteArcaneConfig.swapDEP -= 1;
-      if (swapType === ARCANE_BIT_VALUES.ADJ) whiteArcaneConfig.swapADJ -= 1;
-    } else {
-      if (swapType === ARCANE_BIT_VALUES.DEP) blackArcaneConfig.swapDEP -= 1;
-      if (swapType === ARCANE_BIT_VALUES.ADJ) blackArcaneConfig.swapADJ -= 1;
+    if (commit) {
+      const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+      const spellBook = side === COLOURS.WHITE ? whiteArcaneSpellBook : blackArcaneSpellBook;
+      let swapKey = null;
+      if (swapType === ARCANE_BIT_VALUES.DEP) {
+        swapKey = 'swapDEP';
+      } else if (swapType === ARCANE_BIT_VALUES.ADJ) {
+        swapKey = 'swapADJ';
+      }
+      if (swapKey) {
+        cfg[swapKey] = (cfg[swapKey] ?? 0) - 1;
+        spellBook[swapKey] = Math.max(0, (spellBook[swapKey] ?? 0) - 1);
+        h.spellKey = swapKey;
+        h.spellCfg = cfg;
+        h.spellBook = spellBook;
+        triggerArcanaUpdateCallback();
+      }
     }
   }
 
@@ -1946,15 +1957,7 @@ export function TakeMove(wasDyadMove = false) {
     ClearPiece(from);
     MovePiece(to, from);
     AddPiece(to, putBack);
-
-    const swapType = pieceEpsilon;
-    if (GameBoard.side === COLOURS.WHITE) {
-      if (swapType === ARCANE_BIT_VALUES.DEP) whiteArcaneConfig.swapDEP += 1;
-      if (swapType === ARCANE_BIT_VALUES.ADJ) whiteArcaneConfig.swapADJ += 1;
-    } else {
-      if (swapType === ARCANE_BIT_VALUES.DEP) blackArcaneConfig.swapDEP += 1;
-      if (swapType === ARCANE_BIT_VALUES.ADJ) blackArcaneConfig.swapADJ += 1;
-    }
+    // Swap spell restoration is now handled by the general spell tracking system above
   } else if (TOSQ(move) === 0 && FROMSQ(move) > 0 && CAPTURED(move) > 0) {
     const useWhite = GameBoard.side === COLOURS.WHITE;
     const arcaneConfig = useWhite ? whiteArcaneConfig : blackArcaneConfig;
