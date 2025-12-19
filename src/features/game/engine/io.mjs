@@ -317,6 +317,19 @@ export function PrMove(move, returnType) {
       'ep';
   }
 
+  if (pieceEpsilon === 30 && CAPTURED(move) > 0) {
+    MvStr =
+      getPceChar(GameBoard.pieces[FROMSQ(move)]) +
+      FileChar[ff] +
+      RankChar[rf] +
+      '$' +
+      getPceChar(CAPTURED(move)) +
+      FileChar[ft] +
+      RankChar[rt];
+  } else {
+    MvStr = PrSq(FROMSQ(move)) + '-' + PrSq(TOSQ(move));
+  }
+
   if (InCheck()) {
     MvStr += '+';
   }
