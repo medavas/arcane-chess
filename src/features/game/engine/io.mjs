@@ -432,6 +432,9 @@ export function ParseMove(
         // Trample moves: PROMOTED = 30, TOSQ > 0 (target square), CAPTURED > 0
         found = BOOL.TRUE;
         break;
+      } else if (!isTrampleType && PROMOTED(Move) === 30 && TOSQ(Move) > 0) {
+        // Skip trample moves when not making a trample move
+        continue;
       } else if (Move & MFLAGSUMN) {
         if (pieceEpsilon !== PIECES.EMPTY) {
           found = BOOL.TRUE;

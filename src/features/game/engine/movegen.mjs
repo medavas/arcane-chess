@@ -28,9 +28,6 @@ import {
   SQUARES,
   PieceCol,
   PieceKing,
-  PieceKnight,
-  PieceZebra,
-  PieceUnicorn,
   PieceDyad,
   LoopNonSlideDyad,
   LoopNonSlidePce,
@@ -73,7 +70,6 @@ import {
 } from './defs';
 import { MakeMove, TakeMove } from './makemove';
 import { validMoves } from './gui.mjs';
-import { PrSq } from './io.mjs';
 
 const MvvLvaValue = [
   0, 100, 500, 600, 700, 1200, 1400, 100, 500, 600, 700, 1200, 1400, 300, 900,

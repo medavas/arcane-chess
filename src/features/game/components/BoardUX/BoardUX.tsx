@@ -504,16 +504,6 @@ export const BoardUX: React.FC<BoardUXProps> = ({
     return () => clearTimeout(timeoutId);
   }, [gameState.fen, whiteArcaneConfig, blackArcaneConfig]);
 
-  // Sync trampleSelected changes back to parent component
-  React.useEffect(() => {
-    if (interactionState.trampleType && interactionState.trampleSelected !== gameState.trampleSelected) {
-      onGameStateChange({
-        trampleType: interactionState.trampleType,
-        trampleSelected: interactionState.trampleSelected,
-      });
-    }
-  }, [interactionState.trampleSelected, interactionState.trampleType]);
-
   const handleMove = (orig: string, dest: string) => {
     const swapOrTeleport = interactionState.isTeleport
       ? 'TELEPORT'
@@ -640,7 +630,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
     });
   };
 
-  const handleDropNewPiece = (piece: string, key: string) => {
+  const handleDropNewPiece = (_piece: string, key: string) => {
     if (forwardedRef && 'current' in forwardedRef && forwardedRef.current) {
       forwardedRef.current.setAutoShapes([]);
     }
@@ -726,7 +716,9 @@ export const BoardUX: React.FC<BoardUXProps> = ({
             'selectedKey:',
             key
           );
-        } catch (e) {}
+        } catch (e) {
+          // Ignore errors
+        }
       }
 
       if (
@@ -867,19 +859,8 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       }
 
       // Check if clicked square has valid trample targets (it's an Equus piece)
-      if (dests.has(key) && dests.get(key)!.length > 0) {
-        // Valid Equus piece clicked - select it (Chessground will show destinations)
-        setInteractionState((prev) => ({
-          ...prev,
-          trampleSelected: key,
-        }));
-      } else {
-        // Clicked somewhere else - deselect but keep trample mode active
-        setInteractionState((prev) => ({
-          ...prev,
-          trampleSelected: undefined,
-        }));
-      }
+      // Note: trampleSelected is managed by parent via interactionState
+      // Selection/deselection happens automatically through Chessground's select prop
     }
   };
 
@@ -964,11 +945,13 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         }
       : interactionState.magnetType !== ''
       ? {
+          // @ts-expect-error - magnetType checked for empty string above
           role: `m${interactionState.magnetType.toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }
       : interactionState.trampleType !== ''
       ? {
+          // @ts-expect-error - trampleType checked for empty string above
           role: `t${interactionState.trampleType.toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }

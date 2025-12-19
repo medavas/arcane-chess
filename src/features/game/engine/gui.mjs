@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { GameBoard, FROMSQ, TOSQ, MFLAGSHFT, MFLAGCA } from './board';
+import { GameBoard, FROMSQ, MFLAGSHFT, MFLAGCA } from './board';
 import {
   generatePlayableOptions,
   GenerateMoves,
