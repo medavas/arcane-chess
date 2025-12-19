@@ -24,7 +24,9 @@ import {
   CASTLEBIT,
   PIECES,
   RANKS,
+  FILES,
   RanksBrd,
+  FilesBrd,
   SQUARES,
   PieceCol,
   PieceKing,
@@ -3231,4 +3233,140 @@ export function GenerateMoves(
     pce = LoopSlidePce[pceIndex];
     dyad = LoopSlideDyad[pceIndex++];
   }
+
+  // BISHOP BOUNCE (modsBOU) - Mirror Strike
+  // Check if current side has the modsBOU spell (bit 16 in arcane[4])
+  const hasModsBOU =
+    (GameBoard.side === COLOURS.WHITE && GameBoard.whiteArcane[4] & 65536) ||
+    (GameBoard.side === COLOURS.BLACK && GameBoard.blackArcane[4] & 65536);
+  
+  if (!forcedEpAvailable && hasModsBOU) {
+    // Check if current side has gluttony (modsGLU = 64 in arcane[4])
+    const hasGluttony =
+      (GameBoard.side === COLOURS.WHITE && GameBoard.whiteArcane[4] & 64) ||
+      (GameBoard.side === COLOURS.BLACK && GameBoard.blackArcane[4] & 64);
+
+    const bishopPieces =
+      GameBoard.side === COLOURS.WHITE
+        ? [PIECES.wB]
+        : [PIECES.bB];
+
+    for (const bishopPce of bishopPieces) {
+      const count = GameBoard.pceNum[bishopPce];
+      
+      for (let pceNum = 0; pceNum < count; pceNum++) {
+        const sq = GameBoard.pList[PCEINDEX(bishopPce, pceNum)];
+
+        // Check for royalty overrides
+        const isOverrided =
+          GameBoard.royaltyQ[sq] > 0 ||
+          GameBoard.royaltyT[sq] > 0 ||
+          GameBoard.royaltyM[sq] > 0 ||
+          GameBoard.royaltyV[sq] > 0 ||
+          GameBoard.royaltyE[sq] > 0;
+
+        if (isOverrided) continue;
+
+        // For each of the 4 diagonal directions
+        for (let dirIndex = 0; dirIndex < 4; dirIndex++) {
+          const dir = BiDir[dirIndex];
+          let t_sq = sq + dir;
+          let lastValidSq = sq;
+
+          // First segment: move until hitting a wall or piece
+          while (SQOFFBOARD(t_sq) === BOOL.FALSE) {
+            if (GameBoard.pieces[t_sq] !== PIECES.EMPTY) break;
+            lastValidSq = t_sq;
+            t_sq += dir;
+          }
+
+          // If we hit a wall (OFFBOARD), calculate bounce at 90 degrees
+          if (SQOFFBOARD(t_sq) === BOOL.TRUE && lastValidSq !== sq) {
+            const wallFile = FilesBrd[lastValidSq];
+            const wallRank = RanksBrd[lastValidSq];
+            
+            // Determine which wall was hit
+            const hitLeftWall = wallFile === FILES.FILE_A;
+            const hitRightWall = wallFile === FILES.FILE_H;
+            const hitTopWall = wallRank === RANKS.RANK_8;
+            const hitBottomWall = wallRank === RANKS.RANK_1;
+
+          // Calculate bounce direction by reflecting the appropriate component
+            // Diagonal directions: -11 (up-left), -9 (up-right), 9 (down-left), 11 (down-right)
+            // BiDir[0]=-11, BiDir[1]=-9, BiDir[2]=9, BiDir[3]=11
+            let bounceDir;
+            
+            if (hitLeftWall || hitRightWall) {
+              // Hit left/right wall: reflect file component (negate ±1)
+              const fileComp = ((dir % 10) + 10) % 10;
+              if (fileComp === 1) {
+                bounceDir = dir - 2;
+              } else if (fileComp === 9) {
+                bounceDir = dir + 2;
+              } else {
+                continue; // Invalid state
+              }
+            } else if (hitTopWall || hitBottomWall) {
+              // Hit top/bottom wall: reflect rank component (negate ±10)
+              const fileComp = dir > 0 ? (dir % 10) : ((dir % 10) + 10) % 10;
+              const actualFile = fileComp > 5 ? fileComp - 10 : fileComp;
+              bounceDir = -dir + 2 * actualFile;
+            } else {
+              continue; // No wall detected
+            }
+
+            // Start from last valid square before wall and continue in bounce direction
+            let bounce_sq = lastValidSq + bounceDir;
+
+            while (SQOFFBOARD(bounce_sq) === BOOL.FALSE) {
+              if (GameBoard.pieces[bounce_sq] !== PIECES.EMPTY) {
+                // Check if it's a capturable piece (enemy piece) and we have gluttony
+                if (
+                  hasGluttony &&
+                  PieceCol[GameBoard.pieces[bounce_sq]] !== GameBoard.side &&
+                  PieceCol[GameBoard.pieces[bounce_sq]] !== COLOURS.BOTH
+                ) {
+                  // Check herrings - only add if no herrings or if this square is a herring
+                  if (
+                    !herrings.length ||
+                    (herrings.length && _.includes(herrings, bounce_sq))
+                  ) {
+                    // Mark as bounce move with promoted=29
+                    AddCaptureMove(
+                      MOVE(
+                        sq,
+                        bounce_sq,
+                        GameBoard.pieces[bounce_sq],
+                        29,
+                        0
+                      ),
+                      false,
+                      capturesOnly
+                    );
+                  }
+                }
+                break;
+              }
+
+              // Add quiet bounce move, mark with promoted=29
+              // Check herrings for quiet moves too
+              if (
+                !herrings.length ||
+                (herrings.length && _.includes(herrings, bounce_sq))
+              ) {
+                AddQuietMove(
+                  MOVE(sq, bounce_sq, PIECES.EMPTY, 29, 0),
+                  capturesOnly
+                );
+              }
+
+              bounce_sq += bounceDir;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (type === 'modsBOU') return;
 }

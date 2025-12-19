@@ -22,6 +22,7 @@ export interface SpellState {
   isEvoActive: boolean;
   magnetType: string; // '' | 'modsMAG'
   trampleType: string; // '' | 'modsTRA'
+  bounceType: string; // '' | 'modsBOU'
 }
 
 export interface SpellHandlerCallbacks {
@@ -76,7 +77,8 @@ export class SpellHandler {
       state.isDyadMove === true ||
       state.isEvoActive === true ||
       state.magnetType !== '' ||
-      state.trampleType !== ''
+      state.trampleType !== '' ||
+      state.bounceType !== ''
     );
   };
 
@@ -120,6 +122,7 @@ export class SpellHandler {
       isEvoActive: false,
       magnetType: '',
       trampleType: '',
+      bounceType: '',
     });
   };
 
@@ -152,17 +155,20 @@ export class SpellHandler {
       state.isDyadMove === true ||
       state.isEvoActive === true ||
       state.magnetType !== '' ||
-      state.trampleType !== '';
+      state.trampleType !== '' ||
+      state.bounceType !== '';
 
     // Check if trying to activate a different spell (allow toggling off same spell)
     const isDyadActive = state.isDyadMove;
     const isEvoActive = state.isEvoActive;
     const isMagnetActive = state.magnetType !== '';
     const isTrampleActive = state.trampleType !== '';
+    const isBounceActive = state.bounceType !== '';
     const isSameDyadSpell = isDyadActive && key.startsWith('dyad');
     const isSameEvoSpell = isEvoActive && key === 'modsEVO';
     const isSameMagnetSpell = isMagnetActive && key === 'modsMAG';
     const isSameTrampleSpell = isTrampleActive && key === 'modsTRA';
+    const isSameBounceSpell = isBounceActive && key === 'modsBOU';
     const isSamePlacingSpell =
       (state.placingPiece > 0 && key.startsWith('sumn')) ||
       (state.swapType !== '' && key.startsWith('swap')) ||
@@ -175,7 +181,8 @@ export class SpellHandler {
       !isSameEvoSpell &&
       !isSamePlacingSpell &&
       !isSameMagnetSpell &&
-      !isSameTrampleSpell;
+      !isSameTrampleSpell &&
+      !isSameBounceSpell;
     if (anySpellCurrentlyActive && isDifferentSpell && key !== 'deactivate') {
       return;
     }
@@ -461,6 +468,23 @@ export class SpellHandler {
       return;
     }
 
+    // === BISHOP BOUNCE ===
+    if (key === 'modsBOU') {
+      const dyadClock = arcane.getDyadClock();
+      if (dyadClock > 0 || state.isDyadMove) return;
+
+      // Block if forced EP is active
+      if (arcane.isForcedEnPassantActive && arcane.isForcedEnPassantActive()) {
+        return;
+      }
+
+      // Toggle bounce type
+      this.callbacks.updateSpellState({
+        bounceType: state.bounceType === key ? '' : key,
+      });
+      return;
+    }
+
     // === EVO ===
     if (key === 'modsEVO') {
       const state = this.callbacks.getSpellState();
@@ -591,6 +615,10 @@ export class SpellHandler {
 
     if (key === 'modsTRA') {
       return state.trampleType === key;
+    }
+
+    if (key === 'modsBOU') {
+      return state.bounceType === key;
     }
 
     if (key.includes('dyad')) {

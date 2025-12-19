@@ -202,8 +202,8 @@ export const modes: Record<string, GameModeType> = padModes({
     white: {
       arcana: [
         arcana.sumnH,
-        arcana.toknHER,
-        arcana.modsSUS,
+        arcana.modsGLU,
+        arcana.modsBOU,
         arcana.modsEVO,
         arcana.modsMAG,
         arcana.modsTRA,
@@ -216,7 +216,7 @@ export const modes: Record<string, GameModeType> = padModes({
         arcana.toknHEM,
         arcana.swapADJ,
         arcana.modsEVO,
-        arcana.modsRED,
+        arcana.modsBOU,
       ],
       setup: 'rnbmkbnr',
     },

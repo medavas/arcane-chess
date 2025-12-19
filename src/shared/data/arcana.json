@@ -959,12 +959,12 @@
     "related": [],
     "tier": "Elite"
   },
-  "modsMIR": {
-    "id": "modsMIR",
+  "modsBOU": {
+    "id": "modsBOU",
     "name": "Mirror Strike",
     "description": "Friendly Bishops (not all Bishop move patterns) reflect off of the wall once.",
     "type": "inherent",
-    "imagePath": "/modsMIR",
+    "imagePath": "/modsBOU",
     "value": 5,
     "related": [],
     "tier": "Advanced"

@@ -150,6 +150,10 @@ export const validTrampleMoves = (trampleType) => {
   return validGroundMoves(trampleType, '');
 };
 
+export const validBounceMoves = (bounceType) => {
+  return validGroundMoves(bounceType, '');
+};
+
 export function validMoves(
   summon = 'COMP',
   swap = 'COMP',

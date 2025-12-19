@@ -26,6 +26,7 @@ import {
   validOfferingMoves,
   validMagnetMoves,
   validTrampleMoves,
+  validBounceMoves,
   MakeUserMove,
   PreSearch,
   engineSuggestion,
@@ -207,6 +208,9 @@ export default function arcaneChess() {
     },
     getTrampleMoves: (trampleType) => {
       return validTrampleMoves(trampleType);
+    },
+    getBounceMoves: (bounceType) => {
+      return validBounceMoves(bounceType);
     },
     getSwapMoves: (swapType) => {
       return validGroundMoves('', swapType);

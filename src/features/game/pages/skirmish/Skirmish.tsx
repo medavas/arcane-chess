@@ -103,6 +103,8 @@ interface State {
   magnetType: string;
   trampleType: string;
   trampleSelected?: string;
+  bounceType: string;
+  bounceSelected?: string;
   offeringType: string;
   isDyadMove: boolean;
   normalMovesOnly: boolean;
@@ -231,6 +233,8 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
       magnetType: '',
       trampleType: '',
       trampleSelected: undefined,
+      bounceType: '',
+      bounceSelected: undefined,
       offeringType: '',
       isDyadMove: false,
       normalMovesOnly: false,
@@ -299,6 +303,7 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
         isEvoActive: this.state.isEvoActive,
         magnetType: this.state.magnetType,
         trampleType: this.state.trampleType,
+        bounceType: this.state.bounceType,
       }),
       updateSpellState: (updates) => this.setState(updates as any),
       updateHistory: (updates, callback) =>

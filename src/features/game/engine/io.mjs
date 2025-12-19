@@ -377,14 +377,17 @@ export function ParseMove(
   swapType = '',
   royaltyEpsilon = PIECES.EMPTY
 ) {
-  // Check if this is a magnet/black hole spell or trample
+  // Check if this is a magnet/black hole spell or trample or bishop bounce
   const isMagnetType = swapType === 'modsMAG';
   const isTrampleType = swapType === 'modsTRA';
+  const isBounceType = swapType === 'modsBOU';
 
   const arcaneType = isMagnetType
     ? swapType // Use the magnet type directly
     : isTrampleType
     ? swapType // Use the trample type directly
+    : isBounceType
+    ? swapType // Use the bounce type directly
     : to === null
     ? 'OFFERING'
     : (pieceEpsilon > 0 && from === null) || royaltyEpsilon > 0
@@ -397,7 +400,7 @@ export function ParseMove(
     true,
     false,
     arcaneType,
-    isMagnetType || isTrampleType ? '' : swapType,
+    isMagnetType || isTrampleType || isBounceType ? '' : swapType,
     royaltyOrPieceSummon
   );
 

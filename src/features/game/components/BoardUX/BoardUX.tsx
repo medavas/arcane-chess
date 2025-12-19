@@ -54,6 +54,8 @@ interface BoardUXProps {
     magnetType?: string;
     trampleType?: string;
     trampleSelected?: string;
+    bounceType?: string;
+    bounceSelected?: string;
   };
   onGameStateChange: (newState: any) => void;
   onGameOver: (result: any) => void;
@@ -528,6 +530,21 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       return;
     }
 
+    // Handle bounce moves via drag
+    if (interactionState.bounceType && interactionState.bounceType !== '') {
+      const { parsed } = game.makeUserMove(
+        orig,
+        dest,
+        0,
+        interactionState.bounceType,
+        0
+      );
+      audioManager.playSFX('spell');
+      onMove(parsed, orig, dest);
+      onGameStateChange({ bounceType: '', bounceSelected: undefined });
+      return;
+    }
+
     const { parsed, isInitPromotion = false } = game.makeUserMove(
       orig,
       dest,
@@ -861,6 +878,42 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       // Check if clicked square has valid trample targets (it's an Equus piece)
       // Note: trampleSelected is managed by parent via interactionState
       // Selection/deselection happens automatically through Chessground's select prop
+    } else if (interactionState.bounceType && interactionState.bounceType !== '') {
+      // For bounce: click a bishop/queen piece to select it, then click or drag to bounce target
+      const dests = game.getBounceMoves(interactionState.bounceType);
+
+      // Check if a piece is already selected and this click is on a valid destination
+      if (
+        interactionState.bounceSelected &&
+        dests.has(interactionState.bounceSelected)
+      ) {
+        const validDests = dests.get(interactionState.bounceSelected);
+        if (validDests && validDests.includes(key)) {
+          // Execute the bounce move
+          if (
+            forwardedRef &&
+            'current' in forwardedRef &&
+            forwardedRef.current
+          ) {
+            forwardedRef.current.setAutoShapes([]);
+          }
+          const { parsed } = game.makeUserMove(
+            interactionState.bounceSelected,
+            key,
+            0,
+            interactionState.bounceType,
+            0
+          );
+          audioManager.playSFX('spell');
+          onMove(parsed, interactionState.bounceSelected, key);
+          onGameStateChange({ bounceType: '', bounceSelected: undefined });
+          return;
+        }
+      }
+
+      // Check if clicked square has valid bounce targets (it's a Bishop/Queen piece)
+      // Note: bounceSelected is managed by parent via interactionState
+      // Selection/deselection happens automatically through Chessground's select prop
     }
   };
 
@@ -873,22 +926,50 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           interactionState.trampleType === '' ||
           !interactionState.trampleType
         ) {
-          if (interactionState.magnetType === '') {
-            if (interactionState.swapType === '') {
-              if (interactionState.offeringType === '') {
-                if (interactionState.isTeleport) {
-                  dests = game.getGroundMoves('TELEPORT');
+          if (
+            !interactionState.bounceType ||
+            interactionState.bounceType === ''
+          ) {
+            if (interactionState.magnetType === '') {
+              if (interactionState.swapType === '') {
+                if (interactionState.offeringType === '') {
+                  if (interactionState.isTeleport) {
+                    dests = game.getGroundMoves('TELEPORT');
+                  } else {
+                    dests = game.getGroundMoves();
+                  }
                 } else {
-                  dests = game.getGroundMoves();
+                  dests = game.getOfferingMoves(interactionState.offeringType);
                 }
               } else {
-                dests = game.getOfferingMoves(interactionState.offeringType);
+                dests = game.getSwapMoves(interactionState.swapType);
               }
             } else {
-              dests = game.getSwapMoves(interactionState.swapType);
+              dests = game.getMagnetMoves(interactionState.magnetType);
             }
           } else {
-            dests = game.getMagnetMoves(interactionState.magnetType);
+            // For bounce: only show moves if a piece is selected
+            if (interactionState.bounceSelected) {
+              const allBounceMoves = game.getBounceMoves(
+                interactionState.bounceType
+              );
+              const selectedDests = allBounceMoves.get(
+                interactionState.bounceSelected
+              );
+              if (selectedDests && selectedDests.length > 0) {
+                const filteredDests = new Map();
+                filteredDests.set(
+                  interactionState.bounceSelected,
+                  selectedDests
+                );
+                dests = filteredDests;
+              } else {
+                dests = new Map(); // No valid moves for selected piece
+              }
+            } else {
+              // No piece selected yet - show all bounce pieces as clickable
+              dests = game.getBounceMoves(interactionState.bounceType);
+            }
           }
         } else {
           // For trample: only show moves if a piece is selected
@@ -953,6 +1034,11 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       ? {
           // @ts-expect-error - trampleType checked for empty string above
           role: `t${interactionState.trampleType.toLowerCase()}-piece`,
+          color: interactionState.playerColor,
+        }
+      : interactionState.bounceType && interactionState.bounceType !== ''
+      ? {
+          role: `b${interactionState.bounceType.toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }
       : null;

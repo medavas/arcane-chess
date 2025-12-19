@@ -121,7 +121,7 @@ export const POWERBIT = {
   dyadE: 16, // m t q
   dyadF: 32, // v k
 
-  // 3 summons active 26
+  // 3 summons active 27
   sumnP: 1, //         // a
   sumnS: 2, //         // a
   sumnH: 4, //         //
@@ -203,14 +203,14 @@ export const POWERBIT = {
   modsEVO: 8192, // passive      berserking evolution
   modsRED: 16384, // passive     blinding mist - reduce slider scope
   modsMAG: 32768, // active      magnet
-  // modsBLA: 65536, // active      deprecated - black hole
+  modsBOU: 65536, // inherent    bishop bounce (Mirror Strike)
   modsSUR: 131072, // passive    pawn surge
   modsDIM: 262144, // passive    5th dimension sword
   // modsHER: 524288, // passive    hermit
   // modsHEM: 1048576, // inherent  hemlock
   modsBAN: 2097152, // inherent  // banshee
   modsGLA: 4194304, // inherent  // glare - rook attacks apply disarmament
-  modsZ: 8388608, // passive     // .
+  // modsZ: 8388608, // passive     // .
   modsFLA: 16777216, // passive  // hurricane
   modsHEX: 33554432, // passive  // hexlash
   modsTRA: 67108864, // active   // trample - equus eliminates attacked piece without moving
@@ -388,6 +388,7 @@ const STACKING_PREFIXES = [
 const STACKING_EXCEPTIONS = new Set([
   'modsSUS',
   'modsMAG',
+  'modsBOU',
   'modsBLA',
   'modsFUT',
   'modsCON',
