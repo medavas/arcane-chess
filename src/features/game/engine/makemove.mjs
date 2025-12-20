@@ -82,6 +82,8 @@ const FIVE_SQUARE_OFFSETS = [
 const FIVE_SQUARE_A = [-22, -20, -18, -11, -9, -2, 0, 2, 9, 11, 18, 20, 22];
 const FIVE_SQUARE_B = [-21, -19, -12, -10, -8, -1, 1, 8, 10, 12, 19, 21];
 
+// DEPRECATED: offr system is being replaced by dopl (doppelganger)
+// Keeping these for backward compatibility during transition
 const OFFER_STRING = '.ABCDEEFFGGHHIJKKKKLMNOOOZQR';
 const OFFER_CHARS = OFFER_STRING.split('');
 
@@ -107,9 +109,9 @@ const WHITE_PIECE_TO_OFFERINGS = {
   // 19: ['shftT'],
   20: ['sumnRV', 'modsEXT', 'modsINH'],
   21: ['dyadA', 'modsGLU', 'modsINH'],
-  22: ['sumnH', 'toknHER', 'areaQ'],
-  23: ['sumnH', 'toknHER', 'areaT'],
-  24: ['sumnH', 'toknHER', 'areaM'],
+  22: ['sumnH', 'toknHER', 'auraQ'],
+  23: ['sumnH', 'toknHER', 'auraT'],
+  24: ['sumnH', 'toknHER', 'auraM'],
   25: ['dyadD', 'sumnS', 'modsBAN'],
   26: ['dyadC', 'sumnR', 'modsEXT', 'modsGLU'],
   27: ['sumnRE', 'sumnRE', 'sumnRE', 'modsSIL'],
@@ -137,9 +139,9 @@ const BLACK_PIECE_TO_OFFERINGS = {
   19: ['swapDEP'],
   20: ['sumnRV', 'modsEXT', 'modsINH'],
   21: ['dyadA', 'modsGLU', 'modsINH'],
-  22: ['sumnH', 'toknHER', 'areaQ'],
-  23: ['sumnH', 'toknHER', 'areaT'],
-  24: ['sumnH', 'toknHER', 'areaM'],
+  22: ['sumnH', 'toknHER', 'auraQ'],
+  23: ['sumnH', 'toknHER', 'auraT'],
+  24: ['sumnH', 'toknHER', 'auraM'],
   25: ['dyadD', 'sumnS', 'modsBAN'],
   26: ['dyadC', 'sumnR', 'modsEXT', 'modsGLU'],
   27: ['sumnRE', 'sumnRE', 'sumnRE', 'modsSIL'],
@@ -941,18 +943,18 @@ export function MakeMove(move, moveType = '') {
       if (isHermit || isNomad) {
         const arcCfg =
           side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
-        const hasAreaQ = arcCfg.areaQ > 0;
-        const hasAreaT = arcCfg.areaT > 0;
-        const hasAreaE = arcCfg.areaE > 0;
-        const hasAreaF = arcCfg.areaF > 0;
-        const hasAreaN = arcCfg.areaN > 0;
+        const hasauraQ = arcCfg.auraQ > 0;
+        const hasauraT = arcCfg.auraT > 0;
+        const hasauraE = arcCfg.auraE > 0;
+        const hasauraF = arcCfg.auraF > 0;
+        const hasauraN = arcCfg.auraN > 0;
 
         let activeCount = 0;
-        if (hasAreaQ) activeCount++;
-        if (hasAreaT) activeCount++;
-        if (hasAreaE) activeCount++;
-        if (hasAreaF) activeCount++;
-        if (hasAreaN) activeCount++;
+        if (hasauraQ) activeCount++;
+        if (hasauraT) activeCount++;
+        if (hasauraE) activeCount++;
+        if (hasauraF) activeCount++;
+        if (hasauraN) activeCount++;
 
         // Determine which royalty type to use
         let royaltyType = 'M';
@@ -962,11 +964,11 @@ export function MakeMove(move, moveType = '') {
           royaltyType = 'V';
         } else {
           // Exactly one active
-          if (hasAreaQ) royaltyType = 'Q';
-          else if (hasAreaT) royaltyType = 'T';
-          else if (hasAreaE) royaltyType = 'E';
-          else if (hasAreaF) royaltyType = 'F';
-          else if (hasAreaN) royaltyType = 'N';
+          if (hasauraQ) royaltyType = 'Q';
+          else if (hasauraT) royaltyType = 'T';
+          else if (hasauraE) royaltyType = 'E';
+          else if (hasauraF) royaltyType = 'F';
+          else if (hasauraN) royaltyType = 'N';
         }
 
         const hermitPattern = KiDir; // User requested King move pattern for AoE
@@ -1270,18 +1272,18 @@ export function MakeMove(move, moveType = '') {
           // Hermit or Nomad
           const arcCfg =
             side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
-          const hasAreaQ = arcCfg.areaQ > 0;
-          const hasAreaT = arcCfg.areaT > 0;
-          const hasAreaE = arcCfg.areaE > 0;
-          const hasAreaF = arcCfg.areaF > 0;
-          const hasAreaN = arcCfg.areaN > 0;
+          const hasauraQ = arcCfg.auraQ > 0;
+          const hasauraT = arcCfg.auraT > 0;
+          const hasauraE = arcCfg.auraE > 0;
+          const hasauraF = arcCfg.auraF > 0;
+          const hasauraN = arcCfg.auraN > 0;
 
           let activeCount = 0;
-          if (hasAreaQ) activeCount++;
-          if (hasAreaT) activeCount++;
-          if (hasAreaE) activeCount++;
-          if (hasAreaF) activeCount++;
-          if (hasAreaN) activeCount++;
+          if (hasauraQ) activeCount++;
+          if (hasauraT) activeCount++;
+          if (hasauraE) activeCount++;
+          if (hasauraF) activeCount++;
+          if (hasauraN) activeCount++;
 
           // Determine which royalty type to use
           let royaltyType = 'M';
@@ -1291,11 +1293,11 @@ export function MakeMove(move, moveType = '') {
             royaltyType = 'V';
           } else {
             // Exactly one active
-            if (hasAreaQ) royaltyType = 'Q';
-            else if (hasAreaT) royaltyType = 'T';
-            else if (hasAreaE) royaltyType = 'E';
-            else if (hasAreaF) royaltyType = 'F';
-            else if (hasAreaN) royaltyType = 'N';
+            if (hasauraQ) royaltyType = 'Q';
+            else if (hasauraT) royaltyType = 'T';
+            else if (hasauraE) royaltyType = 'E';
+            else if (hasauraF) royaltyType = 'F';
+            else if (hasauraN) royaltyType = 'N';
           }
 
           const hermitPattern = KiDir;
@@ -1388,6 +1390,9 @@ export function MakeMove(move, moveType = '') {
     }
   }
 
+  // DEPRECATED: offr (offering) system - being replaced by dopl
+  // This logic handles when pieces are offered for rewards
+  // TODO: Replace with dopl system which has different mechanics
   if (TOSQ(move) === 0 && FROMSQ(move) > 0 && CAPTURED(move) > 0) {
     const promoted = PROMOTED(move);
     const useWhite = GameBoard.side === COLOURS.WHITE;
@@ -1975,6 +1980,7 @@ export function TakeMove(wasDyadMove = false) {
     AddPiece(to, putBack);
     // Swap spell restoration is now handled by the general spell tracking system above
   } else if (TOSQ(move) === 0 && FROMSQ(move) > 0 && CAPTURED(move) > 0) {
+    // DEPRECATED: offr revert logic - part of offering system being replaced by dopl
     const useWhite = GameBoard.side === COLOURS.WHITE;
     const arcaneConfig = useWhite ? whiteArcaneConfig : blackArcaneConfig;
 

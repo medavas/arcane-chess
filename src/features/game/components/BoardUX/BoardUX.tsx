@@ -45,7 +45,7 @@ interface BoardUXProps {
     placingPiece: number;
     placingRoyalty: number;
     swapType: string;
-    offeringType: string;
+    offeringType: string; // DEPRECATED: offr system, will be reused for dopl
     isTeleport: boolean;
     thinking: boolean;
     playerColor: string;
@@ -784,6 +784,8 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         });
       }
     } else if (interactionState.offeringType !== '') {
+      // DEPRECATED: offr (offering) system - being replaced by dopl
+      // This handles offering moves where pieces are sacrificed for rewards
       const dests = game.getOfferingMoves(interactionState.offeringType);
       if (
         dests.has(`o${interactionState.offeringType}@`) &&
@@ -939,6 +941,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
                     dests = game.getGroundMoves();
                   }
                 } else {
+                  // DEPRECATED: offr system - getOfferingMoves will be replaced by getDoplMoves
                   dests = game.getOfferingMoves(interactionState.offeringType);
                 }
               } else {
@@ -1019,7 +1022,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           ].toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }
-      : interactionState.offeringType !== ''
+      : interactionState.offeringType !== '' // DEPRECATED: offr, will be reused for dopl
       ? {
           role: `o${interactionState.offeringType.toLowerCase()}-piece`,
           color: interactionState.playerColor,

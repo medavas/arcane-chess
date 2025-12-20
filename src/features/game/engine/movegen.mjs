@@ -489,11 +489,11 @@ export const generatePowers = () => {
       shft: 0,
       swap: 0,
       mods: 0,
-      offr: 0,
+      dopl: 0, // CHANGED: replaced offr with dopl
       mori: 0,
       mora: 0,
       gain: 0,
-      area: 0,
+      aura: 0,
       tokn: 0,
     };
 
@@ -511,11 +511,11 @@ export const generatePowers = () => {
     powerBits[2] |= powerTypes.swap;
     powerBits[3] |= powerTypes.sumn;
     powerBits[4] |= powerTypes.mods;
-    powerBits[5] |= powerTypes.offr;
+    powerBits[5] |= powerTypes.dopl; // CHANGED: replaced offr with dopl
     powerBits[6] |= powerTypes.mori;
     powerBits[7] |= powerTypes.mora;
     powerBits[8] |= powerTypes.gain;
-    powerBits[9] |= powerTypes.area;
+    powerBits[9] |= powerTypes.aura;
     powerBits[10] |= powerTypes.tokn;
 
     GameBoard.whiteArcane = powerBits;
@@ -529,11 +529,11 @@ export const generatePowers = () => {
       shft: 0,
       swap: 0,
       mods: 0,
-      offr: 0,
+      dopl: 0, // CHANGED: replaced offr with dopl
       mori: 0,
       mora: 0,
       gain: 0,
-      area: 0,
+      aura: 0,
       tokn: 0,
     };
 
@@ -549,11 +549,11 @@ export const generatePowers = () => {
     powerBits[2] |= powerTypes.swap;
     powerBits[3] |= powerTypes.sumn;
     powerBits[4] |= powerTypes.mods;
-    powerBits[5] |= powerTypes.offr;
+    powerBits[5] |= powerTypes.dopl; // CHANGED: replaced offr with dopl
     powerBits[6] |= powerTypes.mori;
     powerBits[7] |= powerTypes.mora;
     powerBits[8] |= powerTypes.gain;
-    powerBits[9] |= powerTypes.area;
+    powerBits[9] |= powerTypes.aura;
     powerBits[10] |= powerTypes.tokn;
 
     GameBoard.blackArcane = powerBits;
@@ -976,258 +976,259 @@ export function GenerateMoves(
     //
     // if (type2 === 'TELEPORT') return;
 
-    // OFFERINGS
-    let offeringIndex = LoopPcePrimeIndex[GameBoard.side];
-    let offeringPce = LoopPcePrime[offeringIndex];
-    let offeringSymbol = LoopPcePrimeSymbols[offeringIndex++];
+    // DEPRECATED: OFFERINGS - being replaced with dopl system
+    // let offeringIndex = LoopPcePrimeIndex[GameBoard.side];
+    // let offeringPce = LoopPcePrime[offeringIndex];
+    // let offeringSymbol = LoopPcePrimeSymbols[offeringIndex++];
 
-    if (
-      !herrings.length &&
-      !forcedEpAvailable &&
-      (type === 'OFFERING' || type === 'COMP')
-    ) {
-      while (offeringPce !== 0) {
-        let offeringArcanaSide =
-          GameBoard.side === COLOURS.WHITE
-            ? GameBoard.whiteArcane[5]
-            : GameBoard.blackArcane[5];
+    // if (
+    //   !herrings.length &&
+    //   !forcedEpAvailable &&
+    //   (type === 'OFFERING' || type === 'COMP')
+    // ) {
+    //   while (offeringPce !== 0) {
+    //     let offeringArcanaSide =
+    //       GameBoard.side === COLOURS.WHITE
+    //         ? GameBoard.whiteArcane[5]
+    //         : GameBoard.blackArcane[5];
 
-        let pceType = offeringPce;
+    //     let pceType = offeringPce;
 
-        for (let pceNum = 0; pceNum < GameBoard.pceNum[offeringPce]; pceNum++) {
-          let sq = GameBoard.pList[PCEINDEX(pceType, pceNum)];
-          if (PieceCol[offeringPce] === GameBoard.side) {
-            // pawn for herring
-            if (
-              offeringArcanaSide & 1 &&
-              (('A' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (offeringSymbol === 'P') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 1, 0));
-              }
-            }
-            // Q or T for 2 R
-            if (
-              offeringArcanaSide & 2 &&
-              (('B' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (offeringSymbol === 'Q' || offeringSymbol === 'T') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 2, 0));
-              }
-            }
-            // templar queen for equus family
-            if (
-              offeringArcanaSide & 4 &&
-              (('C' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (offeringSymbol === 'Q' || offeringSymbol === 'T') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 3, 0));
-              }
-            }
-            // B for R
-            if (
-              offeringArcanaSide & 8 &&
-              (('D' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (
-                offeringSymbol === 'N' ||
-                offeringSymbol === 'Z' ||
-                offeringSymbol === 'U' ||
-                offeringSymbol === 'B'
-              ) {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 4, 0));
-              }
-            }
+    //     for (let pceNum = 0; pceNum < GameBoard.pceNum[offeringPce]; pceNum++) {
+    //       let sq = GameBoard.pList[PCEINDEX(pceType, pceNum)];
+    //       if (PieceCol[offeringPce] === GameBoard.side) {
+    //         // pawn for herring
+    //         if (
+    //           offeringArcanaSide & 1 &&
+    //           (('A' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (offeringSymbol === 'P') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 1, 0));
+    //           }
+    //         }
+    //         // Q or T for 2 R
+    //         if (
+    //           offeringArcanaSide & 2 &&
+    //           (('B' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (offeringSymbol === 'Q' || offeringSymbol === 'T') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 2, 0));
+    //           }
+    //         }
+    //         // templar queen for equus family
+    //         if (
+    //           offeringArcanaSide & 4 &&
+    //           (('C' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (offeringSymbol === 'Q' || offeringSymbol === 'T') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 3, 0));
+    //           }
+    //         }
+    //         // B for R
+    //         if (
+    //           offeringArcanaSide & 8 &&
+    //           (('D' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (
+    //             offeringSymbol === 'N' ||
+    //             offeringSymbol === 'Z' ||
+    //             offeringSymbol === 'U' ||
+    //             offeringSymbol === 'B'
+    //           ) {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 4, 0));
+    //           }
+    //         }
 
-            //////////
-            // T / Q cha
-            if (
-              offeringArcanaSide & 16 &&
-              (('E' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (offeringSymbol === 'Q') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 5, 0));
-              }
-              if (offeringSymbol === 'T') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 6, 0));
-              }
-            }
-            // W / S cha
-            if (
-              offeringArcanaSide & 32 &&
-              (('F' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (offeringSymbol === 'S') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 7, 0));
-              }
-              if (offeringSymbol === 'W') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 8, 0));
-              }
-            }
+    //         //////////
+    //         // T / Q cha
+    //         if (
+    //           offeringArcanaSide & 16 &&
+    //           (('E' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (offeringSymbol === 'Q') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 5, 0));
+    //           }
+    //           if (offeringSymbol === 'T') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 6, 0));
+    //           }
+    //         }
+    //         // W / S cha
+    //         if (
+    //           offeringArcanaSide & 32 &&
+    //           (('F' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (offeringSymbol === 'S') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 7, 0));
+    //           }
+    //           if (offeringSymbol === 'W') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 8, 0));
+    //           }
+    //         }
 
-            //////////
-            // M for Q or T
-            if (
-              offeringArcanaSide & 64 &&
-              (('G' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (offeringSymbol === 'M') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, _.sample([9, 10]), 0));
-              }
-            }
-            // R for S or W
-            if (
-              offeringArcanaSide & 128 &&
-              (('H' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (offeringSymbol === 'R') {
-                addOfferingMove(
-                  MOVE(sq, 0, offeringPce, _.sample([11, 12]), 0)
-                );
-              }
-            }
+    //         //////////
+    //         // M for Q or T
+    //         if (
+    //           offeringArcanaSide & 64 &&
+    //           (('G' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (offeringSymbol === 'M') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, _.sample([9, 10]), 0));
+    //           }
+    //         }
+    //         // R for S or W
+    //         if (
+    //           offeringArcanaSide & 128 &&
+    //           (('H' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (offeringSymbol === 'R') {
+    //             addOfferingMove(
+    //               MOVE(sq, 0, offeringPce, _.sample([11, 12]), 0)
+    //             );
+    //           }
+    //         }
 
-            // any
-            if (
-              offeringArcanaSide & 256 &&
-              (('I' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              addOfferingMove(MOVE(sq, 0, offeringPce, 13, 0));
-            }
+    //         // any
+    //         if (
+    //           offeringArcanaSide & 256 &&
+    //           (('I' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           addOfferingMove(MOVE(sq, 0, offeringPce, 13, 0));
+    //         }
 
-            // offer for arcana
-            if (
-              offeringArcanaSide & 512 &&
-              (('J' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (
-                offeringSymbol === 'N' ||
-                offeringSymbol === 'Z' ||
-                offeringSymbol === 'U' ||
-                offeringSymbol === 'B'
-              ) {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 14, 0));
-              }
-            }
-            // K
-            if (
-              offeringArcanaSide & 1024 &&
-              (('K' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (offeringSymbol === 'Q') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 15, 0));
-              }
-              if (offeringSymbol === 'T') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 16, 0));
-              }
-              if (offeringSymbol === 'M') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 17, 0));
-              }
-              if (offeringSymbol === 'V') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 18, 0));
-              }
-            }
-            // L
-            if (
-              offeringArcanaSide & 2048 &&
-              (('L' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (offeringSymbol === 'P') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 19, 0));
-              }
-            }
-            // M
-            if (
-              offeringArcanaSide & 4096 &&
-              (('M' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (
-                offeringSymbol === 'M' ||
-                offeringSymbol === 'Q' ||
-                offeringSymbol === 'T'
-              ) {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 20, 0));
-              }
-            }
-            // N
-            if (
-              offeringArcanaSide & 8192 &&
-              (('N' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (
-                offeringSymbol === 'M' ||
-                offeringSymbol === 'Q' ||
-                offeringSymbol === 'T'
-              ) {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 21, 0));
-              }
-            }
-            // O
-            if (
-              offeringArcanaSide & 16384 &&
-              (('O' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (offeringSymbol === 'Q') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 22, 0));
-              }
-              if (offeringSymbol === 'T') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 23, 0));
-              }
-              if (offeringSymbol === 'M') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 24, 0));
-              }
-            }
-            // Z
-            if (
-              offeringArcanaSide & 32768 &&
-              (('Z' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (offeringSymbol === 'V') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 25, 0));
-              }
-            }
-            // Q
-            if (
-              offeringArcanaSide & 65536 &&
-              (('Q' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (offeringSymbol === 'Q' || offeringSymbol === 'T') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 26, 0));
-              }
-            }
-            // R
-            if (
-              offeringArcanaSide & 131072 &&
-              (('R' === userSummonPceRty && type === 'OFFERING') ||
-                type !== 'OFFERING')
-            ) {
-              if (offeringSymbol === 'S' || offeringSymbol === 'W') {
-                addOfferingMove(MOVE(sq, 0, offeringPce, 27, 0));
-              }
-            }
-          }
-        }
-        offeringPce = LoopPcePrime[offeringIndex];
-        offeringSymbol = LoopPcePrimeSymbols[offeringIndex++];
-      }
-    }
+    //         // offer for arcana
+    //         if (
+    //           offeringArcanaSide & 512 &&
+    //           (('J' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (
+    //             offeringSymbol === 'N' ||
+    //             offeringSymbol === 'Z' ||
+    //             offeringSymbol === 'U' ||
+    //             offeringSymbol === 'B'
+    //           ) {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 14, 0));
+    //           }
+    //         }
+    //         // K
+    //         if (
+    //           offeringArcanaSide & 1024 &&
+    //           (('K' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (offeringSymbol === 'Q') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 15, 0));
+    //           }
+    //           if (offeringSymbol === 'T') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 16, 0));
+    //           }
+    //           if (offeringSymbol === 'M') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 17, 0));
+    //           }
+    //           if (offeringSymbol === 'V') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 18, 0));
+    //           }
+    //         }
+    //         // L
+    //         if (
+    //           offeringArcanaSide & 2048 &&
+    //           (('L' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (offeringSymbol === 'P') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 19, 0));
+    //           }
+    //         }
+    //         // M
+    //         if (
+    //           offeringArcanaSide & 4096 &&
+    //           (('M' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (
+    //             offeringSymbol === 'M' ||
+    //             offeringSymbol === 'Q' ||
+    //             offeringSymbol === 'T'
+    //           ) {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 20, 0));
+    //           }
+    //         }
+    //         // N
+    //         if (
+    //           offeringArcanaSide & 8192 &&
+    //           (('N' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (
+    //             offeringSymbol === 'M' ||
+    //             offeringSymbol === 'Q' ||
+    //             offeringSymbol === 'T'
+    //           ) {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 21, 0));
+    //           }
+    //         }
+    //         // O
+    //         if (
+    //           offeringArcanaSide & 16384 &&
+    //           (('O' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (offeringSymbol === 'Q') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 22, 0));
+    //           }
+    //           if (offeringSymbol === 'T') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 23, 0));
+    //           }
+    //           if (offeringSymbol === 'M') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 24, 0));
+    //           }
+    //         }
+    //         // Z
+    //         if (
+    //           offeringArcanaSide & 32768 &&
+    //           (('Z' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (offeringSymbol === 'V') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 25, 0));
+    //           }
+    //         }
+    //         // Q
+    //         if (
+    //           offeringArcanaSide & 65536 &&
+    //           (('Q' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (offeringSymbol === 'Q' || offeringSymbol === 'T') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 26, 0));
+    //           }
+    //         }
+    //         // R
+    //         if (
+    //           offeringArcanaSide & 131072 &&
+    //           (('R' === userSummonPceRty && type === 'OFFERING') ||
+    //             type !== 'OFFERING')
+    //         ) {
+    //           if (offeringSymbol === 'S' || offeringSymbol === 'W') {
+    //             addOfferingMove(MOVE(sq, 0, offeringPce, 27, 0));
+    //           }
+    //         }
+    //       }
+    //     }
+    //     offeringPce = LoopPcePrime[offeringIndex];
+    //     offeringSymbol = LoopPcePrimeSymbols[offeringIndex++];
+    //   }
+    // }
+    // END DEPRECATED OFFERINGS
 
     if (type === 'OFFERING') return;
 
@@ -3239,7 +3240,7 @@ export function GenerateMoves(
   const hasModsBOU =
     (GameBoard.side === COLOURS.WHITE && GameBoard.whiteArcane[4] & 65536) ||
     (GameBoard.side === COLOURS.BLACK && GameBoard.blackArcane[4] & 65536);
-  
+
   if (!forcedEpAvailable && hasModsBOU) {
     // Check if current side has gluttony (modsGLU = 64 in arcane[4])
     const hasGluttony =
@@ -3247,13 +3248,11 @@ export function GenerateMoves(
       (GameBoard.side === COLOURS.BLACK && GameBoard.blackArcane[4] & 64);
 
     const bishopPieces =
-      GameBoard.side === COLOURS.WHITE
-        ? [PIECES.wB]
-        : [PIECES.bB];
+      GameBoard.side === COLOURS.WHITE ? [PIECES.wB] : [PIECES.bB];
 
     for (const bishopPce of bishopPieces) {
       const count = GameBoard.pceNum[bishopPce];
-      
+
       for (let pceNum = 0; pceNum < count; pceNum++) {
         const sq = GameBoard.pList[PCEINDEX(bishopPce, pceNum)];
 
@@ -3284,18 +3283,18 @@ export function GenerateMoves(
           if (SQOFFBOARD(t_sq) === BOOL.TRUE && lastValidSq !== sq) {
             const wallFile = FilesBrd[lastValidSq];
             const wallRank = RanksBrd[lastValidSq];
-            
+
             // Determine which wall was hit
             const hitLeftWall = wallFile === FILES.FILE_A;
             const hitRightWall = wallFile === FILES.FILE_H;
             const hitTopWall = wallRank === RANKS.RANK_8;
             const hitBottomWall = wallRank === RANKS.RANK_1;
 
-          // Calculate bounce direction by reflecting the appropriate component
+            // Calculate bounce direction by reflecting the appropriate component
             // Diagonal directions: -11 (up-left), -9 (up-right), 9 (down-left), 11 (down-right)
             // BiDir[0]=-11, BiDir[1]=-9, BiDir[2]=9, BiDir[3]=11
             let bounceDir;
-            
+
             if (hitLeftWall || hitRightWall) {
               // Hit left/right wall: reflect file component (negate ±1)
               const fileComp = ((dir % 10) + 10) % 10;
@@ -3308,7 +3307,7 @@ export function GenerateMoves(
               }
             } else if (hitTopWall || hitBottomWall) {
               // Hit top/bottom wall: reflect rank component (negate ±10)
-              const fileComp = dir > 0 ? (dir % 10) : ((dir % 10) + 10) % 10;
+              const fileComp = dir > 0 ? dir % 10 : ((dir % 10) + 10) % 10;
               const actualFile = fileComp > 5 ? fileComp - 10 : fileComp;
               bounceDir = -dir + 2 * actualFile;
             } else {
@@ -3333,13 +3332,7 @@ export function GenerateMoves(
                   ) {
                     // Mark as bounce move with promoted=29
                     AddCaptureMove(
-                      MOVE(
-                        sq,
-                        bounce_sq,
-                        GameBoard.pieces[bounce_sq],
-                        29,
-                        0
-                      ),
+                      MOVE(sq, bounce_sq, GameBoard.pieces[bounce_sq], 29, 0),
                       false,
                       capturesOnly
                     );

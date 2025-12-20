@@ -173,7 +173,8 @@ export class SpellHandler {
       (state.placingPiece > 0 && key.startsWith('sumn')) ||
       (state.swapType !== '' && key.startsWith('swap')) ||
       (state.placingRoyalty > 0 && key.startsWith('sumn')) ||
-      (state.offeringType !== '' && key.startsWith('offr'));
+      (state.offeringType !== '' && key.startsWith('offr')) || // DEPRECATED: offr
+      (state.offeringType !== '' && key.startsWith('dopl')); // NEW: dopl replaces offr
 
     // If a spell is active and trying to activate a DIFFERENT spell, block it
     const isDifferentSpell =
@@ -268,12 +269,15 @@ export class SpellHandler {
       return;
     }
 
-    // === OFFER ===
-    if (key.startsWith('offr')) {
+    // === OFFER (DEPRECATED) / DOPL (NEW) ===
+    // offr is deprecated, dopl is the replacement
+    if (key.startsWith('offr') || key.startsWith('dopl')) {
       const dyadClock = arcane.getDyadClock();
       if (dyadClock > 0 || state.isDyadMove) return;
+      // Extract type from either offr or dopl prefix
+      const type = key.startsWith('offr') ? key.split('offr')[1] : key.split('dopl')[1];
       this.callbacks.updateSpellState({
-        offeringType: state.offeringType === '' ? key.split('offr')[1] : '',
+        offeringType: state.offeringType === '' ? type : '',
       });
       return;
     }
@@ -633,8 +637,9 @@ export class SpellHandler {
       return state.swapType === type;
     }
 
-    if (key.includes('offr')) {
-      const type = key.split('offr')[1];
+    // DEPRECATED: offr is being replaced by dopl
+    if (key.includes('offr') || key.includes('dopl')) {
+      const type = key.includes('offr') ? key.split('offr')[1] : key.split('dopl')[1];
       return state.offeringType === type;
     }
 

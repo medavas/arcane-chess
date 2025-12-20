@@ -75,7 +75,7 @@
     "description": "Casts an aura of Royalty Mystic square conditions. Can't capture. Overrides Herring. Stacks with Hemlock.",
     "type": "inherent",
     "imagePath": "/toknHER",
-    "value": 8,
+    "value": 9,
     "related": [],
     "tier": "Elite"
   },
@@ -85,7 +85,7 @@
     "description": "Invisible to your opponent. 1 up 1 over and 1 up 3 over move pattern similar to Knight, moves across the other side of the board. Overrides Herring. Stacks with Hermit.",
     "type": "inherent",
     "imagePath": "/toknHEM",
-    "value": 8,
+    "value": 9,
     "related": [],
     "tier": "Elite"
   },
@@ -99,52 +99,52 @@
     "related": [],
     "tier": "Elite"
   },
-  "areaT": {
-    "id": "areaT",
+  "auraT": {
+    "id": "auraT",
     "name": "Crusader's Battlecry",
     "description": "Hermit casts Royalty Templar Aura.",
     "type": "inherent",
-    "imagePath": "/areaT",
+    "imagePath": "/auraT",
     "value": 4,
     "related": [],
     "tier": "Basic"
   },
-  "areaQ": {
-    "id": "areaQ",
+  "auraQ": {
+    "id": "auraQ",
     "name": "Regal Battlecry",
     "description": "Hermit casts Royalty Queen Aura.",
     "type": "inherent",
-    "imagePath": "/areaQ",
+    "imagePath": "/auraQ",
     "value": 5,
     "related": [],
     "tier": "Advanced"
   },
-  "areaE": {
-    "id": "areaE",
+  "auraE": {
+    "id": "auraE",
     "name": "Ice Howl",
     "description": "Hermit casts Entanglement Aura.",
     "type": "inherent",
-    "imagePath": "/areaE",
+    "imagePath": "/auraE",
     "value": 6,
     "related": [],
     "tier": "Advanced"
   },
-  "areaF": {
-    "id": "areaF",
+  "auraF": {
+    "id": "auraF",
     "name": "Hiding Lantern",
     "description": "Hermit casts Fog of War Aura.",
     "type": "inherent",
-    "imagePath": "/areaF",
+    "imagePath": "/auraF",
     "value": 3,
     "related": [],
     "tier": "Basic"
   },
-  "areaN": {
-    "id": "areaN",
+  "auraN": {
+    "id": "auraN",
     "name": "Aura of Disarmament",
     "description": "Hermit casts Disarmament Aura.",
     "type": "inherent",
-    "imagePath": "/areaN",
+    "imagePath": "/auraN",
     "value": 4,
     "related": [],
     "tier": "Basic"
@@ -341,7 +341,7 @@
   },
   "sumnRY": {
     "id": "sumnRY",
-    "name": "Hexweaver's Tornado",
+    "name": "Hexweaver's Staff",
     "description": "Select a square, all squares along that file have entanglement for 4 turns.",
     "type": "active",
     "imagePath": "/sumnRY",
@@ -351,7 +351,7 @@
   },
   "sumnRZ": {
     "id": "sumnRZ",
-    "name": "Hexweaver's Staff",
+    "name": "Hexweaver's Tornado",
     "description": "Select a square, all squares along that rank have entanglement for 4 turns.",
     "type": "active",
     "imagePath": "/sumnRZ",
@@ -372,7 +372,7 @@
   "sumnRF": {
     "id": "sumnRF",
     "name": "Hexweaver's Curtain",
-    "description": "Summon a 3x3 area with fog of war.",
+    "description": "Summon a 3x3 aura with fog of war.",
     "type": "active",
     "imagePath": "/sumnRF",
     "value": 3,
@@ -382,7 +382,7 @@
   "sumnRG": {
     "id": "sumnRG",
     "name": "Hexweaver's Fallout",
-    "description": "Summon a 5x5 area with fog of war.",
+    "description": "Summon a 5x5 aura with fog of war.",
     "type": "active",
     "imagePath": "/sumnRG",
     "value": 4,
@@ -525,9 +525,9 @@
     "description": "You may summon amongst the whole board.",
     "type": "inherent",
     "imagePath": "/modsEXT",
-    "value": 8,
+    "value": 7,
     "related": [],
-    "tier": "Elite"
+    "tier": "Advanced"
   },
   "modsFUG": {
     "id": "modsFUG",
@@ -715,7 +715,7 @@
     "description": "Any opponent piece attacked by a friendly Rook has Disarmament.",
     "type": "inherent",
     "imagePath": "/modsGLA",
-    "value": 7,
+    "value": 9,
     "related": [],
     "tier": "Advanced"
   },
@@ -953,7 +953,7 @@
     "id": "modsCOM",
     "name": "Combo Berserker",
     "description": "Every 5 checks you give your opponent's King, you gain a Dyad.",
-    "type": "passive",
+    "type": "inherent",
     "imagePath": "/modsCOM",
     "value": 8,
     "related": [],
@@ -998,5 +998,45 @@
     "value": 4,
     "related": [],
     "tier": "Basic"
+  },
+  "doplA": {
+    "id": "doplA",
+    "name": "Doppleganger Any",
+    "description": "At the start of the game, this spell is replaced by a random spell in the basic tier.",
+    "type": "passive",
+    "imagePath": "/modsDOD",
+    "value": 3,
+    "related": [],
+    "tier": "Basic"
+  },
+  "doplB": {
+    "id": "doplB",
+    "name": "Doppleganger Basic",
+    "description": "At the start of the game, this spell is replaced by a random spell in the basic tier.",
+    "type": "passive",
+    "imagePath": "/modsDOA",
+    "value": 6,
+    "related": [],
+    "tier": "Basic"
+  },
+  "doplC": {
+    "id": "doplC",
+    "name": "Doppleganger Advanced",
+    "description": "At the start of the game, this spell is replaced by a random spell in the advanced tier.",
+    "type": "passive",
+    "imagePath": "/modsDOB",
+    "value": 9,
+    "related": [],
+    "tier": "Advanced"
+  },
+  "doplD": {
+    "id": "doplD",
+    "name": "Doppleganger Elite",
+    "description": "At the start of the game, this spell is replaced by a random spell in the elite tier.",
+    "type": "passive",
+    "imagePath": "/modsDOC",
+    "value": 12,
+    "related": [],
+    "tier": "Elite"
   }
 }

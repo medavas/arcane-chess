@@ -150,7 +150,8 @@ export const POWERBIT = {
   sumnRI: 33554432, // // ra
   sumnRN: 67108864, // // disarm
 
-  // 5 active 18
+  // 5 active - DEPRECATED: offr system replaced by dopl
+  // keeping these for backward compatibility with old book data
   offrA: 1,
   offrB: 2,
   offrC: 4,
@@ -170,6 +171,12 @@ export const POWERBIT = {
   offrZ: 32768,
   offrQ: 65536,
   offrR: 131072,
+
+  // 5 dopl (doppelganger) - replaces offr system
+  doplA: 1, // any tier
+  doplB: 2, // basic
+  doplC: 4, // advanced
+  doplD: 8, // elite
 
   // 1 passive 9
   shftP: 1,
@@ -229,13 +236,13 @@ export const POWERBIT = {
   moraNOR: 8, // inherent
   moraMAN: 16, // inherent
 
-  // 8 area inherent 6
-  areaF: 1,
-  areaM: 2,
-  areaT: 4,
-  areaQ: 8,
-  areaE: 16,
-  areaN: 32,
+  // 8 aura inherent 6
+  auraF: 1,
+  auraM: 2,
+  auraT: 4,
+  auraQ: 8,
+  auraE: 16,
+  auraN: 32,
   // wildcard that lets you change?
 
   // 9 gain passive 3
@@ -381,7 +388,7 @@ const STACKING_PREFIXES = [
   'dyad',
   'mori',
   'mora',
-  'area',
+  'aura',
   'gain',
   'tokn',
 ];

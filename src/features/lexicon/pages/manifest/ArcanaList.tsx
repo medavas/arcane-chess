@@ -31,7 +31,8 @@ const sectionPrefixes = [
   'sumn',
   'dyad',
   'shft',
-  'offr',
+  'offr', // DEPRECATED: kept for backward compatibility
+  'dopl', // NEW: replaces offr
   'swap',
   'mods',
   'mori',
