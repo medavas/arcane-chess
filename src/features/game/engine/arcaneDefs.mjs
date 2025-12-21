@@ -1,4 +1,5 @@
 import { PIECES, PceChar, PiecePawn, BOOL } from './defs.mjs';
+import { GameBoard } from './board.mjs';
 import arcanaData from '../../../shared/data/arcana.json' assert { type: 'json' };
 
 // Helper function to get power value from arcana data
@@ -579,6 +580,12 @@ function mapPieceToSummonKey(piece) {
   return 'sumn' + L.toUpperCase();
 }
 
+// Check if piece type should be tracked for once-per-type rewards (PNZUBRSW)
+function isPieceTypeTracked(piece) {
+  const L = PceChar.charAt(piece)?.toUpperCase();
+  return L && 'PNZUBRSW'.includes(L);
+}
+
 function isQTMV(piece) {
   return (
     piece === PIECES.wQ ||
@@ -650,8 +657,18 @@ export function applyMoriMoraRewards(context, keys) {
   if (mk) {
     moriFired = true;
     if (mk === 'moriDYA') {
-      offerGrant(context.victimSide, 'dyadA', 1);
-      moriGifts.push('dyadA');
+      const pieceChar = PceChar.charAt(context.piece)?.toUpperCase();
+      const shouldTrack = isPieceTypeTracked(context.piece);
+      
+      if (shouldTrack) {
+        const alreadyTriggered = GameBoard.moriDYATriggered[pieceChar];
+        
+        if (!alreadyTriggered) {
+          offerGrant(context.victimSide, 'dyadA', 1);
+          moriGifts.push('dyadA');
+          GameBoard.moriDYATriggered[pieceChar] = true;
+        }
+      }
     } else if (mk === 'moriROY' && isQTMV(context.piece)) {
       offerGrant(context.victimSide, 'sumnRV', 1);
       moriGifts.push('sumnRV');
@@ -659,10 +676,20 @@ export function applyMoriMoraRewards(context, keys) {
       offerGrant(context.victimSide, 'dyadA', 1);
       moriGifts.push('dyadA');
     } else if (mk === 'moriNOR') {
-      const sKey = mapPieceToSummonKey(context.piece);
-      if (sKey) {
-        offerGrant(context.victimSide, sKey, 1);
-        moriGifts.push(sKey);
+      const pieceChar = PceChar.charAt(context.piece)?.toUpperCase();
+      const shouldTrack = isPieceTypeTracked(context.piece);
+      
+      if (shouldTrack) {
+        const sKey = mapPieceToSummonKey(context.piece);
+        if (sKey) {
+          const alreadyTriggered = GameBoard.moriNORTriggered[pieceChar];
+          
+          if (!alreadyTriggered) {
+            offerGrant(context.victimSide, sKey, 1);
+            moriGifts.push(sKey);
+            GameBoard.moriNORTriggered[pieceChar] = true;
+          }
+        }
       }
     } else if (mk === 'moriMAN') {
       const keysGranted = ArcanaProgression.advanceBy(context.victimSide, 2);
@@ -674,8 +701,18 @@ export function applyMoriMoraRewards(context, keys) {
   if (nk) {
     moraFired = true;
     if (nk === 'moraDYA') {
-      offerGrant(context.killerSide, 'dyadA', 1);
-      moraGifts.push('dyadA');
+      const pieceChar = PceChar.charAt(context.piece)?.toUpperCase();
+      const shouldTrack = isPieceTypeTracked(context.piece);
+      
+      if (shouldTrack) {
+        const alreadyTriggered = GameBoard.moraDYATriggered[pieceChar];
+        
+        if (!alreadyTriggered) {
+          offerGrant(context.killerSide, 'dyadA', 1);
+          moraGifts.push('dyadA');
+          GameBoard.moraDYATriggered[pieceChar] = true;
+        }
+      }
     } else if (nk === 'moraROY' && isQTMV(context.piece)) {
       offerGrant(context.killerSide, 'sumnRV', 1);
       moraGifts.push('sumnRV');
@@ -683,10 +720,20 @@ export function applyMoriMoraRewards(context, keys) {
       offerGrant(context.killerSide, 'dyadA', 1);
       moraGifts.push('dyadA');
     } else if (nk === 'moraNOR') {
-      const sKey = mapPieceToSummonKey(context.piece);
-      if (sKey) {
-        offerGrant(context.killerSide, sKey, 1);
-        moraGifts.push(sKey);
+      const pieceChar = PceChar.charAt(context.piece)?.toUpperCase();
+      const shouldTrack = isPieceTypeTracked(context.piece);
+      
+      if (shouldTrack) {
+        const sKey = mapPieceToSummonKey(context.piece);
+        if (sKey) {
+          const alreadyTriggered = GameBoard.moraNORTriggered[pieceChar];
+          
+          if (!alreadyTriggered) {
+            offerGrant(context.killerSide, sKey, 1);
+            moraGifts.push(sKey);
+            GameBoard.moraNORTriggered[pieceChar] = true;
+          }
+        }
       }
     } else if (nk === 'moraMAN') {
       const keysGranted = ArcanaProgression.advanceBy(context.killerSide, 2);

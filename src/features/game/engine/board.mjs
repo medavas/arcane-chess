@@ -160,6 +160,11 @@ GameBoard.royaltyF = {};
 GameBoard.royaltyN = {};
 GameBoard.hermitTracker = {};
 
+GameBoard.moriDYATriggered = {};
+GameBoard.moriNORTriggered = {};
+GameBoard.moraNORTriggered = {};
+GameBoard.moraDYATriggered = {};
+
 GameBoard.preset;
 
 GameBoard.suspend = 0; // += not =
@@ -444,6 +449,11 @@ export function ResetBoard() {
   // GameBoard.royaltyV = {};
   // GameBoard.royaltyE = {};
   GameBoard.hermitTracker = {};
+
+  GameBoard.moriDYATriggered = {};
+  GameBoard.moriNORTriggered = {};
+  GameBoard.moraNORTriggered = {};
+  GameBoard.moraDYATriggered = {};
 
   // GameBoard.suspend = 0; // += not =
   // GameBoard.invisibility = [0, 0];

@@ -522,7 +522,7 @@
   "modsEXT": {
     "id": "modsEXT",
     "name": "Omni Gaze",
-    "description": "You may summon amongst the whole board.",
+    "description": "You may summon pieces and square conditionsamongst the whole board.",
     "type": "inherent",
     "imagePath": "/modsEXT",
     "value": 7,
@@ -722,7 +722,7 @@
   "moriDYA": {
     "id": "moriDYA",
     "name": "Letum Gemini",
-    "description": "On any of your piece death you gain a dyad all",
+    "description": "On the first death of each of your piece types (PNZUBRSW), you gain a dyad all",
     "type": "inherent",
     "imagePath": "/moriDYA",
     "value": 10,
@@ -739,20 +739,10 @@
     "related": [],
     "tier": "Elite"
   },
-  "moriPAW": {
-    "id": "moriPAW",
-    "name": "Letum Bane",
-    "description": "On any of your pawn death you gain a dyad all",
-    "type": "inherent",
-    "imagePath": "/moriPAW",
-    "value": 12,
-    "related": [],
-    "tier": "Legendary"
-  },
   "moriNOR": {
     "id": "moriNOR",
     "name": "Letum Anima",
-    "description": "On any of your piece death, you get a summon of that piece",
+    "description": "On the first death of each of your piece types (PNZUBRSW), you get a summon of that piece",
     "type": "inherent",
     "imagePath": "/moriNOR",
     "value": 9,
@@ -772,7 +762,7 @@
   "moraDYA": {
     "id": "moraDYA",
     "name": "Nex Gemini",
-    "description": "On any of your opponent piece death you gain a dyad all",
+    "description": "On the first death of each of your opponent's piece types (PNZUBRSW), you gain a dyad all",
     "type": "inherent",
     "imagePath": "/moraDYA",
     "value": 10,
@@ -789,20 +779,10 @@
     "related": [],
     "tier": "Elite"
   },
-  "moraPAW": {
-    "id": "moraPAW",
-    "name": "Nex Bane",
-    "description": "On any of your opponent pawn death you gain a dyad all",
-    "type": "inherent",
-    "imagePath": "/moraPAW",
-    "value": 12,
-    "related": [],
-    "tier": "Legendary"
-  },
   "moraNOR": {
     "id": "moraNOR",
     "name": "Nex Anima",
-    "description": "On any of your opponent piece death, you get a summon of that piece",
+    "description": "On the first death of each of your opponent's piece types (PNZUBRSW), you get a summon of that piece",
     "type": "inherent",
     "imagePath": "/moraNOR",
     "value": 9,
@@ -815,36 +795,6 @@
     "description": "On any of your opponent's piece death, gain 2 arcana charge tempo.",
     "type": "inherent",
     "imagePath": "/moraMAN",
-    "value": 2,
-    "related": [],
-    "tier": "Basic"
-  },
-  "gainDYA": {
-    "id": "gainDYA",
-    "name": "Dyad Reckoning",
-    "description": "When a friendly Bishop, Knight, Zebra, or Unicorn reaches the opposite side of the board, you gain a Dyad.",
-    "type": "passive",
-    "imagePath": "/gainALL",
-    "value": 4,
-    "related": [],
-    "tier": "Basic"
-  },
-  "gainVAL": {
-    "id": "gainVAL",
-    "name": "Titan's Reckoning",
-    "description": "When a friendly Bishop, Knight, Zebra, or Unicorn reaches the opposite side of the board, you gain a Royalty Valkyrie Summon.",
-    "type": "passive",
-    "imagePath": "/gainALL",
-    "value": 5,
-    "related": [],
-    "tier": "Advanced"
-  },
-  "gainPAW": {
-    "id": "gainPAW",
-    "name": "Soldier's Reckoning",
-    "description": "When a friendly Bishop, Knight, Zebra, or Unicorn reaches the opposite side of the board, you gain a Pawn Summon.",
-    "type": "passive",
-    "imagePath": "/gainALL",
     "value": 2,
     "related": [],
     "tier": "Basic"
@@ -899,46 +849,6 @@
     "related": [],
     "tier": "Basic"
   },
-  "modsDOA": {
-    "id": "modsDOA",
-    "name": "Doppleganger Basic",
-    "description": "At the start of the game, this spell is replaced by a random basic spell.",
-    "type": "passive",
-    "imagePath": "/modsDOA",
-    "value": 3,
-    "related": [],
-    "tier": "Basic"
-  },
-  "modsDOB": {
-    "id": "modsDOB",
-    "name": "Doppleganger Advanced",
-    "description": "At the start of the game, this spell is replaced by a random advanced spell.",
-    "type": "passive",
-    "imagePath": "/modsDOB",
-    "value": 6,
-    "related": [],
-    "tier": "Advanced"
-  },
-  "modsDOC": {
-    "id": "modsDOC",
-    "name": "Doppleganger Elite",
-    "description": "At the start of the game, this spell is replaced by a random elite spell.",
-    "type": "passive",
-    "imagePath": "/modsDOC",
-    "value": 9,
-    "related": [],
-    "tier": "Elite"
-  },
-  "modsDOD": {
-    "id": "modsDOD",
-    "name": "Doppleganger Legendary",
-    "description": "At the start of the game, this spell is replaced by a random legendary spell.",
-    "type": "passive",
-    "imagePath": "/modsDOD",
-    "value": 12,
-    "related": [],
-    "tier": "Legendary"
-  },
   "modsTRA": {
     "id": "modsTRA",
     "name": "Trample",
@@ -946,16 +856,6 @@
     "type": "active",
     "imagePath": "/modsTRA",
     "value": 10,
-    "related": [],
-    "tier": "Elite"
-  },
-  "modsCOM": {
-    "id": "modsCOM",
-    "name": "Combo Berserker",
-    "description": "Every 5 checks you give your opponent's King, you gain a Dyad.",
-    "type": "inherent",
-    "imagePath": "/modsCOM",
-    "value": 8,
     "related": [],
     "tier": "Elite"
   },
@@ -999,12 +899,52 @@
     "related": [],
     "tier": "Basic"
   },
+  "gainDYA": {
+    "id": "gainDYA",
+    "name": "Dyad Reckoning",
+    "description": "When a friendly Bishop, Knight, Zebra, or Unicorn reaches the opposite side of the board, you gain a Dyad.",
+    "type": "passive",
+    "imagePath": "/gainALL",
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
+  },
+  "gainVAL": {
+    "id": "gainVAL",
+    "name": "Titan's Reckoning",
+    "description": "When a friendly Bishop, Knight, Zebra, or Unicorn reaches the opposite side of the board, you gain a Royalty Valkyrie Summon.",
+    "type": "passive",
+    "imagePath": "/gainALL",
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
+  },
+  "gainPAW": {
+    "id": "gainPAW",
+    "name": "Soldier's Reckoning",
+    "description": "When a friendly Bishop, Knight, Zebra, or Unicorn reaches the opposite side of the board, you gain a Pawn Summon.",
+    "type": "passive",
+    "imagePath": "/gainALL",
+    "value": 2,
+    "related": [],
+    "tier": "Basic"
+  },
+  "gainCOM": {
+    "id": "gainCOM",
+    "name": "Combo Berserker",
+    "description": "Every 5 checks you give your opponent's King, you gain a Dyad.",
+    "type": "inherent",
+    "imagePath": "/gainCOM",
+    "value": 8,
+    "related": [],
+    "tier": "Elite"
+  },
   "doplA": {
     "id": "doplA",
     "name": "Doppleganger Any",
     "description": "At the start of the game, this spell is replaced by a random spell in the basic tier.",
     "type": "passive",
-    "imagePath": "/modsDOD",
+    "imagePath": "/doplA",
     "value": 3,
     "related": [],
     "tier": "Basic"
@@ -1014,7 +954,7 @@
     "name": "Doppleganger Basic",
     "description": "At the start of the game, this spell is replaced by a random spell in the basic tier.",
     "type": "passive",
-    "imagePath": "/modsDOA",
+    "imagePath": "/doplA",
     "value": 6,
     "related": [],
     "tier": "Basic"
@@ -1024,7 +964,7 @@
     "name": "Doppleganger Advanced",
     "description": "At the start of the game, this spell is replaced by a random spell in the advanced tier.",
     "type": "passive",
-    "imagePath": "/modsDOB",
+    "imagePath": "/doplA",
     "value": 9,
     "related": [],
     "tier": "Advanced"
@@ -1034,7 +974,7 @@
     "name": "Doppleganger Elite",
     "description": "At the start of the game, this spell is replaced by a random spell in the elite tier.",
     "type": "passive",
-    "imagePath": "/modsDOC",
+    "imagePath": "/doplA",
     "value": 12,
     "related": [],
     "tier": "Elite"
