@@ -1,4 +1,4 @@
-import { PIECES, PceChar, PiecePawn, BOOL } from './defs.mjs';
+import { PIECES, PceChar, PiecePawn, BOOL, PieceCol, RkDir, BiDir, WrDir, VaDir } from './defs.mjs';
 import { GameBoard } from './board.mjs';
 import arcanaData from '../../../shared/data/arcana.json' assert { type: 'json' };
 
@@ -1077,24 +1077,140 @@ export function detectFork(fromSq, toSq, piece, side, attacksFromSquare) {
 }
 
 /**
- * Detect if a move creates a pin (piece cannot move without exposing a more valuable piece)
- * This is a simplified check - a full implementation would require ray tracing
+ * Helper: Check if a slider at a specific square creates a pin
+ * @param {number} sq - square of the slider
+ * @param {number} piece - the slider piece
+ * @param {number} sideNum - numeric side (0=white, 1=black)
+ * @param {number} enemySide - numeric enemy side
+ * @param {number} enemyKing - enemy king piece value
+ * @param {boolean} hasREA - whether the side has modsREA active
+ * @returns {boolean}
+ */
+function checkSliderForPin(sq, piece, sideNum, enemySide, enemyKing, hasREA) {
+  // Check if piece is a slider that can create pins
+  const isRook = piece === (sideNum === 0 ? PIECES.wR : PIECES.bR);
+  const isBishop = piece === (sideNum === 0 ? PIECES.wB : PIECES.bB);
+  const isQueen = piece === (sideNum === 0 ? PIECES.wQ : PIECES.bQ);
+  const isMystic = piece === (sideNum === 0 ? PIECES.wM : PIECES.bM);
+  const isTemplar = piece === (sideNum === 0 ? PIECES.wT : PIECES.bT);
+  const isWraith = hasREA && (piece === (sideNum === 0 ? PIECES.wW : PIECES.bW));
+  const isValkyrie = hasREA && (piece === (sideNum === 0 ? PIECES.wV : PIECES.bV));
+
+  const isSlider = isRook || isBishop || isQueen || isMystic || isTemplar || isWraith || isValkyrie;
+  if (!isSlider) {
+    return false;
+  }
+
+  // Determine which directions this piece can slide
+  const directions = [];
+  if (isRook || isQueen || isMystic) {
+    directions.push(...RkDir); // Orthogonal
+  }
+  if (isBishop || isQueen || isTemplar) {
+    directions.push(...BiDir); // Diagonal
+  }
+  if (isWraith) {
+    directions.push(...WrDir); // Wraith moves
+  }
+  if (isValkyrie) {
+    directions.push(...VaDir); // Valkyrie moves
+  }
+
+  // Check each direction for pin pattern: slider -> 1 enemy piece -> enemy king
+  for (const dir of directions) {
+    let enemyPieceCount = 0;
+    let foundKing = false;
+    let pinnedPiece = null;
+    let pinnedSq = null;
+    let testSq = sq;
+    const piecesFound = [];
+
+    while (true) {
+      testSq += dir;
+      const pieceAtSq = GameBoard.pieces[testSq];
+
+      if (pieceAtSq === PIECES.EMPTY) {
+        continue;
+      }
+      if (pieceAtSq === PIECES.OFFBOARD) {
+        break;
+      }
+
+      const pieceColor = PieceCol[pieceAtSq];
+      const isEnemyKing = pieceAtSq === enemyKing;
+      piecesFound.push({ sq: testSq, piece: pieceAtSq, color: pieceColor, isKing: isEnemyKing });
+
+      if (pieceColor === enemySide) {
+        enemyPieceCount++;
+        
+        // Store the first enemy piece (the pinned piece)
+        if (enemyPieceCount === 1) {
+          pinnedPiece = pieceAtSq;
+          pinnedSq = testSq;
+        }
+        
+        if (isEnemyKing) {
+          foundKing = true;
+          break;
+        }
+        
+        if (enemyPieceCount > 1) {
+          break;
+        }
+      } else {
+        // Found a friendly piece - can't pin through it
+        break;
+      }
+    }
+
+    // Pin detected if we found exactly 2 enemy pieces, one is the king, and the pinned piece is NOT a pawn
+    if (enemyPieceCount === 2 && foundKing && pinnedPiece) {
+      const isPinnedPiecePawn = PiecePawn[pinnedPiece] === BOOL.TRUE;
+      if (!isPinnedPiecePawn) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Detect if a move creates a pin (any friendly slider now pins enemy piece to their king)
  * @param {number} fromSq - square the piece moved from
  * @param {number} toSq - square the piece moved to
  * @param {number} piece - the piece that moved
- * @param {number} side - 0 for white, 1 for black
+ * @param {number} side - string 'white'/'black' or number 0/1
  * @returns {boolean}
  */
 export function detectPin(fromSq, toSq, piece, side) {
-  // Simplified: check if the moved piece is a slider (R, B, Q) and if there's a line
-  // from the piece through an enemy piece to a more valuable enemy piece
-  const isSlider =
-    piece === (side === 0 ? PIECES.wR : PIECES.bR) ||
-    piece === (side === 0 ? PIECES.wB : PIECES.bB) ||
-    piece === (side === 0 ? PIECES.wQ : PIECES.bQ);
+  // Convert side to numeric if it's a string
+  const sideNum = side === 'white' || side === 0 ? 0 : 1;
+  const enemySide = sideNum === 0 ? 1 : 0;
+  const enemyKing = enemySide === 0 ? PIECES.wK : PIECES.bK;
 
-  // For now, return false - will need access to board state and ray tracing
-  // This will be implemented more fully when integrated with board logic
+  // Get player's arcane config to check for modsREA
+  const cfg = sideNum === 0 ? whiteArcaneConfig : blackArcaneConfig;
+  const hasREA = (cfg.modsREA || 0) > 0;
+
+  // Check all squares on the board for friendly sliders
+  for (let sq = 21; sq <= 98; sq++) {
+    const pieceAtSq = GameBoard.pieces[sq];
+    if (pieceAtSq === PIECES.EMPTY || pieceAtSq === PIECES.OFFBOARD) {
+      continue;
+    }
+
+    const pieceColor = PieceCol[pieceAtSq];
+    if (pieceColor !== sideNum) {
+      continue; // Not our piece
+    }
+
+    // Check if this slider creates a pin
+    if (checkSliderForPin(sq, pieceAtSq, sideNum, enemySide, enemyKing, hasREA)) {
+      return true;
+    }
+  }
+
   return false;
 }
 
@@ -1118,17 +1234,14 @@ export function detectOutpost(toSq, piece, side) {
   // Check if piece is on opponent's side of the board
   // Board representation: 20s, 30s, 40s, 50s for white; 60s, 70s, 80s, 90s for black
   // Opponent's side means past the halfway point:
-  // - White pieces on opponent's side: rank 6+ (60s, 70s, 80s, 90s)
-  // - Black pieces on opponent's side: rank 3- (20s, 30s)
+  // - White pieces on opponent's side: rank 6+ (60s, 70s, 80s)
+  // - Black pieces on opponent's side: rank 5- (50s, 40s, 30s, 20s)
   // Get rank from tens digit of square number
   const rank = Math.floor(toSq / 10);
 
-  // Adjusted: rank 5 (50s) and 4 (40s) are center/neutral
-  // White needs rank >= 5 to count as advanced position
-  // Black needs rank <= 4 to count as advanced position
-  const isOnOpponentSide = sideNum === 0 ? rank >= 5 : rank <= 4;
-
-  console.log(`[OUTPOST] Square ${toSq}, Rank ${rank}, Side ${side} (${sideNum}), OnOppSide: ${isOnOpponentSide}`);
+  // White needs rank >= 6 to be on black's side
+  // Black needs rank <= 5 to be on white's side
+  const isOnOpponentSide = sideNum === 0 ? rank >= 6 : rank <= 5;
 
   if (!isOnOpponentSide) return false;
 
@@ -1143,17 +1256,12 @@ export function detectOutpost(toSq, piece, side) {
       ? [toSq - 11, toSq - 9] // White pawns defend from bottom-left and bottom-right
       : [toSq + 11, toSq + 9]; // Black pawns defend from top-left and top-right
 
-  console.log(`[OUTPOST] Checking pawn squares:`, pawnDefenderSquares);
   for (const sq of pawnDefenderSquares) {
-    const pieceAtSq = GameBoard.pieces[sq];
-    console.log(`[OUTPOST] Square ${sq}: piece ${pieceAtSq}, looking for ${friendlyPawn}`);
-    if (pieceAtSq === friendlyPawn) {
-      console.log(`[OUTPOST] FOUND PAWN PROTECTION! Outpost detected.`);
+    if (GameBoard.pieces[sq] === friendlyPawn) {
       return true;
     }
   }
 
-  console.log(`[OUTPOST] No pawn protection found.`);
   return false;
 }
 
