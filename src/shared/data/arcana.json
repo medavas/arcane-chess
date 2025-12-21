@@ -869,6 +869,36 @@
     "related": [],
     "tier": "Basic"
   },
+  "doplA": {
+    "id": "doplA",
+    "name": "Doppleganger I",
+    "description": "At the start of the game, this spell is replaced by a random low-impact spell. The result is always playable and never game-warping.",
+    "type": "passive",
+    "imagePath": "/doplA",
+    "value": 3,
+    "related": [],
+    "tier": "Basic"
+  },
+  "doplB": {
+    "id": "doplB",
+    "name": "Doppleganger II",
+    "description": "At the start of the game, this spell is replaced by a random mid-impact spell. The result may meaningfully affect the position.",
+    "type": "passive",
+    "imagePath": "/doplA",
+    "value": 6,
+    "related": [],
+    "tier": "Advanced"
+  },
+  "doplC": {
+    "id": "doplC",
+    "name": "Doppleganger III",
+    "description": "At the start of the game, this spell is replaced by a random high-impact spell. The result is volatile but does not redefine your archetype.",
+    "type": "passive",
+    "imagePath": "/doplA",
+    "value": 9,
+    "related": [],
+    "tier": "Elite"
+  },
   "gainPIN": {
     "id": "gainPIN",
     "name": "Pin Gain",
@@ -936,36 +966,6 @@
     "type": "inherent",
     "imagePath": "/gainALL",
     "value": 8,
-    "related": [],
-    "tier": "Elite"
-  },
-  "doplA": {
-    "id": "doplA",
-    "name": "Doppleganger I",
-    "description": "At the start of the game, this spell is replaced by a random low-impact spell. The result is always playable and never game-warping.",
-    "type": "passive",
-    "imagePath": "/doplA",
-    "value": 3,
-    "related": [],
-    "tier": "Basic"
-  },
-  "doplB": {
-    "id": "doplB",
-    "name": "Doppleganger II",
-    "description": "At the start of the game, this spell is replaced by a random mid-impact spell. The result may meaningfully affect the position.",
-    "type": "passive",
-    "imagePath": "/doplA",
-    "value": 6,
-    "related": [],
-    "tier": "Advanced"
-  },
-  "doplC": {
-    "id": "doplC",
-    "name": "Doppleganger III",
-    "description": "At the start of the game, this spell is replaced by a random high-impact spell. The result is volatile but does not redefine your archetype.",
-    "type": "passive",
-    "imagePath": "/doplA",
-    "value": 9,
     "related": [],
     "tier": "Elite"
   }

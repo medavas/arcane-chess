@@ -1,4 +1,14 @@
-import { PIECES, PceChar, PiecePawn, BOOL, PieceCol, RkDir, BiDir, WrDir, VaDir } from './defs.mjs';
+import {
+  PIECES,
+  PceChar,
+  PiecePawn,
+  BOOL,
+  PieceCol,
+  RkDir,
+  BiDir,
+  WrDir,
+  VaDir,
+} from './defs.mjs';
 import { GameBoard } from './board.mjs';
 import arcanaData from '../../../shared/data/arcana.json' assert { type: 'json' };
 
@@ -1048,18 +1058,28 @@ export function getGainTacticsState(side) {
 export function detectFork(fromSq, toSq, piece, side, attacksFromSquare) {
   // Only certain pieces are eligible to fork: N, Z, U, B, R, M, T, Q
   const eligibleForkingPieces = new Set([
-    PIECES.wN, PIECES.bN,  // Knight
-    PIECES.wZ, PIECES.bZ,  // Z piece
-    PIECES.wU, PIECES.bU,  // U piece
-    PIECES.wB, PIECES.bB,  // Bishop
-    PIECES.wR, PIECES.bR,  // Rook
-    PIECES.wM, PIECES.bM,  // M piece
-    PIECES.wT, PIECES.bT,  // T piece
-    PIECES.wQ, PIECES.bQ,  // Queen
+    PIECES.wP,
+    PIECES.bP, // Pawn
+    PIECES.wN,
+    PIECES.bN, // Knight
+    PIECES.wZ,
+    PIECES.bZ, // Z piece
+    PIECES.wU,
+    PIECES.bU, // U piece
+    PIECES.wB,
+    PIECES.bB, // Bishop
+    PIECES.wR,
+    PIECES.bR, // Rook
+    PIECES.wM,
+    PIECES.bM, // M piece
+    PIECES.wT,
+    PIECES.bT, // T piece
+    PIECES.wQ,
+    PIECES.bQ, // Queen
   ]);
-  
+
   if (!eligibleForkingPieces.has(piece)) return false;
-  
+
   // Get all squares attacked by the piece from its new position
   const attacks = attacksFromSquare(toSq, piece, side);
   if (!attacks || attacks.length < 2) return false;
@@ -1067,20 +1087,20 @@ export function detectFork(fromSq, toSq, piece, side, attacksFromSquare) {
   // Count how many enemy pieces that are NOT pawns are being attacked
   const sideNum = side === 'white' || side === 0 ? 0 : 1;
   const enemySide = sideNum === 0 ? 1 : 0;
-  
+
   let attackedNonPawnCount = 0;
   for (const sq of attacks) {
     const targetPiece = GameBoard.pieces[sq];
     if (targetPiece === PIECES.EMPTY) continue;
-    
+
     // Check if it's an enemy piece
     const targetColor = PieceCol[targetPiece];
     if (targetColor !== enemySide) continue;
-    
+
     // Skip pawns
     const isTargetPawn = PiecePawn[targetPiece] === BOOL.TRUE;
     if (isTargetPawn) continue;
-    
+
     attackedNonPawnCount++;
     if (attackedNonPawnCount >= 2) return true;
   }
@@ -1105,10 +1125,18 @@ function checkSliderForPin(sq, piece, sideNum, enemySide, enemyKing, hasREA) {
   const isQueen = piece === (sideNum === 0 ? PIECES.wQ : PIECES.bQ);
   const isMystic = piece === (sideNum === 0 ? PIECES.wM : PIECES.bM);
   const isTemplar = piece === (sideNum === 0 ? PIECES.wT : PIECES.bT);
-  const isWraith = hasREA && (piece === (sideNum === 0 ? PIECES.wW : PIECES.bW));
-  const isValkyrie = hasREA && (piece === (sideNum === 0 ? PIECES.wV : PIECES.bV));
+  const isWraith = hasREA && piece === (sideNum === 0 ? PIECES.wW : PIECES.bW);
+  const isValkyrie =
+    hasREA && piece === (sideNum === 0 ? PIECES.wV : PIECES.bV);
 
-  const isSlider = isRook || isBishop || isQueen || isMystic || isTemplar || isWraith || isValkyrie;
+  const isSlider =
+    isRook ||
+    isBishop ||
+    isQueen ||
+    isMystic ||
+    isTemplar ||
+    isWraith ||
+    isValkyrie;
   if (!isSlider) {
     return false;
   }
@@ -1137,7 +1165,8 @@ function checkSliderForPin(sq, piece, sideNum, enemySide, enemyKing, hasREA) {
     let testSq = sq;
     const piecesFound = [];
 
-    while (true) {
+    let continueScanning = true;
+    while (continueScanning) {
       testSq += dir;
       const pieceAtSq = GameBoard.pieces[testSq];
 
@@ -1150,22 +1179,27 @@ function checkSliderForPin(sq, piece, sideNum, enemySide, enemyKing, hasREA) {
 
       const pieceColor = PieceCol[pieceAtSq];
       const isEnemyKing = pieceAtSq === enemyKing;
-      piecesFound.push({ sq: testSq, piece: pieceAtSq, color: pieceColor, isKing: isEnemyKing });
+      piecesFound.push({
+        sq: testSq,
+        piece: pieceAtSq,
+        color: pieceColor,
+        isKing: isEnemyKing,
+      });
 
       if (pieceColor === enemySide) {
         enemyPieceCount++;
-        
+
         // Store the first enemy piece (the pinned piece)
         if (enemyPieceCount === 1) {
           pinnedPiece = pieceAtSq;
           pinnedSq = testSq;
         }
-        
+
         if (isEnemyKing) {
           foundKing = true;
           break;
         }
-        
+
         if (enemyPieceCount > 1) {
           break;
         }
@@ -1218,7 +1252,9 @@ export function detectPin(fromSq, toSq, piece, side) {
     }
 
     // Check if this slider creates a pin
-    if (checkSliderForPin(sq, pieceAtSq, sideNum, enemySide, enemyKing, hasREA)) {
+    if (
+      checkSliderForPin(sq, pieceAtSq, sideNum, enemySide, enemyKing, hasREA)
+    ) {
       return true;
     }
   }
@@ -1244,9 +1280,10 @@ export function detectOutpostCreation(toSq, piece, side) {
   // Get the squares that this pawn now protects (diagonally forward)
   // For white pawns: protect top-left and top-right (toSq + 9, toSq + 11)
   // For black pawns: protect bottom-left and bottom-right (toSq - 11, toSq - 9)
-  const protectedSquares = sideNum === 0 
-    ? [toSq + 9, toSq + 11]  // White pawn protects upward
-    : [toSq - 11, toSq - 9]; // Black pawn protects downward
+  const protectedSquares =
+    sideNum === 0
+      ? [toSq + 9, toSq + 11] // White pawn protects upward
+      : [toSq - 11, toSq - 9]; // Black pawn protects downward
 
   // Check each protected square for a friendly piece in an outpost position
   for (const sq of protectedSquares) {
@@ -1254,7 +1291,26 @@ export function detectOutpostCreation(toSq, piece, side) {
     if (targetPiece === PIECES.EMPTY) continue;
 
     // Check if it's a friendly piece
-    const targetColor = targetPiece <= 6 ? 0 : (targetPiece <= 12 ? 1 : (targetPiece <= 18 ? 0 : (targetPiece <= 23 ? 1 : (targetPiece <= 25 ? 0 : (targetPiece <= 27 ? 1 : (targetPiece === 28 ? 0 : (targetPiece === 29 ? 1 : (targetPiece === 30 ? 1 : -1))))))));
+    const targetColor =
+      targetPiece <= 6
+        ? 0
+        : targetPiece <= 12
+        ? 1
+        : targetPiece <= 18
+        ? 0
+        : targetPiece <= 23
+        ? 1
+        : targetPiece <= 25
+        ? 0
+        : targetPiece <= 27
+        ? 1
+        : targetPiece === 28
+        ? 0
+        : targetPiece === 29
+        ? 1
+        : targetPiece === 30
+        ? 1
+        : -1;
     if (targetColor !== sideNum) continue;
 
     // Must not be a King or Pawn
@@ -1265,7 +1321,7 @@ export function detectOutpostCreation(toSq, piece, side) {
     // Check if the piece is on opponent's side of the board
     const rank = Math.floor(sq / 10);
     const isOnOpponentSide = sideNum === 0 ? rank >= 6 : rank <= 5;
-    
+
     if (isOnOpponentSide) {
       return true; // Found a piece that's now in an outpost position
     }
@@ -1381,9 +1437,17 @@ export function applyGainTacticsRewards(
   // gainOUT - Outpost detection (triggered by pawn creating outpost OR piece moving to outpost)
   if (tacticsState.gainOUT) {
     // Check both: pawn creating an outpost, or piece moving to an outpost square
-    const isPawnCreatingOutpost = detectOutpostCreation(context.toSq, context.piece, context.side);
-    const isPieceOnOutpost = detectOutpost(context.toSq, context.piece, context.side);
-    
+    const isPawnCreatingOutpost = detectOutpostCreation(
+      context.toSq,
+      context.piece,
+      context.side
+    );
+    const isPieceOnOutpost = detectOutpost(
+      context.toSq,
+      context.piece,
+      context.side
+    );
+
     if (isPawnCreatingOutpost || isPieceOnOutpost) {
       fired = true;
       offerGrant(s, 'dyadA', 1);
