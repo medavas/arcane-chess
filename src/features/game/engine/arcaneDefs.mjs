@@ -1046,31 +1046,43 @@ export function getGainTacticsState(side) {
  * @returns {boolean}
  */
 export function detectFork(fromSq, toSq, piece, side, attacksFromSquare) {
+  // Only certain pieces are eligible to fork: N, Z, U, B, R, M, T, Q
+  const eligibleForkingPieces = new Set([
+    PIECES.wN, PIECES.bN,  // Knight
+    PIECES.wZ, PIECES.bZ,  // Z piece
+    PIECES.wU, PIECES.bU,  // U piece
+    PIECES.wB, PIECES.bB,  // Bishop
+    PIECES.wR, PIECES.bR,  // Rook
+    PIECES.wM, PIECES.bM,  // M piece
+    PIECES.wT, PIECES.bT,  // T piece
+    PIECES.wQ, PIECES.bQ,  // Queen
+  ]);
+  
+  if (!eligibleForkingPieces.has(piece)) return false;
+  
   // Get all squares attacked by the piece from its new position
   const attacks = attacksFromSquare(toSq, piece, side);
   if (!attacks || attacks.length < 2) return false;
 
-  // Count how many enemy pieces of value are being attacked
-  // Consider Knights, Bishops, Rooks, Queens, and King as valuable
-  const enemyColor = side === 0 ? 1 : 0;
-  const valuablePieces = new Set([
-    enemyColor === 0 ? PIECES.wN : PIECES.bN,
-    enemyColor === 0 ? PIECES.wB : PIECES.bB,
-    enemyColor === 0 ? PIECES.wR : PIECES.bR,
-    enemyColor === 0 ? PIECES.wQ : PIECES.bQ,
-    enemyColor === 0 ? PIECES.wK : PIECES.bK,
-    enemyColor === 0 ? PIECES.wT : PIECES.bT,
-    enemyColor === 0 ? PIECES.wM : PIECES.bM,
-    enemyColor === 0 ? PIECES.wV : PIECES.bV,
-  ]);
-
-  let attackedValuableCount = 0;
+  // Count how many enemy pieces that are NOT pawns are being attacked
+  const sideNum = side === 'white' || side === 0 ? 0 : 1;
+  const enemySide = sideNum === 0 ? 1 : 0;
+  
+  let attackedNonPawnCount = 0;
   for (const sq of attacks) {
     const targetPiece = GameBoard.pieces[sq];
-    if (targetPiece !== PIECES.EMPTY && valuablePieces.has(targetPiece)) {
-      attackedValuableCount++;
-      if (attackedValuableCount >= 2) return true;
-    }
+    if (targetPiece === PIECES.EMPTY) continue;
+    
+    // Check if it's an enemy piece
+    const targetColor = PieceCol[targetPiece];
+    if (targetColor !== enemySide) continue;
+    
+    // Skip pawns
+    const isTargetPawn = PiecePawn[targetPiece] === BOOL.TRUE;
+    if (isTargetPawn) continue;
+    
+    attackedNonPawnCount++;
+    if (attackedNonPawnCount >= 2) return true;
   }
 
   return false;
@@ -1215,6 +1227,54 @@ export function detectPin(fromSq, toSq, piece, side) {
 }
 
 /**
+ * Detect if a pawn move creates an outpost (protects a piece on opponent's side)
+ * @param {number} toSq - square the pawn moved to
+ * @param {number} piece - the piece that moved (should be a pawn)
+ * @param {number} side - 0 for white, 1 for black
+ * @returns {boolean}
+ */
+export function detectOutpostCreation(toSq, piece, side) {
+  // Check if the moved piece is a pawn
+  const isPawn = PiecePawn[piece] === BOOL.TRUE;
+  if (!isPawn) return false;
+
+  // Convert side to numeric if it's a string
+  const sideNum = side === 'white' || side === 0 ? 0 : 1;
+
+  // Get the squares that this pawn now protects (diagonally forward)
+  // For white pawns: protect top-left and top-right (toSq + 9, toSq + 11)
+  // For black pawns: protect bottom-left and bottom-right (toSq - 11, toSq - 9)
+  const protectedSquares = sideNum === 0 
+    ? [toSq + 9, toSq + 11]  // White pawn protects upward
+    : [toSq - 11, toSq - 9]; // Black pawn protects downward
+
+  // Check each protected square for a friendly piece in an outpost position
+  for (const sq of protectedSquares) {
+    const targetPiece = GameBoard.pieces[sq];
+    if (targetPiece === PIECES.EMPTY) continue;
+
+    // Check if it's a friendly piece
+    const targetColor = targetPiece <= 6 ? 0 : (targetPiece <= 12 ? 1 : (targetPiece <= 18 ? 0 : (targetPiece <= 23 ? 1 : (targetPiece <= 25 ? 0 : (targetPiece <= 27 ? 1 : (targetPiece === 28 ? 0 : (targetPiece === 29 ? 1 : (targetPiece === 30 ? 1 : -1))))))));
+    if (targetColor !== sideNum) continue;
+
+    // Must not be a King or Pawn
+    const isKing = targetPiece === PIECES.wK || targetPiece === PIECES.bK;
+    const isTargetPawn = PiecePawn[targetPiece] === BOOL.TRUE;
+    if (isKing || isTargetPawn) continue;
+
+    // Check if the piece is on opponent's side of the board
+    const rank = Math.floor(sq / 10);
+    const isOnOpponentSide = sideNum === 0 ? rank >= 6 : rank <= 5;
+    
+    if (isOnOpponentSide) {
+      return true; // Found a piece that's now in an outpost position
+    }
+  }
+
+  return false;
+}
+
+/**
  * Detect if a piece created an outpost (piece on opponent's side protected by a pawn)
  * @param {number} toSq - square the piece moved to
  * @param {number} piece - the piece that moved
@@ -1318,10 +1378,13 @@ export function applyGainTacticsRewards(
     }
   }
 
-  // gainOUT - Outpost detection
+  // gainOUT - Outpost detection (triggered by pawn creating outpost OR piece moving to outpost)
   if (tacticsState.gainOUT) {
-    const isOutpost = detectOutpost(context.toSq, context.piece, context.side);
-    if (isOutpost) {
+    // Check both: pawn creating an outpost, or piece moving to an outpost square
+    const isPawnCreatingOutpost = detectOutpostCreation(context.toSq, context.piece, context.side);
+    const isPieceOnOutpost = detectOutpost(context.toSq, context.piece, context.side);
+    
+    if (isPawnCreatingOutpost || isPieceOnOutpost) {
       fired = true;
       offerGrant(s, 'dyadA', 1);
       gifts.push('dyadA');

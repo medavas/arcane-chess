@@ -719,6 +719,76 @@
     "related": [],
     "tier": "Advanced"
   },
+  "modsREI": {
+    "id": "modsREI",
+    "name": "Reincarnate",
+    "description": "Any friendly pieces captured with Consume come back to you as a summon arcane.",
+    "type": "inherent",
+    "imagePath": "/modsREI",
+    "value": 6,
+    "related": [],
+    "tier": "Advanced"
+  },
+  "modsFLA": {
+    "id": "modsFLA",
+    "name": "Flank Inversion",
+    "description": "Swap all the pieces on the A file with the H file. Kings cannot be swapped.",
+    "type": "active",
+    "imagePath": "/modsFLA",
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
+  },
+  "modsEVO": {
+    "id": "modsEVO",
+    "name": "Berserking Evolution",
+    "description": "Click to activate. All moves (including captures) evolve pieces while active: P→N→R, ZUB→R→W, WSH→Q→V, MT→V.",
+    "type": "active",
+    "imagePath": "/modsEVO",
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
+  },
+  "modsMAG": {
+    "id": "modsMAG",
+    "name": "Magnet",
+    "description": "Pick a square. Pieces exactly 2-3 squares away in orthogonal directions are moved one square toward that square if not blocked.",
+    "type": "active",
+    "imagePath": "/modsMAG",
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
+  },
+  "modsRED": {
+    "id": "modsRED",
+    "name": "Reduction",
+    "description": "Reduce the scope of enemy slider patterns (any piece that moves like Rook / Bishop) from 7 to 3 for 4 turns.",
+    "type": "active",
+    "imagePath": "/modsRED",
+    "value": 4,
+    "related": [],
+    "tier": "Basic"
+  },
+  "modsTRA": {
+    "id": "modsTRA",
+    "name": "Trample",
+    "description": "Use your turn to eliminate an opponent's piece that is attacked by a friendly Equus (Knight, Zebra, Unicorn). Equus stays in place.",
+    "type": "active",
+    "imagePath": "/modsTRA",
+    "value": 10,
+    "related": [],
+    "tier": "Elite"
+  },
+  "modsBOU": {
+    "id": "modsBOU",
+    "name": "Reflect Attack",
+    "description": "Friendly Bishops (not all Bishop move patterns) reflect off of the wall once.",
+    "type": "inherent",
+    "imagePath": "/modsBOU",
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
+  },
   "moriDYA": {
     "id": "moriDYA",
     "name": "Letum Gemini",
@@ -798,76 +868,6 @@
     "value": 2,
     "related": [],
     "tier": "Basic"
-  },
-  "modsREI": {
-    "id": "modsREI",
-    "name": "Reincarnate",
-    "description": "Any friendly pieces captured with Consume come back to you as a summon arcane.",
-    "type": "inherent",
-    "imagePath": "/modsREI",
-    "value": 6,
-    "related": [],
-    "tier": "Advanced"
-  },
-  "modsFLA": {
-    "id": "modsFLA",
-    "name": "Flank Inversion",
-    "description": "Swap all the pieces on the A file with the H file. Kings cannot be swapped.",
-    "type": "active",
-    "imagePath": "/modsFLA",
-    "value": 4,
-    "related": [],
-    "tier": "Basic"
-  },
-  "modsEVO": {
-    "id": "modsEVO",
-    "name": "Berserking Evolution",
-    "description": "Click to activate. All moves (including captures) evolve pieces while active: P→N→R, ZUB→R→W, WSH→Q→V, MT→V.",
-    "type": "active",
-    "imagePath": "/modsEVO",
-    "value": 5,
-    "related": [],
-    "tier": "Advanced"
-  },
-  "modsMAG": {
-    "id": "modsMAG",
-    "name": "Magnet",
-    "description": "Pick a square. Pieces exactly 2-3 squares away in orthogonal directions are moved one square toward that square if not blocked.",
-    "type": "active",
-    "imagePath": "/modsMAG",
-    "value": 4,
-    "related": [],
-    "tier": "Basic"
-  },
-  "modsRED": {
-    "id": "modsRED",
-    "name": "Reduction",
-    "description": "Reduce the scope of enemy slider patterns (any piece that moves like Rook / Bishop) from 7 to 3 for 4 turns.",
-    "type": "active",
-    "imagePath": "/modsRED",
-    "value": 4,
-    "related": [],
-    "tier": "Basic"
-  },
-  "modsTRA": {
-    "id": "modsTRA",
-    "name": "Trample",
-    "description": "Use your turn to eliminate an opponent's piece that is attacked by a friendly Equus (Knight, Zebra, Unicorn). Equus stays in place.",
-    "type": "active",
-    "imagePath": "/modsTRA",
-    "value": 10,
-    "related": [],
-    "tier": "Elite"
-  },
-  "modsBOU": {
-    "id": "modsBOU",
-    "name": "Reflect Attack",
-    "description": "Friendly Bishops (not all Bishop move patterns) reflect off of the wall once.",
-    "type": "inherent",
-    "imagePath": "/modsBOU",
-    "value": 5,
-    "related": [],
-    "tier": "Advanced"
   },
   "gainPIN": {
     "id": "gainPIN",

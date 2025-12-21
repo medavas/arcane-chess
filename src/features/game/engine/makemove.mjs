@@ -1521,14 +1521,73 @@ export function MakeMove(move, moveType = '') {
         isCheck,
       };
 
-      // Simple attack-from-square function for fork detection
+      // Attack-from-square function for fork detection
       const attacksFromSquare = (sq, piece, _side) => {
-        // This is a placeholder - in full implementation, would use proper attack generation
-        // For now, just return empty array to avoid errors
-        // TODO: Implement proper attack generation for fork detection
-        void sq;
-        void piece;
-        return [];
+        const attacks = [];
+        const isPawn = PiecePawn[piece] === BOOL.TRUE;
+        
+        if (isPawn) {
+          // Pawns attack diagonally
+          const isWhitePawn = PieceCol[piece] === COLOURS.WHITE;
+          const directions = isWhitePawn ? [9, 11] : [-11, -9];
+          for (const dir of directions) {
+            const targetSq = sq + dir;
+            if (GameBoard.pieces[targetSq] !== SQOFFBOARD) {
+              attacks.push(targetSq);
+            }
+          }
+        } else if (
+          piece === PIECES.wN || piece === PIECES.bN ||
+          piece === PIECES.wZ || piece === PIECES.bZ ||
+          piece === PIECES.wU || piece === PIECES.bU
+        ) {
+          // Knights and knight-like pieces
+          const directions = [-8, -19, -21, -12, 8, 19, 21, 12];
+          for (const dir of directions) {
+            const targetSq = sq + dir;
+            if (GameBoard.pieces[targetSq] !== SQOFFBOARD) {
+              attacks.push(targetSq);
+            }
+          }
+        } else if (piece === PIECES.wK || piece === PIECES.bK) {
+          // King - one square in all directions
+          const directions = [-1, -10, 1, 10, -9, -11, 11, 9];
+          for (const dir of directions) {
+            const targetSq = sq + dir;
+            if (GameBoard.pieces[targetSq] !== SQOFFBOARD) {
+              attacks.push(targetSq);
+            }
+          }
+        } else {
+          // Sliding pieces (B, R, Q, T, M, etc.)
+          let directions = [];
+          const isRook = piece === PIECES.wR || piece === PIECES.bR;
+          const isBishop = piece === PIECES.wB || piece === PIECES.bB;
+          const isQueen = piece === PIECES.wQ || piece === PIECES.bQ;
+          const isT = piece === PIECES.wT || piece === PIECES.bT;
+          const isM = piece === PIECES.wM || piece === PIECES.bM;
+          
+          if (isRook || isQueen || isT) {
+            directions.push(...RkDir); // Orthogonal: [-1, -10, 1, 10]
+          }
+          if (isBishop || isQueen || isM) {
+            directions.push(...[-9, -11, 11, 9]); // Diagonal
+          }
+          
+          for (const dir of directions) {
+            let targetSq = sq + dir;
+            while (GameBoard.pieces[targetSq] !== SQOFFBOARD) {
+              attacks.push(targetSq);
+              // Stop if we hit a piece
+              if (GameBoard.pieces[targetSq] !== PIECES.EMPTY) {
+                break;
+              }
+              targetSq += dir;
+            }
+          }
+        }
+        
+        return attacks;
       };
 
       const tacticsResult = applyGainTacticsRewards(
