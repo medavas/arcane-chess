@@ -37,7 +37,7 @@ const sectionPrefixes = [
   'mods',
   'mori',
   'mora',
-  'area',
+  'aura',
   'gain',
   'tokn',
 ];
@@ -86,8 +86,9 @@ export default class ArcanaList extends React.Component<
         <div className="title-row">
           <div className="name">{arcaneItem.name}</div>
           <div
-            className={`type pill pill-${arcaneItem.type?.toLowerCase?.() || 'unknown'
-              }`}
+            className={`type pill pill-${
+              arcaneItem.type?.toLowerCase?.() || 'unknown'
+            }`}
           >
             {arcaneItem.type}
           </div>

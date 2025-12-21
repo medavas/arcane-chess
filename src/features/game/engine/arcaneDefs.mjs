@@ -7,6 +7,60 @@ function getPowerByKey(key) {
   return arcanaData[key]?.value ?? 0;
 }
 
+// Dopl spell pools - spells that can replace dopl spells
+export const DOPL_POOLS = {
+  doplA: [
+    'sumnP',
+    'sumnRN',
+    'sumnRF',
+    'modsFUT',
+    'modsIMP',
+    'modsORA',
+    'modsMAG',
+    'modsRED',
+    'swapADJ',
+    'shftP',
+    'shftB',
+    'shftR',
+    'gainPIN',
+    'gainFOR',
+    'gainOUT',
+  ],
+  doplB: [
+    'dyadA',
+    'sumnN',
+    'sumnZ',
+    'sumnU',
+    'sumnB',
+    'sumnR',
+    'sumnRE',
+    'sumnRY',
+    'sumnRZ',
+    'sumnRH',
+    'shftI',
+    'modsSUR',
+    'modsSIL',
+    'modsHEX',
+    'modsBAN',
+    'modsBOU',
+    'swapDEP',
+    'modsFLA',
+  ],
+  doplC: [
+    'sumnS',
+    'sumnW',
+    'sumnX',
+    'sumnRA',
+    'sumnRI',
+    // 'modsGLU',
+    'modsGLA',
+    'modsTRA',
+    // 'modsPHA',
+    // 'modsGLI',
+    'shftG',
+  ],
+};
+
 export const whiteArcaneConfig = {};
 export const blackArcaneConfig = {};
 
@@ -84,6 +138,104 @@ export const clearAllArcanaState = () => {
   // Reset progression state
   ArcanaProgression.resetSide('white');
   ArcanaProgression.resetSide('black');
+};
+
+// Replace dopl spells with random spells from their respective pools
+// @param {boolean} alsoReplaceInConfig - If true, also replaces dopl spells in the active config (for debug mode)
+export const replaceDoplSpells = (alsoReplaceInConfig = false) => {
+  let whiteDoplCount = 0;
+  let blackDoplCount = 0;
+
+  // Process white spellbook
+  Object.keys(whiteArcaneSpellBook).forEach((key) => {
+    if (key.startsWith('dopl') && DOPL_POOLS[key]) {
+      const count = whiteArcaneSpellBook[key] | 0;
+      if (count > 0) {
+        whiteDoplCount += count;
+        // Remove the dopl spell
+        delete whiteArcaneSpellBook[key];
+
+        // Add random spells from the pool
+        for (let i = 0; i < count; i++) {
+          const pool = DOPL_POOLS[key];
+          const randomSpell = pool[Math.floor(Math.random() * pool.length)];
+          whiteArcaneSpellBook[randomSpell] =
+            (whiteArcaneSpellBook[randomSpell] | 0) + 1;
+        }
+      }
+    }
+  });
+
+  // Process black spellbook
+  Object.keys(blackArcaneSpellBook).forEach((key) => {
+    if (key.startsWith('dopl') && DOPL_POOLS[key]) {
+      const count = blackArcaneSpellBook[key] | 0;
+      if (count > 0) {
+        blackDoplCount += count;
+        // Remove the dopl spell
+        delete blackArcaneSpellBook[key];
+
+        // Add random spells from the pool
+        for (let i = 0; i < count; i++) {
+          const pool = DOPL_POOLS[key];
+          const randomSpell = pool[Math.floor(Math.random() * pool.length)];
+          blackArcaneSpellBook[randomSpell] =
+            (blackArcaneSpellBook[randomSpell] | 0) + 1;
+        }
+      }
+    }
+  });
+
+  // Only replace dopl spells in config if specified (for debug mode where config is pre-populated)
+  if (alsoReplaceInConfig) {
+    Object.keys(whiteArcaneConfig).forEach((key) => {
+      if (key.startsWith('dopl') && DOPL_POOLS[key]) {
+        const count = whiteArcaneConfig[key] | 0;
+        if (count > 0) {
+          // Remove the dopl spell
+          delete whiteArcaneConfig[key];
+
+          // Add random spells from the pool (same ones added to spellbook)
+          for (let i = 0; i < count; i++) {
+            const pool = DOPL_POOLS[key];
+            const randomSpell = pool[Math.floor(Math.random() * pool.length)];
+            whiteArcaneConfig[randomSpell] =
+              (whiteArcaneConfig[randomSpell] | 0) + 1;
+          }
+        }
+      }
+    });
+
+    Object.keys(blackArcaneConfig).forEach((key) => {
+      if (key.startsWith('dopl') && DOPL_POOLS[key]) {
+        const count = blackArcaneConfig[key] | 0;
+        if (count > 0) {
+          // Remove the dopl spell
+          delete blackArcaneConfig[key];
+
+          // Add random spells from the pool (same ones added to spellbook)
+          for (let i = 0; i < count; i++) {
+            const pool = DOPL_POOLS[key];
+            const randomSpell = pool[Math.floor(Math.random() * pool.length)];
+            blackArcaneConfig[randomSpell] =
+              (blackArcaneConfig[randomSpell] | 0) + 1;
+          }
+        }
+      }
+    });
+
+    // Track that these spells were granted by dopl replacement, not progression
+    // This prevents the progression system from granting extra spells
+    if (whiteDoplCount > 0) {
+      ArcanaProgression.creditGrantsGiven('white', whiteDoplCount);
+    }
+    if (blackDoplCount > 0) {
+      ArcanaProgression.creditGrantsGiven('black', blackDoplCount);
+    }
+  }
+
+  // Notify UI that arcana has changed
+  triggerArcanaUpdateCallback();
 };
 
 // Optional UI callback to notify the React layer that arcana state changed.
@@ -177,7 +329,7 @@ export const POWERBIT = {
   doplA: 1, // any tier
   doplB: 2, // basic
   doplC: 4, // advanced
-  doplD: 8, // elite
+  // doplD: 8, // elite
 
   // 1 passive 9
   shftP: 1,
@@ -384,6 +536,7 @@ export function offerRevert(side, key, qty = 1) {
 const STACKING_PREFIXES = [
   'sumn',
   'offr',
+  'dopl',
   'shft',
   'swap',
   'dyad',
@@ -562,6 +715,20 @@ const ArcanaProgression = (() => {
     grantsGiven[s] = Math.max(0, (grantsGiven[s] | 0) - n);
   }
 
+  function creditGrantsGiven(sideInput, count) {
+    const s = sideKey(sideInput);
+    const n = count | 0;
+    if (n <= 0) return;
+    
+    grantsGiven[s] = (grantsGiven[s] | 0) + n;
+    
+    // Also adjust moveCount so the next spell grant happens at the correct time
+    // If we've granted N spells already, set moveCount to simulate that those grants happened
+    // Formula: moveCount = firstAt + (N - 1) * every
+    const totalGrantsNow = grantsGiven[s];
+    moveCount[s] = firstAt + (totalGrantsNow - 1) * every;
+  }
+
   return {
     setEvery,
     setFirstAt,
@@ -571,6 +738,7 @@ const ArcanaProgression = (() => {
     getProgressState,
     advanceBy,
     rewindBy,
+    creditGrantsGiven,
   };
 })();
 

@@ -861,7 +861,7 @@
   },
   "modsBOU": {
     "id": "modsBOU",
-    "name": "Mirror Strike",
+    "name": "Reflect Attack",
     "description": "Friendly Bishops (not all Bishop move patterns) reflect off of the wall once.",
     "type": "inherent",
     "imagePath": "/modsBOU",
@@ -874,27 +874,27 @@
     "name": "Pin Gain",
     "description": "Achieve a pin, gain a dyad.",
     "type": "passive",
-    "imagePath": "/gainPIN",
+    "imagePath": "/gainALL",
     "value": 4,
     "related": [],
     "tier": "Basic"
   },
   "gainFOR": {
     "id": "gainFOR",
-    "name": "Force Gain",
+    "name": "Fork Gain",
     "description": "Achieve a fork, gain a dyad.",
     "type": "passive",
-    "imagePath": "/gainFOR",
+    "imagePath": "/gainALL",
     "value": 4,
     "related": [],
     "tier": "Basic"
   },
   "gainOUT": {
     "id": "gainOUT",
-    "name": "Outer Gain",
+    "name": "Outpost Gain",
     "description": "Achieve an outpost with a minor piece or Rook, gain a dyad.",
     "type": "passive",
-    "imagePath": "/gainOUT",
+    "imagePath": "/gainALL",
     "value": 4,
     "related": [],
     "tier": "Basic"
@@ -932,17 +932,17 @@
   "gainCOM": {
     "id": "gainCOM",
     "name": "Combo Berserker",
-    "description": "Every 5 checks you give your opponent's King, you gain a Dyad.",
+    "description": "Every 4 checks you give your opponent's King, you gain a Dyad.",
     "type": "inherent",
-    "imagePath": "/gainCOM",
+    "imagePath": "/gainALL",
     "value": 8,
     "related": [],
     "tier": "Elite"
   },
   "doplA": {
     "id": "doplA",
-    "name": "Doppleganger Any",
-    "description": "At the start of the game, this spell is replaced by a random spell in the basic tier.",
+    "name": "Doppleganger I",
+    "description": "At the start of the game, this spell is replaced by a random low-impact spell. The result is always playable and never game-warping.",
     "type": "passive",
     "imagePath": "/doplA",
     "value": 3,
@@ -951,31 +951,21 @@
   },
   "doplB": {
     "id": "doplB",
-    "name": "Doppleganger Basic",
-    "description": "At the start of the game, this spell is replaced by a random spell in the basic tier.",
+    "name": "Doppleganger II",
+    "description": "At the start of the game, this spell is replaced by a random mid-impact spell. The result may meaningfully affect the position.",
     "type": "passive",
     "imagePath": "/doplA",
     "value": 6,
     "related": [],
-    "tier": "Basic"
+    "tier": "Advanced"
   },
   "doplC": {
     "id": "doplC",
-    "name": "Doppleganger Advanced",
-    "description": "At the start of the game, this spell is replaced by a random spell in the advanced tier.",
+    "name": "Doppleganger III",
+    "description": "At the start of the game, this spell is replaced by a random high-impact spell. The result is volatile but does not redefine your archetype.",
     "type": "passive",
     "imagePath": "/doplA",
     "value": 9,
-    "related": [],
-    "tier": "Advanced"
-  },
-  "doplD": {
-    "id": "doplD",
-    "name": "Doppleganger Elite",
-    "description": "At the start of the game, this spell is replaced by a random spell in the elite tier.",
-    "type": "passive",
-    "imagePath": "/doplA",
-    "value": 12,
     "related": [],
     "tier": "Elite"
   }

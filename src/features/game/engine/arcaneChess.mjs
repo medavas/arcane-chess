@@ -40,6 +40,7 @@ import {
   blackArcaneSpellBook,
   setWhiteArcana,
   setBlackArcana,
+  replaceDoplSpells,
   triggerArcanaUpdateCallback,
   POWERBIT,
   ArcanaProgression,
@@ -90,6 +91,8 @@ export default function arcaneChess() {
       Object.assign(blackArcaneSpellBook, blackConfig);
       Object.assign(whiteArcaneConfig, whiteConfig);
       Object.assign(blackArcaneConfig, blackConfig);
+      // Replace dopl spells with random spells from their pools (including in config for debug mode)
+      replaceDoplSpells(true);
       triggerArcanaUpdateCallback();
     } else {
       // Set how often arcana is granted
@@ -101,8 +104,12 @@ export default function arcaneChess() {
       setBlackArcana({
         ...blackConfig,
       });
-      // In prod mode, don't initialize the config - let progression grant spells as moves are made
-      // The spellBook is populated above and will be the pool from which progression grants
+      // Replace dopl spells with random spells from their pools
+      // Note: We pass true here because dopl spells should be immediately replaced and available
+      // The config will only have the dopl replacement spells, other spells still come through progression
+      replaceDoplSpells(true);
+      // In prod mode, the config starts with only the dopl replacement spells
+      // Other spells in the spellBook will be granted through progression as moves are made
     }
 
     _.forEach(royalties, (value, key) => {
