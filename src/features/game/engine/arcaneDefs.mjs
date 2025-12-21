@@ -659,10 +659,10 @@ export function applyMoriMoraRewards(context, keys) {
     if (mk === 'moriDYA') {
       const pieceChar = PceChar.charAt(context.piece)?.toUpperCase();
       const shouldTrack = isPieceTypeTracked(context.piece);
-      
+
       if (shouldTrack) {
         const alreadyTriggered = GameBoard.moriDYATriggered[pieceChar];
-        
+
         if (!alreadyTriggered) {
           offerGrant(context.victimSide, 'dyadA', 1);
           moriGifts.push('dyadA');
@@ -678,12 +678,12 @@ export function applyMoriMoraRewards(context, keys) {
     } else if (mk === 'moriNOR') {
       const pieceChar = PceChar.charAt(context.piece)?.toUpperCase();
       const shouldTrack = isPieceTypeTracked(context.piece);
-      
+
       if (shouldTrack) {
         const sKey = mapPieceToSummonKey(context.piece);
         if (sKey) {
           const alreadyTriggered = GameBoard.moriNORTriggered[pieceChar];
-          
+
           if (!alreadyTriggered) {
             offerGrant(context.victimSide, sKey, 1);
             moriGifts.push(sKey);
@@ -703,10 +703,10 @@ export function applyMoriMoraRewards(context, keys) {
     if (nk === 'moraDYA') {
       const pieceChar = PceChar.charAt(context.piece)?.toUpperCase();
       const shouldTrack = isPieceTypeTracked(context.piece);
-      
+
       if (shouldTrack) {
         const alreadyTriggered = GameBoard.moraDYATriggered[pieceChar];
-        
+
         if (!alreadyTriggered) {
           offerGrant(context.killerSide, 'dyadA', 1);
           moraGifts.push('dyadA');
@@ -722,12 +722,12 @@ export function applyMoriMoraRewards(context, keys) {
     } else if (nk === 'moraNOR') {
       const pieceChar = PceChar.charAt(context.piece)?.toUpperCase();
       const shouldTrack = isPieceTypeTracked(context.piece);
-      
+
       if (shouldTrack) {
         const sKey = mapPieceToSummonKey(context.piece);
         if (sKey) {
           const alreadyTriggered = GameBoard.moraNORTriggered[pieceChar];
-          
+
           if (!alreadyTriggered) {
             offerGrant(context.killerSide, sKey, 1);
             moraGifts.push(sKey);
