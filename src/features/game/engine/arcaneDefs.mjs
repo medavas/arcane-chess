@@ -138,6 +138,9 @@ export const clearAllArcanaState = () => {
   // Reset progression state
   ArcanaProgression.resetSide('white');
   ArcanaProgression.resetSide('black');
+
+  // Reset check counts for gainCOM
+  resetCheckCounts();
 };
 
 // Replace dopl spells with random spells from their respective pools
@@ -398,10 +401,14 @@ export const POWERBIT = {
   auraN: 32,
   // wildcard that lets you change?
 
-  // 9 gain passive 3
+  // 9 gain passive 7
   gainDYA: 1,
   gainVAL: 2,
   gainPAW: 4,
+  gainFOR: 8,
+  gainPIN: 16,
+  gainOUT: 32,
+  gainCOM: 64,
 
   // 10 tokens passive 2
   toknHER: 1,
@@ -719,9 +726,9 @@ const ArcanaProgression = (() => {
     const s = sideKey(sideInput);
     const n = count | 0;
     if (n <= 0) return;
-    
+
     grantsGiven[s] = (grantsGiven[s] | 0) + n;
-    
+
     // Also adjust moveCount so the next spell grant happens at the correct time
     // If we've granted N spells already, set moveCount to simulate that those grants happened
     // Formula: moveCount = firstAt + (N - 1) * every
@@ -987,6 +994,247 @@ export function applyGainRewards(context, keys) {
 
 export function getProgressState(side) {
   return ArcanaProgression.getProgressState(side);
+}
+
+// =======================
+// Tactical Gain Spells
+// =======================
+
+// Track check counts for gainCOM (Combo Berserker)
+const checkCounts = { white: 0, black: 0 };
+
+export function resetCheckCounts() {
+  checkCounts.white = 0;
+  checkCounts.black = 0;
+}
+
+export function getCheckCount(side) {
+  return checkCounts[sideKey(side)] || 0;
+}
+
+/**
+ * Check if a side has the gainFOR, gainPIN, gainOUT, or gainCOM spells active
+ */
+export function getGainTacticsState(side) {
+  const s = sideKey(side);
+  const live = s === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+
+  const getLiveKeys = (live, prefix) =>
+    Object.keys(live).filter(
+      (k) =>
+        k.startsWith(prefix) &&
+        ((live[k] | 0) > 0 || live[k] === true || live[k] === 'true')
+    );
+
+  const gainAll = getLiveKeys(live, 'gain');
+
+  return {
+    gainFOR: gainAll.includes('gainFOR'),
+    gainPIN: gainAll.includes('gainPIN'),
+    gainOUT: gainAll.includes('gainOUT'),
+    gainCOM: gainAll.includes('gainCOM'),
+  };
+}
+
+/**
+ * Detect if a move creates a fork (one piece attacking 2+ valuable pieces)
+ * @param {number} fromSq - square the piece moved from
+ * @param {number} toSq - square the piece moved to
+ * @param {number} piece - the piece that moved
+ * @param {number} side - 0 for white, 1 for black
+ * @param {Function} attacksFromSquare - function to get attacked squares from a position
+ * @returns {boolean}
+ */
+export function detectFork(fromSq, toSq, piece, side, attacksFromSquare) {
+  // Get all squares attacked by the piece from its new position
+  const attacks = attacksFromSquare(toSq, piece, side);
+  if (!attacks || attacks.length < 2) return false;
+
+  // Count how many enemy pieces of value are being attacked
+  // Consider Knights, Bishops, Rooks, Queens, and King as valuable
+  const enemyColor = side === 0 ? 1 : 0;
+  const valuablePieces = new Set([
+    enemyColor === 0 ? PIECES.wN : PIECES.bN,
+    enemyColor === 0 ? PIECES.wB : PIECES.bB,
+    enemyColor === 0 ? PIECES.wR : PIECES.bR,
+    enemyColor === 0 ? PIECES.wQ : PIECES.bQ,
+    enemyColor === 0 ? PIECES.wK : PIECES.bK,
+    enemyColor === 0 ? PIECES.wT : PIECES.bT,
+    enemyColor === 0 ? PIECES.wM : PIECES.bM,
+    enemyColor === 0 ? PIECES.wV : PIECES.bV,
+  ]);
+
+  let attackedValuableCount = 0;
+  for (const sq of attacks) {
+    const targetPiece = GameBoard.pieces[sq];
+    if (targetPiece !== PIECES.EMPTY && valuablePieces.has(targetPiece)) {
+      attackedValuableCount++;
+      if (attackedValuableCount >= 2) return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Detect if a move creates a pin (piece cannot move without exposing a more valuable piece)
+ * This is a simplified check - a full implementation would require ray tracing
+ * @param {number} fromSq - square the piece moved from
+ * @param {number} toSq - square the piece moved to
+ * @param {number} piece - the piece that moved
+ * @param {number} side - 0 for white, 1 for black
+ * @returns {boolean}
+ */
+export function detectPin(fromSq, toSq, piece, side) {
+  // Simplified: check if the moved piece is a slider (R, B, Q) and if there's a line
+  // from the piece through an enemy piece to a more valuable enemy piece
+  const isSlider =
+    piece === (side === 0 ? PIECES.wR : PIECES.bR) ||
+    piece === (side === 0 ? PIECES.wB : PIECES.bB) ||
+    piece === (side === 0 ? PIECES.wQ : PIECES.bQ);
+
+  // For now, return false - will need access to board state and ray tracing
+  // This will be implemented more fully when integrated with board logic
+  return false;
+}
+
+/**
+ * Detect if a piece created an outpost (piece on opponent's side protected by a pawn)
+ * @param {number} toSq - square the piece moved to
+ * @param {number} piece - the piece that moved
+ * @param {number} side - 0 for white, 1 for black
+ * @returns {boolean}
+ */
+export function detectOutpost(toSq, piece, side) {
+  // Piece must not be a King or Pawn
+  const isKing = piece === PIECES.wK || piece === PIECES.bK;
+  const isPawn = PiecePawn[piece] === BOOL.TRUE;
+
+  if (isKing || isPawn) return false;
+
+  // Convert side to numeric if it's a string
+  const sideNum = side === 'white' || side === 0 ? 0 : 1;
+
+  // Check if piece is on opponent's side of the board
+  // Board representation: 20s, 30s, 40s, 50s for white; 60s, 70s, 80s, 90s for black
+  // Opponent's side means past the halfway point:
+  // - White pieces on opponent's side: rank 6+ (60s, 70s, 80s, 90s)
+  // - Black pieces on opponent's side: rank 3- (20s, 30s)
+  // Get rank from tens digit of square number
+  const rank = Math.floor(toSq / 10);
+
+  // Adjusted: rank 5 (50s) and 4 (40s) are center/neutral
+  // White needs rank >= 5 to count as advanced position
+  // Black needs rank <= 4 to count as advanced position
+  const isOnOpponentSide = sideNum === 0 ? rank >= 5 : rank <= 4;
+
+  console.log(`[OUTPOST] Square ${toSq}, Rank ${rank}, Side ${side} (${sideNum}), OnOppSide: ${isOnOpponentSide}`);
+
+  if (!isOnOpponentSide) return false;
+
+  // Check if the square is protected by a friendly pawn
+  const friendlyPawn = sideNum === 0 ? PIECES.wP : PIECES.bP;
+
+  // Pawns protect diagonally
+  // For white pawns: they protect from squares below-left and below-right
+  // For black pawns: they protect from squares above-left and above-right
+  const pawnDefenderSquares =
+    sideNum === 0
+      ? [toSq - 11, toSq - 9] // White pawns defend from bottom-left and bottom-right
+      : [toSq + 11, toSq + 9]; // Black pawns defend from top-left and top-right
+
+  console.log(`[OUTPOST] Checking pawn squares:`, pawnDefenderSquares);
+  for (const sq of pawnDefenderSquares) {
+    const pieceAtSq = GameBoard.pieces[sq];
+    console.log(`[OUTPOST] Square ${sq}: piece ${pieceAtSq}, looking for ${friendlyPawn}`);
+    if (pieceAtSq === friendlyPawn) {
+      console.log(`[OUTPOST] FOUND PAWN PROTECTION! Outpost detected.`);
+      return true;
+    }
+  }
+
+  console.log(`[OUTPOST] No pawn protection found.`);
+  return false;
+}
+
+/**
+ * Apply rewards for tactical gain spells
+ * @param {Object} context - { side, move, piece, fromSq, toSq, isCheck }
+ * @param {Object} tacticsState - result from getGainTacticsState
+ * @param {Function} attacksFromSquare - function to get attacks (needed for fork detection)
+ * @returns {Object} - { fired, gifts, checkTriggered }
+ */
+export function applyGainTacticsRewards(
+  context,
+  tacticsState,
+  attacksFromSquare = null
+) {
+  const gifts = [];
+  let fired = false;
+  let checkTriggered = false;
+  const s = sideKey(context.side);
+  const cfg = s === 'white' ? whiteArcaneConfig : blackArcaneConfig;
+
+  // gainFOR - Fork detection
+  if (tacticsState.gainFOR && attacksFromSquare) {
+    const isFork = detectFork(
+      context.fromSq,
+      context.toSq,
+      context.piece,
+      context.side,
+      attacksFromSquare
+    );
+    if (isFork) {
+      fired = true;
+      offerGrant(s, 'dyadA', 1);
+      gifts.push('dyadA');
+      // Consume the spell
+      cfg.gainFOR = (cfg.gainFOR || 0) - 1;
+    }
+  }
+
+  // gainPIN - Pin detection
+  if (tacticsState.gainPIN) {
+    const isPin = detectPin(
+      context.fromSq,
+      context.toSq,
+      context.piece,
+      context.side
+    );
+    if (isPin) {
+      fired = true;
+      offerGrant(s, 'dyadA', 1);
+      gifts.push('dyadA');
+      // Consume the spell
+      cfg.gainPIN = (cfg.gainPIN || 0) - 1;
+    }
+  }
+
+  // gainOUT - Outpost detection
+  if (tacticsState.gainOUT) {
+    const isOutpost = detectOutpost(context.toSq, context.piece, context.side);
+    if (isOutpost) {
+      fired = true;
+      offerGrant(s, 'dyadA', 1);
+      gifts.push('dyadA');
+      // Consume the spell
+      cfg.gainOUT = (cfg.gainOUT || 0) - 1;
+    }
+  }
+
+  // gainCOM - Check counter (Combo Berserker)
+  if (tacticsState.gainCOM && context.isCheck) {
+    checkCounts[s] = (checkCounts[s] || 0) + 1;
+    if (checkCounts[s] >= 4) {
+      fired = true;
+      checkTriggered = true;
+      offerGrant(s, 'dyadA', 1);
+      gifts.push('dyadA');
+      checkCounts[s] = 0; // Reset counter after granting
+    }
+  }
+
+  return { fired, gifts, checkTriggered, checkCount: checkCounts[s] || 0 };
 }
 
 export { ArcanaProgression };

@@ -33,6 +33,8 @@ import {
   applyMoriMoraRewards,
   getGainState,
   applyGainRewards,
+  getGainTacticsState,
+  applyGainTacticsRewards,
   POWERBIT,
   canCastGlare,
   triggerArcanaUpdateCallback,
@@ -1490,6 +1492,58 @@ export function MakeMove(move, moveType = '') {
     )
   ) {
     GameBoard.checksGiven[GameBoard.side]++;
+  }
+
+  // Check for tactical gain spells (fork, pin, outpost, combo)
+  if (moveType === 'userMove' || moveType === 'commit') {
+    const moverSide = side === COLOURS.WHITE ? 'white' : 'black';
+    const tacticsState = getGainTacticsState(moverSide);
+    
+    if (
+      tacticsState.gainFOR ||
+      tacticsState.gainPIN ||
+      tacticsState.gainOUT ||
+      tacticsState.gainCOM
+    ) {
+      const isCheck =
+        SqAttacked(
+          GameBoard.pList[PCEINDEX(Kings[GameBoard.side ^ 1], 0)],
+          GameBoard.side
+        ) === BOOL.TRUE;
+
+      const movedPiece = GameBoard.pieces[to];
+      const tacticsContext = {
+        side: moverSide,
+        piece: movedPiece,
+        fromSq: from,
+        toSq: to,
+        move,
+        isCheck,
+      };
+
+      // Simple attack-from-square function for fork detection
+      const attacksFromSquare = (sq, piece, _side) => {
+        // This is a placeholder - in full implementation, would use proper attack generation
+        // For now, just return empty array to avoid errors
+        // TODO: Implement proper attack generation for fork detection
+        void sq;
+        void piece;
+        return [];
+      };
+
+      const tacticsResult = applyGainTacticsRewards(
+        tacticsContext,
+        tacticsState,
+        attacksFromSquare
+      );
+
+      if (tacticsResult && tacticsResult.fired) {
+        h.gainTacticsTag = true;
+        h.gainTacticsGifts = tacticsResult.gifts;
+        h.gainTacticsSide = moverSide;
+        h.gainTacticsCheckCount = tacticsResult.checkCount;
+      }
+    }
   }
 
   GameBoard.hisPly++;
