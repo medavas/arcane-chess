@@ -22,7 +22,13 @@ import PromotionModal from 'src/features/game/components/PromotionModal/Promotio
 import { booksMap } from 'src/shared/data/booksMap';
 
 import arcaneChess from 'src/features/game/engine/arcaneChess.mjs';
-import { GameBoard, InCheck, TOSQ, CAPTURED, PROMOTED } from 'src/features/game/engine/board.mjs';
+import {
+  GameBoard,
+  InCheck,
+  TOSQ,
+  CAPTURED,
+  PROMOTED,
+} from 'src/features/game/engine/board.mjs';
 import { PrSq } from 'src/features/game/engine/io.mjs';
 import { SearchController } from 'src/features/game/engine/search.mjs';
 
@@ -97,6 +103,7 @@ interface State {
   magnetType: string;
   trampleType: string;
   trampleSelected?: string;
+  bounceType: string;
   offeringType: string;
   isDyadMove: boolean;
   normalMovesOnly: boolean;
@@ -225,6 +232,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
       magnetType: '',
       trampleType: '',
       trampleSelected: undefined,
+      bounceType: '',
       offeringType: '',
       isDyadMove: false,
       normalMovesOnly: false,
@@ -289,6 +297,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         isEvoActive: this.state.isEvoActive,
         magnetType: this.state.magnetType,
         trampleType: this.state.trampleType,
+        bounceType: this.state.bounceType,
       }),
       updateSpellState: (updates) => this.setState(updates as any),
       updateHistory: (updates, callback) =>
@@ -411,7 +420,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         [this.state.nodeId]:
           Math.abs(
             GameBoard.material[this.state.playerColor === 'white' ? 0 : 1] -
-            GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
+              GameBoard.material[this.state.playerColor === 'white' ? 1 : 0]
           ) *
           (timeLeft || 1) *
           LS.config.multiplier,
@@ -612,7 +621,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
             score={LS.nodeScores[this.state.nodeId]}
             type={
               this.state.gameOverType.split(' ')[1] === 'mates' &&
-                this.state.playerColor === this.state.gameOverType.split(' ')[0]
+              this.state.playerColor === this.state.gameOverType.split(' ')[0]
                 ? 'victory'
                 : 'defeat'
             }
@@ -664,6 +673,8 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                 });
               }}
               avatar={this.state.engineAvatar}
+              isDyadActive={this.state.isDyadMove}
+              isEvoActive={this.state.isEvoActive}
             />
             <div className="time-board-time">
               <div className="board-view tactorius-default-board">
@@ -719,8 +730,9 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                   }}
                   onMove={(parsed, orig, dest) => {
                     // Check if this is a magnet/black hole spell
-                    const isMagnetMove = (TOSQ(parsed) === 0 &&
-                      (CAPTURED(parsed) === 31 || PROMOTED(parsed) === 30));
+                    const isMagnetMove =
+                      TOSQ(parsed) === 0 &&
+                      (CAPTURED(parsed) === 31 || PROMOTED(parsed) === 30);
 
                     this.gameEngineHandler.normalMoveStateAndEngineGo(
                       parsed,
@@ -779,6 +791,8 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                 });
               }}
               variantInfo={node.variant ? node.variant : ''}
+              isDyadActive={this.state.isDyadMove}
+              isEvoActive={this.state.isEvoActive}
             />
           </div>
         </div>

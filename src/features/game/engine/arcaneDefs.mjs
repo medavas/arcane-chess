@@ -1161,7 +1161,7 @@ function checkSliderForPin(sq, piece, sideNum, enemySide, enemyKing, hasREA) {
     let enemyPieceCount = 0;
     let foundKing = false;
     let pinnedPiece = null;
-    let pinnedSq = null;
+    // let pinnedSq = null;
     let testSq = sq;
     const piecesFound = [];
 
@@ -1192,7 +1192,7 @@ function checkSliderForPin(sq, piece, sideNum, enemySide, enemyKing, hasREA) {
         // Store the first enemy piece (the pinned piece)
         if (enemyPieceCount === 1) {
           pinnedPiece = pieceAtSq;
-          pinnedSq = testSq;
+          // pinnedSq = testSq;
         }
 
         if (isEnemyKing) {

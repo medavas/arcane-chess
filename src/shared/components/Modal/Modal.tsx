@@ -75,7 +75,13 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
     const LS = getLocalStorage(this.props.auth.user.username);
 
     // Use defaults if LS is null (for Skirmish/QuickPlay without login)
-    const config = LS?.config || { multiplier: 80, color: 'white', thinkingTime: 2, depth: 1, clock: false };
+    const config = LS?.config || {
+      multiplier: 80,
+      color: 'white',
+      thinkingTime: 2,
+      depth: 1,
+      clock: false,
+    };
     const nodeScores = LS?.nodeScores || {};
     const chapter = LS?.chapter ?? 0;
     const difficulty = LS?.difficulty || 'novice';
@@ -378,7 +384,10 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                   type="button"
                   className="endgame-btn primary-btn"
                   onClick={() => {
-                    window.removeEventListener('beforeunload', (window as any).handleBeforeUnload);
+                    window.removeEventListener(
+                      'beforeunload',
+                      (window as any).handleBeforeUnload
+                    );
                     location.reload();
                   }}
                 >
@@ -431,7 +440,10 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                   type="button"
                   className="endgame-btn primary-btn"
                   onClick={() => {
-                    window.removeEventListener('beforeunload', (window as any).handleBeforeUnload);
+                    window.removeEventListener(
+                      'beforeunload',
+                      (window as any).handleBeforeUnload
+                    );
                     location.reload();
                   }}
                 >
@@ -451,9 +463,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
           isOpen={this.props.isOpen}
           ariaHideApp={false}
         >
-          <div
-            className="chapter-end"
-          >
+          <div className="chapter-end">
             <div className="chapter-end-text" style={{ padding: '20px' }}>
               <div className="chapter-end-text-top">
                 <h1>BOOK END</h1>
@@ -471,8 +481,9 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                         return (
                           <img
                             key={key}
-                            className={`arcane ${this.state.hoverArcane === `${key}` ? 'focus' : ''
-                              }`}
+                            className={`arcane ${
+                              this.state.hoverArcane === `${key}` ? 'focus' : ''
+                            }`}
                             src={`/assets/arcanaImages${arcana[key].imagePath}.svg`}
                             onMouseEnter={() => this.toggleHover(`${key}`)}
                             onMouseLeave={() => this.toggleHover('')}
@@ -488,7 +499,10 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                       </b>
                     </span>
                     <p>
-                      {arcana[this.state.hoverArcane.split('-')[0]]?.description}
+                      {
+                        arcana[this.state.hoverArcane.split('-')[0]]
+                          ?.description
+                      }
                     </p>
                   </div>
                 </div>
