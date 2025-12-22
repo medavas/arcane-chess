@@ -237,7 +237,7 @@ export const modes: Record<string, GameModeType> = padModes({
         // arcana.gainOUT,
         // arcana.gainCOM,
       ],
-      setup: '4k3',
+      setup: 'rnbmkbnr',
     },
   },
   tutorial1: {

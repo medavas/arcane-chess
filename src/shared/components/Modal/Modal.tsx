@@ -327,6 +327,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                   type="button"
                   className="endgame-btn primary-btn"
                   onClick={() => {
+                    (window as any).allowNavigation = true;
                     this.props.navigate('/chapter');
                   }}
                 >
@@ -377,6 +378,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                   type="button"
                   className="endgame-btn primary-btn"
                   onClick={() => {
+                    window.removeEventListener('beforeunload', (window as any).handleBeforeUnload);
                     location.reload();
                   }}
                 >
@@ -429,6 +431,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                   type="button"
                   className="endgame-btn primary-btn"
                   onClick={() => {
+                    window.removeEventListener('beforeunload', (window as any).handleBeforeUnload);
                     location.reload();
                   }}
                 >
@@ -496,6 +499,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                   width={200}
                   height={60}
                   onClick={() => {
+                    (window as any).allowNavigation = true;
                     setLocalStorage({
                       ...getLocalStorage(this.props.auth.user.username),
                       chapter: 0,
@@ -613,6 +617,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                     type="button"
                     className="endgame-btn secondary-btn"
                     onClick={() => {
+                      (window as any).allowNavigation = true;
                       this.props.navigate('/');
                     }}
                   >
@@ -632,6 +637,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                   type="button"
                   className="endgame-btn primary-btn"
                   onClick={() => {
+                    (window as any).allowNavigation = true;
                     location.reload();
                   }}
                 >
@@ -663,6 +669,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                     type="button"
                     className="endgame-btn secondary-btn"
                     onClick={() => {
+                      (window as any).allowNavigation = true;
                       this.props.navigate('/');
                     }}
                   >
@@ -682,6 +689,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                   type="button"
                   className="endgame-btn primary-btn"
                   onClick={() => {
+                    (window as any).allowNavigation = true;
                     location.reload();
                   }}
                 >
@@ -715,6 +723,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                     type="button"
                     className="endgame-btn secondary-btn"
                     onClick={() => {
+                      (window as any).allowNavigation = true;
                       this.props.navigate('/');
                     }}
                   >
@@ -734,6 +743,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                   type="button"
                   className="endgame-btn primary-btn"
                   onClick={() => {
+                    (window as any).allowNavigation = true;
                     location.reload();
                   }}
                 >

@@ -467,6 +467,10 @@ class UnwrappedQuickPlay extends React.Component<Props, State> {
   }
 
   handleBeforeUnload(event: BeforeUnloadEvent) {
+    // Allow programmatic navigation (retry/home buttons) without alert
+    if ((window as any).allowNavigation) {
+      return;
+    }
     // Prevent the default behavior and trigger the confirmation dialog
     event.preventDefault();
     // Chrome requires returnValue to be set
