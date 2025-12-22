@@ -82,7 +82,7 @@
   "toknHEM": {
     "id": "toknHEM",
     "name": "Hemlock",
-    "description": "Invisible to your opponent. 1 up 1 over and 1 up 3 over move pattern similar to Knight, moves across the other side of the board. Overrides Herring. Stacks with Hermit.",
+    "description": "Invisible to your opponent. 1 up 1 over and 1 up 3 over move pattern similar to Knight, moves across the other side of the board. Can't check. Overrides Herring. Stacks with Hermit.",
     "type": "inherent",
     "imagePath": "/toknHEM",
     "value": 9,

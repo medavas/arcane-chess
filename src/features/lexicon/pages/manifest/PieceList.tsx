@@ -17,6 +17,15 @@ const pieceList: PieceItem[] = [
     family: 'Infantry',
   },
 
+  // Obstructors
+  {
+    name: 'Exile',
+    description:
+      'A banished piece that blocks movement and key squares. Cannot be captured by normal means.',
+    imagePath: '/assets/images/pieces/tactorius/normal/wX',
+    family: 'Obstructors',
+  },
+
   // Equus
   {
     name: 'Knight',
@@ -56,29 +65,29 @@ const pieceList: PieceItem[] = [
     family: 'Sliders',
   },
 
-  // Ghost
+  // Ghosts
   {
     name: 'Spectre',
     description:
       'Moves to the opposite-colored square complex in a 5×5 box from its position. A phantom that haunts the board.',
     imagePath: '/assets/images/pieces/tactorius/normal/wS',
-    family: 'Ghost',
+    family: 'Ghosts',
   },
   {
     name: 'Wraith',
     description:
       'Moves to the same-colored square complex in a 5×5 box from its position. A relentless spirit shadowing its prey.',
     imagePath: '/assets/images/pieces/tactorius/normal/wW',
-    family: 'Ghost',
+    family: 'Ghosts',
   },
 
-  // Token
+  // Sentinels
   {
     name: 'Herring, Hermit, Hemlock, Nomad',
     description:
       'Must be captured if it is attacked. Holding a token arcane changes behavior. Hermit casts a square condition aura. Hemlock acts as a super Knight. Both combine to form a Nomad.',
     imagePath: '/assets/images/pieces/tactorius/normal/wH',
-    family: 'Spellcasters',
+    family: 'Sentinels',
   },
 
   // Royalty
@@ -120,7 +129,15 @@ const pieceList: PieceItem[] = [
 ];
 
 export default function PieceList() {
-  const families = ['Infantry', 'Equus', 'Sliders', 'Ghost', 'Spellcasters', 'Royalty'];
+  const families = [
+    'Infantry',
+    'Equus',
+    'Sliders',
+    'Ghosts',
+    'Sentinels',
+    'Obstructors',
+    'Royalty',
+  ];
 
   return (
     <div className="piece-list">

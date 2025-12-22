@@ -770,7 +770,7 @@ export let HerShftDir = [-20, -12, -8, 8, 12, 20];
 export let HemlockHopA = [11, -11, 9, -9, 31, -31, 29, -29, -13, -7, 7, 13];
 export let HemlockHopB = [-33, -27, 27, 33];
 
-export let ExiDir = [-22, -20, -18, -2, 2, 18, 20, 22];
+export let ExiDir = [-22, -20, -11, -9, -18, -2, 2, 9, 11, 18, 20, 22];
 
 export const DirNum = [
   0, 0, 8, 4, 4, 8, 8, 0, 8, 4, 4, 8, 8, 12, 12, 6, 4, 4, 24, 12, 6, 4, 4, 24,
