@@ -968,5 +968,15 @@
     "value": 8,
     "related": [],
     "tier": "Elite"
+  },
+  "modsBLI": {
+    "id": "modsBLI",
+    "name": "Blitz",
+    "description": "Friendly Pawns may push an opposing Pawn back one space (if there is room).",
+    "type": "passive",
+    "imagePath": "/modsBLI",
+    "value": 5,
+    "related": [],
+    "tier": "Advanced"
   }
 }

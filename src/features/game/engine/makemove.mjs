@@ -709,12 +709,22 @@ export function MakeMove(move, moveType = '') {
     }
   }
 
+  // Detect blitz move early to exclude from normal capture logic
+  const isBlitzMove = TOSQ(move) > 0 && 
+    PiecePawn[GameBoard.pieces[from]] === BOOL.TRUE &&
+    captured !== PIECES.EMPTY &&
+    PiecePawn[captured] === BOOL.TRUE &&
+    PieceCol[captured] !== side &&
+    ((side === COLOURS.WHITE && to === from + 10) ||
+     (side === COLOURS.BLACK && to === from - 10));
+
   const isNormalCapture =
     to > 0 &&
     (move & (MFLAGSWAP | MFLAGSUMN | MFLAGEP)) === 0 &&
     targetPieceAtTo !== PIECES.EMPTY &&
     // targetPieceAtTo !== TELEPORT_CONST &&
-    (PieceCol[targetPieceAtTo] !== side || consume);
+    (PieceCol[targetPieceAtTo] !== side || consume) &&
+    !isBlitzMove;  // Blitz moves handled separately
 
   // TRAMPLE MOVE: Piece stays in place, target is eliminated
   // Marked with PROMOTED === 30 and TOSQ > 0
@@ -850,10 +860,41 @@ export function MakeMove(move, moveType = '') {
     }
   }
 
+  // Blitz: Handle the special move
+  if (isBlitzMove) {
+    // Blitz: Push enemy pawn back one square toward its home
+    // White pushes black pawn back (+10 toward rank 8)
+    // Black pushes white pawn back (-10 toward rank 1)
+    const enemyPawn = captured; // Enemy pawn is encoded in captured field
+    const pushBackSq = side === COLOURS.WHITE ? to + 10 : to - 10;
+    
+    // The enemy pawn should be at 'to' square
+    // Clear it and move it back one square
+    if (GameBoard.pieces[to] === enemyPawn) {
+      ClearPiece(to);
+      AddPiece(pushBackSq, enemyPawn);
+    }
+    
+    // Move friendly pawn forward to where enemy was
+    MovePiece(from, to);
+    
+    if (commit) {
+      const cfg =
+        side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+      const spellBook =
+        side === COLOURS.WHITE ? whiteArcaneSpellBook : blackArcaneSpellBook;
+      cfg.modsBLI = (cfg.modsBLI ?? 0) - 1;
+      spellBook.modsBLI = Math.max(0, (spellBook.modsBLI ?? 0) - 1);
+      h.modsBLIConsumed = true;
+      triggerArcanaUpdateCallback();
+    }
+  }
+
   if (
     (move & MFLAGSUMN) === 0 &&
     TOSQ(move) > 0 &&
     !isTrampleMove && // Trample: piece stays in place
+    !isBlitzMove && // Blitz: handled separately above
     // (TOSQ(move) > 0 || CAPTURED(move) === TELEPORT_CONST) &&
     (ARCANEFLAG(move) === 0 ||
       isShift(move) ||
@@ -1902,6 +1943,13 @@ export function TakeMove(wasDyadMove = false) {
     h.gainSide = undefined;
   }
 
+  // Detect blitz move early for proper undo handling
+  const isBlitzMove = to > 0 && 
+    captured !== PIECES.EMPTY &&
+    PiecePawn[captured] === BOOL.TRUE &&
+    ((GameBoard.side === COLOURS.WHITE && to === from + 10) ||
+     (GameBoard.side === COLOURS.BLACK && to === from - 10));
+
   if (TOSQ(move) > 0 && isConsumeFlag(move) && !isShift(move)) {
     (GameBoard.side === COLOURS.WHITE
       ? whiteArcaneConfig
@@ -1958,7 +2006,7 @@ export function TakeMove(wasDyadMove = false) {
   ) {
     // Skip MovePiece for trample moves (pieceEpsilon === 30)
     const isTrampleMove = to > 0 && captured > 0 && pieceEpsilon === 30;
-    if (!isTrampleMove) {
+    if (!isTrampleMove && !isBlitzMove) {
       MovePiece(to, from);
     }
 
@@ -1971,10 +2019,10 @@ export function TakeMove(wasDyadMove = false) {
     to > 0 &&
     captured !== PIECES.EMPTY &&
     // captured !== TELEPORT_CONST &&
-    (move & (MFLAGSWAP | MFLAGSUMN | MFLAGEP)) === 0
+    (move & (MFLAGSWAP | MFLAGSUMN | MFLAGEP)) === 0 &&
+    !isBlitzMove  // Skip for blitz moves - handled separately
   ) {
     AddPiece(to, captured);
-    const h = GameBoard.history[GameBoard.hisPly];
 
     if (h && h.moriMana) {
       const { side, steps, keys = [] } = h.moriMana;
@@ -2085,6 +2133,25 @@ export function TakeMove(wasDyadMove = false) {
         AddPiece(to, h.summonOverwrittenPiece);
         h.summonOverwrittenPiece = undefined;
       }
+    }
+  } else if (isBlitzMove) {
+    // Undo Blitz: Restore enemy pawn to original position
+    const enemyPawn = CAPTURED(move); // Enemy pawn is encoded in captured field
+    const pushBackSq = GameBoard.side === COLOURS.WHITE ? to + 10 : to - 10;
+    
+    // Move friendly pawn back
+    MovePiece(to, from);
+    
+    // Restore enemy pawn
+    ClearPiece(pushBackSq);
+    AddPiece(to, enemyPawn);
+    
+    // Restore spell counter only if it was consumed (committed move)
+    if (h.modsBLIConsumed) {
+      const cfg =
+        GameBoard.side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+      cfg.modsBLI = (cfg.modsBLI ?? 0) + 1;
+      triggerArcanaUpdateCallback();
     }
   } else if (TOSQ(move) > 0 && isSwap(move)) {
     const putBack = GameBoard.pieces[from];

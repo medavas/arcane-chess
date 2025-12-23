@@ -1629,6 +1629,22 @@ export function GenerateMoves(
         );
       }
 
+      // blitz - push back enemy pawn
+      const whiteModsBLI = whiteArcaneConfig?.modsBLI || 0;
+      if (
+        !activeBlackForcedEpCapture &&
+        whiteModsBLI > 0 &&
+        GameBoard.pieces[sq + 10] === PIECES.bP &&
+        GameBoard.pieces[sq + 20] === PIECES.EMPTY &&
+        !herrings.length
+      ) {
+        // Encode enemy pawn in captured field for detection
+        AddCaptureMove(
+          MOVE(sq, sq + 10, PIECES.bP, PIECES.EMPTY, 0),
+          capturesOnly
+        );
+      }
+
       if (
         !activeBlackForcedEpCapture &&
         ((SQOFFBOARD(sq + 9) === BOOL.FALSE && !herrings.length) ||
@@ -1994,6 +2010,23 @@ export function GenerateMoves(
       ) {
         AddCaptureMove(
           MOVE(sq, sq - 20, GameBoard.pieces[sq - 20], PIECES.EMPTY, MFLAGPS),
+          capturesOnly
+        );
+      }
+
+      // blitz - push back enemy pawn
+      const blackModsBLI = blackArcaneConfig?.modsBLI || 0;
+      if (
+        !activeWhiteForcedEpCapture &&
+        blackModsBLI > 0 &&
+        GameBoard.pieces[sq - 10] === PIECES.wP &&
+        GameBoard.pieces[sq - 20] === PIECES.EMPTY &&
+        !herrings.length
+      ) {
+        // Encode enemy pawn in captured field for detection
+        // Encode enemy pawn in captured field for detection
+        AddCaptureMove(
+          MOVE(sq, sq - 10, PIECES.wP, PIECES.EMPTY, 0),
           capturesOnly
         );
       }

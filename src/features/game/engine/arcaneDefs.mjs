@@ -359,7 +359,7 @@ export const POWERBIT = {
   swapDEP: 1,
   swapADJ: 2,
 
-  // 4 mods 26
+  // 4 mods 27
   modsCON: 1, // passive
   modsAET: 2, // active
   modsFUG: 4, // inherent
@@ -374,17 +374,17 @@ export const POWERBIT = {
   modsTRO: 2048, // inherent     // trojan horse
   modsREI: 4096, // inherent     . reincarnet for cons and offr
   modsEVO: 8192, // passive      berserking evolution
-  modsRED: 16384, // passive     blinding mist - reduce slider scope
+  modsRED: 16384, // passive      reduce slider scope
   modsMAG: 32768, // active      magnet
   modsBOU: 65536, // inherent    bishop bounce (Mirror Strike)
   modsSUR: 131072, // passive    pawn surge
   modsDIM: 262144, // passive    5th dimension sword
-  // modsHER: 524288, // passive    hermit
-  // modsHEM: 1048576, // inherent  hemlock
+  modsBLI: 524288, // passive    pawn blitz
+  // modsHEM: 1048576, //
   modsBAN: 2097152, // inherent  // banshee
   modsGLA: 4194304, // inherent  // glare - rook attacks apply disarmament
   // modsZ: 8388608, // passive     // .
-  modsFLA: 16777216, // passive  // hurricane
+  modsFLA: 16777216, // passive  // flank swap
   modsHEX: 33554432, // passive  // hexlash
   modsTRA: 67108864, // active   // trample - equus eliminates attacked piece without moving
 

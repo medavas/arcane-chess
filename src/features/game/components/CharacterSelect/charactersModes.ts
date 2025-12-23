@@ -214,6 +214,7 @@ export const modes: Record<string, GameModeType> = padModes({
         arcana.gainPIN,
         arcana.gainOUT,
         arcana.gainCOM,
+        arcana.modsBLI,
 
         // arcana.modsEVO,
         // arcana.modsMAG,

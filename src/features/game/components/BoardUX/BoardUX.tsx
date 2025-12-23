@@ -129,6 +129,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           const hasModsREA = ((pieceConfig as any)['modsREA'] || 0) > 0; // Iron Reach - Wraith & Valkyrie, always red
           const hasModsSUR = ((pieceConfig as any)['modsSUR'] || 0) > 0; // Pawn Surge - pawns only, always red
           const hasModsAET = ((pieceConfig as any)['modsAET'] || 0) > 0; // Aetherstep - pawns only
+          const hasModsBLI = ((pieceConfig as any)['modsBLI'] || 0) > 0; // Blitz - pawns only, push back enemy pawns
 
           // Piece type checks
           const isPawn = classList.includes('p-piece');
@@ -413,6 +414,48 @@ export const BoardUX: React.FC<BoardUXProps> = ({
           if (hasModsREA && (isWraith || isValkyrie)) {
             canShift = true;
             forceRed = true;
+          }
+
+          // modsBLI: Blitz - pawns can push back enemy pawns
+          if (hasModsBLI && isPawn) {
+            // Get square position from piece element
+            const transform = (pieceEl as HTMLElement).style.transform;
+            const match = transform.match(/translate\(([^,]+),\s*([^)]+)\)/);
+
+            if (match) {
+              const xStr = match[1].replace('px', '').trim();
+              const yStr = match[2].replace('px', '').trim();
+              const xPx = parseFloat(xStr);
+              const yPx = parseFloat(yStr);
+
+              const boardEl = (pieceEl as HTMLElement).closest('cg-board');
+              if (boardEl) {
+                const boardWidth = boardEl.clientWidth;
+                const squareSize = boardWidth / 8;
+                const file = Math.round(xPx / squareSize);
+                const visualRank = Math.round(yPx / squareSize);
+                const boardRank = 8 - visualRank;
+                const sq = 21 + (boardRank - 1) * 10 + file;
+
+                if (isWhitePiece) {
+                  // White pawn - check if there's a black pawn ahead and room behind it
+                  const ahead = GameBoard.pieces[sq + 10];
+                  const twoAhead = GameBoard.pieces[sq + 20];
+                  if (ahead === PIECES.bP && twoAhead === PIECES.EMPTY) {
+                    canShift = true;
+                    forceRed = true;
+                  }
+                } else if (isBlackPiece) {
+                  // Black pawn - check if there's a white pawn ahead and room behind it
+                  const ahead = GameBoard.pieces[sq - 10];
+                  const twoAhead = GameBoard.pieces[sq - 20];
+                  if (ahead === PIECES.wP && twoAhead === PIECES.EMPTY) {
+                    canShift = true;
+                    forceRed = true;
+                  }
+                }
+              }
+            }
           }
 
           // modsAET: Aetherstep - only show for pawns on starting rank with blocking piece
