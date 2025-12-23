@@ -682,6 +682,7 @@ export function MakeMove(move, moveType = '') {
 
   GameBoard.castlePerm &= CastlePerm[from];
   GameBoard.castlePerm &= CastlePerm[to];
+
   GameBoard.enPas = SQUARES.NO_SQ;
 
   HASH_CA();
@@ -710,13 +711,14 @@ export function MakeMove(move, moveType = '') {
   }
 
   // Detect blitz move early to exclude from normal capture logic
-  const isBlitzMove = TOSQ(move) > 0 && 
+  const isBlitzMove =
+    TOSQ(move) > 0 &&
     PiecePawn[GameBoard.pieces[from]] === BOOL.TRUE &&
     captured !== PIECES.EMPTY &&
     PiecePawn[captured] === BOOL.TRUE &&
     PieceCol[captured] !== side &&
     ((side === COLOURS.WHITE && to === from + 10) ||
-     (side === COLOURS.BLACK && to === from - 10));
+      (side === COLOURS.BLACK && to === from - 10));
 
   const isNormalCapture =
     to > 0 &&
@@ -724,7 +726,7 @@ export function MakeMove(move, moveType = '') {
     targetPieceAtTo !== PIECES.EMPTY &&
     // targetPieceAtTo !== TELEPORT_CONST &&
     (PieceCol[targetPieceAtTo] !== side || consume) &&
-    !isBlitzMove;  // Blitz moves handled separately
+    !isBlitzMove; // Blitz moves handled separately
 
   // TRAMPLE MOVE: Piece stays in place, target is eliminated
   // Marked with PROMOTED === 30 and TOSQ > 0
@@ -863,21 +865,25 @@ export function MakeMove(move, moveType = '') {
   // Blitz: Handle the special move
   if (isBlitzMove) {
     // Blitz: Push enemy pawn back one square toward its home
-    // White pushes black pawn back (+10 toward rank 8)
-    // Black pushes white pawn back (-10 toward rank 1)
+    // White blitzing black pawn: push toward rank 8 (+10)
+    // Black blitzing white pawn: push toward rank 1 (-10)
     const enemyPawn = captured; // Enemy pawn is encoded in captured field
-    const pushBackSq = side === COLOURS.WHITE ? to + 10 : to - 10;
-    
-    // The enemy pawn should be at 'to' square
-    // Clear it and move it back one square
-    if (GameBoard.pieces[to] === enemyPawn) {
+    const enemySide = PieceCol[enemyPawn];
+    const pushBackSq = enemySide === COLOURS.WHITE ? to - 10 : to + 10;
+
+    // Only push back if the pushBack square is empty
+    // If occupied, the blitz move should fail (piece stays but move is invalid)
+    // However since we're here, the move was already generated, so we just skip the pushback
+    if (
+      GameBoard.pieces[to] === enemyPawn &&
+      GameBoard.pieces[pushBackSq] === PIECES.EMPTY
+    ) {
       ClearPiece(to);
       AddPiece(pushBackSq, enemyPawn);
+      // Move friendly pawn forward to where enemy was
+      MovePiece(from, to);
     }
-    
-    // Move friendly pawn forward to where enemy was
-    MovePiece(from, to);
-    
+
     if (commit) {
       const cfg =
         side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
@@ -911,7 +917,6 @@ export function MakeMove(move, moveType = '') {
     // Evolution triggers on all moves while active
     // Captures are blocked unless Gluttony (modsGLU) is active
     const movedPiece = GameBoard.pieces[to];
-    const cfg = side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
 
     if (GameBoard.evo > 0 && commit && movedPiece !== PIECES.EMPTY) {
       let evolvedPiece = PIECES.EMPTY;
@@ -1539,7 +1544,7 @@ export function MakeMove(move, moveType = '') {
   if (moveType === 'userMove' || moveType === 'commit') {
     const moverSide = side === COLOURS.WHITE ? 'white' : 'black';
     const tacticsState = getGainTacticsState(moverSide);
-    
+
     if (
       tacticsState.gainFOR ||
       tacticsState.gainPIN ||
@@ -1563,10 +1568,10 @@ export function MakeMove(move, moveType = '') {
       };
 
       // Attack-from-square function for fork detection
-      const attacksFromSquare = (sq, piece, _side) => {
+      const attacksFromSquare = (sq, piece) => {
         const attacks = [];
         const isPawn = PiecePawn[piece] === BOOL.TRUE;
-        
+
         if (isPawn) {
           // Pawns attack diagonally
           const isWhitePawn = PieceCol[piece] === COLOURS.WHITE;
@@ -1578,9 +1583,12 @@ export function MakeMove(move, moveType = '') {
             }
           }
         } else if (
-          piece === PIECES.wN || piece === PIECES.bN ||
-          piece === PIECES.wZ || piece === PIECES.bZ ||
-          piece === PIECES.wU || piece === PIECES.bU
+          piece === PIECES.wN ||
+          piece === PIECES.bN ||
+          piece === PIECES.wZ ||
+          piece === PIECES.bZ ||
+          piece === PIECES.wU ||
+          piece === PIECES.bU
         ) {
           // Knights and knight-like pieces
           const directions = [-8, -19, -21, -12, 8, 19, 21, 12];
@@ -1607,14 +1615,14 @@ export function MakeMove(move, moveType = '') {
           const isQueen = piece === PIECES.wQ || piece === PIECES.bQ;
           const isT = piece === PIECES.wT || piece === PIECES.bT;
           const isM = piece === PIECES.wM || piece === PIECES.bM;
-          
+
           if (isRook || isQueen || isT) {
             directions.push(...RkDir); // Orthogonal: [-1, -10, 1, 10]
           }
           if (isBishop || isQueen || isM) {
             directions.push(...[-9, -11, 11, 9]); // Diagonal
           }
-          
+
           for (const dir of directions) {
             let targetSq = sq + dir;
             while (GameBoard.pieces[targetSq] !== SQOFFBOARD) {
@@ -1627,7 +1635,7 @@ export function MakeMove(move, moveType = '') {
             }
           }
         }
-        
+
         return attacks;
       };
 
@@ -1855,7 +1863,6 @@ export function TakeMove(wasDyadMove = false) {
   move = GameBoard.history[GameBoard.hisPly].move;
   from = FROMSQ(move);
   to = TOSQ(move);
-  const capturedPiece = CAPTURED(move);
   const pieceEpsilon = PROMOTED(move);
 
   const consume = isConsumeFlag(move);
@@ -1944,11 +1951,12 @@ export function TakeMove(wasDyadMove = false) {
   }
 
   // Detect blitz move early for proper undo handling
-  const isBlitzMove = to > 0 && 
+  const isBlitzMove =
+    to > 0 &&
     captured !== PIECES.EMPTY &&
     PiecePawn[captured] === BOOL.TRUE &&
     ((GameBoard.side === COLOURS.WHITE && to === from + 10) ||
-     (GameBoard.side === COLOURS.BLACK && to === from - 10));
+      (GameBoard.side === COLOURS.BLACK && to === from - 10));
 
   if (TOSQ(move) > 0 && isConsumeFlag(move) && !isShift(move)) {
     (GameBoard.side === COLOURS.WHITE
@@ -2020,7 +2028,7 @@ export function TakeMove(wasDyadMove = false) {
     captured !== PIECES.EMPTY &&
     // captured !== TELEPORT_CONST &&
     (move & (MFLAGSWAP | MFLAGSUMN | MFLAGEP)) === 0 &&
-    !isBlitzMove  // Skip for blitz moves - handled separately
+    !isBlitzMove // Skip for blitz moves - handled separately
   ) {
     AddPiece(to, captured);
 
@@ -2135,21 +2143,30 @@ export function TakeMove(wasDyadMove = false) {
       }
     }
   } else if (isBlitzMove) {
-    // Undo Blitz: Restore enemy pawn to original position
+    // Undo Blitz: Move friendly pawn back, then restore enemy pawn
     const enemyPawn = CAPTURED(move); // Enemy pawn is encoded in captured field
-    const pushBackSq = GameBoard.side === COLOURS.WHITE ? to + 10 : to - 10;
-    
-    // Move friendly pawn back
+    const enemySide = PieceCol[enemyPawn];
+    const pushBackSq = enemySide === COLOURS.WHITE ? to - 10 : to + 10;
+
+    // Move friendly piece back from destination to origin
     MovePiece(to, from);
-    
-    // Restore enemy pawn
-    ClearPiece(pushBackSq);
-    AddPiece(to, enemyPawn);
-    
+
+    // Verify the moving piece is actually a pawn (prevent false positives from non-pawn captures)
+    const movedPiece = GameBoard.pieces[from];
+    if (PiecePawn[movedPiece]) {
+      // True blitz move: restore enemy pawn from pushBackSq to original position
+      MovePiece(pushBackSq, to);
+    } else {
+      // False positive: non-pawn captured a pawn at distance 10, treat as normal capture
+      AddPiece(to, enemyPawn);
+    }
+
     // Restore spell counter only if it was consumed (committed move)
     if (h.modsBLIConsumed) {
       const cfg =
-        GameBoard.side === COLOURS.WHITE ? whiteArcaneConfig : blackArcaneConfig;
+        GameBoard.side === COLOURS.WHITE
+          ? whiteArcaneConfig
+          : blackArcaneConfig;
       cfg.modsBLI = (cfg.modsBLI ?? 0) + 1;
       triggerArcanaUpdateCallback();
     }

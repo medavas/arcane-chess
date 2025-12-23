@@ -66,9 +66,6 @@ import {
   royaltySliderMap,
   royaltyHopperMap,
   RtyChar,
-  LoopPcePrime,
-  LoopPcePrimeSymbols,
-  LoopPcePrimeIndex,
 } from './defs';
 import { MakeMove, TakeMove } from './makemove';
 import { validMoves } from './gui.mjs';
@@ -1636,7 +1633,11 @@ export function GenerateMoves(
         whiteModsBLI > 0 &&
         GameBoard.pieces[sq + 10] === PIECES.bP &&
         GameBoard.pieces[sq + 20] === PIECES.EMPTY &&
-        !herrings.length
+        !herrings.length &&
+        // Exclude if the target pawn can be captured via en passant from adjacent files
+        // EP square would be at sq+9 or sq+11 (diagonal forward squares)
+        GameBoard.enPas !== sq + 9 &&
+        GameBoard.enPas !== sq + 11
       ) {
         // Encode enemy pawn in captured field for detection
         AddCaptureMove(
@@ -1921,6 +1922,7 @@ export function GenerateMoves(
         if (GameBoard.pieces[sq - 10] === PIECES.EMPTY) {
           AddBlackPawnQuietMove(sq, sq - 10, 0, 0, capturesOnly);
         }
+
         if (
           (GameBoard.pieces[sq - 10] === PIECES.EMPTY &&
             GameBoard.pieces[sq - 20] === PIECES.EMPTY) ||
@@ -2021,9 +2023,12 @@ export function GenerateMoves(
         blackModsBLI > 0 &&
         GameBoard.pieces[sq - 10] === PIECES.wP &&
         GameBoard.pieces[sq - 20] === PIECES.EMPTY &&
-        !herrings.length
+        !herrings.length &&
+        // Exclude if the target pawn can be captured via en passant from adjacent files
+        // EP square would be at sq-9 or sq-11 (diagonal forward squares for black)
+        GameBoard.enPas !== sq - 9 &&
+        GameBoard.enPas !== sq - 11
       ) {
-        // Encode enemy pawn in captured field for detection
         // Encode enemy pawn in captured field for detection
         AddCaptureMove(
           MOVE(sq, sq - 10, PIECES.wP, PIECES.EMPTY, 0),
