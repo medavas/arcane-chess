@@ -509,6 +509,16 @@
     "related": [],
     "tier": "Basic"
   },
+  "modsREI": {
+    "id": "modsREI",
+    "name": "Reincarnate",
+    "description": "Any friendly pieces captured with Consume come back to you as a summon arcane.",
+    "type": "inherent",
+    "imagePath": "/modsREI",
+    "value": 6,
+    "related": [],
+    "tier": "Advanced"
+  },
   "modsREA": {
     "id": "modsREA",
     "name": "Iron Reach",
@@ -516,6 +526,16 @@
     "type": "inherent",
     "imagePath": "/modsREA",
     "value": 5,
+    "related": [],
+    "tier": "Advanced"
+  },
+  "modsBAN": {
+    "id": "modsBAN",
+    "name": "The Banshee",
+    "description": "Spectre move pattern is extended to the 7x7 square, non-capture moves only. Cannot wield 5D Sword.",
+    "type": "inherent",
+    "imagePath": "/modsBAN",
+    "value": 6,
     "related": [],
     "tier": "Advanced"
   },
@@ -669,16 +689,6 @@
     "related": [],
     "tier": "Elite"
   },
-  "modsBAN": {
-    "id": "modsBAN",
-    "name": "The Banshee",
-    "description": "Spectre move pattern is extended to the 7x7 square, non-capture moves only. Cannot wield 5D Sword.",
-    "type": "inherent",
-    "imagePath": "/modsBAN",
-    "value": 6,
-    "related": [],
-    "tier": "Advanced"
-  },
   "modsDIM": {
     "id": "modsDIM",
     "name": "5th Dimension Sword",
@@ -716,16 +726,6 @@
     "type": "inherent",
     "imagePath": "/modsGLA",
     "value": 9,
-    "related": [],
-    "tier": "Advanced"
-  },
-  "modsREI": {
-    "id": "modsREI",
-    "name": "Reincarnate",
-    "description": "Any friendly pieces captured with Consume come back to you as a summon arcane.",
-    "type": "inherent",
-    "imagePath": "/modsREI",
-    "value": 6,
     "related": [],
     "tier": "Advanced"
   },

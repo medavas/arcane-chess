@@ -1018,5 +1018,15 @@
     "value": 4,
     "related": [],
     "tier": "Basic"
+  },
+  "sumnRW": {
+    "id": "sumnRW",
+    "name": "Hexweaver's Abyss",
+    "description": "Summon a 3x3 grid of Abyss square conditions. The next piece that lands or is summoned on these squares is instantly captured. Then the square condition disappears.",
+    "type": "active",
+    "imagePath": "/sumnRW",
+    "value": 10,
+    "related": [],
+    "tier": "Legendary"
   }
 }
