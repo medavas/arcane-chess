@@ -342,6 +342,80 @@ export class UnwrappedDashboard extends React.Component<
             <h1 className="news-title">Transmissions</h1>
             <div className="news-item">
               <h4>
+                Patch 3.0 Live: Skirmish Archetypes, Spell Balance Update
+                <h6>Source: medavas</h6>
+                <h6>Date: December 2025</h6>
+                <h6>Category: Mechanics</h6>
+              </h4>
+              <ul>
+                <li>
+                  <strong>Archetype Exposition in Skirmish:</strong> Each
+                  faction archetype now displays its strategic identity -
+                  explore Gladiators who dominate with powerful units, Mages who
+                  master entanglement zones, Priests who summon vast
+                  reinforcements, and more unique playstyles.
+                </li>
+                <li>
+                  <strong>Arcana Unlock Acceleration:</strong> Arcana now
+                  unlocks every 5 turns instead of 6, granting faster access to
+                  your spellbook and creating more dynamic mid-game scenarios.
+                </li>
+                <li>
+                  <strong>Offering Spells Removed:</strong> The offering-type
+                  spell mechanic has been removed from the game to streamline
+                  spell interactions.
+                </li>
+                <li>
+                  <strong>&quot;Gain&quot; Spells Expanded:</strong> New
+                  tactical gain mechanics reward strategic positions - achieve
+                  pins, forks, outposts, or multiple checks to the opposing King
+                  to gain dyad arcana.
+                </li>
+                <li>
+                  <strong>Spell Arsenal Additions:</strong>
+                  <ul>
+                    <li>
+                      Reincarnate - When consuming a friendly piece with Jaws of
+                      Betrayal, it returns as a summon arcana.
+                    </li>
+                    <li>
+                      Berserking Evolution - The next move evolves your piece
+                      along with the move (P→N→R, ZUB→R→W, etc).
+                    </li>
+                    <li>
+                      Trample - Eliminate an opponent&apos;s piece attacked by
+                      your Equus units without moving.
+                    </li>
+                    <li>
+                      Blitz - Your pawns push opposing pawns back one space,
+                      creating unstoppable momentum.
+                    </li>
+                    <li>
+                      Flank Inversion - Swap all pieces on the A and H files in
+                      one dramatic repositioning.
+                    </li>
+                    <li>
+                      Doppleganger - Random spell replacement at game start with
+                      varying impact levels.
+                    </li>
+                    <li>
+                      Magnet - Pull pieces toward a target square from 2-7
+                      spaces away orthogonally.
+                    </li>
+                    <li>
+                      Reduction - Limit enemy slider range from 7 to 3 squares
+                      for 4 turns.
+                    </li>
+                    <li>
+                      Reflect Attack - Bishops bounce off board edges for
+                      unexpected angles.
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div className="news-item">
+              <h4>
                 Patch 2.9 Live: Ghost of Christmas Future Update
                 <h6>Source: medavas</h6>
                 <h6>Date: December 2025</h6>

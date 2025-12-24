@@ -752,7 +752,7 @@
   "modsMAG": {
     "id": "modsMAG",
     "name": "Magnet",
-    "description": "Pick a square. Pieces exactly 2-3 squares away in orthogonal directions are moved one square toward that square if not blocked.",
+    "description": "Pick a square. Pieces exactly 2-7 squares away in orthogonal directions are moved one square toward that square if not blocked.",
     "type": "active",
     "imagePath": "/modsMAG",
     "value": 4,
