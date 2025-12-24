@@ -418,38 +418,29 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
     const nextPlayerColor = prevPlayerColor === 'white' ? 'black' : 'white';
     const nextEngineColor = prevEngineColor === 'white' ? 'black' : 'white';
 
-    const playerArmy =
+    // Keep armies and arcana with their colors - they don't change during swap
+    // Only the player/engine roles change
+    const nextWhiteSetup = this.state.whiteSetup.toUpperCase();
+    const nextBlackSetup = this.state.blackSetup.toLowerCase();
+
+    const nextWhiteArc = this.state.whiteArcana;
+    const nextBlackArc = this.state.blackArcana;
+
+    // Keep archetypes with their colors, not their roles
+    const whiteArchetypeId =
       prevPlayerColor === 'white'
-        ? this.state.whiteSetup
-        : this.state.blackSetup;
-    const playerInv =
-      prevPlayerColor === 'white'
-        ? this.state.whiteArcana
-        : this.state.blackArcana;
+        ? this.state.playerArchetypeId
+        : this.state.engineArchetypeId;
+    const blackArchetypeId =
+      prevPlayerColor === 'black'
+        ? this.state.playerArchetypeId
+        : this.state.engineArchetypeId;
 
-    const engineArmy =
-      prevEngineColor === 'white'
-        ? this.state.whiteSetup
-        : this.state.blackSetup;
-    const engineInv =
-      prevEngineColor === 'white'
-        ? this.state.whiteArcana
-        : this.state.blackArcana;
-
-    // enforce casing by color
-    const nextWhiteSetup = (
-      nextPlayerColor === 'white' ? playerArmy : engineArmy
-    ).toUpperCase();
-    const nextBlackSetup = (
-      nextPlayerColor === 'black' ? playerArmy : engineArmy
-    ).toLowerCase();
-
-    const nextWhiteArc = nextPlayerColor === 'white' ? playerInv : engineInv;
-    const nextBlackArc = nextPlayerColor === 'black' ? playerInv : engineInv;
-
-    // Swap archetype IDs
-    const prevPlayerArchetype = this.state.playerArchetypeId;
-    const prevEngineArchetype = this.state.engineArchetypeId;
+    // After swap, assign archetypes based on who is now playing which color
+    const nextPlayerArchetype =
+      nextPlayerColor === 'white' ? whiteArchetypeId : blackArchetypeId;
+    const nextEngineArchetype =
+      nextEngineColor === 'white' ? whiteArchetypeId : blackArchetypeId;
 
     this.setState(
       {
@@ -459,8 +450,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
         blackSetup: nextBlackSetup,
         whiteArcana: nextWhiteArc,
         blackArcana: nextBlackArc,
-        playerArchetypeId: prevEngineArchetype,
-        engineArchetypeId: prevPlayerArchetype,
+        playerArchetypeId: nextPlayerArchetype,
+        engineArchetypeId: nextEngineArchetype,
       },
       () => {
         const wCounts = this.transformedSpellBook(this.state.whiteArcana);

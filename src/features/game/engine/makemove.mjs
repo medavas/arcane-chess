@@ -39,6 +39,7 @@ import {
   canCastGlare,
   triggerArcanaUpdateCallback,
 } from './arcaneDefs';
+import arcanaData from '../../../shared/data/arcana.json' assert { type: 'json' };
 import {
   COLOURS,
   PIECES,
@@ -1876,7 +1877,12 @@ export function TakeMove(wasDyadMove = false) {
     if (h.spellKey && h.spellCfg) {
       h.spellCfg[h.spellKey] = (h.spellCfg[h.spellKey] ?? 0) + 1;
       if (h.spellBook) {
-        h.spellBook[h.spellKey] = (h.spellBook[h.spellKey] ?? 0) + 1;
+        // Only restore spellBook counter for non-single-use spells
+        const spellType = arcanaData[h.spellKey]?.type;
+        const isSingleUse = spellType === 'active' || spellType === 'passive';
+        if (!isSingleUse) {
+          h.spellBook[h.spellKey] = (h.spellBook[h.spellKey] ?? 0) + 1;
+        }
       }
       triggerArcanaUpdateCallback();
       h.spellKey = undefined;
@@ -1886,7 +1892,12 @@ export function TakeMove(wasDyadMove = false) {
     if (h.shiftKey && h.shiftCfg) {
       h.shiftCfg[h.shiftKey] = (h.shiftCfg[h.shiftKey] ?? 0) + 1;
       if (h.shiftBook) {
-        h.shiftBook[h.shiftKey] = (h.shiftBook[h.shiftKey] ?? 0) + 1;
+        // Only restore spellBook counter for non-single-use spells
+        const spellType = arcanaData[h.shiftKey]?.type;
+        const isSingleUse = spellType === 'active' || spellType === 'passive';
+        if (!isSingleUse) {
+          h.shiftBook[h.shiftKey] = (h.shiftBook[h.shiftKey] ?? 0) + 1;
+        }
       }
       triggerArcanaUpdateCallback();
       h.shiftKey = undefined;
