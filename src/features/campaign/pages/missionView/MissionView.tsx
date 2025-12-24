@@ -445,6 +445,9 @@ class UnwrappedMissionView extends React.Component<Props, State> {
         hoverArcane: this.state.hoverArcane,
         glitchQueued: this.state.glitchQueued,
         isEvoActive: this.state.isEvoActive,
+        magnetType: this.state.magnetType,
+        trampleType: this.state.trampleType,
+        bounceType: this.state.bounceType,
       }),
       updateSpellState: (updates) => this.setState(updates as any),
       updateHistory: (updates, callback) =>

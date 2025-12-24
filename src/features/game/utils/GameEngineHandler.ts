@@ -177,9 +177,10 @@ export class GameEngineHandler {
               const { bestMove, temporalPincer } = reply;
               let newDialogue: string[] = [];
               if (level === 1) {
+                const moveStr = String(PrMove(bestMove));
                 newDialogue = [
                   ...state.dialogue,
-                  PrSq(FROMSQ(bestMove)) || PrMove(bestMove).split('@')[0],
+                  PrSq(FROMSQ(bestMove)) || moveStr.split('@')[0],
                 ];
                 chessgroundRef.current?.setAutoShapes([
                   {
@@ -188,7 +189,7 @@ export class GameEngineHandler {
                   },
                 ]);
               } else if (level === 2) {
-                newDialogue = [...state.dialogue, PrMove(bestMove)];
+                newDialogue = [...state.dialogue, String(PrMove(bestMove))];
                 chessgroundRef.current?.setAutoShapes([
                   {
                     orig: PrSq(FROMSQ(bestMove)) || PrSq(TOSQ(bestMove)),
@@ -284,7 +285,6 @@ export class GameEngineHandler {
           lastMoveHistory: newLastMoveHistory,
           dyadFirstMove: null,
           dyadStartPly: -1,
-          dyadFirstMove: null,
           placingPiece: 0,
           placingRoyalty: 0,
           placingPromotion: 0,

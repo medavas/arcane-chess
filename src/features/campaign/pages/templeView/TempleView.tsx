@@ -481,7 +481,7 @@ class UnwrappedTempleView extends React.Component<Props, State> {
         this.setState(
           (prevState) => ({
             pvLine: GameBoard.cleanPV,
-            history: [...prevState.history, PrMove(reply)],
+            history: [...prevState.history, String(PrMove(reply))],
             fenHistory: [...prevState.fenHistory, outputFenOfCurrentPosition()],
             thinking: false,
             turn: prevState.turn === 'white' ? 'black' : 'white',
@@ -557,7 +557,7 @@ class UnwrappedTempleView extends React.Component<Props, State> {
         // console.log('invalid move');
       }
       this.setState((prevState) => ({
-        history: [...prevState.history, PrMove(parsed)],
+        history: [...prevState.history, String(PrMove(parsed))],
         fen: outputFenOfCurrentPosition(),
         fenHistory: [...prevState.fenHistory, outputFenOfCurrentPosition()],
         lastMove: [
@@ -886,7 +886,7 @@ class UnwrappedTempleView extends React.Component<Props, State> {
                         ) {
                           this.setState(
                             (prevState) => ({
-                              history: [...prevState.history, PrMove(parsed)],
+                              history: [...prevState.history, String(PrMove(parsed))],
                               fen: outputFenOfCurrentPosition(),
                               fenHistory: [
                                 ...prevState.fenHistory,
