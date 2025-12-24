@@ -122,7 +122,7 @@ class UnwrappedFrontPage extends React.Component<
           <div className="row-a">
             <div className="enter-buttons">
               <Button
-                text="ENTER THE SITE"
+                text="PLAY"
                 color="V"
                 height={80}
                 width={400}
@@ -136,6 +136,9 @@ class UnwrappedFrontPage extends React.Component<
                 backgroundColorOverride="linear-gradient(135deg, rgba(255, 81, 47, 0.4), rgba(142, 45, 226, 0.4))"
                 onClick={() => this.handleEnterClick()}
               />
+              <p style={{ marginTop: '10px', fontStyle: 'italic', opacity: 0.8 }}>
+                Sign in or enter as guest to play
+              </p>
             </div>
             <div className="intro-box">
               <div className="intro">
@@ -202,7 +205,7 @@ class UnwrappedFrontPage extends React.Component<
             </div>
             <div className="enter-buttons">
               <Button
-                text="ENTER THE SITE"
+                text="PLAY"
                 color="V"
                 height={80}
                 width={400}
@@ -216,6 +219,9 @@ class UnwrappedFrontPage extends React.Component<
                 backgroundColorOverride="linear-gradient(135deg, rgba(255, 81, 47, 0.4), rgba(142, 45, 226, 0.4))"
                 onClick={() => this.handleEnterClick()}
               />
+              <p style={{ marginTop: '10px', fontStyle: 'italic', opacity: 0.8 }}>
+                Sign in or enter as guest to play
+              </p>
             </div>
             <div className="intro-box" style={{ marginBottom: '200px' }}>
               <div className="intro">
