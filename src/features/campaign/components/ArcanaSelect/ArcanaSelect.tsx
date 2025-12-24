@@ -94,54 +94,67 @@ export default class ArcanaSelect extends React.Component<
     return (
       <div className="arcane-select">
         <div className="spellBook">
-          {spellBook.map((arcane, key) => (
-            <div
-              key={key}
-              className={`arcane-wrapper ${
-                key === currentSpellBookSlot ? 'active' : ''
-              }`}
-              onMouseEnter={() => {
-                updateHover?.(arcane);
-                this.setState({
-                  hoverId: arcane.id,
-                  currentSpellBookSlot: key,
-                });
-              }}
-              onMouseLeave={() => {
-                updateHover?.({} as ArcanaDetail);
-                if (!isOpen) {
+          {spellBook.map((arcane, key) => {
+            // Safety check: skip rendering if arcane is undefined or null
+            if (!arcane) {
+              return (
+                <div
+                  key={key}
+                  className="arcane-wrapper"
+                  aria-label="Empty slot"
+                />
+              );
+            }
+
+            return (
+              <div
+                key={key}
+                className={`arcane-wrapper ${
+                  key === currentSpellBookSlot ? 'active' : ''
+                }`}
+                onMouseEnter={() => {
+                  updateHover?.(arcane);
                   this.setState({
-                    hoverId: '',
-                    currentSpellBookSlot: -1,
+                    hoverId: arcane.id,
+                    currentSpellBookSlot: key,
                   });
-                }
-              }}
-              onClick={
-                readOnly
-                  ? undefined
-                  : () => {
-                      handleToggle?.();
-                      this.setState({
-                        currentSpellBookSlot: key,
-                      });
-                    }
-              }
-              aria-disabled={readOnly || undefined}
-            >
-              <img
-                className="arcane"
-                src={`/assets/arcanaImages${arcane.imagePath}.svg`}
-                style={{
-                  cursor: cursorInteractive,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
                 }}
-                alt={arcane.name}
-                draggable={false}
-              />
-            </div>
-          ))}
+                onMouseLeave={() => {
+                  updateHover?.({} as ArcanaDetail);
+                  if (!isOpen) {
+                    this.setState({
+                      hoverId: '',
+                      currentSpellBookSlot: -1,
+                    });
+                  }
+                }}
+                onClick={
+                  readOnly
+                    ? undefined
+                    : () => {
+                        handleToggle?.();
+                        this.setState({
+                          currentSpellBookSlot: key,
+                        });
+                      }
+                }
+                aria-disabled={readOnly || undefined}
+              >
+                <img
+                  className="arcane"
+                  src={`/assets/arcanaImages${arcane.imagePath}.svg`}
+                  style={{
+                    cursor: cursorInteractive,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                  alt={arcane.name}
+                  draggable={false}
+                />
+              </div>
+            );
+          })}
         </div>
 
         {isOpen && (
