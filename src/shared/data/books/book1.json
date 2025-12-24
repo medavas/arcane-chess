@@ -1067,7 +1067,7 @@
           "r1bqkbnr/ppppp1pp/2n5/8/2PP1p2/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 1"
         ],
         "history": [],
-        "panelText": "The black Pawn moves to the 3rd rank (or 5th for white).",
+        "panelText": "The black Pawn moves to the 4th rank (or 5th for white).",
         "arrowsCircles": [
           {
             "orig": "f5",
@@ -1323,7 +1323,7 @@
         "fen": "8/2p3p1/1n1n1p1p/8/8/8/6U1/8 w - - 0 1",
         "fenHistory": ["8/2p3p1/1n1n1p1p/8/8/8/6U1/8 w - - 0 1"],
         "history": [],
-        "panelText": "Finally, the Unicorn. A new tricky piece that can target the first move of a Rook, or to the second square that a Bishop. It hops other pieces similar to it's sisters. Think teleporting to engage in close combat!",
+        "panelText": "Finally, the Unicorn. A new tricky piece that can target the first move of a Rook, or to the second square that of a Bishop. It hops other pieces similar to it's sisters. Think teleporting to engage in close combat!",
         "arrowsCircles": [],
         "royalties": {
           "royaltyQ": {},

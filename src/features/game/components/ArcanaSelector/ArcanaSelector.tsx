@@ -200,11 +200,11 @@ const ArcanaSelectorComponent: React.FC<ArcanaSelectorProps> = ({
     };
   }, []);
 
-  // Calculate progress bar segments - 6 segments for progression
-  const totalProgressSegments = 6;
+  // Calculate progress bar segments - use denom from progress state (5 for normal progression)
+  const totalProgressSegments = progress.denom || 5;
   const filledProgressSegments = React.useMemo(
     () => Math.round((progress.pct || 0) * totalProgressSegments),
-    [progress.pct]
+    [progress.pct, totalProgressSegments]
   );
 
   // Create a stable list of keys that are present in either the static spellBook

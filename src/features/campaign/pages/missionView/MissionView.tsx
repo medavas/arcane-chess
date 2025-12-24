@@ -38,6 +38,8 @@ import { SearchController } from 'src/features/game/engine/search.mjs';
 import {
   whiteArcaneConfig,
   blackArcaneConfig,
+  whiteArcaneSpellBook,
+  blackArcaneSpellBook,
   clearArcanaConfig,
   registerArcanaUpdateCallback,
   unregisterArcanaUpdateCallback,
@@ -196,6 +198,11 @@ interface State {
   normalMovesOnly: boolean;
   selectedSide: string;
   hoverArcane: string;
+  magnetType: string;
+  trampleType: string;
+  trampleSelected: string | undefined;
+  bounceType: string;
+  bounceSelected: string | undefined;
   royalties: {
     [key: string]: { [key: string]: number | undefined };
   };
@@ -285,18 +292,8 @@ class UnwrappedMissionView extends React.Component<Props, State> {
               `book${getLocalStorage(this.props.auth.user.username).chapter}`
             ]?.[getLocalStorage(this.props.auth.user.username).nodeId]
               .time[1][0],
-      playerColor:
-        booksMap[
-          `book${getLocalStorage(this.props.auth.user.username).chapter}`
-        ]?.[getLocalStorage(this.props.auth.user.username).nodeId]?.panels[
-          'panel-1'
-        ]?.turn || getLocalStorage(this.props.auth.user.username).config.color,
+      playerColor: getLocalStorage(this.props.auth.user.username).config.color,
       engineColor:
-        booksMap[
-          `book${getLocalStorage(this.props.auth.user.username).chapter}`
-        ]?.[getLocalStorage(this.props.auth.user.username).nodeId]?.panels[
-          'panel-1'
-        ]?.turn ||
         getLocalStorage(this.props.auth.user.username).config.color === 'white'
           ? 'black'
           : 'white',
@@ -357,6 +354,11 @@ class UnwrappedMissionView extends React.Component<Props, State> {
       normalMovesOnly: false,
       selectedSide: getLocalStorage(this.props.auth.user.username).config.color,
       hoverArcane: '',
+      magnetType: '',
+      trampleType: '',
+      trampleSelected: undefined,
+      bounceType: '',
+      bounceSelected: undefined,
       royalties:
         booksMap[
           `book${getLocalStorage(this.props.auth.user.username).chapter}`
@@ -401,7 +403,8 @@ class UnwrappedMissionView extends React.Component<Props, State> {
       defeatMessage:
         booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`].diagWinLose.defeat,
       dialogue: [],
-      dialogueList: {},
+      dialogueList:
+        booksMap[`book${LS.chapter}`]?.[`${LS.nodeId}`].diagWinLose || {},
       glitchActive: false,
       glitchQueued: false,
       isEvoActive: false,
@@ -744,6 +747,7 @@ class UnwrappedMissionView extends React.Component<Props, State> {
           blackArcana: {
             ...blackArcaneConfig,
           },
+          arcanaUpdateKey: this.state.arcanaUpdateKey + 1,
         },
         () => {
           if (
@@ -941,6 +945,8 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                 avatar={this.state.opponent}
                 showResign={true}
                 volumeControl={true}
+                variantInfo={variantExpos[this.state.preset]}
+                arcanaUpdateKey={this.state.arcanaUpdateKey}
               />
               <div className="time-board-time">
                 <div className="board-frame"></div>
@@ -973,6 +979,9 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                       playerColor: this.state.playerColor,
                       placingPromotion: this.state.placingPromotion,
                       isDyadMove: this.state.isDyadMove,
+                      magnetType: this.state.magnetType,
+                      trampleType: this.state.trampleType,
+                      bounceType: this.state.bounceType,
                     }}
                     width={'100%'}
                     height={'100%'}
@@ -1158,12 +1167,18 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                           number | string | undefined
                         >
                       }
+                      spellBook={
+                        (this.state.playerColor === 'white'
+                          ? whiteArcaneSpellBook
+                          : blackArcaneSpellBook) as Record<string, number>
+                      }
                       playerColor={this.state.playerColor}
                       thinking={this.state.thinking}
                       historyLength={this.state.history.length}
                       futureSightAvailable={this.state.futureSightAvailable}
                       hoverArcane={this.state.hoverArcane}
                       engineColor={this.state.engineColor}
+                      arcanaUpdateKey={this.state.arcanaUpdateKey}
                       dyadName={
                         typeof this.arcaneChess().getDyadName === 'function'
                           ? this.arcaneChess().getDyadName()

@@ -597,7 +597,7 @@ const ArcanaProgression = (() => {
   const moveCount = { white: 0, black: 0 };
   const grantsGiven = { white: 0, black: 0 };
 
-  let every = 6;
+  let every = 5;
   let firstAt = 1;
   let enabled = true;
 

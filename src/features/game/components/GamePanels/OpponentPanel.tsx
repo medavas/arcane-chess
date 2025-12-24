@@ -38,6 +38,7 @@ interface OpponentPanelProps {
   showResign?: boolean; // Optional, as it might not be in all views or desired in all contexts
   volumeControl?: boolean;
   avatar?: string; // For QuickPlay/MissionView avatars if needed
+  variantInfo?: string; // For MissionView variant explanation
 }
 
 export const OpponentPanel: React.FC<OpponentPanelProps> = ({
@@ -65,6 +66,7 @@ export const OpponentPanel: React.FC<OpponentPanelProps> = ({
   onResign,
   showResign = true,
   volumeControl = true,
+  variantInfo,
 }) => {
   return (
     <div className="opponent-dialogue-arcana">
@@ -110,6 +112,7 @@ export const OpponentPanel: React.FC<OpponentPanelProps> = ({
       </div>
       <div id="dialogue" className="dialogue">
         <ul style={{ padding: '0' }}>
+          {variantInfo && <li>{variantInfo}</li>}
           {dialogue.map((item, key) => {
             return <li key={key}>{item}</li>;
           })}

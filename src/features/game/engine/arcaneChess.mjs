@@ -52,8 +52,8 @@ import { PrSq } from './io';
 export default function arcaneChess() {
   // toggle to debug - turns off turn slot unlocks
   // debug all spells
-  // let debugAllSpells = false; // prod
-  let debugAllSpells = true; // dev
+  let debugAllSpells = false; // prod
+  // let debugAllSpells = true; // dev
 
   const init = () => {
     InitFilesRanksBrd();
@@ -96,7 +96,7 @@ export default function arcaneChess() {
       triggerArcanaUpdateCallback();
     } else {
       // Set how often arcana is granted
-      ArcanaProgression.setEvery(6);
+      ArcanaProgression.setEvery(5);
 
       setWhiteArcana({
         ...whiteConfig,

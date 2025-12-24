@@ -396,6 +396,11 @@
         line-height: 1.5;
         box-sizing: border-box;
 
+        // Hide on larger screens (opponent panel will show dialogue instead)
+        @media (min-width: 1025px) {
+          display: none;
+        }
+
         li {
           word-wrap: break-word;
           overflow-wrap: break-word;

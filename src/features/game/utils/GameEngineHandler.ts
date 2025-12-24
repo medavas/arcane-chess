@@ -100,18 +100,20 @@ export class GameEngineHandler {
         const { bestMove, text } = reply;
         this.callbacks.setState(
           (prevState: any) => {
-            const updatedDialogue = [
-              ...prevState.dialogue,
-              ...(text || [])
-                .map((key: string) => {
-                  if (key in prevState.dialogueList) {
-                    const value = prevState.dialogueList[key];
-                    return !prevState.dialogue.includes(value) ? '' : '';
-                  }
-                  return key;
-                })
-                .filter((value: string | null) => value),
-            ];
+            // Filter dialogue to only include spell/arcana-related messages
+            // Exclude mission story dialogue (keys from dialogueList like win1, lose1, etc.)
+            const newMessages = (text || [])
+              .map((key: string) => {
+                // If this is a dialogueList key (mission story), skip it
+                if (key in prevState.dialogueList) {
+                  return '';
+                }
+                // Otherwise it's a spell/game message, keep it
+                return key;
+              })
+              .filter((value: string | null) => value);
+
+            const updatedDialogue = [...prevState.dialogue, ...newMessages];
             return {
               ...prevState,
               dialogue: [...updatedDialogue],
@@ -295,6 +297,7 @@ export class GameEngineHandler {
           isTeleport: false,
           offeringType: '',
           dialogue: [], // Clear dialogue when player makes a move
+          turn: prevState.turn === 'white' ? 'black' : 'white',
           royalties: {
             ...prevState.royalties,
             royaltyQ: _.mapValues(prevState.royalties.royaltyQ, (value) => {

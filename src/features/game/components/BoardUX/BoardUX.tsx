@@ -734,7 +734,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       char = 'E';
     }
 
-    if (interactionState.placingRoyalty > 0) {
+    if (interactionState.placingRoyalty > 0 && char) {
       if (forwardedRef && 'current' in forwardedRef && forwardedRef.current) {
         forwardedRef.current.setAutoShapes([]);
       }
@@ -1051,34 +1051,31 @@ export const BoardUX: React.FC<BoardUXProps> = ({
   };
 
   const getSelected = () => {
-    return interactionState.placingPiece !== 0
+    const pieceChar = PceChar.split('')[interactionState.placingPiece];
+    const royaltyChar = RtyChar.split('')[interactionState.placingRoyalty];
+    
+    return interactionState.placingPiece !== 0 && pieceChar
       ? {
-          role: `${PceChar.split('')[
-            interactionState.placingPiece
-          ].toLowerCase()}-piece`,
+          role: `${pieceChar.toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }
-      : interactionState.placingRoyalty !== 0
+      : interactionState.placingRoyalty !== 0 && royaltyChar
       ? {
-          role: `r${RtyChar.split('')[
-            interactionState.placingRoyalty
-          ].toLowerCase()}-piece`,
+          role: `r${royaltyChar.toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }
-      : interactionState.offeringType !== '' // DEPRECATED: offr, will be reused for dopl
+      : interactionState.offeringType && interactionState.offeringType !== '' // DEPRECATED: offr, will be reused for dopl
       ? {
           role: `o${interactionState.offeringType.toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }
-      : interactionState.magnetType !== ''
+      : interactionState.magnetType && interactionState.magnetType !== ''
       ? {
-          // @ts-expect-error - magnetType checked for empty string above
           role: `m${interactionState.magnetType.toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }
-      : interactionState.trampleType !== ''
+      : interactionState.trampleType && interactionState.trampleType !== ''
       ? {
-          // @ts-expect-error - trampleType checked for empty string above
           role: `t${interactionState.trampleType.toLowerCase()}-piece`,
           color: interactionState.playerColor,
         }
