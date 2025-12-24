@@ -197,48 +197,48 @@ const padModes = (modes: Record<string, GameModeType>) => {
 };
 
 export const modes: Record<string, GameModeType> = padModes({
-  hermitHemlock: {
-    name: 'Hermit vs. Hemlock',
+  chiVsGamma: {
+    name: 'Chi vs Gamma',
     white: {
-      arcana: [
-        // arcana.sumnH,
-        // arcana.modsGLU,
-        // arcana.modsBOU,
-        // arcana.moriDYA,
-        // arcana.moraDYA,
-        // arcana.doplA,
-        // arcana.doplB,
-        // arcana.doplC,
-        arcana.gainPAW,
-        arcana.gainFOR,
-        arcana.gainPIN,
-        arcana.gainOUT,
-        arcana.gainCOM,
-        arcana.modsBLI,
-
-        // arcana.modsEVO,
-        // arcana.modsMAG,
-        // arcana.modsTRA,
-      ],
-      setup: 'RNBTKBNR',
+      arcana: [arcana.sumnRE, arcana.modsSIL, arcana.sumnX, arcana.modsTRO, arcana.modsINH, arcana.swapADJ],
+      setup: 'RNBQKBNR',
     },
     black: {
-      arcana: [
-        // arcana.sumnH,
-        // arcana.toknHEM,
-        // arcana.swapADJ,
-        // arcana.modsEVO,
-        // arcana.modsBOU,
-        // arcana.doplA,
-        // arcana.doplB,
-        // arcana.doplC,
-        // arcana.gainPAW,
-        // arcana.gainFOR,
-        // arcana.gainPIN,
-        // arcana.gainOUT,
-        // arcana.gainCOM,
-      ],
-      setup: 'rnbmkbnr',
+      arcana: [arcana.sumnRE, arcana.shftP, arcana.modsAET, arcana.modsSUR, arcana.modsEXT, arcana.modsSUS],
+      setup: 'rnbtkbnr',
+    },
+  },
+  omegaVsLambda: {
+    name: 'Omega vs Lambda',
+    white: {
+      arcana: [arcana.dyadC, arcana.shftI, arcana.modsSUS, arcana.modsGLA, arcana.swapDEP, arcana.modsFUT],
+      setup: 'RNBMKBNR',
+    },
+    black: {
+      arcana: [arcana.sumnRM, arcana.sumnRE, arcana.shftP, arcana.shftI, arcana.modsTRO, arcana.modsDIM],
+      setup: '1swtkws1',
+    },
+  },
+  sigmaVsPsi: {
+    name: 'Sigma vs Psi',
+    white: {
+      arcana: [arcana.sumnRT, arcana.sumnRE, arcana.modsSIL, arcana.sumnX, arcana.modsFUG, arcana.modsBAN],
+      setup: '1SWMKWS1',
+    },
+    black: {
+      arcana: [arcana.sumnRQ, arcana.dyadD, arcana.modsAET, arcana.modsINH, arcana.modsEXT, arcana.modsREA],
+      setup: '1swqkws1',
+    },
+  },
+  tauVsChi: {
+    name: 'Tau vs Chi',
+    white: {
+      arcana: [arcana.sumnRA, arcana.modsSIL, arcana.dyadA, arcana.modsGLU, arcana.shftK, arcana.modsREA],
+      setup: '2VVKV2',
+    },
+    black: {
+      arcana: [arcana.sumnRE, arcana.modsSIL, arcana.sumnX, arcana.modsTRO, arcana.modsINH, arcana.swapADJ],
+      setup: 'rnbqkbnr',
     },
   },
   tutorial1: {

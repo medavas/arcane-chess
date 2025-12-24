@@ -234,6 +234,193 @@
   }
 }
 
+// Archetype badge clickable
+.archetype-badge-clickable {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 48px;
+
+  &:hover {
+    background: rgba(68, 170, 255, 0.1);
+    border-color: rgba(68, 170, 255, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .archetype-badge-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .archetype-name {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+// Archetype picker modal (appears like arcana-block)
+.archetype-picker-modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: rgba(5, 15, 30, 0.98);
+  border: 2px solid rgba(68, 170, 255, 0.5);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  animation: fadeIn 0.2s ease-out;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .archetype-picker-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255, 50, 50, 0.3);
+    border: 1px solid rgba(255, 100, 100, 0.5);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 20px;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+
+    &:hover {
+      background: rgba(255, 50, 50, 0.5);
+      border-color: rgba(255, 100, 100, 0.8);
+      transform: scale(1.1);
+    }
+  }
+
+  .archetype-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    overflow-y: auto;
+    margin-top: 48px;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(68, 170, 255, 0.4);
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .archetype-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(68, 170, 255, 0.1);
+      border-color: rgba(68, 170, 255, 0.5);
+      transform: translateX(4px);
+    }
+
+    &.is-selected {
+      background: rgba(68, 170, 255, 0.2);
+      border-color: rgba(68, 170, 255, 0.7);
+      box-shadow: 0 0 16px rgba(68, 170, 255, 0.4);
+    }
+
+    .archetype-image-placeholder {
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .archetype-image-label {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.5);
+        text-align: center;
+        padding: 4px;
+      }
+    }
+
+    .archetype-image-container {
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+
+      .archetype-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+    }
+
+    .archetype-info {
+      flex: 1;
+
+      .archetype-name-text {
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .archetype-description {
+        font-size: 12px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.7);
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+    }
+  }
+}
+
 .arcana-section {
   flex: 1;
   min-height: 0;

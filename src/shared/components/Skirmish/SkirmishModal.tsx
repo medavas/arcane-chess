@@ -53,8 +53,8 @@ interface ModalState {
   playerColor: 'white' | 'black';
   engineColor: 'white' | 'black';
 
-  engineFactionId: FactionId | null;
-  playerFactionId: FactionId | null;
+  engineArchetypeId: ArchetypeId | null;
+  playerArchetypeId: ArchetypeId | null;
 
   reducedScore: number;
   chapterNum: number;
@@ -62,8 +62,8 @@ interface ModalState {
 
   hoverId: string;
   activeTab: 'player' | 'engine';
-  showPlayerFactionPicker: boolean;
-  showEngineFactionPicker: boolean;
+  showPlayerArchetypePicker: boolean;
+  showEngineArchetypePicker: boolean;
 }
 
 interface ArcanaDetail {
@@ -77,115 +77,120 @@ interface ArcanaMap {
   [key: string]: ArcanaDetail;
 }
 
+type ArchetypeId =
+  | 'gladiator'
+  | 'mage'
+  | 'priest'
+  | 'ephilate'
+  | 'illusionist'
+  | 'hermit'
+  | 'tactician'
+  | 'alien';
+
 type FactionId = 'chi' | 'gamma' | 'omega' | 'lambda' | 'sigma' | 'psi' | 'tau';
 
-type Faction = {
-  id: FactionId;
+type Archetype = {
+  id: ArchetypeId;
   name: string;
   army: string;
   arcana: string[];
-  unlocked: boolean;
+  faction: FactionId;
   image?: string;
   description: string;
-  color: string;
 };
 
-export const MENU_COLORS = {
-  S_MENU: '#808080',
-  R_MENU: '#c53939',
-  O_MENU: '#c77c35',
-  Y_MENU: '#d9b800',
-  G_MENU: '#34aa48',
-  B_MENU: '#3f48cc',
-  V_MENU: '#a043a2',
-};
-
-export const FACTIONS: Record<FactionId, Faction> = {
-  chi: {
-    id: 'chi',
-    name: 'chi',
-    army: 'RNBQKBNR',
-    arcana: ['sumnRE', 'modsSIL', 'sumnX', 'modsTRO', 'modsINH', 'swapADJ'],
-    unlocked: true,
-    description: 'Law-breaking Pawns, unpredictable Valkyrie impersonation.',
-    color: MENU_COLORS.R_MENU,
-  },
-  gamma: {
-    id: 'gamma',
-    name: 'gamma',
-    army: 'RNBTKBNR',
-    arcana: ['sumnRE', 'shftP', 'modsAET', 'modsSUR', 'modsEXT', 'modsSUS'],
-    unlocked: true,
+export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
+  gladiator: {
+    id: 'gladiator',
+    name: 'Gladiator',
+    army: 'TMQVKQMT',
+    arcana: ['modsBLI', 'modsBLI'],
+    faction: 'tau',
+    image: '/assets/archetypes/gladiator.svg',
     description:
-      'Dangerous, flexible Pawns, unpredictable Valkyrie impersonation',
-    color: MENU_COLORS.O_MENU,
+      'Elite compact force with devastating close-range tactics and overwhelming power.',
   },
-  omega: {
-    id: 'omega',
-    name: 'omega',
+  mage: {
+    id: 'mage',
+    name: 'Mage',
     army: 'RNBMKBNR',
-    arcana: ['dyadC', 'shftI', 'modsSUS', 'modsGLA', 'swapDEP', 'modsFUT'],
-    unlocked: true,
+    arcana: ['sumnRT', 'sumnRN', 'sumnRY', 'sumnRZ', 'sumnRI', 'modsSIL'],
+    faction: 'omega',
+    image: '/assets/archetypes/mage.svg',
     description:
-      'Queen impersonation, flexible and dangerous double-moves at a price',
-    color: MENU_COLORS.Y_MENU,
+      'Master of summoning royal pieces and silencing enemy abilities to control the battlefield.',
   },
-  lambda: {
-    id: 'lambda',
-    name: 'lambda',
-    army: '1SWTKWS1',
-    arcana: ['sumnRM', 'sumnRE', 'shftP', 'shftI', 'modsTRO', 'modsDIM'],
-    unlocked: true,
+  priest: {
+    id: 'priest',
+    name: 'Priest',
+    army: '1NBQKBN1',
+    arcana: ['modsINH', 'sumnP', 'sumnZ', 'sumnU', 'sumnR', 'sumnM'],
+    faction: 'psi',
+    image: '/assets/archetypes/priest.svg',
     description:
-      'Trap and capture pieces in a web, flexible and dangerous double-moves at a price',
-    color: MENU_COLORS.G_MENU,
+      'Sacrifices rooks for divine protection, inhibiting threats and summoning reinforcements.',
   },
-  sigma: {
-    id: 'sigma',
-    name: 'sigma',
-    army: '1SWMKWS1',
-    arcana: ['sumnRT', 'sumnRE', 'modsSIL', 'sumnX', 'modsFUG', 'modsBAN'],
-    unlocked: true,
-    description: 'Heavy-hitting Wraiths, trap pieces in multiple webs.',
-    color: MENU_COLORS.B_MENU,
+  ephilate: {
+    id: 'ephilate',
+    name: 'Ephilate',
+    army: 'RSWMKWSR',
+    arcana: [
+      'modsCON',
+      'modsCON',
+      'modsREI',
+      'modsBAN',
+      'modsREA',
+      'shftG',
+      'moriPAW',
+    ],
+    faction: 'sigma',
+    image: '/assets/archetypes/ephilate.svg',
+    description:
+      'Weaver of spectral webs that confound and banish enemies while controlling the dead.',
   },
-  psi: {
-    id: 'psi',
-    name: 'psi',
-    army: '1SWQKWS1',
-    arcana: ['sumnRQ', 'dyadD', 'modsAET', 'modsINH', 'modsEXT', 'modsREA'],
-    unlocked: true,
-    description: 'Buff Spectres, trap pieces in multiple webs.',
-    color: MENU_COLORS.V_MENU,
+  illusionist: {
+    id: 'illusionist',
+    name: 'Illusionist',
+    army: 'RNZTKWUR',
+    arcana: ['doplC', 'modsFLA', 'swapADJ', 'swapADJ', 'gainFOR', 'modsMAG'],
+    faction: 'chi',
+    image: '/assets/archetypes/illusionist.svg',
+    description:
+      'High-risk, high-reward playstyle with position swaps and fortune-bending magic.',
   },
-  tau: {
-    id: 'tau',
-    name: 'tau',
-    army: '2VVKV2',
-    arcana: ['sumnRA', 'modsSIL', 'dyadA', 'modsGLU', 'shftK', 'modsREA'],
-    unlocked: true,
-    description: 'Small army with many spells.',
-    color: MENU_COLORS.S_MENU,
+  hermit: {
+    id: 'hermit',
+    name: 'Hermit',
+    army: 'RSBQKBSR',
+    arcana: ['toknHER', 'sumnH', 'sumnH', 'modsEXT', 'shftI', 'modsRED'],
+    faction: 'gamma',
+    image: '/assets/archetypes/hermit.svg',
+    description:
+      'Mysterious loner who extends range, reduces threats, and summons hidden hermit allies.',
+  },
+  tactician: {
+    id: 'tactician',
+    name: 'Tactician',
+    army: 'RNWVKWNR',
+    arcana: ['dyadA', 'modsAET', 'modsSUR', 'shftK', 'sumnX'],
+    faction: 'lambda',
+    image: '/assets/archetypes/tactician.svg',
+    description:
+      'Strategic genius using wraith pairs, aethereal shifts, and surprising king mobility.',
+  },
+  alien: {
+    id: 'alien',
+    name: 'Alien',
+    army: 'RSBMKZUW',
+    arcana: ['modsBOU', 'modsTRA', 'modsGLA', 'swapDEP', 'modsPHA', 'modsGLI'],
+    faction: 'omega',
+    image: '/assets/archetypes/alien.svg',
+    description:
+      'Otherworldly force with bizarre pieces that bounce, phase, and trap in glass cages.',
   },
 };
-
-const HEX_ROWS: FactionId[][] = [
-  ['omega', 'sigma'],
-  ['chi', 'tau', 'lambda'],
-  ['psi', 'gamma'],
-];
 
 const arcana: ArcanaMap = arcanaJson as ArcanaMap;
-
-export const GREEK_CAP: Record<FactionId, string> = {
-  chi: 'Χ',
-  gamma: 'Γ',
-  omega: 'Ω',
-  lambda: 'Λ',
-  sigma: 'Σ',
-  psi: 'Ψ',
-  tau: 'Τ',
-};
 
 class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
   constructor(props: ModalProps) {
@@ -193,7 +198,11 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
     const LS = getLocalStorage(this.props.auth.user.username);
 
     // Use defaults if LS is null (for Skirmish without login)
-    const config = LS?.config || { multiplier: 80, color: 'white', clock: false };
+    const config = LS?.config || {
+      multiplier: 80,
+      color: 'white',
+      clock: false,
+    };
     const nodeScores = LS?.nodeScores || {};
     const chapter = LS?.chapter ?? 0;
     const difficulty = LS?.difficulty || 'novice';
@@ -220,8 +229,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
       playerColor: 'white',
       engineColor: 'black',
 
-      engineFactionId: null,
-      playerFactionId: null,
+      engineArchetypeId: null,
+      playerArchetypeId: null,
 
       reducedScore: _.reduce(nodeScores, (acc, v) => acc + v, 0),
       chapterNum: chapter + 1,
@@ -229,20 +238,18 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
 
       hoverId: '',
       activeTab: 'player',
-      showPlayerFactionPicker: false,
-      showEngineFactionPicker: false,
+      showPlayerArchetypePicker: false,
+      showEngineArchetypePicker: false,
     };
   }
 
   componentDidMount() {
-    const unlocked = Object.values(FACTIONS)
-      .filter((f) => f.unlocked)
-      .map((f) => f.id);
-    if (unlocked.length) {
-      const rnd = (arr: FactionId[]) =>
+    const archetypeIds = Object.keys(ARCHETYPES) as ArchetypeId[];
+    if (archetypeIds.length) {
+      const rnd = (arr: ArchetypeId[]) =>
         arr[Math.floor(Math.random() * arr.length)];
-      this.setFactionForRole('engine', rnd(unlocked));
-      this.setFactionForRole('player', rnd(unlocked));
+      this.setArchetypeForRole('engine', rnd(archetypeIds));
+      this.setArchetypeForRole('player', rnd(archetypeIds));
     }
   }
 
@@ -298,10 +305,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
   };
 
   randomizeAll = () => {
-    const unlocked = Object.values(FACTIONS)
-      .filter((f) => f.unlocked)
-      .map((f) => f.id) as FactionId[];
-    if (!unlocked.length) return;
+    const archetypeIds = Object.keys(ARCHETYPES) as ArchetypeId[];
+    if (!archetypeIds.length) return;
 
     const rnd = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
 
@@ -310,22 +315,22 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
     const nextEngineColor: 'white' | 'black' =
       nextPlayerColor === 'white' ? 'black' : 'white';
 
-    const playerFaction = rnd(unlocked);
-    const engineFaction = rnd(unlocked);
+    const playerArchetype = rnd(archetypeIds);
+    const engineArchetype = rnd(archetypeIds);
 
-    // set colors first, then set factions so setFactionForRole reads correct color
+    // set colors first, then set archetypes so setArchetypeForRole reads correct color
     this.setState(
       {
         playerColor: nextPlayerColor,
         engineColor: nextEngineColor,
         hoverId: '',
         // reset so UI reflects new picks after we set them below
-        playerFactionId: null,
-        engineFactionId: null,
+        playerArchetypeId: null,
+        engineArchetypeId: null,
       },
       () => {
-        this.setFactionForRole('player', playerFaction);
-        this.setFactionForRole('engine', engineFaction);
+        this.setArchetypeForRole('player', playerArchetype);
+        this.setArchetypeForRole('engine', engineArchetype);
       }
     );
   };
@@ -333,16 +338,16 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
   descriptions = (): Record<string, string> => {
     const base = {
       engineDiff: 'Engine difficulty & knobs.',
-      engineFact: 'Choose an Engine faction.',
-      randomize: 'Randomize colors & factions for both sides.',
+      engineArch: 'Choose an Engine archetype.',
+      randomize: 'Randomize colors & archetypes for both sides.',
       swapSides: `Swap sides: you are ${this.state.playerColor}.`,
-      '': 'Choose a faction or adjust engine settings.',
+      '': 'Choose an archetype or adjust engine settings.',
     };
 
-    // faction hover: "faction:<id>"
-    const factionDescs: Record<string, string> = {};
-    Object.values(FACTIONS).forEach((f) => {
-      factionDescs[`faction:${f.id}`] = `${f.name}: ${f.description}`;
+    // archetype hover: "archetype:<id>"
+    const archetypeDescs: Record<string, string> = {};
+    Object.values(ARCHETYPES).forEach((a) => {
+      archetypeDescs[`archetype:${a.id}`] = `${a.name}: ${a.description}`;
     });
 
     // arcana hover: by raw arcana id (e.g., "sumnRQ")
@@ -355,14 +360,14 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
       }
     });
 
-    return { ...base, ...factionDescs, ...arcanaDescs };
+    return { ...base, ...archetypeDescs, ...arcanaDescs };
   };
 
-  setFactionForRole = (role: 'engine' | 'player', id: FactionId) => {
-    const f = FACTIONS[id];
-    if (!f || !f.unlocked) return;
+  setArchetypeForRole = (role: 'engine' | 'player', id: ArchetypeId) => {
+    const archetype = ARCHETYPES[id];
+    if (!archetype) return;
 
-    const inv = f.arcana
+    const inv = archetype.arcana
       .map((aid) => arcana[aid])
       .filter(Boolean)
       .slice(0, 6) as ArcanaDetail[];
@@ -373,36 +378,36 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
 
     const next: Partial<ModalState> = {};
     if (roleColor === 'white') {
-      next.whiteSetup = f.army;
+      next.whiteSetup = archetype.army;
       next.whiteArcana = inv.length ? inv : this.state.whiteArcana;
     } else {
-      next.blackSetup = f.army.toLowerCase();
+      next.blackSetup = archetype.army.toLowerCase();
       next.blackArcana = inv.length ? inv : this.state.blackArcana;
     }
-    if (role === 'engine') next.engineFactionId = id;
-    else next.playerFactionId = id;
+    if (role === 'engine') next.engineArchetypeId = id;
+    else next.playerArchetypeId = id;
 
     this.setState(next as ModalState, () => {
       if (this.props.updateConfig) {
         if (roleColor === 'white') {
-          this.props.updateConfig('whiteSetup', f.army);
+          this.props.updateConfig('whiteSetup', archetype.army);
           this.props.updateConfig('whiteArcana', invCounts);
-          this.props.updateConfig('whiteFaction', id);
+          this.props.updateConfig('whiteFaction', archetype.faction);
         } else {
-          this.props.updateConfig('blackSetup', f.army.toLowerCase());
+          this.props.updateConfig('blackSetup', archetype.army.toLowerCase());
           this.props.updateConfig('blackArcana', invCounts);
-          this.props.updateConfig('blackFaction', id);
+          this.props.updateConfig('blackFaction', archetype.faction);
         }
       }
     });
   };
 
-  handleFactionClick = (id: FactionId, role: 'player' | 'engine') => {
-    this.setFactionForRole(role, id);
+  handleArchetypeClick = (id: ArchetypeId, role: 'player' | 'engine') => {
+    this.setArchetypeForRole(role, id);
     if (role === 'player') {
-      this.setState({ showPlayerFactionPicker: false });
+      this.setState({ showPlayerArchetypePicker: false });
     } else {
-      this.setState({ showEngineFactionPicker: false });
+      this.setState({ showEngineArchetypePicker: false });
     }
   };
 
@@ -442,6 +447,10 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
     const nextWhiteArc = nextPlayerColor === 'white' ? playerInv : engineInv;
     const nextBlackArc = nextPlayerColor === 'black' ? playerInv : engineInv;
 
+    // Swap archetype IDs
+    const prevPlayerArchetype = this.state.playerArchetypeId;
+    const prevEngineArchetype = this.state.engineArchetypeId;
+
     this.setState(
       {
         playerColor: nextPlayerColor,
@@ -450,6 +459,8 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
         blackSetup: nextBlackSetup,
         whiteArcana: nextWhiteArc,
         blackArcana: nextBlackArc,
+        playerArchetypeId: prevEngineArchetype,
+        engineArchetypeId: prevPlayerArchetype,
       },
       () => {
         const wCounts = this.transformedSpellBook(this.state.whiteArcana);
@@ -460,15 +471,22 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
         this.props.updateConfig?.('whiteArcana', wCounts);
         this.props.updateConfig?.('blackArcana', bCounts);
 
-        const whiteFaction =
+        const whiteArchetypeId =
           this.state.playerColor === 'white'
-            ? this.state.playerFactionId
-            : this.state.engineFactionId;
+            ? this.state.playerArchetypeId
+            : this.state.engineArchetypeId;
 
-        const blackFaction =
+        const blackArchetypeId =
           this.state.playerColor === 'black'
-            ? this.state.playerFactionId
-            : this.state.engineFactionId;
+            ? this.state.playerArchetypeId
+            : this.state.engineArchetypeId;
+
+        const whiteFaction = whiteArchetypeId
+          ? ARCHETYPES[whiteArchetypeId].faction
+          : null;
+        const blackFaction = blackArchetypeId
+          ? ARCHETYPES[blackArchetypeId].faction
+          : null;
 
         if (whiteFaction)
           this.props.updateConfig?.('whiteFaction', whiteFaction);
@@ -493,35 +511,19 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
   };
 
   render() {
-    const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s);
-
     const hoverText =
       this.descriptions()[this.state.hoverId] ?? this.descriptions()[''];
 
     const canStart = Boolean(
-      this.state.engineFactionId && this.state.playerFactionId
+      this.state.engineArchetypeId && this.state.playerArchetypeId
     );
 
-    const engineGreek = this.state.engineFactionId
-      ? GREEK_CAP[this.state.engineFactionId]
-      : '';
-    const playerGreek = this.state.playerFactionId
-      ? GREEK_CAP[this.state.playerFactionId]
-      : '';
-
-    const engineAccent = this.state.engineFactionId
-      ? FACTIONS[this.state.engineFactionId].color
-      : undefined;
-    const playerAccent = this.state.playerFactionId
-      ? FACTIONS[this.state.playerFactionId].color
-      : undefined;
-
-    const engineFactionName = this.state.engineFactionId
-      ? cap(FACTIONS[this.state.engineFactionId].name)
-      : 'Engine Faction';
-    const playerFactionName = this.state.playerFactionId
-      ? cap(FACTIONS[this.state.playerFactionId].name)
-      : 'Player Faction';
+    const engineArchetype = this.state.engineArchetypeId
+      ? ARCHETYPES[this.state.engineArchetypeId]
+      : null;
+    const playerArchetype = this.state.playerArchetypeId
+      ? ARCHETYPES[this.state.playerArchetypeId]
+      : null;
 
     return (
       <div className="container">
@@ -550,15 +552,17 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                 {/* Tab navigation for mobile */}
                 <div className="tab-nav">
                   <button
-                    className={`tab-button ${this.state.activeTab === 'player' ? 'active' : ''
-                      }`}
+                    className={`tab-button ${
+                      this.state.activeTab === 'player' ? 'active' : ''
+                    }`}
                     onClick={() => this.setState({ activeTab: 'player' })}
                   >
                     Player
                   </button>
                   <button
-                    className={`tab-button ${this.state.activeTab === 'engine' ? 'active' : ''
-                      }`}
+                    className={`tab-button ${
+                      this.state.activeTab === 'engine' ? 'active' : ''
+                    }`}
                     onClick={() => this.setState({ activeTab: 'engine' })}
                   >
                     Engine
@@ -587,8 +591,9 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
             <div className="content-container">
               {/* Player Section */}
               <div
-                className={`player-section ${this.state.activeTab === 'player' ? 'active' : ''
-                  }`}
+                className={`player-section ${
+                  this.state.activeTab === 'player' ? 'active' : ''
+                }`}
               >
                 <div className="section-header">
                   <h3>Your Setup</h3>
@@ -599,21 +604,25 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                 </div>
 
                 <div
-                  className="faction-badge-clickable"
-                  style={
-                    playerAccent
-                      ? { borderColor: playerAccent, color: playerAccent }
-                      : {}
-                  }
+                  className="archetype-badge-clickable"
                   onClick={() =>
                     this.setState((prev) => ({
-                      showPlayerFactionPicker: !prev.showPlayerFactionPicker,
-                      showEngineFactionPicker: false,
+                      showPlayerArchetypePicker:
+                        !prev.showPlayerArchetypePicker,
+                      showEngineArchetypePicker: false,
                     }))
                   }
                 >
-                  <span className="badge-glyph">{playerGreek || '–'}</span>
-                  <div className="faction-name-small">{playerFactionName}</div>
+                  {playerArchetype && (
+                    <img
+                      src={playerArchetype.image}
+                      alt={playerArchetype.name}
+                      className="archetype-badge-icon"
+                    />
+                  )}
+                  <div className="archetype-name">
+                    {playerArchetype?.name || 'Select Archetype'}
+                  </div>
                 </div>
 
                 <div className="arcana-section">
@@ -639,41 +648,61 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                         ? this.state.whiteSetup
                         : this.state.blackSetup
                     }
-                    faction={this.state.playerFactionId ?? undefined}
+                    faction={playerArchetype?.faction}
                     isOpen={false}
                     color={this.state.playerColor}
                     readOnly
                   />
                 </div>
 
-                {/* Player Faction Picker */}
-                {this.state.showPlayerFactionPicker && (
-                  <div className="faction-picker-section">
-                    <div className="faction-grid">
-                      {HEX_ROWS.flat().map((id) => {
-                        const f = FACTIONS[id];
-                        const isLocked = !f.unlocked;
-                        const isSelected = this.state.playerFactionId === id;
+                {/* Player Archetype Picker */}
+                {this.state.showPlayerArchetypePicker && (
+                  <div className="archetype-picker-modal">
+                    <button
+                      className="archetype-picker-close"
+                      onClick={() =>
+                        this.setState({ showPlayerArchetypePicker: false })
+                      }
+                      aria-label="Close"
+                    >
+                      ✕
+                    </button>
+                    <div className="archetype-list">
+                      {Object.values(ARCHETYPES).map((archetype) => {
+                        const isSelected =
+                          this.state.playerArchetypeId === archetype.id;
 
                         return (
                           <div
-                            key={id}
-                            className={[
-                              'faction-tile',
-                              isSelected ? 'is-selected' : '',
-                              isLocked ? 'is-locked' : 'is-unlocked',
-                            ].join(' ')}
+                            key={archetype.id}
+                            className={`archetype-item ${
+                              isSelected ? 'is-selected' : ''
+                            }`}
                             onClick={() =>
-                              !isLocked && this.handleFactionClick(id, 'player')
+                              this.handleArchetypeClick(archetype.id, 'player')
                             }
-                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''
-                              }`}
-                            tabIndex={isLocked ? -1 : 0}
-                            style={{ ['--accent' as any]: f.color }}
+                            onMouseEnter={() =>
+                              this.setState({
+                                hoverId: `archetype:${archetype.id}`,
+                              })
+                            }
+                            onMouseLeave={() => this.setState({ hoverId: '' })}
                           >
-                            <span className="faction-glyph">
-                              {GREEK_CAP[id]}
-                            </span>
+                            <div className="archetype-image-container">
+                              <img
+                                src={archetype.image}
+                                alt={archetype.name}
+                                className="archetype-image"
+                              />
+                            </div>
+                            <div className="archetype-info">
+                              <div className="archetype-name-text">
+                                {archetype.name}
+                              </div>
+                              <div className="archetype-description">
+                                {archetype.description}
+                              </div>
+                            </div>
                           </div>
                         );
                       })}
@@ -684,8 +713,9 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
 
               {/* Engine Section */}
               <div
-                className={`engine-section ${this.state.activeTab === 'engine' ? 'active' : ''
-                  }`}
+                className={`engine-section ${
+                  this.state.activeTab === 'engine' ? 'active' : ''
+                }`}
               >
                 <div className="section-header">
                   <h3>Engine Setup</h3>
@@ -696,21 +726,25 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                 </div>
 
                 <div
-                  className="faction-badge-clickable"
-                  style={
-                    engineAccent
-                      ? { borderColor: engineAccent, color: engineAccent }
-                      : {}
-                  }
+                  className="archetype-badge-clickable"
                   onClick={() =>
                     this.setState((prev) => ({
-                      showEngineFactionPicker: !prev.showEngineFactionPicker,
-                      showPlayerFactionPicker: false,
+                      showEngineArchetypePicker:
+                        !prev.showEngineArchetypePicker,
+                      showPlayerArchetypePicker: false,
                     }))
                   }
                 >
-                  <span className="badge-glyph">{engineGreek || '–'}</span>
-                  <div className="faction-name-small">{engineFactionName}</div>
+                  {engineArchetype && (
+                    <img
+                      src={engineArchetype.image}
+                      alt={engineArchetype.name}
+                      className="archetype-badge-icon"
+                    />
+                  )}
+                  <div className="archetype-name">
+                    {engineArchetype?.name || 'Select Archetype'}
+                  </div>
                 </div>
 
                 <div className="arcana-section">
@@ -736,41 +770,61 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                         ? this.state.whiteSetup
                         : this.state.blackSetup
                     }
-                    faction={this.state.engineFactionId ?? undefined}
+                    faction={engineArchetype?.faction}
                     isOpen={false}
                     color={this.state.engineColor}
                     readOnly
                   />
                 </div>
 
-                {/* Engine Faction Picker */}
-                {this.state.showEngineFactionPicker && (
-                  <div className="faction-picker-section">
-                    <div className="faction-grid">
-                      {HEX_ROWS.flat().map((id) => {
-                        const f = FACTIONS[id];
-                        const isLocked = !f.unlocked;
-                        const isSelected = this.state.engineFactionId === id;
+                {/* Engine Archetype Picker */}
+                {this.state.showEngineArchetypePicker && (
+                  <div className="archetype-picker-modal">
+                    <button
+                      className="archetype-picker-close"
+                      onClick={() =>
+                        this.setState({ showEngineArchetypePicker: false })
+                      }
+                      aria-label="Close"
+                    >
+                      ✕
+                    </button>
+                    <div className="archetype-list">
+                      {Object.values(ARCHETYPES).map((archetype) => {
+                        const isSelected =
+                          this.state.engineArchetypeId === archetype.id;
 
                         return (
                           <div
-                            key={id}
-                            className={[
-                              'faction-tile',
-                              isSelected ? 'is-selected' : '',
-                              isLocked ? 'is-locked' : 'is-unlocked',
-                            ].join(' ')}
+                            key={archetype.id}
+                            className={`archetype-item ${
+                              isSelected ? 'is-selected' : ''
+                            }`}
                             onClick={() =>
-                              !isLocked && this.handleFactionClick(id, 'engine')
+                              this.handleArchetypeClick(archetype.id, 'engine')
                             }
-                            aria-label={`${f.name}${isLocked ? ' (locked)' : ''
-                              }`}
-                            tabIndex={isLocked ? -1 : 0}
-                            style={{ ['--accent' as any]: f.color }}
+                            onMouseEnter={() =>
+                              this.setState({
+                                hoverId: `archetype:${archetype.id}`,
+                              })
+                            }
+                            onMouseLeave={() => this.setState({ hoverId: '' })}
                           >
-                            <span className="faction-glyph">
-                              {GREEK_CAP[id]}
-                            </span>
+                            <div className="archetype-image-container">
+                              <img
+                                src={archetype.image}
+                                alt={archetype.name}
+                                className="archetype-image"
+                              />
+                            </div>
+                            <div className="archetype-info">
+                              <div className="archetype-name-text">
+                                {archetype.name}
+                              </div>
+                              <div className="archetype-description">
+                                {archetype.description}
+                              </div>
+                            </div>
                           </div>
                         );
                       })}
