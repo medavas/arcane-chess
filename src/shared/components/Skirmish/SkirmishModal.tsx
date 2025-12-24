@@ -108,7 +108,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
     faction: 'tau',
     image: '/assets/archetypes/gladiator.svg',
     description:
-      'Elite compact force with devastating close-range tactics and overwhelming power.',
+      'Elite compact force that pushes back enemy pawns with Blitz, creating unstoppable forward momentum.',
   },
   mage: {
     id: 'mage',
@@ -118,7 +118,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
     faction: 'omega',
     image: '/assets/archetypes/mage.svg',
     description:
-      'Master of summoning royal pieces and silencing enemy abilities to control the battlefield.',
+      'Hexweaver who conjures entanglement zones across files, ranks, and grids while capturing frozen enemies.',
   },
   priest: {
     id: 'priest',
@@ -128,7 +128,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
     faction: 'psi',
     image: '/assets/archetypes/priest.svg',
     description:
-      'Sacrifices rooks for divine protection, inhibiting threats and summoning reinforcements.',
+      'Begins without rooks but summons vast reinforcements—pawns, knights, and even mystics—with early promotions.',
   },
   ephilate: {
     id: 'ephilate',
@@ -146,7 +146,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
     faction: 'sigma',
     image: '/assets/archetypes/ephilate.svg',
     description:
-      'Weaver of spectral webs that confound and banish enemies while controlling the dead.',
+      'Necromancer who devours allies to reincarnate them, extends spectral reach, and empowers wraiths.',
   },
   illusionist: {
     id: 'illusionist',
@@ -156,7 +156,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
     faction: 'chi',
     image: '/assets/archetypes/illusionist.svg',
     description:
-      'High-risk, high-reward playstyle with position swaps and fortune-bending magic.',
+      'Reality-bender with random powerful magic, position swaps, flank inversions, and magnetic tricks.',
   },
   hermit: {
     id: 'hermit',
@@ -166,7 +166,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
     faction: 'gamma',
     image: '/assets/archetypes/hermit.svg',
     description:
-      'Mysterious loner who extends range, reduces threats, and summons hidden hermit allies.',
+      'Mystical hermit with royal auras, herring summons, board-wide reach, piece hopping, and slider reduction.',
   },
   tactician: {
     id: 'tactician',
@@ -176,7 +176,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
     faction: 'lambda',
     image: '/assets/archetypes/tactician.svg',
     description:
-      'Strategic genius using wraith pairs, aethereal shifts, and surprising king mobility.',
+      'Strategic master with double-move dyads, aethereal pawn abilities, aggressive king mobility, and exile summons.',
   },
   alien: {
     id: 'alien',
@@ -186,7 +186,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
     faction: 'omega',
     image: '/assets/archetypes/alien.svg',
     description:
-      'Otherworldly force with bizarre pieces that bounce, phase, and trap in glass cages.',
+      'Bizarre entity with bouncing bishops, trampling knights, disarming rooks, invisibility, and mind scrambling.',
   },
 };
 
