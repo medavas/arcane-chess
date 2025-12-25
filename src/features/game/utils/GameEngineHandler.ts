@@ -114,6 +114,27 @@ export class GameEngineHandler {
               .filter((value: string | null) => value);
 
             const updatedDialogue = [...prevState.dialogue, ...newMessages];
+            
+            // Validate move before adding to history
+            if (!bestMove || bestMove === 0) {
+              console.error('❌ Invalid bestMove from engine:', bestMove);
+              return {
+                ...prevState,
+                thinking: false,
+                turn: prevState.turn, // Don't change turn on invalid move
+              };
+            }
+            
+            const moveNotation = PrMove(bestMove);
+            if (!moveNotation || moveNotation === 'NaN-NaN') {
+              console.error('❌ Invalid move notation:', moveNotation, 'for move:', bestMove);
+              return {
+                ...prevState,
+                thinking: false,
+                turn: prevState.turn, // Don't change turn on invalid move
+              };
+            }
+            
             return {
               ...prevState,
               dialogue: [...updatedDialogue],
@@ -121,7 +142,7 @@ export class GameEngineHandler {
               historyPly: prevState.historyPly + 1,
               history: [
                 ...prevState.history.slice(0, prevState.historyPly),
-                PrMove(bestMove),
+                moveNotation,
               ],
               fen: outputFenOfCurrentPosition(),
               fenHistory: [

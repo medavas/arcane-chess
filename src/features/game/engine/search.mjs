@@ -17,6 +17,7 @@ import {
   PCEINDEX,
   Kings,
   BRD_SQ_NUM,
+  PIECES,
 } from './defs';
 import { EvalPosition } from './evaluate';
 import { generatePlayableOptions } from './movegen';
@@ -224,6 +225,37 @@ export function AlphaBeta(alpha, beta, depth) {
   let BestMove = NOMOVE;
   let Move = NOMOVE;
 
+  // Check for no moves at root
+  const moveCount =
+    GameBoard.moveListStart[GameBoard.ply + 1] -
+    GameBoard.moveListStart[GameBoard.ply];
+  if (GameBoard.ply === 0 && depth === SearchController.depth && moveCount === 0) {
+    console.error('❌ No moves generated at root');
+    SearchController.stop = BOOL.TRUE;
+    return 0;
+  }
+
+  // Validate generated moves at root only
+  if (GameBoard.ply === 0) {
+    for (
+      let i = GameBoard.moveListStart[GameBoard.ply];
+      i < GameBoard.moveListStart[GameBoard.ply + 1];
+      i++
+    ) {
+      const testMove = GameBoard.moveList[i];
+      const testFrom = FROMSQ(testMove);
+      const testTo = TOSQ(testMove);
+
+      if (testMove === 0x3e00000 || testMove === 65011712) {
+        console.error(`❌ Bogus move ${testMove.toString(16)} from=${testFrom} to=${testTo}`);
+      } else if (testFrom < 21 || testFrom > 98 || testTo < 21 || testTo > 98) {
+        console.error(`❌ Invalid squares: ${PrMove(testMove)} from=${testFrom} to=${testTo}`);
+      } else if (testFrom >= 21 && testFrom <= 98 && GameBoard.pieces[testFrom] === PIECES.EMPTY) {
+        console.error(`❌ Move from empty: ${PrMove(testMove)} sq=${testFrom}`);
+      }
+    }
+  }
+
   let PvMove = ProbePvTable();
   if (PvMove !== NOMOVE) {
     for (
@@ -306,6 +338,9 @@ export function AlphaBeta(alpha, beta, depth) {
   }
 
   if (Legal === 0) {
+    if (GameBoard.ply === 0) {
+      console.error(`❌ No legal moves - ${InCheckA ? 'checkmate' : 'stalemate'}`);
+    }
     if (InCheckA === BOOL.TRUE) {
       return -MATE + GameBoard.ply;
     } else {
@@ -369,6 +404,7 @@ export function SearchPosition() {
 
     bestScore = Score;
     bestMove = ProbePvTable();
+
     line =
       'D:' +
       currentDepth +
@@ -384,7 +420,6 @@ export function SearchPosition() {
 
     deepestDepthReached = currentDepth;
 
-    // Store the temporal pincer info for the deepest depth
     temporalPincer = `Depth ${deepestDepthReached}` + ' ';
 
     for (c = 0; c < PvNum; c++) {
@@ -397,10 +432,34 @@ export function SearchPosition() {
         ((SearchController.fhf / SearchController.fh) * 100).toFixed(2) +
         '%';
     }
-    console.log(line);
   }
 
   GameBoard.cleanPV = [bestScore, line];
+  
+  // Final validation: ensure we have a valid move before returning
+  if (bestMove === NOMOVE || bestMove === 0) {
+    console.error('❌ No best move found, attempting fallback');
+    
+    generatePlayableOptions(true, false, 'COMP', 'COMP');
+    const fallbackMoveCount = GameBoard.moveListStart[GameBoard.ply + 1] - GameBoard.moveListStart[GameBoard.ply];
+    
+    if (fallbackMoveCount > 0) {
+      for (let i = GameBoard.moveListStart[GameBoard.ply]; i < GameBoard.moveListStart[GameBoard.ply + 1]; i++) {
+        const testMove = GameBoard.moveList[i];
+        if (MakeMove(testMove) !== BOOL.FALSE) {
+          TakeMove();
+          bestMove = testMove;
+          console.log(`✅ Fallback: ${PrMove(testMove)}`);
+          break;
+        }
+      }
+    }
+    
+    if (bestMove === NOMOVE || bestMove === 0) {
+      console.error('🚨 CRITICAL: No legal moves available');
+    }
+  }
+  
   SearchController.best = bestMove;
   SearchController.thinking = BOOL.FALSE;
 

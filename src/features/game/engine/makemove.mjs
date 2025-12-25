@@ -21,6 +21,7 @@ import {
   SqAttacked,
   SQOFFBOARD,
 } from './board';
+import { PrMove } from './io';
 import {
   whiteArcaneConfig,
   blackArcaneConfig,
@@ -165,10 +166,16 @@ function trimHistory(commit) {
 }
 
 export function ClearPiece(sq, summon = false) {
+  // Validate square is on board
+  if (sq < 21 || sq > 98) {
+    console.error('❌ ClearPiece invalid square:', sq);
+    return;
+  }
+
   let pce = GameBoard.pieces[sq];
 
   // Debug: Check if trying to clear an empty square
-  if (pce === PIECES.EMPTY) {
+  if (pce === PIECES.EMPTY || pce === PIECES.OFFBOARD) {
     return;
   }
 
@@ -200,6 +207,18 @@ export function ClearPiece(sq, summon = false) {
 }
 
 export function AddPiece(sq, pce, summon = false) {
+  // Validate square is on board
+  if (sq < 21 || sq > 98) {
+    console.error('❌ AddPiece invalid square:', sq);
+    return;
+  }
+  
+  // Validate piece is valid
+  if (pce === PIECES.EMPTY || pce === PIECES.OFFBOARD) {
+    console.error('❌ AddPiece invalid piece:', pce, 'at', sq, '- Stack:', new Error().stack.split('\n').slice(1, 4).join(' <- '));
+    return;
+  }
+
   let col = PieceCol[pce];
 
   HASH_PCE(pce, sq);
@@ -214,6 +233,23 @@ export function AddPiece(sq, pce, summon = false) {
 }
 
 export function MovePiece(from, to) {
+  // Validate squares are on board
+  if (from < 21 || from > 98 || to < 21 || to > 98) {
+    console.error('❌ MovePiece invalid squares:', from, to);
+    return;
+  }
+  
+  // Validate there's a piece to move
+  if (GameBoard.pieces[from] === PIECES.EMPTY) {
+    console.error('❌ MovePiece from empty:', from, 'to', to);
+    return;
+  }
+  
+  // Prevent moving to the same square
+  if (from === to) {
+    return;
+  }
+  
   let index = 0;
   let pce = GameBoard.pieces[from];
 
@@ -450,9 +486,32 @@ function recalculateAllGlare(commit = true) {
 }
 
 export function MakeMove(move, moveType = '') {
+  // Validate move is not 0 or invalid
+  if (!move || move === 0) {
+    console.error('❌ Invalid move passed to MakeMove:', move);
+    return BOOL.FALSE;
+  }
+
   let from = FROMSQ(move);
   let to = TOSQ(move);
   let side = GameBoard.side;
+
+  // Validate that FROM square actually has a piece
+  const pieceAtFrom = GameBoard.pieces[from];
+  if (pieceAtFrom === PIECES.EMPTY) {
+    return BOOL.FALSE;
+  }
+
+  // Validate piece belongs to side to move
+  const pieceColor = PieceCol[pieceAtFrom];
+  if (pieceColor !== side) {
+    return BOOL.FALSE;
+  }
+  
+  // Minimal logging for debugging
+  // if (moveType === 'userMove' || moveType === 'aiMove' || moveType === 'commit') {
+  //   console.log('Move:', PrMove(move), 'ply:', GameBoard.hisPly);
+  // }
 
   // Validate square indices
   if (from > 0 && (from < 21 || from > 98 || GameBoard.pieces[from] === 100)) {
@@ -554,6 +613,8 @@ export function MakeMove(move, moveType = '') {
   h.evoClock = GameBoard.evoClock;
   h.evoOwner = GameBoard.evoOwner;
 
+  // IMPORTANT: Calculate rook positions BEFORE the piece moves
+  // These are used for Fischer Random castling to find where rooks started
   const getWhiteKingRookPos = _.lastIndexOf(GameBoard.pieces, 4);
   const getWhiteQueenRookPos = _.indexOf(GameBoard.pieces, 4, 22);
 
@@ -608,48 +669,74 @@ export function MakeMove(move, moveType = '') {
       GameBoard.fiftyMove = 0;
     }
   } else if ((move & MFLAGCA) !== 0) {
-    if (GameBoard.blackArcane[4] & 8) {
-      switch (to) {
-        case getWhiteQueenRookPos:
-          MovePiece(getWhiteQueenRookPos, SQUARES.D1);
-          break;
-        case getWhiteKingRookPos:
-          MovePiece(getWhiteKingRookPos, SQUARES.F1);
-          break;
+    // CASTLING MOVE: King is castling, need to move the rook
+    // In standard castling: to = C1/G1/C8/G8 (king's destination)
+    // In Fischer Random: to = rook's current position (king castles "onto" the rook)
+    
+    // Validate this is actually a king move (not a rook moving independently)
+    const movingPiece = GameBoard.pieces[from];
+    const isKingMove = (movingPiece === PIECES.wK || movingPiece === PIECES.bK);
+    
+    if (!isKingMove) {
+      console.error('❌ Castling flag on non-king:', PrMove(move), PceChar[movingPiece]);
+      // Don't execute castling logic - just continue with normal move
+    } else if (side === COLOURS.WHITE) {
+      // White castling
+      if (GameBoard.blackArcane[4] & 8) {
+        // Fischer Random for white
+        switch (to) {
+          case getWhiteQueenRookPos:
+            if (getWhiteQueenRookPos !== SQUARES.D1) {
+              MovePiece(getWhiteQueenRookPos, SQUARES.D1);
+            }
+            break;
+          case getWhiteKingRookPos:
+            if (getWhiteKingRookPos !== SQUARES.F1) {
+              MovePiece(getWhiteKingRookPos, SQUARES.F1);
+            }
+            break;
+        }
+      } else {
+        // Standard castling for white
+        switch (to) {
+          case SQUARES.C1:
+            MovePiece(SQUARES.A1, SQUARES.D1);
+            break;
+          case SQUARES.G1:
+            MovePiece(SQUARES.H1, SQUARES.F1);
+            break;
+          default:
+            break;
+        }
       }
     } else {
-      switch (to) {
-        case SQUARES.C1:
-          MovePiece(SQUARES.A1, SQUARES.D1);
-          break;
-        case SQUARES.G1:
-          MovePiece(SQUARES.H1, SQUARES.F1);
-          break;
-        default:
-          break;
-      }
-    }
-    if (GameBoard.whiteArcane[4] & 8) {
-      switch (to) {
-        case getBlackQueenRookPos:
-          MovePiece(getBlackQueenRookPos, SQUARES.D8);
-          break;
-        case getBlackKingRookPos:
-          MovePiece(getBlackKingRookPos, SQUARES.F8);
-          break;
-        default:
-          break;
-      }
-    } else {
-      switch (to) {
-        case SQUARES.C8:
-          MovePiece(SQUARES.A8, SQUARES.D8);
-          break;
-        case SQUARES.G8:
-          MovePiece(SQUARES.H8, SQUARES.F8);
-          break;
-        default:
-          break;
+      // Black castling
+      if (GameBoard.whiteArcane[4] & 8) {
+        // Fischer Random for black
+        switch (to) {
+          case getBlackQueenRookPos:
+            if (getBlackQueenRookPos !== SQUARES.D8) {
+              MovePiece(getBlackQueenRookPos, SQUARES.D8);
+            }
+            break;
+          case getBlackKingRookPos:
+            if (getBlackKingRookPos !== SQUARES.F8) {
+              MovePiece(getBlackKingRookPos, SQUARES.F8);
+            }
+            break;
+        }
+      } else {
+        // Standard castling for black
+        switch (to) {
+          case SQUARES.C8:
+            MovePiece(SQUARES.A8, SQUARES.D8);
+            break;
+          case SQUARES.G8:
+            MovePiece(SQUARES.H8, SQUARES.F8);
+            break;
+          default:
+            break;
+        }
       }
     }
   }
@@ -1389,9 +1476,14 @@ export function MakeMove(move, moveType = '') {
 
   if (TOSQ(move) > 0 && isSwap(move)) {
     const fromPiece = GameBoard.pieces[from];
+    const toPiece = GameBoard.pieces[to];
     ClearPiece(from);
-    MovePiece(to, from);
-    AddPiece(to, fromPiece);
+    if (toPiece !== PIECES.EMPTY) {
+      MovePiece(to, from);
+    }
+    if (fromPiece !== PIECES.EMPTY) {
+      AddPiece(to, fromPiece);
+    }
     const swapType = pieceEpsilon;
     if (commit) {
       const cfg =
@@ -2025,7 +2117,7 @@ export function TakeMove(wasDyadMove = false) {
   ) {
     // Skip MovePiece for trample moves (pieceEpsilon === 30)
     const isTrampleMove = to > 0 && captured > 0 && pieceEpsilon === 30;
-    if (!isTrampleMove && !isBlitzMove) {
+    if (!isTrampleMove && !isBlitzMove && !isSwap(move)) {
       MovePiece(to, from);
     }
 
@@ -2182,10 +2274,15 @@ export function TakeMove(wasDyadMove = false) {
       triggerArcanaUpdateCallback();
     }
   } else if (TOSQ(move) > 0 && isSwap(move)) {
-    const putBack = GameBoard.pieces[from];
+    const putBack = GameBoard.pieces[to];  // Get piece at TO (was originally at FROM)
+    const fromPiece = GameBoard.pieces[from];
     ClearPiece(from);
-    MovePiece(to, from);
-    AddPiece(to, putBack);
+    if (putBack !== PIECES.EMPTY) {
+      MovePiece(to, from);
+    }
+    if (fromPiece !== PIECES.EMPTY) {
+      AddPiece(to, fromPiece);
+    }
     // Swap spell restoration is now handled by the general spell tracking system above
   } else if (TOSQ(move) === 0 && FROMSQ(move) > 0 && CAPTURED(move) > 0) {
     // DEPRECATED: offr revert logic - part of offering system being replaced by dopl

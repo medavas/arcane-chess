@@ -70,11 +70,32 @@ export function PrMove(move, returnType) {
 
   let MvStr;
   let tempFrom = FROMSQ(move) || 100;
+  let tempTo = TOSQ(move);
+
+  // Safety check for invalid squares
+  if (tempFrom === undefined || tempFrom === null || tempFrom < 0 || tempFrom > 119) {
+    console.error('PrMove: Invalid FROMSQ', { move, tempFrom, moveHex: move?.toString(16) });
+    return 'NaN-NaN';
+  }
+  if (tempTo !== 0 && (tempTo === undefined || tempTo === null || tempTo < 0 || tempTo > 119)) {
+    console.error('PrMove: Invalid TOSQ', { move, tempTo, moveHex: move?.toString(16) });
+    return 'NaN-NaN';
+  }
 
   let ff = FilesBrd[tempFrom];
   let rf = RanksBrd[tempFrom];
-  let ft = FilesBrd[TOSQ(move)];
-  let rt = RanksBrd[TOSQ(move)];
+  let ft = FilesBrd[tempTo];
+  let rt = RanksBrd[tempTo];
+  
+  // Additional check for undefined file/rank values
+  if (ff === undefined || rf === undefined) {
+    console.error('PrMove: Invalid file/rank from', { tempFrom, ff, rf, move });
+    return 'NaN-NaN';
+  }
+  if (tempTo !== 0 && (ft === undefined || rt === undefined)) {
+    console.error('PrMove: Invalid file/rank to', { tempTo, ft, rt, move });
+    return 'NaN-NaN';
+  }
 
   // promoted, summon, swap
   let pieceEpsilon = PROMOTED(move);
@@ -86,13 +107,13 @@ export function PrMove(move, returnType) {
   }
   // normal quiet
   if (
-    TOSQ(move) !== 0 &&
+    tempTo !== 0 &&
     CAPTURED(move) === 0 &&
     pieceEpsilon === 0 &&
     ARCANEFLAG(move) === 0
   ) {
     MvStr =
-      getPceChar(GameBoard.pieces[TOSQ(move)]) +
+      getPceChar(GameBoard.pieces[tempTo]) +
       FileChar[ff] +
       RankChar[rf] +
       FileChar[ft] +
@@ -100,7 +121,7 @@ export function PrMove(move, returnType) {
   }
   // normal capture
   if (
-    TOSQ(move) !== 0 &&
+    tempTo !== 0 &&
     CAPTURED(move) > 0 &&
     pieceEpsilon === 0 &&
     !(move & MFLAGSWAP)
@@ -108,7 +129,7 @@ export function PrMove(move, returnType) {
     // !(move & MFLAGOFFR)
   ) {
     MvStr =
-      getPceChar(GameBoard.pieces[TOSQ(move)]) +
+      getPceChar(GameBoard.pieces[tempTo]) +
       FileChar[ff] +
       RankChar[rf] +
       'x' +
@@ -118,13 +139,13 @@ export function PrMove(move, returnType) {
   }
   // trample capture (promoted === 30)
   if (
-    TOSQ(move) !== 0 &&
+    tempTo !== 0 &&
     CAPTURED(move) > 0 &&
     pieceEpsilon === 30 &&
     !(move & MFLAGSWAP)
   ) {
     MvStr =
-      getPceChar(GameBoard.pieces[FROMSQ(move)]) +
+      getPceChar(GameBoard.pieces[tempFrom]) +
       FileChar[ff] +
       RankChar[rf] +
       '$' +
@@ -133,9 +154,9 @@ export function PrMove(move, returnType) {
       RankChar[rt];
   }
   // consume capture
-  if (TOSQ(move) !== 0 && move & MFLAGCNSM && pieceEpsilon !== 0) {
+  if (tempTo !== 0 && move & MFLAGCNSM && pieceEpsilon !== 0) {
     MvStr =
-      getPceChar(GameBoard.pieces[TOSQ(move)]) +
+      getPceChar(GameBoard.pieces[tempTo]) +
       FileChar[ff] +
       RankChar[rf] +
       'x' +
@@ -144,16 +165,16 @@ export function PrMove(move, returnType) {
       RankChar[rt];
   }
   // swap
-  if (TOSQ(move) !== 0 && move & MFLAGSWAP) {
+  if (tempTo !== 0 && move & MFLAGSWAP) {
     MvStr =
-      getPceChar(GameBoard.pieces[FROMSQ(move)]) +
-      PrSq(FROMSQ(move)) +
+      getPceChar(GameBoard.pieces[tempFrom]) +
+      PrSq(tempFrom) +
       '&' +
-      getPceChar(GameBoard.pieces[TOSQ(move)]) +
-      PrSq(TOSQ(move));
+      getPceChar(GameBoard.pieces[tempTo]) +
+      PrSq(tempTo);
   }
   // summon
-  if (TOSQ(move) !== 0 && move & MFLAGSUMN) {
+  if (tempTo !== 0 && move & MFLAGSUMN) {
     if (
       royaltyMap[CAPTURED(move)] === ARCANE_BIT_VALUES.RQ ||
       royaltyMap[CAPTURED(move)] === ARCANE_BIT_VALUES.RT ||
@@ -168,22 +189,22 @@ export function PrMove(move, returnType) {
         'R' +
         RtyChar.split('')[royaltyMap[CAPTURED(move)]] +
         '@' +
-        PrSq(TOSQ(move));
+        PrSq(tempTo);
     } else {
       MvStr =
         PceChar.split('')[PROMOTED(move)]?.toUpperCase() +
         '@' +
-        PrSq(TOSQ(move));
+        PrSq(tempTo);
     }
   }
   // magnet / black hole
-  if (TOSQ(move) === 0 && (CAPTURED(move) === 31 || PROMOTED(move) === 30)) {
+  if (tempTo === 0 && (CAPTURED(move) === 31 || PROMOTED(move) === 30)) {
     const isMagnet = CAPTURED(move) === 31;
-    MvStr = (isMagnet ? 'magnet@' : 'blackhole@') + PrSq(FROMSQ(move));
+    MvStr = (isMagnet ? 'magnet@' : 'blackhole@') + PrSq(tempFrom);
   }
   // offering
   if (
-    TOSQ(move) === 0 &&
+    tempTo === 0 &&
     CAPTURED(move) > 0 &&
     PROMOTED(move) > 0 &&
     CAPTURED(move) !== 31 &&
@@ -193,19 +214,19 @@ export function PrMove(move, returnType) {
       'o' +
       '.ABCDEEFFGGHHIJKKKKLMNOOOZZQR'.split('')[PROMOTED(move)] +
       '@' +
-      PrSq(FROMSQ(move));
+      PrSq(tempFrom);
   }
   // shift
-  if (TOSQ(move) !== 0 && move & MFLAGSHFT) {
+  if (tempTo !== 0 && move & MFLAGSHFT) {
     MvStr =
-      getPceChar(GameBoard.pieces[TOSQ(move)]) +
-      PrSq(FROMSQ(move)) +
+      getPceChar(GameBoard.pieces[tempTo]) +
+      PrSq(tempFrom) +
       '^' +
-      PrSq(TOSQ(move));
+      PrSq(tempTo);
   }
   // promotion
   if (
-    TOSQ(move) !== 0 &&
+    tempTo !== 0 &&
     pieceEpsilon !== 0 &&
     (move & MFLAGSHFT) === 0 &&
     !(move & MFLAGSUMN) &&
@@ -217,7 +238,7 @@ export function PrMove(move, returnType) {
       RankChar[rf] +
       (CAPTURED(move) & 0 || !(move & MFLAGCNSM)
         ? ''
-        : `x${getPceChar(GameBoard.pieces[TOSQ(move)])}`) +
+        : `x${getPceChar(GameBoard.pieces[tempTo])}`) +
       FileChar[ft] +
       RankChar[rt];
 
@@ -291,17 +312,17 @@ export function PrMove(move, returnType) {
     const BQR = _.indexOf(GameBoard.pieces, 10, 91);
 
     if (GameBoard.side === COLOURS.WHITE) {
-      if (FROMSQ(move) - TOSQ(move) === -2 || TOSQ(move) === WKR) {
+      if (tempFrom - tempTo === -2 || tempTo === WKR) {
         MvStr = 'O-O';
       }
-      if (FROMSQ(move) - TOSQ(move) === 2 || TOSQ(move) === WQR) {
+      if (tempFrom - tempTo === 2 || tempTo === WQR) {
         MvStr = 'O-O-O';
       }
     } else {
-      if (FROMSQ(move) - TOSQ(move) === -2 || TOSQ(move) === BKR) {
+      if (tempFrom - tempTo === -2 || tempTo === BKR) {
         MvStr = 'O-O';
       }
-      if (FROMSQ(move) - TOSQ(move) === 2 || TOSQ(move) === BQR) {
+      if (tempFrom - tempTo === 2 || tempTo === BQR) {
         MvStr = 'O-O-O';
       }
     }
@@ -309,17 +330,17 @@ export function PrMove(move, returnType) {
   // EP
   if (move & MFLAGEP) {
     MvStr =
-      getPceChar(GameBoard.pieces[TOSQ(move)]) +
-      PrSq(FROMSQ(move)) +
+      getPceChar(GameBoard.pieces[tempTo]) +
+      PrSq(tempFrom) +
       'x' +
-      getPceChar(GameBoard.pieces[TOSQ(move)]) +
-      PrSq(TOSQ(move)) +
+      getPceChar(GameBoard.pieces[tempTo]) +
+      PrSq(tempTo) +
       'ep';
   }
 
   if (pieceEpsilon === 30 && CAPTURED(move) > 0) {
     MvStr =
-      getPceChar(GameBoard.pieces[FROMSQ(move)]) +
+      getPceChar(GameBoard.pieces[tempFrom]) +
       FileChar[ff] +
       RankChar[rf] +
       '$' +
@@ -327,7 +348,7 @@ export function PrMove(move, returnType) {
       FileChar[ft] +
       RankChar[rt];
   } else {
-    MvStr = PrSq(FROMSQ(move)) + '-' + PrSq(TOSQ(move));
+    MvStr = PrSq(tempFrom) + '-' + PrSq(tempTo);
   }
 
   if (InCheck()) {
@@ -336,7 +357,13 @@ export function PrMove(move, returnType) {
 
   // from chessground translator
   if (returnType === 'array') {
-    return [PrSq(FROMSQ(move)), PrSq(TOSQ(move))];
+    return [PrSq(tempFrom), PrSq(tempTo)];
+  }
+
+  // Final safety check - if MvStr is still undefined, return error notation
+  if (MvStr === undefined || MvStr === null) {
+    console.error('PrMove: MvStr is undefined at end', { move, tempFrom, tempTo, moveHex: move?.toString(16) });
+    return 'NaN-NaN';
   }
 
   return MvStr;

@@ -487,7 +487,18 @@ export function incLiveArcana(side, key, delta = 1) {
   const next =
     delta > 0 ? Math.min(cap, cur + delta) : Math.max(0, cur + delta);
   live[key] = next;
-  return next !== cur;
+  const changed = next !== cur;
+  
+  // Log when a spell is added to hand (positive delta and value changed)
+  if (changed && delta > 0) {
+    console.log(`=== SPELL GRANTED TO ${side.toUpperCase()} ===`);
+    console.log(`Granted: ${key} (${cur} -> ${next})`);
+    const spellsInHand = Object.keys(live).filter(k => live[k] > 0).join(', ');
+    console.log(`${side} hand:`, spellsInHand || 'none');
+    console.log('===================================');
+  }
+  
+  return changed;
 }
 
 export function offerGrant(side, key, qty = 1) {
@@ -1413,7 +1424,14 @@ export function applyGainTacticsRewards(
       offerGrant(s, 'dyadA', 1);
       gifts.push('dyadA');
       // Consume the spell
-      cfg.gainFOR = (cfg.gainFOR || 0) - 1;
+      const oldValue = cfg.gainFOR || 0;
+      cfg.gainFOR = oldValue - 1;
+      if (cfg.gainFOR <= 0) delete cfg.gainFOR;
+      console.log(`=== SPELL CONSUMED: ${s} ===`);
+      console.log(`gainFOR consumed (${oldValue} -> ${cfg.gainFOR || 0})`);
+      const spellsInHand = Object.keys(cfg).filter(k => cfg[k] > 0).join(', ');
+      console.log(`${s} hand:`, spellsInHand || 'none');
+      console.log('===================================');
     }
   }
 
@@ -1430,7 +1448,14 @@ export function applyGainTacticsRewards(
       offerGrant(s, 'dyadA', 1);
       gifts.push('dyadA');
       // Consume the spell
-      cfg.gainPIN = (cfg.gainPIN || 0) - 1;
+      const oldValue = cfg.gainPIN || 0;
+      cfg.gainPIN = oldValue - 1;
+      if (cfg.gainPIN <= 0) delete cfg.gainPIN;
+      console.log(`=== SPELL CONSUMED: ${s} ===`);
+      console.log(`gainPIN consumed (${oldValue} -> ${cfg.gainPIN || 0})`);
+      const spellsInHand = Object.keys(cfg).filter(k => cfg[k] > 0).join(', ');
+      console.log(`${s} hand:`, spellsInHand || 'none');
+      console.log('===================================');
     }
   }
 
@@ -1453,7 +1478,14 @@ export function applyGainTacticsRewards(
       offerGrant(s, 'dyadA', 1);
       gifts.push('dyadA');
       // Consume the spell
-      cfg.gainOUT = (cfg.gainOUT || 0) - 1;
+      const oldValue = cfg.gainOUT || 0;
+      cfg.gainOUT = oldValue - 1;
+      if (cfg.gainOUT <= 0) delete cfg.gainOUT;
+      console.log(`=== SPELL CONSUMED: ${s} ===`);
+      console.log(`gainOUT consumed (${oldValue} -> ${cfg.gainOUT || 0})`);
+      const spellsInHand = Object.keys(cfg).filter(k => cfg[k] > 0).join(', ');
+      console.log(`${s} hand:`, spellsInHand || 'none');
+      console.log('===================================');
     }
   }
 
