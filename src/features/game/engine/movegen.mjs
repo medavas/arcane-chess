@@ -1380,11 +1380,6 @@ export function GenerateMoves(
                   GameBoard.pieces[sq] === PIECES.EMPTY &&
                   GameBoard.blackArcane[3] & summonFlag
                 ) {
-                  console.log('[movegen] addSummonMove: black piece', {
-                    sq,
-                    summonPce,
-                    summonFlag,
-                  });
                   addSummonMove(
                     MOVE(0, sq, PIECES.EMPTY, summonPce, MFLAGSUMN)
                   );
@@ -1409,19 +1404,10 @@ export function GenerateMoves(
                         royaltyChar !== 'A' &&
                         royaltyChar !== 'I'
                       ) {
-                        console.log(
-                          '[movegen] skip: royalty on checked king not allowed',
-                          { sq, summonPce, royaltyChar }
-                        );
                         continue;
                       }
                     }
                   }
-                  console.log('[movegen] addSummonMove: black royalty', {
-                    sq,
-                    summonPce,
-                    summonFlag,
-                  });
                   addSummonMove(
                     MOVE(
                       0,
@@ -1432,11 +1418,6 @@ export function GenerateMoves(
                     )
                   );
                 } else {
-                  console.log('[movegen] skip: black else', {
-                    sq,
-                    summonPce,
-                    summonFlag,
-                  });
                   continue;
                 }
               }
