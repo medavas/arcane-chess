@@ -172,7 +172,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
     id: 'tactician',
     name: 'Tactician',
     army: 'RNWVKWNR',
-    arcana: ['dyadA', 'modsAET', 'modsSUR', 'shftK', 'sumnX'],
+    arcana: ['dyadA', 'modsAET', 'modsSUR', 'shftK', 'sumnX', 'modsFUT'],
     faction: 'lambda',
     image: '/assets/archetypes/tactician.svg',
     description:

@@ -797,6 +797,7 @@ class UnwrappedSkirmish extends React.Component<Props, State> {
               }
               history={this.state.history}
               sortedHistory={sortedHistory}
+              historyPly={this.state.historyPly}
               navigateHistory={(type, targetIndex) =>
                 this.navigateHistory(type, targetIndex)
               }

@@ -821,8 +821,10 @@ export function SqAttacked(sq, side) {
     GameBoard.royaltyT[t_sq] > 0 ||
     GameBoard.royaltyM[t_sq] > 0 ||
     GameBoard.royaltyV[t_sq] > 0 ||
-    GameBoard.royaltyE[t_sq] > 0 ||
-    GameBoard.royaltyN[t_sq] > 0;
+    GameBoard.royaltyE[t_sq] > 0;
+    // Note: royaltyN (Disarmament/Glare) is NOT included here because:
+    // - A piece with Disarmament CAN still be attacked (e.g., King in check)
+    // - Disarmament only prevents the piece FROM attacking, not being attacked
 
   const arc =
     side === COLOURS.WHITE ? GameBoard.whiteArcane : GameBoard.blackArcane;

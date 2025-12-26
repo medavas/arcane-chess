@@ -1560,14 +1560,18 @@ export function GenerateMoves(
             (PieceCol[GameBoard.pieces[sq - 1]] === COLOURS.BLACK ||
               GameBoard.pieces[sq - 1] === PIECES.bX)
           ) {
-            AddWhitePawnCaptureMove(
-              sq,
-              sq - 1,
-              GameBoard.pieces[sq - 1],
-              1,
-              MFLAGSHFT,
-              capturesOnly
-            );
+            // Glare/Disarmament: If this pawn has royaltyN > 0, it cannot capture
+            const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+            if (!hasDisarmament) {
+              AddWhitePawnCaptureMove(
+                sq,
+                sq - 1,
+                GameBoard.pieces[sq - 1],
+                1,
+                MFLAGSHFT,
+                capturesOnly
+              );
+            }
           }
 
           if (GameBoard.pieces[sq + 1] === PIECES.EMPTY) {
@@ -1578,14 +1582,18 @@ export function GenerateMoves(
             (PieceCol[GameBoard.pieces[sq + 1]] === COLOURS.BLACK ||
               GameBoard.pieces[sq + 1] === PIECES.bX)
           ) {
-            AddWhitePawnCaptureMove(
-              sq,
-              sq + 1,
-              GameBoard.pieces[sq + 1],
-              1,
-              MFLAGSHFT,
-              capturesOnly
-            );
+            // Glare/Disarmament: If this pawn has royaltyN > 0, it cannot capture
+            const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+            if (!hasDisarmament) {
+              AddWhitePawnCaptureMove(
+                sq,
+                sq + 1,
+                GameBoard.pieces[sq + 1],
+                1,
+                MFLAGSHFT,
+                capturesOnly
+              );
+            }
           }
 
           if (GameBoard.pieces[sq - 10] === PIECES.EMPTY) {
@@ -1596,14 +1604,18 @@ export function GenerateMoves(
             (PieceCol[GameBoard.pieces[sq - 10]] === COLOURS.BLACK ||
               GameBoard.pieces[sq - 10] === PIECES.bX)
           ) {
-            AddWhitePawnCaptureMove(
-              sq,
-              sq - 10,
-              GameBoard.pieces[sq - 10],
-              1,
-              MFLAGSHFT,
-              capturesOnly
-            );
+            // Glare/Disarmament: If this pawn has royaltyN > 0, it cannot capture
+            const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+            if (!hasDisarmament) {
+              AddWhitePawnCaptureMove(
+                sq,
+                sq - 10,
+                GameBoard.pieces[sq - 10],
+                1,
+                MFLAGSHFT,
+                capturesOnly
+              );
+            }
           }
         }
       }
@@ -1654,14 +1666,18 @@ export function GenerateMoves(
             _.includes(herrings, sq + 9)))
       ) {
         if (PieceCol[GameBoard.pieces[sq + 9]] === COLOURS.BLACK) {
-          AddWhitePawnCaptureMove(
-            sq,
-            sq + 9,
-            GameBoard.pieces[sq + 9],
-            0,
-            0,
-            capturesOnly
-          );
+          // Glare/Disarmament: If this pawn has royaltyN > 0, it cannot capture
+          const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+          if (!hasDisarmament) {
+            AddWhitePawnCaptureMove(
+              sq,
+              sq + 9,
+              GameBoard.pieces[sq + 9],
+              0,
+              0,
+              capturesOnly
+            );
+          }
         }
         // note white pawn consume
         if (
@@ -1689,14 +1705,18 @@ export function GenerateMoves(
           _.includes(herrings, sq + 11))
       ) {
         if (PieceCol[GameBoard.pieces[sq + 11]] === COLOURS.BLACK) {
-          AddWhitePawnCaptureMove(
-            sq,
-            sq + 11,
-            GameBoard.pieces[sq + 11],
-            0,
-            0,
-            capturesOnly
-          );
+          // Glare/Disarmament: If this pawn has royaltyN > 0, it cannot capture
+          const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+          if (!hasDisarmament) {
+            AddWhitePawnCaptureMove(
+              sq,
+              sq + 11,
+              GameBoard.pieces[sq + 11],
+              0,
+              0,
+              capturesOnly
+            );
+          }
         }
         // note white pawn consume
         if (
@@ -1950,14 +1970,18 @@ export function GenerateMoves(
             (PieceCol[GameBoard.pieces[sq - 1]] === COLOURS.WHITE ||
               GameBoard.pieces[sq - 1] === PIECES.wX)
           ) {
-            AddBlackPawnCaptureMove(
-              sq,
-              sq - 1,
-              GameBoard.pieces[sq - 1],
-              7,
-              MFLAGSHFT,
-              capturesOnly
-            );
+            // Glare/Disarmament: If this pawn has royaltyN > 0, it cannot capture
+            const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+            if (!hasDisarmament) {
+              AddBlackPawnCaptureMove(
+                sq,
+                sq - 1,
+                GameBoard.pieces[sq - 1],
+                7,
+                MFLAGSHFT,
+                capturesOnly
+              );
+            }
           }
 
           if (GameBoard.pieces[sq + 1] === PIECES.EMPTY) {
@@ -1968,14 +1992,18 @@ export function GenerateMoves(
             (PieceCol[GameBoard.pieces[sq + 1]] === COLOURS.WHITE ||
               GameBoard.pieces[sq + 1] === PIECES.wX)
           ) {
-            AddBlackPawnCaptureMove(
-              sq,
-              sq + 1,
-              GameBoard.pieces[sq + 1],
-              7,
-              MFLAGSHFT,
-              capturesOnly
-            );
+            // Glare/Disarmament: If this pawn has royaltyN > 0, it cannot capture
+            const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+            if (!hasDisarmament) {
+              AddBlackPawnCaptureMove(
+                sq,
+                sq + 1,
+                GameBoard.pieces[sq + 1],
+                7,
+                MFLAGSHFT,
+                capturesOnly
+              );
+            }
           }
 
           if (GameBoard.pieces[sq + 10] === PIECES.EMPTY) {
@@ -1986,14 +2014,18 @@ export function GenerateMoves(
             (PieceCol[GameBoard.pieces[sq + 10]] === COLOURS.WHITE ||
               GameBoard.pieces[sq + 10] === PIECES.wX)
           ) {
-            AddBlackPawnCaptureMove(
-              sq,
-              sq + 10,
-              GameBoard.pieces[sq + 10],
-              7,
-              MFLAGSHFT,
-              capturesOnly
-            );
+            // Glare/Disarmament: If this pawn has royaltyN > 0, it cannot capture
+            const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+            if (!hasDisarmament) {
+              AddBlackPawnCaptureMove(
+                sq,
+                sq + 10,
+                GameBoard.pieces[sq + 10],
+                7,
+                MFLAGSHFT,
+                capturesOnly
+              );
+            }
           }
         }
       }
@@ -2045,14 +2077,18 @@ export function GenerateMoves(
           _.includes(herrings, sq - 9))
       ) {
         if (PieceCol[GameBoard.pieces[sq - 9]] === COLOURS.WHITE) {
-          AddBlackPawnCaptureMove(
-            sq,
-            sq - 9,
-            GameBoard.pieces[sq - 9],
-            0,
-            0,
-            capturesOnly
-          );
+          // Glare/Disarmament: If this pawn has royaltyN > 0, it cannot capture
+          const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+          if (!hasDisarmament) {
+            AddBlackPawnCaptureMove(
+              sq,
+              sq - 9,
+              GameBoard.pieces[sq - 9],
+              0,
+              0,
+              capturesOnly
+            );
+          }
         }
         // note black pawn consume
         if (
@@ -2079,14 +2115,18 @@ export function GenerateMoves(
             _.includes(herrings, sq - 11)))
       ) {
         if (PieceCol[GameBoard.pieces[sq - 11]] === COLOURS.WHITE) {
-          AddBlackPawnCaptureMove(
-            sq,
-            sq - 11,
-            GameBoard.pieces[sq - 11],
-            0,
-            0,
-            capturesOnly
-          );
+          // Glare/Disarmament: If this pawn has royaltyN > 0, it cannot capture
+          const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+          if (!hasDisarmament) {
+            AddBlackPawnCaptureMove(
+              sq,
+              sq - 11,
+              GameBoard.pieces[sq - 11],
+              0,
+              0,
+              capturesOnly
+            );
+          }
         }
         // note black pawn consume
         if (
@@ -2507,30 +2547,36 @@ export function GenerateMoves(
                 !herrings.length ||
                 (herrings.length && _.includes(herrings, t_sq))
               ) {
-                if (GameBoard.pieces[sq] === PIECES.wP) {
-                  AddWhitePawnCaptureMove(
-                    sq,
-                    t_sq,
-                    GameBoard.pieces[t_sq],
-                    PIECES.EMPTY,
-                    0,
-                    capturesOnly
-                  );
-                } else if (GameBoard.pieces[sq] === PIECES.bP) {
-                  AddBlackPawnCaptureMove(
-                    sq,
-                    t_sq,
-                    GameBoard.pieces[t_sq],
-                    PIECES.EMPTY,
-                    0,
-                    capturesOnly
-                  );
-                } else {
-                  AddCaptureMove(
-                    MOVE(sq, t_sq, GameBoard.pieces[t_sq], PIECES.EMPTY, 0),
-                    false,
-                    capturesOnly
-                  );
+                // Glare/Disarmament: If this piece has royaltyN > 0 (Disarmament),
+                // it cannot capture any pieces
+                const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+                
+                if (!hasDisarmament) {
+                  if (GameBoard.pieces[sq] === PIECES.wP) {
+                    AddWhitePawnCaptureMove(
+                      sq,
+                      t_sq,
+                      GameBoard.pieces[t_sq],
+                      PIECES.EMPTY,
+                      0,
+                      capturesOnly
+                    );
+                  } else if (GameBoard.pieces[sq] === PIECES.bP) {
+                    AddBlackPawnCaptureMove(
+                      sq,
+                      t_sq,
+                      GameBoard.pieces[t_sq],
+                      PIECES.EMPTY,
+                      0,
+                      capturesOnly
+                    );
+                  } else {
+                    AddCaptureMove(
+                      MOVE(sq, t_sq, GameBoard.pieces[t_sq], PIECES.EMPTY, 0),
+                      false,
+                      capturesOnly
+                    );
+                  }
                 }
               }
             }
@@ -2706,6 +2752,14 @@ export function GenerateMoves(
                 if (hasHermit || hasHemlock) continue;
               }
 
+              // Glare/Disarmament: If this piece has royaltyN > 0 (Disarmament),
+              // it cannot capture any pieces
+              const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+              if (hasDisarmament) {
+                // Piece with Disarmament cannot capture - skip this capture move
+                continue;
+              }
+
               if (
                 targetPieceColor !== GameBoard.side &&
                 targetPieceColor !== COLOURS.BOTH
@@ -2831,8 +2885,13 @@ export function GenerateMoves(
             }
 
             // CAPTURE shift only if enemy present
+            // Glare/Disarmament: If this piece has royaltyN > 0 (Disarmament),
+            // it cannot capture any pieces (including via shift)
+            const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+            
             if (
               canCapture &&
+              !hasDisarmament &&
               (has5thDimensionSword || wantShogun) &&
               GameBoard.pieces[targetSq] !== PIECES.EMPTY &&
               PieceCol[targetPiece] !== side &&
@@ -2881,7 +2940,12 @@ export function GenerateMoves(
                 }
               }
               // CAPTURE: Allow with 5D Sword OR if this is a Hemlock piece
-              else if (
+              // Glare/Disarmament: If this piece has royaltyN > 0 (Disarmament),
+              // it cannot capture any pieces
+              const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+              
+              if (
+                !hasDisarmament &&
                 (has5thDimensionSword || isHemlock) &&
                 PieceCol[targetPiece] !== side &&
                 herringAllowed
@@ -3154,11 +3218,17 @@ export function GenerateMoves(
                   !herrings.length ||
                   (herrings.length && _.includes(herrings, t_sq))
                 ) {
-                  AddCaptureMove(
-                    MOVE(sq, t_sq, GameBoard.pieces[t_sq], PIECES.EMPTY, 0),
-                    false,
-                    capturesOnly
-                  );
+                  // Glare/Disarmament: If this piece has royaltyN > 0 (Disarmament),
+                  // it cannot capture any pieces
+                  const hasDisarmament = GameBoard.royaltyN[sq] > 0;
+                  
+                  if (!hasDisarmament) {
+                    AddCaptureMove(
+                      MOVE(sq, t_sq, GameBoard.pieces[t_sq], PIECES.EMPTY, 0),
+                      false,
+                      capturesOnly
+                    );
+                  }
                 }
               }
 

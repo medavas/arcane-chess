@@ -20,6 +20,7 @@ interface PlayerPanelProps {
   arcaneConfig: any;
   history: (string | string[])[];
   sortedHistory: (string | string[])[][];
+  historyPly: number;
   navigateHistory: (type: string, targetIndex?: number) => void;
   thinking: boolean;
   hoverArcane: string;
@@ -59,6 +60,7 @@ export const PlayerPanel: React.FC<PlayerPanelProps> = ({
   // arcaneConfig,
   history,
   sortedHistory,
+  historyPly,
   navigateHistory,
   thinking,
   hoverArcane,
@@ -156,28 +158,33 @@ export const PlayerPanel: React.FC<PlayerPanelProps> = ({
       )}
       <div id="history" className="history">
         {sortedHistory.map((fullMove: any, fullMoveIndex: number) => {
+          const whiteIndex = fullMoveIndex * 2 + 1;
+          const blackIndex = fullMoveIndex * 2 + 2;
+          const isWhiteCurrent = historyPly === whiteIndex;
+          const isBlackCurrent = historyPly === blackIndex;
+          
           return (
             <p className="full-move" key={fullMoveIndex}>
               <span className="move-number">{fullMoveIndex + 1}.</span>
               <Button
-                className="tertiary"
+                className={`tertiary ${isWhiteCurrent ? 'current-move' : ''}`}
                 text={fullMove[0]}
                 color={playerColor === 'white' ? 'S' : 'B'}
-                height={20}
+                height={90}
                 onClick={() => {
-                  navigateHistory('jump', fullMoveIndex * 2 + 1);
+                  navigateHistory('jump', whiteIndex);
                 }}
-                backgroundColorOverride="#00000000"
+                backgroundColorOverride={isWhiteCurrent ? "#0d3a5f" : "#00000000"}
               />
               <Button
-                className="tertiary"
+                className={`tertiary ${isBlackCurrent ? 'current-move' : ''}`}
                 text={fullMove[1]}
                 color={playerColor === 'white' ? 'S' : 'B'}
-                height={20}
+                height={90}
                 onClick={() => {
-                  navigateHistory('jump', fullMoveIndex * 2 + 2);
+                  navigateHistory('jump', blackIndex);
                 }}
-                backgroundColorOverride="#00000000"
+                backgroundColorOverride={isBlackCurrent ? "#0d3a5f" : "#00000000"}
               />
             </p>
           );

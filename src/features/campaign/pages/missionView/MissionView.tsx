@@ -1051,30 +1051,35 @@ class UnwrappedMissionView extends React.Component<Props, State> {
                 </div>
                 <div id="history" className="history">
                   {sortedHistory.map((fullMove, fullMoveIndex) => {
+                    const whiteIndex = fullMoveIndex * 2 + 1;
+                    const blackIndex = fullMoveIndex * 2 + 2;
+                    const isWhiteCurrent = this.state.historyPly === whiteIndex;
+                    const isBlackCurrent = this.state.historyPly === blackIndex;
+
                     return (
                       <p className="full-move" key={fullMoveIndex}>
                         <span className="move-number">
                           {fullMoveIndex + 1}.
                         </span>
                         <Button
-                          className="tertiary"
+                          className={`tertiary ${isWhiteCurrent ? 'current-move' : ''}`}
                           text={fullMove[0]}
                           color="S"
-                          height={20}
+                          height={90}
                           onClick={() => {
-                            this.navigateHistory('jump', fullMoveIndex * 2 + 1);
+                            this.navigateHistory('jump', whiteIndex);
                           }}
-                          backgroundColorOverride="#00000000"
+                          backgroundColorOverride={isWhiteCurrent ? "#0d3a5f" : "#00000000"}
                         />
                         <Button
-                          className="tertiary"
+                          className={`tertiary ${isBlackCurrent ? 'current-move' : ''}`}
                           text={fullMove[1]}
                           color="S"
-                          height={20}
+                          height={90}
                           onClick={() => {
-                            this.navigateHistory('jump', fullMoveIndex * 2 + 2);
+                            this.navigateHistory('jump', blackIndex);
                           }}
-                          backgroundColorOverride="#00000000"
+                          backgroundColorOverride={isBlackCurrent ? "#0d3a5f" : "#00000000"}
                         />
                       </p>
                     );
