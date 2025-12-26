@@ -68,7 +68,7 @@ export default class ArcanaSelect extends React.Component<
 
   componentDidUpdate(prevProps: ArcanaSelectProps) {
     // Update currentSpellBookSlot when initialSlot prop changes
-    if (this.props.initialSlot !== prevProps.initialSlot && this.props.initialSlot !== null) {
+    if (this.props.initialSlot !== prevProps.initialSlot && this.props.initialSlot != null) {
       this.setState({ currentSpellBookSlot: this.props.initialSlot });
     }
   }

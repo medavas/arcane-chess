@@ -18,7 +18,6 @@ import 'src/features/game/board/styles/omega.scss';
 import 'src/features/game/board/styles/psi.scss';
 import 'src/features/game/board/styles/gamma.scss';
 
-import ArcanaSelect from 'src/features/campaign/components/ArcanaSelect/ArcanaSelect';
 import ArmySelect from 'src/features/game/components/ArmySelect/ArmySelect';
 
 import { startingSpellBook } from 'src/features/game/components/CharacterSelect/charactersModes';
@@ -72,6 +71,7 @@ interface ArcanaDetail {
   description: string;
   type: string;
   imagePath: string;
+  value: number;
 }
 interface ArcanaMap {
   [key: string]: ArcanaDetail;
@@ -500,9 +500,6 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
   };
 
   render() {
-    const hoverText =
-      this.descriptions()[this.state.hoverId] ?? this.descriptions()[''];
-
     const canStart = Boolean(
       this.state.engineArchetypeId && this.state.playerArchetypeId
     );
