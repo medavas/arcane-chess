@@ -354,9 +354,7 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
     const arcanaDescs: Record<string, string> = {};
     Object.values(arcana).forEach((a) => {
       if (a && a.id) {
-        const name = a.name || a.id;
-        const desc = a.description || '';
-        arcanaDescs[a.id] = desc ? `${name}: ${desc}` : name;
+        arcanaDescs[a.id] = a.description || a.name || '';
       }
     });
 
@@ -560,22 +558,6 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                   </button>
                 </div>
               </div>
-
-              {/* Hover panel */}
-              <div className="hover-panel">
-                {this.state.hoverId ? (
-                  <>
-                    <div className="hover-title">
-                      {arcana[this.state.hoverId]?.name || 'Info'}
-                    </div>
-                    <div className="hover-description">{hoverText}</div>
-                  </>
-                ) : (
-                  <div className="hover-empty">
-                    Choose a faction or adjust engine settings.
-                  </div>
-                )}
-              </div>
             </div>
 
             {/* Content container */}
@@ -616,35 +598,62 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                   </div>
                 </div>
 
-                <div className="arcana-section">
-                  <ArcanaSelect
-                    spellBook={
-                      this.state.playerColor === 'white'
-                        ? this.state.whiteArcana
-                        : this.state.blackArcana
-                    }
-                    color={this.state.playerColor}
-                    isOpen={false}
-                    readOnly
-                    updateHover={(arcaneObject) => {
-                      this.setState({ hoverId: arcaneObject.id || '' });
-                    }}
-                  />
-                </div>
+                <div className="scrollable-content">
+                  <div className="army-section">
+                    <ArmySelect
+                      army={
+                        this.state.playerColor === 'white'
+                          ? this.state.whiteSetup
+                          : this.state.blackSetup
+                      }
+                      faction={playerArchetype?.faction}
+                      isOpen={false}
+                      color={this.state.playerColor}
+                      readOnly
+                    />
+                  </div>
 
-                <div className="army-section">
-                  <ArmySelect
-                    army={
-                      this.state.playerColor === 'white'
-                        ? this.state.whiteSetup
-                        : this.state.blackSetup
-                    }
-                    faction={playerArchetype?.faction}
-                    isOpen={false}
-                    color={this.state.playerColor}
-                    readOnly
-                  />
+                  <div className="spell-list-section">
+                    <div className="spell-list">
+                    {playerArchetype &&
+                      playerArchetype.arcana.map((arcanaId, idx) => {
+                        const arcanaDetail = arcana[arcanaId];
+                        if (!arcanaDetail) return null;
+
+                        return (
+                          <div
+                            key={`${arcanaId}-${idx}`}
+                            className="spell-list-item"
+                            onMouseEnter={() =>
+                              this.setState({ hoverId: arcanaId })
+                            }
+                            onMouseLeave={() => this.setState({ hoverId: '' })}
+                          >
+                            <img
+                              src={`/assets/arcanaImages${arcanaDetail.imagePath}.svg`}
+                              alt={arcanaDetail.name}
+                              className="spell-icon"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                            <div className="spell-text-container">
+                              <span className="spell-name">
+                                {arcanaDetail.name}
+                              </span>
+                              <span className="spell-description">
+                                {arcanaDetail.description}
+                              </span>
+                            </div>
+                            <span className="spell-value">
+                              {arcanaDetail.value}
+                            </span>
+                          </div>
+                        );
+                      })}
+                  </div>
                 </div>
+              </div>
 
                 {/* Player Archetype Picker */}
                 {this.state.showPlayerArchetypePicker && (
@@ -738,35 +747,62 @@ class UnwrappedSkirmishModal extends React.Component<ModalProps, ModalState> {
                   </div>
                 </div>
 
-                <div className="arcana-section">
-                  <ArcanaSelect
-                    spellBook={
-                      this.state.engineColor === 'white'
-                        ? this.state.whiteArcana
-                        : this.state.blackArcana
-                    }
-                    color={this.state.engineColor}
-                    isOpen={false}
-                    readOnly
-                    updateHover={(arcaneObject) => {
-                      this.setState({ hoverId: arcaneObject.id || '' });
-                    }}
-                  />
-                </div>
+                <div className="scrollable-content">
+                  <div className="army-section">
+                    <ArmySelect
+                      army={
+                        this.state.engineColor === 'white'
+                          ? this.state.whiteSetup
+                          : this.state.blackSetup
+                      }
+                      faction={engineArchetype?.faction}
+                      isOpen={false}
+                      color={this.state.engineColor}
+                      readOnly
+                    />
+                  </div>
 
-                <div className="army-section">
-                  <ArmySelect
-                    army={
-                      this.state.engineColor === 'white'
-                        ? this.state.whiteSetup
-                        : this.state.blackSetup
-                    }
-                    faction={engineArchetype?.faction}
-                    isOpen={false}
-                    color={this.state.engineColor}
-                    readOnly
-                  />
+                  <div className="spell-list-section">
+                    <div className="spell-list">
+                    {engineArchetype &&
+                      engineArchetype.arcana.map((arcanaId, idx) => {
+                        const arcanaDetail = arcana[arcanaId];
+                        if (!arcanaDetail) return null;
+
+                        return (
+                          <div
+                            key={`${arcanaId}-${idx}`}
+                            className="spell-list-item"
+                            onMouseEnter={() =>
+                              this.setState({ hoverId: arcanaId })
+                            }
+                            onMouseLeave={() => this.setState({ hoverId: '' })}
+                          >
+                            <img
+                              src={`/assets/arcanaImages${arcanaDetail.imagePath}.svg`}
+                              alt={arcanaDetail.name}
+                              className="spell-icon"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                            <div className="spell-text-container">
+                              <span className="spell-name">
+                                {arcanaDetail.name}
+                              </span>
+                              <span className="spell-description">
+                                {arcanaDetail.description}
+                              </span>
+                            </div>
+                            <span className="spell-value">
+                              {arcanaDetail.value}
+                            </span>
+                          </div>
+                        );
+                      })}
+                  </div>
                 </div>
+              </div>
 
                 {/* Engine Archetype Picker */}
                 {this.state.showEngineArchetypePicker && (
