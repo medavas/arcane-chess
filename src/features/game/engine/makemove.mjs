@@ -212,10 +212,17 @@ export function AddPiece(sq, pce, summon = false) {
     console.error('❌ AddPiece invalid square:', sq);
     return;
   }
-  
+
   // Validate piece is valid
   if (pce === PIECES.EMPTY || pce === PIECES.OFFBOARD) {
-    console.error('❌ AddPiece invalid piece:', pce, 'at', sq, '- Stack:', new Error().stack.split('\n').slice(1, 4).join(' <- '));
+    console.error(
+      '❌ AddPiece invalid piece:',
+      pce,
+      'at',
+      sq,
+      '- Stack:',
+      new Error().stack.split('\n').slice(1, 4).join(' <- ')
+    );
     return;
   }
 
@@ -238,18 +245,18 @@ export function MovePiece(from, to) {
     console.error('❌ MovePiece invalid squares:', from, to);
     return;
   }
-  
+
   // Validate there's a piece to move
   if (GameBoard.pieces[from] === PIECES.EMPTY) {
     console.error('❌ MovePiece from empty:', from, 'to', to);
     return;
   }
-  
+
   // Prevent moving to the same square
   if (from === to) {
     return;
   }
-  
+
   let index = 0;
   let pce = GameBoard.pieces[from];
 
@@ -496,18 +503,23 @@ export function MakeMove(move, moveType = '') {
   let to = TOSQ(move);
   let side = GameBoard.side;
 
-  // Validate that FROM square actually has a piece
-  const pieceAtFrom = GameBoard.pieces[from];
-  if (pieceAtFrom === PIECES.EMPTY) {
-    return BOOL.FALSE;
+  // SUMMON MOVES: Skip FROM square validation for summon moves (from=0)
+  const isSummonMove = from === 0;
+
+  // Validate that FROM square actually has a piece (skip for summon moves)
+  if (!isSummonMove) {
+    const pieceAtFrom = GameBoard.pieces[from];
+    if (pieceAtFrom === PIECES.EMPTY) {
+      return BOOL.FALSE;
+    }
+
+    // Validate piece belongs to side to move
+    const pieceColor = PieceCol[pieceAtFrom];
+    if (pieceColor !== side) {
+      return BOOL.FALSE;
+    }
   }
 
-  // Validate piece belongs to side to move
-  const pieceColor = PieceCol[pieceAtFrom];
-  if (pieceColor !== side) {
-    return BOOL.FALSE;
-  }
-  
   // Minimal logging for debugging
   // if (moveType === 'userMove' || moveType === 'aiMove' || moveType === 'commit') {
   //   console.log('Move:', PrMove(move), 'ply:', GameBoard.hisPly);
@@ -672,13 +684,17 @@ export function MakeMove(move, moveType = '') {
     // CASTLING MOVE: King is castling, need to move the rook
     // In standard castling: to = C1/G1/C8/G8 (king's destination)
     // In Fischer Random: to = rook's current position (king castles "onto" the rook)
-    
+
     // Validate this is actually a king move (not a rook moving independently)
     const movingPiece = GameBoard.pieces[from];
-    const isKingMove = (movingPiece === PIECES.wK || movingPiece === PIECES.bK);
-    
+    const isKingMove = movingPiece === PIECES.wK || movingPiece === PIECES.bK;
+
     if (!isKingMove) {
-      console.error('❌ Castling flag on non-king:', PrMove(move), PceChar[movingPiece]);
+      console.error(
+        '❌ Castling flag on non-king:',
+        PrMove(move),
+        PceChar[movingPiece]
+      );
       // Don't execute castling logic - just continue with normal move
     } else if (side === COLOURS.WHITE) {
       // White castling
@@ -2274,7 +2290,7 @@ export function TakeMove(wasDyadMove = false) {
       triggerArcanaUpdateCallback();
     }
   } else if (TOSQ(move) > 0 && isSwap(move)) {
-    const putBack = GameBoard.pieces[to];  // Get piece at TO (was originally at FROM)
+    const putBack = GameBoard.pieces[to]; // Get piece at TO (was originally at FROM)
     const fromPiece = GameBoard.pieces[from];
     ClearPiece(from);
     if (putBack !== PIECES.EMPTY) {

@@ -139,8 +139,18 @@ export default function arcaneChess() {
 
     // Log spells in hand at game start
     console.log('=== GAME START - SPELLS IN HAND ===');
-    console.log('White hand:', Object.keys(whiteArcaneConfig).filter(k => whiteArcaneConfig[k] > 0).join(', ') || 'none');
-    console.log('Black hand:', Object.keys(blackArcaneConfig).filter(k => blackArcaneConfig[k] > 0).join(', ') || 'none');
+    console.log(
+      'White hand:',
+      Object.keys(whiteArcaneConfig)
+        .filter((k) => whiteArcaneConfig[k] > 0)
+        .join(', ') || 'none'
+    );
+    console.log(
+      'Black hand:',
+      Object.keys(blackArcaneConfig)
+        .filter((k) => blackArcaneConfig[k] > 0)
+        .join(', ') || 'none'
+    );
     console.log('===================================');
   };
 

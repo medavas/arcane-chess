@@ -262,29 +262,12 @@ export function AddEnPassantMove(move) {
 }
 
 export function addSummonMove(move) {
-  // HERRING FORCED CAPTURE: If herrings exist, block summon moves
+  // HERRING FORCED CAPTURE: Only block summon moves if capturesOnly or forcedEpAvailable is true
   if (herrings.length > 0) {
     return;
   }
-  // TODO TBD uncomment one line below for suspend to block summons
-  // if (GameBoard.suspend > 0) return;
-  // if (move & MFLAGSWAP) return;
-  // whiteArcaneConfig[
-  //   `sumn${pieceEpsilon > 27 || pieceEpsilon === ARCANE_BIT_VALUES.RV ? 'R' : ''}${PceChar.split('')[
-  //     pieceEpsilon
-  //   ].toUpperCase()}`
-  // ]
-  // if (
-  //   // [GameBoard[
-  //   //   `${GameBoard.side === COLOURS.WHITE ? 'white' : 'black'}Arcane`
-  //   // ][3] === POWERBIT[`sumn${PceChar.split('')[PROMOTED(move)]}`]
-  //   (` ${GameBoard.side === COLOURS.WHITE ? 'white' : 'black'}ArcaneConfig`)[] ===
-  // ) {
   GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply + 1]] = move;
   GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply + 1]] = 0;
-
-  // todo for chessground translation
-  // GameBoard.summonList.push(move);
 
   if (move === GameBoard.searchKillers[GameBoard.ply]) {
     GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply + 1]] = 900000;
@@ -296,7 +279,6 @@ export function addSummonMove(move) {
     // MvvLvaValue[summonPce] + 1000000;
   }
   GameBoard.moveListStart[GameBoard.ply + 1]++;
-  // }
 }
 
 export function addOfferingMove(move) {
@@ -305,7 +287,7 @@ export function addOfferingMove(move) {
     return;
   }
   if (PROMOTED(move) === 0) return;
-  GameBoard.moveList[GameBoard.moveListStart[GameBoard.ply + 1]] = move;
+  // console.log('[addSummonMove] Adding summon move:', move, {
   GameBoard.moveScores[GameBoard.moveListStart[GameBoard.ply + 1]] = 0;
 
   if (move === GameBoard.searchKillers[GameBoard.ply]) {
@@ -1316,14 +1298,15 @@ export function GenerateMoves(
       ) {
         while (summonPce !== 0) {
           for (let sq = 21; sq <= 98; sq++) {
-            if (
-              SQOFFBOARD(sq) === BOOL.TRUE ||
-              herrings.length ||
-              capturesOnly
-            ) {
+            if (SQOFFBOARD(sq) === BOOL.TRUE) {
               continue;
             }
-            // Block summoning to en passant square when forced EP is active
+            if (herrings.length) {
+              continue;
+            }
+            if (capturesOnly) {
+              continue;
+            }
             if (forcedEpAvailable && sq === GameBoard.enPas) {
               continue;
             }
@@ -1351,65 +1334,41 @@ export function GenerateMoves(
             }
             if (GameBoard.side === COLOURS.WHITE) {
               if (sq < whiteLimit) {
-                if (
-                  summonFlag < 16384 &&
-                  ((summonPce === userSummonPceRty && type === 'SUMMON') ||
-                    type !== 'SUMMON') &&
-                  GameBoard.pieces[sq] === PIECES.EMPTY &&
-                  GameBoard.whiteArcane[3] & summonFlag
-                ) {
-                  addSummonMove(
-                    MOVE(0, sq, PIECES.EMPTY, summonPce, MFLAGSUMN)
-                  );
-                } else if (
-                  ((summonPce === userSummonPceRty && type === 'SUMMON') ||
-                    type !== 'SUMMON') &&
-                  summonFlag >= 16384 &&
-                  summonFlag ===
-                    POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
-                  summonFlag & GameBoard.whiteArcane[3]
-                ) {
-                  if (
-                    GameBoard.royaltyQ[sq] > 0 ||
-                    GameBoard.royaltyT[sq] > 0 ||
-                    GameBoard.royaltyM[sq] > 0 ||
-                    GameBoard.royaltyV[sq] > 0 ||
-                    GameBoard.royaltyE[sq] > 0 ||
-                    GameBoard.royaltyN[sq] > 0
-                  ) {
-                    continue;
-                  }
-                  // Check if trying to place royalty on a king in check
-                  const pieceAtSq = GameBoard.pieces[sq];
-                  const isKing =
-                    pieceAtSq === PIECES.wK || pieceAtSq === PIECES.bK;
-                  if (isKing && PieceCol[pieceAtSq] === GameBoard.side) {
-                    // Check if king is in check (sq is the king's position)
-                    if (SqAttacked(sq, GameBoard.side ^ 1) === BOOL.TRUE) {
-                      // Only allow royalties that affect checking squares: E, X, Y, A, I
-                      const royaltyChar = RtyChar.split('')[summonPce];
-                      if (
-                        royaltyChar !== 'E' &&
-                        royaltyChar !== 'X' &&
-                        royaltyChar !== 'Y' &&
-                        royaltyChar !== 'A' &&
-                        royaltyChar !== 'I'
-                      ) {
-                        continue;
+                if (summonFlag & GameBoard.whiteArcane[3]) {
+                  if (summonFlag >= 16384) {
+                    // Royalty: allow summoning to any square (including on top of pieces), as long as flag is present
+                    const pieceAtSq = GameBoard.pieces[sq];
+                    const isKing =
+                      pieceAtSq === PIECES.wK || pieceAtSq === PIECES.bK;
+                    if (isKing && PieceCol[pieceAtSq] === GameBoard.side) {
+                      if (SqAttacked(sq, GameBoard.side ^ 1) === BOOL.TRUE) {
+                        const royaltyChar = RtyChar.split('')[summonPce];
+                        if (
+                          royaltyChar !== 'E' &&
+                          royaltyChar !== 'X' &&
+                          royaltyChar !== 'Y' &&
+                          royaltyChar !== 'A' &&
+                          royaltyChar !== 'I'
+                        ) {
+                          continue;
+                        }
                       }
                     }
+                    addSummonMove(
+                      MOVE(
+                        0,
+                        sq,
+                        royaltyIndexes[summonPce],
+                        PIECES.EMPTY,
+                        MFLAGSUMN
+                      )
+                    );
+                  } else if (GameBoard.pieces[sq] === PIECES.EMPTY) {
+                    // Pieces: only to empty squares
+                    addSummonMove(
+                      MOVE(0, sq, PIECES.EMPTY, summonPce, MFLAGSUMN)
+                    );
                   }
-                  addSummonMove(
-                    MOVE(
-                      0,
-                      sq,
-                      royaltyIndexes[summonPce],
-                      PIECES.EMPTY,
-                      MFLAGSUMN
-                    )
-                  );
-                } else {
-                  continue;
                 }
               }
             } else if (GameBoard.side === COLOURS.BLACK) {
@@ -1421,6 +1380,11 @@ export function GenerateMoves(
                   GameBoard.pieces[sq] === PIECES.EMPTY &&
                   GameBoard.blackArcane[3] & summonFlag
                 ) {
+                  console.log('[movegen] addSummonMove: black piece', {
+                    sq,
+                    summonPce,
+                    summonFlag,
+                  });
                   addSummonMove(
                     MOVE(0, sq, PIECES.EMPTY, summonPce, MFLAGSUMN)
                   );
@@ -1432,24 +1396,11 @@ export function GenerateMoves(
                     POWERBIT[`sumnR${RtyChar.split('')[summonPce]}`] &&
                   summonFlag & GameBoard.blackArcane[3]
                 ) {
-                  if (
-                    GameBoard.royaltyQ[sq] > 0 ||
-                    GameBoard.royaltyT[sq] > 0 ||
-                    GameBoard.royaltyM[sq] > 0 ||
-                    GameBoard.royaltyV[sq] > 0 ||
-                    GameBoard.royaltyE[sq] > 0 ||
-                    GameBoard.royaltyF[sq] > 0
-                  ) {
-                    continue;
-                  }
-                  // Check if trying to place royalty on a king in check
                   const pieceAtSq = GameBoard.pieces[sq];
                   const isKing =
                     pieceAtSq === PIECES.wK || pieceAtSq === PIECES.bK;
                   if (isKing && PieceCol[pieceAtSq] === GameBoard.side) {
-                    // Check if king is in check (sq is the king's position)
                     if (SqAttacked(sq, GameBoard.side ^ 1) === BOOL.TRUE) {
-                      // Only allow royalties that affect checking squares: E, X, Y, A, I
                       const royaltyChar = RtyChar.split('')[summonPce];
                       if (
                         royaltyChar !== 'E' &&
@@ -1458,10 +1409,19 @@ export function GenerateMoves(
                         royaltyChar !== 'A' &&
                         royaltyChar !== 'I'
                       ) {
+                        console.log(
+                          '[movegen] skip: royalty on checked king not allowed',
+                          { sq, summonPce, royaltyChar }
+                        );
                         continue;
                       }
                     }
                   }
+                  console.log('[movegen] addSummonMove: black royalty', {
+                    sq,
+                    summonPce,
+                    summonFlag,
+                  });
                   addSummonMove(
                     MOVE(
                       0,
@@ -1472,6 +1432,11 @@ export function GenerateMoves(
                     )
                   );
                 } else {
+                  console.log('[movegen] skip: black else', {
+                    sq,
+                    summonPce,
+                    summonFlag,
+                  });
                   continue;
                 }
               }
@@ -2550,7 +2515,7 @@ export function GenerateMoves(
                 // Glare/Disarmament: If this piece has royaltyN > 0 (Disarmament),
                 // it cannot capture any pieces
                 const hasDisarmament = GameBoard.royaltyN[sq] > 0;
-                
+
                 if (!hasDisarmament) {
                   if (GameBoard.pieces[sq] === PIECES.wP) {
                     AddWhitePawnCaptureMove(
@@ -2888,7 +2853,7 @@ export function GenerateMoves(
             // Glare/Disarmament: If this piece has royaltyN > 0 (Disarmament),
             // it cannot capture any pieces (including via shift)
             const hasDisarmament = GameBoard.royaltyN[sq] > 0;
-            
+
             if (
               canCapture &&
               !hasDisarmament &&
@@ -2943,7 +2908,7 @@ export function GenerateMoves(
               // Glare/Disarmament: If this piece has royaltyN > 0 (Disarmament),
               // it cannot capture any pieces
               const hasDisarmament = GameBoard.royaltyN[sq] > 0;
-              
+
               if (
                 !hasDisarmament &&
                 (has5thDimensionSword || isHemlock) &&
@@ -3221,7 +3186,7 @@ export function GenerateMoves(
                   // Glare/Disarmament: If this piece has royaltyN > 0 (Disarmament),
                   // it cannot capture any pieces
                   const hasDisarmament = GameBoard.royaltyN[sq] > 0;
-                  
+
                   if (!hasDisarmament) {
                     AddCaptureMove(
                       MOVE(sq, t_sq, GameBoard.pieces[t_sq], PIECES.EMPTY, 0),

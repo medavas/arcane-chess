@@ -114,6 +114,7 @@ export const validSummonMoves = (piece) => {
     }
     moveMap.get(from).push(to);
   }
+
   return moveMap;
 };
 
