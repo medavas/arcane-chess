@@ -61,6 +61,7 @@ interface ModalState {
   showCharacterSelect: string;
   showArmySelect: string;
   showArcanaSelect: string;
+  editingSpellIndex: number | null;
   playerCharacterImgPath: string;
   engineCharacterImgPath: string;
   characterDescription: string;
@@ -149,6 +150,7 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
       showCharacterSelect: '',
       showArmySelect: '',
       showArcanaSelect: '',
+      editingSpellIndex: null,
       playerCharacterImgPath: '',
       engineCharacterImgPath: '',
       characterDescription: '',
@@ -581,61 +583,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                     {this.state.playerColor}
                   </div>
                 </div>
-                <div className="buttons-arcana">
-                  <div className="arcana">
-                    <ArcanaSelect
-                      spellBook={
-                        this.state.playerColor === 'white'
-                          ? this.state.whiteArcana
-                          : this.state.blackArcana
-                      }
-                      isOpen={
-                        this.state.showArcanaSelect === this.state.playerColor
-                      }
-                      handleToggle={() => {
-                        this.setState({
-                          showArcanaSelect:
-                            this.state.playerColor ===
-                            this.state.showArcanaSelect
-                              ? ''
-                              : this.state.playerColor,
-                          showCharacterSelect: '',
-                          showArmySelect: '',
-                        });
-                      }}
-                      color={this.state.playerColor}
-                      updateSpellBook={(spellBook) => {
-                        const configArcana =
-                          this.transformedSpellBook(spellBook);
-                        if (this.props.updateConfig)
-                          this.props.updateConfig(
-                            `${
-                              this.state.playerColor === 'white' ? 'w' : 'b'
-                            }Arcana`,
-                            configArcana
-                          );
-                        if (this.state.playerColor === 'white') {
-                          this.setState({
-                            whiteArcana: spellBook,
-                            playerCharacterImgPath: '',
-                          });
-                        }
-                        if (this.state.playerColor === 'black') {
-                          this.setState({
-                            blackArcana: spellBook,
-                            playerCharacterImgPath: '',
-                          });
-                        }
-                      }}
-                      updateHover={(arcaneObject) => {
-                        this.setState({
-                          hoverId: arcaneObject.id || '',
-                        });
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="army-section">
+                <div className="scrollable-content">
+                  <div className="army-section">
                   <ArmySelect
                     army={
                       this.state.playerColor === 'white'
@@ -690,7 +639,124 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                     }}
                   />
                 </div>
-                {/* Mobile Start Button */}
+                <div className="buttons-arcana">
+                  <div className="arcana">
+                    <ArcanaSelect
+                      spellBook={
+                        this.state.playerColor === 'white'
+                          ? this.state.whiteArcana
+                          : this.state.blackArcana
+                      }
+                      isOpen={
+                        this.state.showArcanaSelect === this.state.playerColor
+                      }
+                      initialSlot={this.state.editingSpellIndex}
+                      handleToggle={() => {
+                        this.setState({
+                          showArcanaSelect:
+                            this.state.playerColor ===
+                            this.state.showArcanaSelect
+                              ? ''
+                              : this.state.playerColor,
+                          showCharacterSelect: '',
+                          showArmySelect: '',
+                        });
+                      }}
+                      color={this.state.playerColor}
+                      updateSpellBook={(spellBook) => {
+                        if (this.state.editingSpellIndex === null) return;
+                        
+                        const currentSpellBook = this.state.playerColor === 'white'
+                          ? [...this.state.whiteArcana]
+                          : [...this.state.blackArcana];
+                        
+                        // Find the newly selected spell (the one that changed)
+                        const newSpell = spellBook.find((spell, idx) => 
+                          spell.id !== currentSpellBook[idx]?.id
+                        );
+                        
+                        if (newSpell) {
+                          currentSpellBook[this.state.editingSpellIndex] = newSpell;
+                        }
+                        
+                        const configArcana = this.transformedSpellBook(currentSpellBook);
+                        if (this.props.updateConfig)
+                          this.props.updateConfig(
+                            `${
+                              this.state.playerColor === 'white' ? 'w' : 'b'
+                            }Arcana`,
+                            configArcana
+                          );
+                        if (this.state.playerColor === 'white') {
+                          this.setState({
+                            whiteArcana: currentSpellBook,
+                            playerCharacterImgPath: '',
+                            editingSpellIndex: null,
+                          });
+                        }
+                        if (this.state.playerColor === 'black') {
+                          this.setState({
+                            blackArcana: currentSpellBook,
+                            playerCharacterImgPath: '',
+                            editingSpellIndex: null,
+                          });
+                        }
+                      }}
+                      updateHover={(arcaneObject) => {
+                        this.setState({
+                          hoverId: arcaneObject.id || '',
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="spell-list-section">
+                  <div className="spell-list">
+                    {(this.state.playerColor === 'white'
+                      ? this.state.whiteArcana
+                      : this.state.blackArcana
+                    ).filter((spell: any) => spell).map((spell: any, index: number) => (
+                      <div 
+                        key={`${spell.id}-${index}`} 
+                        className={`spell-list-item ${spell.id === 'empty' ? 'empty-slot' : ''}`}
+                        onClick={() => {
+                          this.setState({
+                            showArcanaSelect: this.state.playerColor,
+                            editingSpellIndex: index,
+                            showCharacterSelect: '',
+                            showArmySelect: '',
+                          });
+                        }}
+                      >
+                        {spell.id === 'empty' ? (
+                          <>
+                            <div className="spell-icon empty-icon">+</div>
+                            <div className="spell-text-container">
+                              <div className="spell-name">Empty Slot</div>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <img
+                              src={`/assets/arcanaImages${spell.imagePath}.svg`}
+                              alt={spell.name}
+                              className="spell-icon"
+                            />
+                            <div className="spell-text-container">
+                              <div className="spell-name">{spell.name}</div>
+                              <div className="spell-description">
+                                {spell.description}
+                              </div>
+                            </div>
+                            <div className="spell-value">{spell.value}</div>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              {/* Mobile Start Button */}
                 <button
                   type="button"
                   className="mobile-start-button"
@@ -715,61 +781,8 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                     {this.state.engineColor}
                   </div>
                 </div>
-                <div className="buttons-arcana">
-                  <div className="arcana">
-                    <ArcanaSelect
-                      spellBook={
-                        this.state.engineColor === 'white'
-                          ? this.state.whiteArcana
-                          : this.state.blackArcana
-                      }
-                      isOpen={
-                        this.state.showArcanaSelect === this.state.engineColor
-                      }
-                      handleToggle={() => {
-                        this.setState({
-                          showArcanaSelect:
-                            this.state.engineColor ===
-                            this.state.showArcanaSelect
-                              ? ''
-                              : this.state.engineColor,
-                          showCharacterSelect: '',
-                          showArmySelect: '',
-                        });
-                      }}
-                      color={this.state.engineColor}
-                      updateSpellBook={(spellBook) => {
-                        const configArcana =
-                          this.transformedSpellBook(spellBook);
-                        if (this.props.updateConfig)
-                          this.props.updateConfig(
-                            `${
-                              this.state.engineColor === 'white' ? 'w' : 'b'
-                            }Arcana`,
-                            configArcana
-                          );
-                        if (this.state.engineColor === 'white') {
-                          this.setState({
-                            whiteArcana: spellBook,
-                            engineCharacterImgPath: '',
-                          });
-                        }
-                        if (this.state.engineColor === 'black') {
-                          this.setState({
-                            blackArcana: spellBook,
-                            engineCharacterImgPath: '',
-                          });
-                        }
-                      }}
-                      updateHover={(arcaneObject) => {
-                        this.setState({
-                          hoverId: arcaneObject.id || '',
-                        });
-                      }}
-                    />
-                  </div>
-                </div>
-                <div className="army-section">
+                <div className="scrollable-content">
+                  <div className="army-section">
                   <ArmySelect
                     army={
                       this.state.engineColor === 'white'
@@ -824,7 +837,124 @@ class UnwrappedTactoriusModal extends React.Component<ModalProps, ModalState> {
                     }}
                   />
                 </div>
-                {/* Mobile Start Button */}
+                <div className="buttons-arcana">
+                  <div className="arcana">
+                    <ArcanaSelect
+                      spellBook={
+                        this.state.engineColor === 'white'
+                          ? this.state.whiteArcana
+                          : this.state.blackArcana
+                      }
+                      isOpen={
+                        this.state.showArcanaSelect === this.state.engineColor
+                      }
+                      initialSlot={this.state.editingSpellIndex}
+                      handleToggle={() => {
+                        this.setState({
+                          showArcanaSelect:
+                            this.state.engineColor ===
+                            this.state.showArcanaSelect
+                              ? ''
+                              : this.state.engineColor,
+                          showCharacterSelect: '',
+                          showArmySelect: '',
+                        });
+                      }}
+                      color={this.state.engineColor}
+                      updateSpellBook={(spellBook) => {
+                        if (this.state.editingSpellIndex === null) return;
+                        
+                        const currentSpellBook = this.state.engineColor === 'white'
+                          ? [...this.state.whiteArcana]
+                          : [...this.state.blackArcana];
+                        
+                        // Find the newly selected spell (the one that changed)
+                        const newSpell = spellBook.find((spell, idx) => 
+                          spell.id !== currentSpellBook[idx]?.id
+                        );
+                        
+                        if (newSpell) {
+                          currentSpellBook[this.state.editingSpellIndex] = newSpell;
+                        }
+                        
+                        const configArcana = this.transformedSpellBook(currentSpellBook);
+                        if (this.props.updateConfig)
+                          this.props.updateConfig(
+                            `${
+                              this.state.engineColor === 'white' ? 'w' : 'b'
+                            }Arcana`,
+                            configArcana
+                          );
+                        if (this.state.engineColor === 'white') {
+                          this.setState({
+                            whiteArcana: currentSpellBook,
+                            engineCharacterImgPath: '',
+                            editingSpellIndex: null,
+                          });
+                        }
+                        if (this.state.engineColor === 'black') {
+                          this.setState({
+                            blackArcana: currentSpellBook,
+                            engineCharacterImgPath: '',
+                            editingSpellIndex: null,
+                          });
+                        }
+                      }}
+                      updateHover={(arcaneObject) => {
+                        this.setState({
+                          hoverId: arcaneObject.id || '',
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="spell-list-section">
+                  <div className="spell-list">
+                    {(this.state.engineColor === 'white'
+                      ? this.state.whiteArcana
+                      : this.state.blackArcana
+                    ).filter((spell: any) => spell).map((spell: any, index: number) => (
+                      <div 
+                        key={`${spell.id}-${index}`} 
+                        className={`spell-list-item ${spell.id === 'empty' ? 'empty-slot' : ''}`}
+                        onClick={() => {
+                          this.setState({
+                            showArcanaSelect: this.state.engineColor,
+                            editingSpellIndex: index,
+                            showCharacterSelect: '',
+                            showArmySelect: '',
+                          });
+                        }}
+                      >
+                        {spell.id === 'empty' ? (
+                          <>
+                            <div className="spell-icon empty-icon">+</div>
+                            <div className="spell-text-container">
+                              <div className="spell-name">Empty Slot</div>
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <img
+                              src={`/assets/arcanaImages${spell.imagePath}.svg`}
+                              alt={spell.name}
+                              className="spell-icon"
+                            />
+                            <div className="spell-text-container">
+                              <div className="spell-name">{spell.name}</div>
+                              <div className="spell-description">
+                                {spell.description}
+                              </div>
+                            </div>
+                            <div className="spell-value">{spell.value}</div>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              {/* Mobile Start Button */}
                 <button
                   type="button"
                   className="mobile-start-button"

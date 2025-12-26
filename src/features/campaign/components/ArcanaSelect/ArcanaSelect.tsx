@@ -25,6 +25,8 @@ interface ArcanaSelectProps {
   readOnly?: boolean;
   /** Object of unlocked arcana with their counts from all chapters */
   unlockedArcana?: { [key: string]: number };
+  /** Initial slot index to edit when modal opens */
+  initialSlot?: number | null;
 }
 
 interface ArcanaSelectState {
@@ -60,8 +62,15 @@ export default class ArcanaSelect extends React.Component<
     super(props);
     this.state = {
       hoverId: '',
-      currentSpellBookSlot: -1,
+      currentSpellBookSlot: props.initialSlot ?? -1,
     };
+  }
+
+  componentDidUpdate(prevProps: ArcanaSelectProps) {
+    // Update currentSpellBookSlot when initialSlot prop changes
+    if (this.props.initialSlot !== prevProps.initialSlot && this.props.initialSlot !== null) {
+      this.setState({ currentSpellBookSlot: this.props.initialSlot });
+    }
   }
 
   updateSlot = (newValue: ArcanaDetail) => {
