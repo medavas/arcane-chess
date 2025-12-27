@@ -726,13 +726,9 @@ export const BoardUX: React.FC<BoardUXProps> = ({
   };
 
   const handleSelect = (key: string) => {
-    let char = RtyChar.split('')[interactionState.placingRoyalty];
+    const char = RtyChar.split('')[interactionState.placingRoyalty];
     const whiteLimit = 100 - 10 * (8 - GameBoard.summonRankLimits[0]);
     const blackLimit = 20 + 10 * (8 - GameBoard.summonRankLimits[1]);
-
-    if (char === 'Y' || char === 'Z') {
-      char = 'E';
-    }
 
     if (interactionState.placingRoyalty > 0 && char) {
       if (forwardedRef && 'current' in forwardedRef && forwardedRef.current) {
@@ -787,40 +783,27 @@ export const BoardUX: React.FC<BoardUXProps> = ({
         GameBoard.pieces[squareNum] !== PIECES.EMPTY &&
         isValidSelection
       ) {
-        if (
-          (gameState.royalties?.royaltyQ?.[key] ?? 0) > 0 ||
-          (gameState.royalties?.royaltyT?.[key] ?? 0) > 0 ||
-          (gameState.royalties?.royaltyM?.[key] ?? 0) > 0 ||
-          (gameState.royalties?.royaltyV?.[key] ?? 0) > 0 ||
-          (gameState.royalties?.royaltyE?.[key] ?? 0) > 0 ||
-          (gameState.royalties?.royaltyF?.[key] ?? 0) > 0
-        ) {
-          onGameStateChange({
-            placingRoyalty: interactionState.placingRoyalty,
-          });
-          return;
-        } else {
-          const { parsed } = game.makeUserMove(
-            null,
-            key,
-            interactionState.placingPiece,
-            '',
-            interactionState.placingRoyalty
-          );
-          audioManager.playSFX('freeze');
-          if (parsed === 0) {
-            console.log('parsed === 0');
-          }
-
-          onGameStateChange({
-            royalties: {
-              ...gameState.royalties,
-              ...game.getPrettyRoyalties(),
-            },
-          });
-
-          onMove(parsed, 'a0', key);
+        // Let the engine handle the move - remove early return for royalty conflicts
+        const { parsed } = game.makeUserMove(
+          null,
+          key,
+          interactionState.placingPiece,
+          '',
+          interactionState.placingRoyalty
+        );
+        audioManager.playSFX('freeze');
+        if (parsed === 0) {
+          console.log('parsed === 0');
         }
+
+        onGameStateChange({
+          royalties: {
+            ...gameState.royalties,
+            ...game.getPrettyRoyalties(),
+          },
+        });
+
+        onMove(parsed, 'a0', key);
       } else {
         onGameStateChange({
           placingRoyalty: interactionState.placingRoyalty,

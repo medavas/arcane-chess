@@ -183,7 +183,12 @@ export function PrMove(move, returnType) {
       royaltyMap[CAPTURED(move)] === ARCANE_BIT_VALUES.RE ||
       royaltyMap[CAPTURED(move)] === ARCANE_BIT_VALUES.RY ||
       royaltyMap[CAPTURED(move)] === ARCANE_BIT_VALUES.RZ ||
-      royaltyMap[CAPTURED(move)] === ARCANE_BIT_VALUES.RA
+      royaltyMap[CAPTURED(move)] === ARCANE_BIT_VALUES.RA ||
+      royaltyMap[CAPTURED(move)] === ARCANE_BIT_VALUES.RF ||
+      royaltyMap[CAPTURED(move)] === ARCANE_BIT_VALUES.RG ||
+      royaltyMap[CAPTURED(move)] === ARCANE_BIT_VALUES.RH ||
+      royaltyMap[CAPTURED(move)] === ARCANE_BIT_VALUES.RI ||
+      royaltyMap[CAPTURED(move)] === ARCANE_BIT_VALUES.RN
     ) {
       MvStr =
         'R' +
@@ -421,14 +426,14 @@ export function ParseMove(
     ? 'SUMMON'
     : 'COMP';
 
-  const royaltyOrPieceSummon =
-    royaltyEpsilon !== 0 ? royaltyEpsilon : pieceEpsilon;
+  // Use royalty code (31-43) or piece value directly for summon moves
+  const summonValue = royaltyEpsilon > 0 ? royaltyEpsilon : pieceEpsilon;
   generatePlayableOptions(
     true,
     false,
     arcaneType,
     isMagnetType || isTrampleType || isBounceType ? '' : swapType,
-    royaltyOrPieceSummon
+    summonValue
   );
 
   let Move = NOMOVE;
@@ -501,18 +506,37 @@ export function ParseMove(
 
   PrMove(Move);
 
+  // DEBUG: Log royalty summon parsing
+  if (royaltyEpsilon >= 36 && royaltyEpsilon <= 37 && found !== BOOL.FALSE) {
+    console.log('🎯 ParseMove found royalty summon:', {
+      Move,
+      to,
+      royaltyCode: royaltyEpsilon,
+      captured: CAPTURED(Move),
+      pieceAtDest: GameBoard.pieces[prettyToSquare(to)],
+    });
+  }
+
   if (found !== BOOL.FALSE) {
     if (MakeMove(Move) === BOOL.FALSE) {
+      console.error('❌ MakeMove returned FALSE for royalty summon');
       return {
         parsed: NOMOVE,
         isInitPromotion: isInitPromotion(Move) ? BOOL.TRUE : BOOL.FALSE,
       };
     }
     TakeMove();
+    if (royaltyEpsilon >= 36 && royaltyEpsilon <= 37) {
+      console.log('✅ ParseMove returning valid royalty summon move');
+    }
     return {
       parsed: Move,
       isInitPromotion: isInitPromotion(Move) ? BOOL.TRUE : BOOL.FALSE,
     };
+  }
+
+  if (royaltyEpsilon >= 36 && royaltyEpsilon <= 37) {
+    console.error('❌ ParseMove could not find matching move for royalty!');
   }
   return {
     parsed: NOMOVE,

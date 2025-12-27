@@ -503,6 +503,16 @@ export function MakeMove(move, moveType = '') {
   let to = TOSQ(move);
   let side = GameBoard.side;
 
+  // DEBUG: Log royalty summons
+  if (from === 0 && CAPTURED(move) >= 6 && CAPTURED(move) <= 13) {
+    console.log('🔮 Royalty summon:', {
+      to,
+      royaltyIndex: CAPTURED(move),
+      pieceAtDestination: GameBoard.pieces[to],
+      moveType,
+    });
+  }
+
   // SUMMON MOVES: Skip FROM square validation for summon moves (from=0)
   const isSummonMove = from === 0;
 

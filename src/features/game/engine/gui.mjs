@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { GameBoard, FROMSQ, MFLAGSHFT, MFLAGCA } from './board';
+import { GameBoard, FROMSQ, CAPTURED, MFLAGSHFT, MFLAGCA } from './board';
 import {
   generatePlayableOptions,
   GenerateMoves,
@@ -243,12 +243,24 @@ export function MakeUserMove(
   }
 
   if (moveResult.parsed === NOMOVE) {
+    console.log('⚠️ makeUserMove: ParseMove returned NOMOVE');
     return { parsed: moveResult.parsed, isInitPromotion: BOOL.FALSE };
+  }
+
+  // DEBUG: Log before actual move execution
+  const isRoyaltySummon = FROMSQ(moveResult.parsed) === 0 && CAPTURED(moveResult.parsed) >= 6 && CAPTURED(moveResult.parsed) <= 13;
+  if (isRoyaltySummon) {
+    console.log('🔥 makeUserMove: About to execute royalty summon with moveType=userMove');
   }
 
   const makeResult = MakeMove(moveResult.parsed, 'userMove');
   if (makeResult === BOOL.FALSE) {
+    console.error('❌ makeUserMove: MakeMove returned FALSE!');
     return { parsed: NOMOVE, isInitPromotion: BOOL.FALSE };
+  }
+
+  if (isRoyaltySummon) {
+    console.log('✅ makeUserMove: Royalty summon executed successfully!');
   }
 
   CheckAndSet();
