@@ -697,62 +697,28 @@ export function MakeMove(move, moveType = '') {
       );
       // Don't execute castling logic - just continue with normal move
     } else if (side === COLOURS.WHITE) {
-      // White castling
-      if (GameBoard.blackArcane[4] & 8) {
-        // Fischer Random for white
-        switch (to) {
-          case getWhiteQueenRookPos:
-            if (getWhiteQueenRookPos !== SQUARES.D1) {
-              MovePiece(getWhiteQueenRookPos, SQUARES.D1);
-            }
-            break;
-          case getWhiteKingRookPos:
-            if (getWhiteKingRookPos !== SQUARES.F1) {
-              MovePiece(getWhiteKingRookPos, SQUARES.F1);
-            }
-            break;
-        }
-      } else {
-        // Standard castling for white
-        switch (to) {
-          case SQUARES.C1:
-            MovePiece(SQUARES.A1, SQUARES.D1);
-            break;
-          case SQUARES.G1:
-            MovePiece(SQUARES.H1, SQUARES.F1);
-            break;
-          default:
-            break;
-        }
+      // White castling - Standard only (Fischer Random not implemented)
+      switch (to) {
+        case SQUARES.C1:
+          MovePiece(SQUARES.A1, SQUARES.D1);
+          break;
+        case SQUARES.G1:
+          MovePiece(SQUARES.H1, SQUARES.F1);
+          break;
+        default:
+          break;
       }
     } else {
-      // Black castling
-      if (GameBoard.whiteArcane[4] & 8) {
-        // Fischer Random for black
-        switch (to) {
-          case getBlackQueenRookPos:
-            if (getBlackQueenRookPos !== SQUARES.D8) {
-              MovePiece(getBlackQueenRookPos, SQUARES.D8);
-            }
-            break;
-          case getBlackKingRookPos:
-            if (getBlackKingRookPos !== SQUARES.F8) {
-              MovePiece(getBlackKingRookPos, SQUARES.F8);
-            }
-            break;
-        }
-      } else {
-        // Standard castling for black
-        switch (to) {
-          case SQUARES.C8:
-            MovePiece(SQUARES.A8, SQUARES.D8);
-            break;
-          case SQUARES.G8:
-            MovePiece(SQUARES.H8, SQUARES.F8);
-            break;
-          default:
-            break;
-        }
+      // Black castling - Standard only (Fischer Random not implemented)
+      switch (to) {
+        case SQUARES.C8:
+          MovePiece(SQUARES.A8, SQUARES.D8);
+          break;
+        case SQUARES.G8:
+          MovePiece(SQUARES.H8, SQUARES.F8);
+          break;
+        default:
+          break;
       }
     }
   }
@@ -2070,12 +2036,14 @@ export function TakeMove(wasDyadMove = false) {
   }
 
   // Detect blitz move early for proper undo handling
+  // Note: GameBoard.side has been flipped, so we check the captured pawn's color
+  // to determine the original moving side
   const isBlitzMove =
     to > 0 &&
     captured !== PIECES.EMPTY &&
     PiecePawn[captured] === BOOL.TRUE &&
-    ((GameBoard.side === COLOURS.WHITE && to === from + 10) ||
-      (GameBoard.side === COLOURS.BLACK && to === from - 10));
+    ((PieceCol[captured] === COLOURS.BLACK && to === from + 10) || // White pawn pushed black pawn
+      (PieceCol[captured] === COLOURS.WHITE && to === from - 10)); // Black pawn pushed white pawn
 
   if (TOSQ(move) > 0 && isConsumeFlag(move) && !isShift(move)) {
     (GameBoard.side === COLOURS.WHITE
@@ -2103,18 +2071,23 @@ export function TakeMove(wasDyadMove = false) {
       AddPiece(epSq, epPawn);
     }
   } else if ((MFLAGCA & move) !== 0) {
+    // Undo castling: move rook back first, then move king back
     switch (to) {
       case SQUARES.C1:
         MovePiece(SQUARES.D1, SQUARES.A1);
+        MovePiece(SQUARES.C1, SQUARES.E1);
         break;
       case SQUARES.C8:
         MovePiece(SQUARES.D8, SQUARES.A8);
+        MovePiece(SQUARES.C8, SQUARES.E8);
         break;
       case SQUARES.G1:
         MovePiece(SQUARES.F1, SQUARES.H1);
+        MovePiece(SQUARES.G1, SQUARES.E1);
         break;
       case SQUARES.G8:
         MovePiece(SQUARES.F8, SQUARES.H8);
+        MovePiece(SQUARES.G8, SQUARES.E8);
         break;
       default:
         break;
@@ -2123,6 +2096,7 @@ export function TakeMove(wasDyadMove = false) {
 
   if (
     (move & MFLAGSUMN) === 0 &&
+    (move & MFLAGCA) === 0 && // Exclude castling moves - handled above
     TOSQ(move) > 0 &&
     // (TOSQ(move) > 0 || CAPTURED(move) === TELEPORT_CONST) &&
     (ARCANEFLAG(move) === 0 ||
@@ -2216,7 +2190,8 @@ export function TakeMove(wasDyadMove = false) {
     TOSQ(move) > 0 &&
     promoEpsilon !== PIECES.EMPTY &&
     !isSummon(move) &&
-    !isSwap(move)
+    !isSwap(move) &&
+    !isBlitzMove // Exclude Blitz moves - handled separately
   ) {
     // Use promoEpsilon directly as it already contains the correct color information
     // from the original move, including for condition-based promotions
@@ -2269,6 +2244,15 @@ export function TakeMove(wasDyadMove = false) {
 
     // Move friendly piece back from destination to origin
     MovePiece(to, from);
+
+    // Handle promotion: if the move had a promotion, demote the piece back to a pawn
+    if (promoEpsilon !== PIECES.EMPTY && GameBoard.pieces[from] === promoEpsilon) {
+      ClearPiece(from);
+      const promotedPieceColor = PieceCol[promoEpsilon];
+      const originalPawn =
+        promotedPieceColor === COLOURS.WHITE ? PIECES.wP : PIECES.bP;
+      AddPiece(from, originalPawn);
+    }
 
     // Verify the moving piece is actually a pawn (prevent false positives from non-pawn captures)
     const movedPiece = GameBoard.pieces[from];
