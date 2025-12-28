@@ -906,7 +906,10 @@ export const BoardUX: React.FC<BoardUXProps> = ({
       // Check if clicked square has valid trample targets (it's an Equus piece)
       // Note: trampleSelected is managed by parent via interactionState
       // Selection/deselection happens automatically through Chessground's select prop
-    } else if (interactionState.bounceType && interactionState.bounceType !== '') {
+    } else if (
+      interactionState.bounceType &&
+      interactionState.bounceType !== ''
+    ) {
       // For bounce: click a bishop/queen piece to select it, then click or drag to bounce target
       const dests = game.getBounceMoves(interactionState.bounceType);
 
@@ -1036,7 +1039,7 @@ export const BoardUX: React.FC<BoardUXProps> = ({
   const getSelected = () => {
     const pieceChar = PceChar.split('')[interactionState.placingPiece];
     const royaltyChar = RtyChar.split('')[interactionState.placingRoyalty];
-    
+
     return interactionState.placingPiece !== 0 && pieceChar
       ? {
           role: `${pieceChar.toLowerCase()}-piece`,

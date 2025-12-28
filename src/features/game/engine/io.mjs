@@ -35,7 +35,7 @@ export function PrSq(sq) {
   return FileChar[FilesBrd[sq]] + RankChar[RanksBrd[sq]];
 }
 
-const royaltyMap = ['.', 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42];
+const royaltyMap = ['.', 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43];
 // todo update to allow swapping your pawns into promotion, but not your opponents
 
 const isInitPromotion = (move) => {
@@ -73,12 +73,28 @@ export function PrMove(move, returnType) {
   let tempTo = TOSQ(move);
 
   // Safety check for invalid squares
-  if (tempFrom === undefined || tempFrom === null || tempFrom < 0 || tempFrom > 119) {
-    console.error('PrMove: Invalid FROMSQ', { move, tempFrom, moveHex: move?.toString(16) });
+  if (
+    tempFrom === undefined ||
+    tempFrom === null ||
+    tempFrom < 0 ||
+    tempFrom > 119
+  ) {
+    console.error('PrMove: Invalid FROMSQ', {
+      move,
+      tempFrom,
+      moveHex: move?.toString(16),
+    });
     return 'NaN-NaN';
   }
-  if (tempTo !== 0 && (tempTo === undefined || tempTo === null || tempTo < 0 || tempTo > 119)) {
-    console.error('PrMove: Invalid TOSQ', { move, tempTo, moveHex: move?.toString(16) });
+  if (
+    tempTo !== 0 &&
+    (tempTo === undefined || tempTo === null || tempTo < 0 || tempTo > 119)
+  ) {
+    console.error('PrMove: Invalid TOSQ', {
+      move,
+      tempTo,
+      moveHex: move?.toString(16),
+    });
     return 'NaN-NaN';
   }
 
@@ -86,7 +102,7 @@ export function PrMove(move, returnType) {
   let rf = RanksBrd[tempFrom];
   let ft = FilesBrd[tempTo];
   let rt = RanksBrd[tempTo];
-  
+
   // Additional check for undefined file/rank values
   if (ff === undefined || rf === undefined) {
     console.error('PrMove: Invalid file/rank from', { tempFrom, ff, rf, move });
@@ -197,9 +213,7 @@ export function PrMove(move, returnType) {
         PrSq(tempTo);
     } else {
       MvStr =
-        PceChar.split('')[PROMOTED(move)]?.toUpperCase() +
-        '@' +
-        PrSq(tempTo);
+        PceChar.split('')[PROMOTED(move)]?.toUpperCase() + '@' + PrSq(tempTo);
     }
   }
   // magnet / black hole
@@ -367,7 +381,12 @@ export function PrMove(move, returnType) {
 
   // Final safety check - if MvStr is still undefined, return error notation
   if (MvStr === undefined || MvStr === null) {
-    console.error('PrMove: MvStr is undefined at end', { move, tempFrom, tempTo, moveHex: move?.toString(16) });
+    console.error('PrMove: MvStr is undefined at end', {
+      move,
+      tempFrom,
+      tempTo,
+      moveHex: move?.toString(16),
+    });
     return 'NaN-NaN';
   }
 
@@ -484,12 +503,20 @@ export function ParseMove(
         // Skip trample moves when not making a trample move
         continue;
       } else if (Move & MFLAGSUMN) {
+        // For summons, verify the move contains the requested piece or royalty
         if (pieceEpsilon !== PIECES.EMPTY) {
-          found = BOOL.TRUE;
-          break;
+          // Piece summon: check PROMOTED field
+          if (PROMOTED(Move) === pieceEpsilon) {
+            found = BOOL.TRUE;
+            break;
+          }
         } else if (royaltyEpsilon !== PIECES.EMPTY) {
-          found = BOOL.TRUE;
-          break;
+          // Royalty summon: CAPTURED contains index, convert to code and compare
+          const moveRoyaltyCode = royaltyMap[CAPTURED(Move)];
+          if (moveRoyaltyCode === royaltyEpsilon) {
+            found = BOOL.TRUE;
+            break;
+          }
         }
         continue;
       } else if (pieceEpsilon !== PIECES.EMPTY) {
@@ -506,38 +533,20 @@ export function ParseMove(
 
   PrMove(Move);
 
-  // DEBUG: Log royalty summon parsing
-  if (royaltyEpsilon >= 36 && royaltyEpsilon <= 37 && found !== BOOL.FALSE) {
-    console.log('🎯 ParseMove found royalty summon:', {
-      Move,
-      to,
-      royaltyCode: royaltyEpsilon,
-      captured: CAPTURED(Move),
-      pieceAtDest: GameBoard.pieces[prettyToSquare(to)],
-    });
-  }
-
   if (found !== BOOL.FALSE) {
     if (MakeMove(Move) === BOOL.FALSE) {
-      console.error('❌ MakeMove returned FALSE for royalty summon');
       return {
         parsed: NOMOVE,
         isInitPromotion: isInitPromotion(Move) ? BOOL.TRUE : BOOL.FALSE,
       };
     }
     TakeMove();
-    if (royaltyEpsilon >= 36 && royaltyEpsilon <= 37) {
-      console.log('✅ ParseMove returning valid royalty summon move');
-    }
     return {
       parsed: Move,
       isInitPromotion: isInitPromotion(Move) ? BOOL.TRUE : BOOL.FALSE,
     };
   }
 
-  if (royaltyEpsilon >= 36 && royaltyEpsilon <= 37) {
-    console.error('❌ ParseMove could not find matching move for royalty!');
-  }
   return {
     parsed: NOMOVE,
     isInitPromotion: isInitPromotion(Move) ? BOOL.TRUE : BOOL.FALSE,

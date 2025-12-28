@@ -248,19 +248,20 @@ export function MakeUserMove(
   }
 
   // DEBUG: Log before actual move execution
-  const isRoyaltySummon = FROMSQ(moveResult.parsed) === 0 && CAPTURED(moveResult.parsed) >= 6 && CAPTURED(moveResult.parsed) <= 13;
+  const isRoyaltySummon =
+    FROMSQ(moveResult.parsed) === 0 &&
+    CAPTURED(moveResult.parsed) >= 6 &&
+    CAPTURED(moveResult.parsed) <= 13;
   if (isRoyaltySummon) {
-    console.log('🔥 makeUserMove: About to execute royalty summon with moveType=userMove');
+    console.log(
+      '🔥 makeUserMove: About to execute royalty summon with moveType=userMove'
+    );
   }
 
   const makeResult = MakeMove(moveResult.parsed, 'userMove');
   if (makeResult === BOOL.FALSE) {
     console.error('❌ makeUserMove: MakeMove returned FALSE!');
     return { parsed: NOMOVE, isInitPromotion: BOOL.FALSE };
-  }
-
-  if (isRoyaltySummon) {
-    console.log('✅ makeUserMove: Royalty summon executed successfully!');
   }
 
   CheckAndSet();
