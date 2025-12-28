@@ -43,8 +43,8 @@ class UnwrappedFrontPage extends React.Component<
       'Built for GMs, fun for aliens, instructive for all.',
       'Is this theory? Nope.',
       'Read. Recognize. React.',
-      "Let's see a more advanced setup.",
-      'Metagame just got a new name.',
+      // "Let's see a more advanced setup.",
+      'Rethinking the metagame.',
       "User used plan. It's super effective.",
       'Patience. Planning. Persistence.',
       'Difficult to learn, impossible to master.',
@@ -136,7 +136,9 @@ class UnwrappedFrontPage extends React.Component<
                 backgroundColorOverride="linear-gradient(135deg, rgba(255, 81, 47, 0.4), rgba(142, 45, 226, 0.4))"
                 onClick={() => this.handleEnterClick()}
               />
-              <p style={{ marginTop: '10px', fontStyle: 'italic', opacity: 0.8 }}>
+              <p
+                style={{ marginTop: '10px', fontStyle: 'italic', opacity: 0.8 }}
+              >
                 Sign in or enter as guest to play
               </p>
             </div>
@@ -219,7 +221,9 @@ class UnwrappedFrontPage extends React.Component<
                 backgroundColorOverride="linear-gradient(135deg, rgba(255, 81, 47, 0.4), rgba(142, 45, 226, 0.4))"
                 onClick={() => this.handleEnterClick()}
               />
-              <p style={{ marginTop: '10px', fontStyle: 'italic', opacity: 0.8 }}>
+              <p
+                style={{ marginTop: '10px', fontStyle: 'italic', opacity: 0.8 }}
+              >
                 Sign in or enter as guest to play
               </p>
             </div>
